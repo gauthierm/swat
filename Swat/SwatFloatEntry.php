@@ -1,6 +1,6 @@
 <?php
 
-/* vim: set noexpandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 require_once 'Swat/SwatNumericEntry.php';
 require_once 'SwatI18N/SwatI18NLocale.php';
