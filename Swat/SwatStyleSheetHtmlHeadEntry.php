@@ -13,35 +13,35 @@ require_once 'Swat/SwatHtmlHeadEntry.php';
  */
 class SwatStyleSheetHtmlHeadEntry extends SwatHtmlHeadEntry
 {
-	// {{{ public function display()
+    // {{{ public function display()
 
-	public function display($uri_prefix = '', $tag = null)
-	{
-		$uri = $this->uri;
+    public function display($uri_prefix = '', $tag = null)
+    {
+        $uri = $this->uri;
 
-		// append tag if it is set
-		if ($tag !== null) {
-			$uri = (strpos($uri, '?') === false ) ?
-				$uri.'?'.$tag :
-				$uri.'&'.$tag;
-		}
+        // append tag if it is set
+        if ($tag !== null) {
+            $uri = (strpos($uri, '?') === false ) ?
+                $uri.'?'.$tag :
+                $uri.'&'.$tag;
+        }
 
-		printf('<link rel="stylesheet" type="text/css" href="%s%s" />',
-			$uri_prefix,
-			$uri);
-	}
+        printf('<link rel="stylesheet" type="text/css" href="%s%s" />',
+            $uri_prefix,
+            $uri);
+    }
 
-	// }}}
-	// {{{ public function displayInline()
+    // }}}
+    // {{{ public function displayInline()
 
-	public function displayInline($path)
-	{
-		echo '<style type="text/css" media="all">';
-		readfile($path.$this->getUri());
-		echo '</style>';
-	}
+    public function displayInline($path)
+    {
+        echo '<style type="text/css" media="all">';
+        readfile($path.$this->getUri());
+        echo '</style>';
+    }
 
-	// }}}
+    // }}}
 }
 
 ?>

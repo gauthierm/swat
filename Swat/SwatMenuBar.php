@@ -19,49 +19,49 @@ require_once 'Swat/SwatMenu.php';
  */
 class SwatMenuBar extends SwatMenu
 {
-	// {{{ protected function getJavaScriptClass()
+    // {{{ protected function getJavaScriptClass()
 
-	/**
-	 * Gets the name of the JavaScript class to instantiate for this menu
-	 *
-	 * @return string the name of the JavaScript class to instantiate for this
-	 *                 menu. For the SwatMenuBar widget, this is
-	 *                 'YAHOO.widget.MenuBar'.
-	 */
-	protected function getJavaScriptClass()
-	{
-		return 'YAHOO.widget.MenuBar';
-	}
+    /**
+     * Gets the name of the JavaScript class to instantiate for this menu
+     *
+     * @return string the name of the JavaScript class to instantiate for this
+     *                menu. For the SwatMenuBar widget, this is
+     *                'YAHOO.widget.MenuBar'.
+     */
+    protected function getJavaScriptClass()
+    {
+        return 'YAHOO.widget.MenuBar';
+    }
 
-	// }}}
-	// {{{ protected function getMenuItemCSSClass()
+    // }}}
+    // {{{ protected function getMenuItemCSSClass()
 
-	/**
-	 * Gets the CSS class name to use for menu items in this menu
-	 *
-	 * @return string the CSS class name to use for menu items in this menu.
-	 */
-	protected function getMenuItemCSSClassName()
-	{
-		return 'yuimenubaritem';
-	}
+    /**
+     * Gets the CSS class name to use for menu items in this menu
+     *
+     * @return string the CSS class name to use for menu items in this menu.
+     */
+    protected function getMenuItemCSSClassName()
+    {
+        return 'yuimenubaritem';
+    }
 
-	// }}}
-	// {{{ protected function getCSSClassNames()
+    // }}}
+    // {{{ protected function getCSSClassNames()
 
-	/**
-	 * Gets the array of CSS classes that are applied to this menu bar
-	 *
-	 * @return array the array of CSS classes that are applied to this menu bar.
-	 */
-	protected function getCSSClassNames()
-	{
-		$classes = array('yuimenubar');
-		$classes = array_merge($classes, parent::getCSSClassNames());
-		return $classes;
-	}
+    /**
+     * Gets the array of CSS classes that are applied to this menu bar
+     *
+     * @return array the array of CSS classes that are applied to this menu bar.
+     */
+    protected function getCSSClassNames()
+    {
+        $classes = array('yuimenubar');
+        $classes = array_merge($classes, parent::getCSSClassNames());
+        return $classes;
+    }
 
-	// }}}
+    // }}}
 }
 
 ?>

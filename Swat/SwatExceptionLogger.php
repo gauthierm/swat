@@ -18,16 +18,16 @@ require_once 'Swat/exceptions/SwatException.php';
  */
 abstract class SwatExceptionLogger
 {
-	// {{{ public abstract function log()
+    // {{{ public abstract function log()
 
-	/**
-	 * Logs a SwatException
-	 *
-	 * This is called by SwatException::process().
-	 */
-	public abstract function log(SwatException $e);
+    /**
+     * Logs a SwatException
+     *
+     * This is called by SwatException::process().
+     */
+    public abstract function log(SwatException $e);
 
-	// }}}
+    // }}}
 }
 
 ?>

@@ -19,16 +19,16 @@ require_once 'Swat/exceptions/SwatException.php';
  */
 abstract class SwatExceptionDisplayer
 {
-	// {{{ public abstract function display()
+    // {{{ public abstract function display()
 
-	/**
-	 * Displays a SwatException
-	 *
-	 * This is called by SwatException::process().
-	 */
-	public abstract function display(SwatException $e);
+    /**
+     * Displays a SwatException
+     *
+     * This is called by SwatException::process().
+     */
+    public abstract function display(SwatException $e);
 
-	// }}}
+    // }}}
 }
 
 ?>

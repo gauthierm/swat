@@ -22,156 +22,157 @@ require_once 'Swat/SwatAutoloaderRule.php';
  */
 class SwatAutoloader extends SwatObject
 {
-	// {{{ private properties
+    // {{{ private properties
 
-	private static $rules = array();
+    private static $rules = array();
 
-	// }}}
-	// {{{ public static function addRule()
+    // }}}
+    // {{{ public static function addRule()
 
-	/**
-	 * Adds an autoloader rule to the autoloader
-	 *
-	 * @param string $expression the class name expression. Uses PERL regular
-	 *                            expression syntax.
-	 * @param string $replacement the format string of the filename for the
-	 *                             class expression.
-	 * @param boolean $last whether or not the added rule is final or not.
-	 *
-	 * @see SwatAutoloaderRule
-	 */
-	public static function addRule($expression, $replacement, $last = true)
-	{
-		SwatAutoloader::$rules[] =
-			new SwatAutoloaderRule($expression, $replacement, $last);
-	}
+    /**
+     * Adds an autoloader rule to the autoloader
+     *
+     * @param string  $expression  the class name expression. Uses PERL regular
+     *                             expression syntax.
+     * @param string  $replacement the format string of the filename for the
+     *                             class expression.
+     * @param boolean $last        whether or not the added rule is final or
+     *                             not.
+     *
+     * @see SwatAutoloaderRule
+     */
+    public static function addRule($expression, $replacement, $last = true)
+    {
+        SwatAutoloader::$rules[] =
+            new SwatAutoloaderRule($expression, $replacement, $last);
+    }
 
-	// }}}
-	// {{{ public static function loadRules()
+    // }}}
+    // {{{ public static function loadRules()
 
-	/**
-	 * Loads a list of autoloader rules from a file
-	 *
-	 * This format of the file is as follows:
-	 *
-	 * Each line defines a rule. The line is tokenized into fields based on
-	 * whitespace characters (tab and space). The first field on the line is
-	 * the rule expression. The next field on the line is the rule replacement.
-	 * After the rule replacement field, there is an optional field
-	 * to specify whether of not the rule is final. If this field is present
-	 * and its value is 1, the rule is final. If the field is present and its
-	 * value is 0 or if the field is omitted, the rule is not final.
-	 * Lines beginning with a hash character (#) are ignored.
-	 *
-	 * An example file containing two rules is:
-	 * <code>
-	 * /^Swat(.*)/            Swat/Swat$1.php
-	 * /^Swat(.*)?Exception$/ Swat/exceptions/Swat$1Exception.php 1
-	 * </code>
-	 *
-	 * @param string $filename the name of the file from which to load the
-	 *                          autoloader rules.
-	 *
-	 * @see SwatAutoloader::addRule()
-	 */
-	public static function loadRules($filename)
-	{
-		$rule_lines = file($filename);
-		foreach ($rule_lines as $rule_line) {
-			$rule_line = trim($rule_line);
-			if (substr($rule_line, 0, 1) === '#')
-				continue;
+    /**
+     * Loads a list of autoloader rules from a file
+     *
+     * This format of the file is as follows:
+     *
+     * Each line defines a rule. The line is tokenized into fields based on
+     * whitespace characters (tab and space). The first field on the line is
+     * the rule expression. The next field on the line is the rule replacement.
+     * After the rule replacement field, there is an optional field
+     * to specify whether of not the rule is final. If this field is present
+     * and its value is 1, the rule is final. If the field is present and its
+     * value is 0 or if the field is omitted, the rule is not final.
+     * Lines beginning with a hash character (#) are ignored.
+     *
+     * An example file containing two rules is:
+     * <code>
+     * /^Swat(.*)/            Swat/Swat$1.php
+     * /^Swat(.*)?Exception$/ Swat/exceptions/Swat$1Exception.php 1
+     * </code>
+     *
+     * @param string $filename the name of the file from which to load the
+     *                         autoloader rules.
+     *
+     * @see SwatAutoloader::addRule()
+     */
+    public static function loadRules($filename)
+    {
+        $rule_lines = file($filename);
+        foreach ($rule_lines as $rule_line) {
+            $rule_line = trim($rule_line);
+            if (substr($rule_line, 0, 1) === '#')
+                continue;
 
-			$last = false;
+            $last = false;
 
-			$tok = strtok($rule_line, " \t");
-			if ($tok === false)
-				continue;
+            $tok = strtok($rule_line, " \t");
+            if ($tok === false)
+                continue;
 
-			$expression = $tok;
-			$tok = strtok(" \t");
-			if ($tok === false)
-				continue;
+            $expression = $tok;
+            $tok = strtok(" \t");
+            if ($tok === false)
+                continue;
 
-			$replacement = $tok;
-			$tok = strtok(" \t");
-			if ($tok !== false)
-				$last = ((integer)$tok === 1);
+            $replacement = $tok;
+            $tok = strtok(" \t");
+            if ($tok !== false)
+                $last = ((integer)$tok === 1);
 
-			self::addRule($expression, $replacement, $last);
-		}
-	}
+            self::addRule($expression, $replacement, $last);
+        }
+    }
 
-	// }}}
-	// {{{ public static function getFileFromClass()
+    // }}}
+    // {{{ public static function getFileFromClass()
 
-	/**
-	 * Gets the filename of a class name
-	 *
-	 * This method uses the autoloader's list of rules to find an appropriate
-	 * filename for a class name. This is used by PHP5's __autoload() method
-	 * to find an appropriate file for undefined classes.
-	 *
-	 * @param string $class_name the name of the class to get the filename for.
-	 *
-	 * @return string the name of the file that likely contains the class
-	 *                 definition or null if no such filename could be
-	 *                 determined.
-	 */
-	public static function getFileFromClass($class_name)
-	{
-		$filename = null;
+    /**
+     * Gets the filename of a class name
+     *
+     * This method uses the autoloader's list of rules to find an appropriate
+     * filename for a class name. This is used by PHP5's __autoload() method
+     * to find an appropriate file for undefined classes.
+     *
+     * @param string $class_name the name of the class to get the filename for.
+     *
+     * @return string the name of the file that likely contains the class
+     *                definition or null if no such filename could be
+     *                determined.
+     */
+    public static function getFileFromClass($class_name)
+    {
+        $filename = null;
 
-		foreach (SwatAutoloader::$rules as $rule) {
-			$result = $rule->apply($class_name);
-			if ($result !== null) {
-				$filename = $result;
-				if ($rule->isLast())
-					break;
-			}
-		}
+        foreach (SwatAutoloader::$rules as $rule) {
+            $result = $rule->apply($class_name);
+            if ($result !== null) {
+                $filename = $result;
+                if ($rule->isLast())
+                    break;
+            }
+        }
 
-		return $filename;
-	}
+        return $filename;
+    }
 
-	// }}}
-	// {{{ public static function autoload()
+    // }}}
+    // {{{ public static function autoload()
 
-	/**
-	 * Provides an opportunity to define a class before causing a fatal error
-	 * when an undefined class is used
-	 *
-	 * If an appropriate file exists for the given class name, it is required.
-	 *
-	 * @param string $class_name the name of the undefined class.
-	 */
-	public static function autoload($class_name)
-	{
-		$filename = SwatAutoloader::getFileFromClass($class_name);
+    /**
+     * Provides an opportunity to define a class before causing a fatal error
+     * when an undefined class is used
+     *
+     * If an appropriate file exists for the given class name, it is required.
+     *
+     * @param string $class_name the name of the undefined class.
+     */
+    public static function autoload($class_name)
+    {
+        $filename = SwatAutoloader::getFileFromClass($class_name);
 
-		// We do not throw an exception here because is_callable() will break.
+        // We do not throw an exception here because is_callable() will break.
 
-		if ($filename !== null) {
-			require $filename;
-		}
-	}
+        if ($filename !== null) {
+            require $filename;
+        }
+    }
 
-	// }}}
-	// {{{ public static function registerAutoload()
+    // }}}
+    // {{{ public static function registerAutoload()
 
-	/**
-	 * Registers {@link SwatAutoload::autoload()} as an autoload function with
-	 * the spl_autoload function
-	 *
-	 * See {@link http://ca.php.net/manual/en/function.spl-autoload-register.php
-	 * the documentation on SPL autoloading} for details.
-	 */
-	public static function registerAutoload()
-	{
-		spl_autoload_register(array(__CLASS__, 'autoload'));
-	}
+    /**
+     * Registers {@link SwatAutoload::autoload()} as an autoload function with
+     * the spl_autoload function
+     *
+     * See {@link http://ca.php.net/manual/en/function.spl-autoload-register.php
+     * the documentation on SPL autoloading} for details.
+     */
+    public static function registerAutoload()
+    {
+        spl_autoload_register(array(__CLASS__, 'autoload'));
+    }
 
-	// }}}
+    // }}}
 }
 
 // Register SwatAutoloader as an autoloader.

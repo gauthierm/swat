@@ -15,92 +15,92 @@ require_once 'Swat/SwatInputControl.php';
  */
 class SwatReCaptcha extends SwatInputControl
 {
-	// {{{ public properties
+    // {{{ public properties
 
-	/**
-	 * Public Key
-	 *
-	 * The public key obtained from the ReCaptcha website used to communicate
-	 * with their servers.
-	 *
-	 * @var string
-	 */
-	public $public_key = null;
+    /**
+     * Public Key
+     *
+     * The public key obtained from the ReCaptcha website used to communicate
+     * with their servers.
+     *
+     * @var string
+     */
+    public $public_key = null;
 
-	/**
-	 * Private Key
-	 *
-	 * The private key obtained from the ReCaptcha website used to communicate
-	 * with their servers.
-	 *
-	 * @var string
-	 */
-	public $private_key = null;
+    /**
+     * Private Key
+     *
+     * The private key obtained from the ReCaptcha website used to communicate
+     * with their servers.
+     *
+     * @var string
+     */
+    public $private_key = null;
 
-	/**
-	 * If you are displaying a page to the user over SSL, be sure to set this
-	 * to true so an error dialog doesn't come up in the user's browser.
-	 *
-	 * @var boolean
-	 */
-	public $secure = false;
+    /**
+     * If you are displaying a page to the user over SSL, be sure to set this
+     * to true so an error dialog doesn't come up in the user's browser.
+     *
+     * @var boolean
+     */
+    public $secure = false;
 
-	// }}}
-	// {{{ public function display()
+    // }}}
+    // {{{ public function display()
 
-	/**
-	 * Displays this ReCaptcha widget
-	 */
-	public function display()
-	{
-		if (!$this->visible)
-			return;
+    /**
+     * Displays this ReCaptcha widget
+     */
+    public function display()
+    {
+        if (!$this->visible)
+            return;
 
-		parent::display();
+        parent::display();
 
-		/*
-		 * Second parameter is null because errors are displayed as
-		 * SwatMessage objects affixed to this widget.
-		 */
-		ReCaptcha::display($this->public_key, null, $this->secure);
-	}
+        /*
+         * Second parameter is null because errors are displayed as
+         * SwatMessage objects affixed to this widget.
+         */
+        ReCaptcha::display($this->public_key, null, $this->secure);
+    }
 
-	// }}}
-	// {{{ public function process()
+    // }}}
+    // {{{ public function process()
 
-	/**
-	 * Processes this ReCaptcha Widget
-	 *
-	 * If the user entered an incorrect response a message is displayed and
-	 * validation is halted.
-	 */
-	public function process()
-	{
-		parent::process();
+    /**
+     * Processes this ReCaptcha Widget
+     *
+     * If the user entered an incorrect response a message is displayed and
+     * validation is halted.
+     */
+    public function process()
+    {
+        parent::process();
 
-		$form = $this->getForm();
-		$data = $form->getFormData();
+        $form = $this->getForm();
+        $data = $form->getFormData();
 
-		$remote_ip = null;
-		if (isset($_SERVER['HTTP_X_FORWARDED_IP'])) {
-			$remote_ip = $_SERVER['HTTP_X_FORWARDED_IP'];
-		} elseif (isset($_SERVER['REMOTE_ADDR'])) {
-			$remote_ip = $_SERVER['REMOTE_ADDR'];
-		}
+        $remote_ip = null;
+        if (isset($_SERVER['HTTP_X_FORWARDED_IP'])) {
+            $remote_ip = $_SERVER['HTTP_X_FORWARDED_IP'];
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $remote_ip = $_SERVER['REMOTE_ADDR'];
+        }
 
-		$response = ReCaptcha::validate($this->private_key,
-			$remote_ip,
-			$data['recaptcha_challenge_field'],
-			$data['recaptcha_response_field']);
+        $response = ReCaptcha::validate($this->private_key,
+            $remote_ip,
+            $data['recaptcha_challenge_field'],
+            $data['recaptcha_response_field']);
 
-		if (!$response->is_valid) {
-			$message = new SwatMessage(Swat::_(
-				'The words you entered did not match the words displayed. '.
-				'Please try again.'), 'error');
+        if (!$response->is_valid) {
+            $message = new SwatMessage(Swat::_(
+                'The words you entered did not match the words displayed. '.
+                'Please try again.'), 'error');
 
-			$this->addMessage($message);
-		}
-	}
+            $this->addMessage($message);
+        }
+    }
 
-	// }}}
+    // }}}
 }

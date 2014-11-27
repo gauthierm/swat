@@ -15,22 +15,22 @@ require_once 'Swat/SwatFormField.php';
  */
 class SwatFooterFormField extends SwatFormField
 {
-	// {{{ protected function getCSSClassNames()
+    // {{{ protected function getCSSClassNames()
 
-	/**
-	 * Gets the array of CSS classes that are applied to this footer form field
-	 *
-	 * @return array the array of CSS classes that are applied to this footer
-	 *                form field.
-	 */
-	protected function getCSSClassNames()
-	{
-		$classes = parent::getCSSClassNames();
-		array_unshift($classes, 'swat-footer-form-field');
-		return $classes;
-	}
+    /**
+     * Gets the array of CSS classes that are applied to this footer form field
+     *
+     * @return array the array of CSS classes that are applied to this footer
+     *               form field.
+     */
+    protected function getCSSClassNames()
+    {
+        $classes = parent::getCSSClassNames();
+        array_unshift($classes, 'swat-footer-form-field');
+        return $classes;
+    }
 
-	// }}}
+    // }}}
 }
 
 ?>

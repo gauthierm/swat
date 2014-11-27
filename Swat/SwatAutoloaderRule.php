@@ -37,74 +37,74 @@ require_once 'Swat/SwatObject.php';
  */
 class SwatAutoloaderRule extends SwatObject
 {
-	// {{{ private properties
+    // {{{ private properties
 
-	private $expression;
-	private $replacement;
-	private $last;
+    private $expression;
+    private $replacement;
+    private $last;
 
-	// }}}
-	// {{{ public function __construct()
+    // }}}
+    // {{{ public function __construct()
 
-	/**
-	 * Creates a new class autoloader rule
-	 *
-	 * @param string $expression the expression of this rule. Uses PERL regular
-	 *                            expression syntax.
-	 * @param string $replacement the replacement format string of this rule.
-	 * @param boolean $last whether or not this rule is final.
-	 */
-	public function __construct($expression, $replacement, $last = true)
-	{
-		$this->expression = $expression;
-		$this->replacement = $replacement;
-		$this->last = $last;
-	}
+    /**
+     * Creates a new class autoloader rule
+     *
+     * @param string $expression the expression of this rule. Uses PERL regular
+     *                            expression syntax.
+     * @param string $replacement the replacement format string of this rule.
+     * @param boolean $last whether or not this rule is final.
+     */
+    public function __construct($expression, $replacement, $last = true)
+    {
+        $this->expression = $expression;
+        $this->replacement = $replacement;
+        $this->last = $last;
+    }
 
-	// }}}
-	// {{{ public function isLast()
+    // }}}
+    // {{{ public function isLast()
 
-	/**
-	 * Whether or not this rule is a final rule
-	 *
-	 * @return boolean whether or not this rule is a final rule.
-	 */
-	public function isLast()
-	{
-		return $this->last;
-	}
+    /**
+     * Whether or not this rule is a final rule
+     *
+     * @return boolean whether or not this rule is a final rule.
+     */
+    public function isLast()
+    {
+        return $this->last;
+    }
 
-	// }}}
-	// {{{ public function apply()
+    // }}}
+    // {{{ public function apply()
 
-	/**
-	 * Applies this autoloader rule to a class name
-	 *
-	 * @param string $class_name the name of the class to apply this rule to.
-	 *
-	 * @return string the filename the class name maps to if the filename
-	 *                 matches this rule, or null if the filename does not
-	 *                 match this rule.
-	 */
-	public function apply($class_name)
-	{
-		$filename = null;
+    /**
+     * Applies this autoloader rule to a class name
+     *
+     * @param string $class_name the name of the class to apply this rule to.
+     *
+     * @return string the filename the class name maps to if the filename
+     *                 matches this rule, or null if the filename does not
+     *                 match this rule.
+     */
+    public function apply($class_name)
+    {
+        $filename = null;
 
-		$matches = array();
-		$match = preg_match($this->expression, $class_name, $matches);
+        $matches = array();
+        $match = preg_match($this->expression, $class_name, $matches);
 
-		if ($match == 1) {
-			$filename = $this->replacement;
-			for ($i = 1; $i < count($matches); $i++) {
-				$needle = '$'.$i;
-				$filename = str_replace($needle, $matches[$i], $filename);
-			}
-		}
+        if ($match == 1) {
+            $filename = $this->replacement;
+            for ($i = 1; $i < count($matches); $i++) {
+                $needle = '$'.$i;
+                $filename = str_replace($needle, $matches[$i], $filename);
+            }
+        }
 
-		return $filename;
-	}
+        return $filename;
+    }
 
-	// }}}
+    // }}}
 }
 
 ?>

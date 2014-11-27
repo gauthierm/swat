@@ -13,33 +13,33 @@ require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
  */
 class SwatLessStyleSheetHtmlHeadEntry extends SwatStyleSheetHtmlHeadEntry
 {
-	// {{{ public function display()
+    // {{{ public function display()
 
-	public function display($uri_prefix = '', $tag = null)
-	{
-		$uri = $this->uri;
+    public function display($uri_prefix = '', $tag = null)
+    {
+        $uri = $this->uri;
 
-		// append tag if it is set
-		if ($tag !== null) {
-			$uri = (strpos($uri, '?') === false ) ?
-				$uri.'?'.$tag :
-				$uri.'&'.$tag;
-		}
+        // append tag if it is set
+        if ($tag !== null) {
+            $uri = (strpos($uri, '?') === false ) ?
+                $uri.'?'.$tag :
+                $uri.'&'.$tag;
+        }
 
-		printf('<link rel="stylesheet/less" type="text/css" href="%s%s" />',
-			$uri_prefix,
-			$uri);
-	}
+        printf('<link rel="stylesheet/less" type="text/css" href="%s%s" />',
+            $uri_prefix,
+            $uri);
+    }
 
-	// }}}
-	// {{{ public function getStyleSheetHeadEntry()
+    // }}}
+    // {{{ public function getStyleSheetHeadEntry()
 
-	public function getStyleSheetHeadEntry()
-	{
-		return new SwatStyleSheetHtmlHeadEntry($this->uri);
-	}
+    public function getStyleSheetHeadEntry()
+    {
+        return new SwatStyleSheetHtmlHeadEntry($this->uri);
+    }
 
-	// }}}
+    // }}}
 }
 
 ?>
