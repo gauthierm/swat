@@ -30,49 +30,6 @@ require_once 'Swat/SwatObject.php';
  */
 class SwatMessage extends SwatObject
 {
-    // {{{ constants
-
-    /**
-     * Notification message type
-     *
-     * An informative message that doesn't require any action by the user.
-     *
-     * @deprecated Use the string 'notice' instead.
-     */
-    const NOTIFICATION = 'notice';
-
-    /**
-     * Warning message type
-     *
-     * A warning message that requires the attention of the user, but is
-     * not critical and does not necessarily require any action by the user.
-     *
-     * @deprecated Use the string 'warning' instead.
-     */
-    const WARNING = 'warning';
-
-    /**
-     * Error message type
-     *
-     * An error message that requires the attention of the user and that is
-     * expected/handled by the application.
-     * eg. Missing required fields
-     *
-     * @deprecated Use the string 'error' instead.
-     */
-    const ERROR = 'error';
-
-    /**
-     * System Error message type
-     *
-     * A system error that requires the attention of the user.
-     * eg. Database connection error
-     *
-     * @deprecated Use the string 'system-error' instead.
-     */
-    const SYSTEM_ERROR = 'system-error';
-
-    // }}}
     // {{{ public properties
 
     /**
@@ -158,21 +115,6 @@ class SwatMessage extends SwatObject
         }
 
         return implode(' ', $classes);
-    }
-
-    // }}}
-    // {{{ public function getCssClass()
-
-    /**
-     * An alias for SwatMessage::getCSSClassString()
-     *
-     * @return string the CSS class names of this message.
-     *
-     * @deprecated Use SwatMessage::getCSSClassString() instead.
-     */
-    public function getCssClass()
-    {
-        return $this->getCSSClassString();
     }
 
     // }}}

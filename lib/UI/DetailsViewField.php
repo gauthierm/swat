@@ -40,15 +40,6 @@ class SwatDetailsViewField extends SwatCellRendererContainer
     public $title_content_type = 'text/plain';
 
     /**
-     * The {@link SwatDetailsView} associated with this field
-     *
-     * @var SwatDetailsView
-     *
-     * @deprecated Use {@link SwatUIObject::$parent} instead.
-     */
-    public $view = null;
-
-    /**
      * Whether or not this field is displayed
      *
      * @var boolean
@@ -187,7 +178,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
             throw new SwatException('No renderer has been provided for this '.
                 'field.');
 
-        $sensitive = $this->view->isSensitive();
+        $sensitive = $this->parent->isSensitive();
 
         // Set the properties of the renderers to the value of the data field.
         foreach ($this->renderers as $renderer) {

@@ -117,15 +117,6 @@ class SwatTextareaEditor extends SwatTextarea
      */
     public $image_server;
 
-    /**
-     * Base-Href
-     *
-     * @var string
-     *
-     * @deprecated Use {@link SwatTextareaEditor::$base_href} instead.
-     */
-    public $basehref = null;
-
     // }}}
     // {{{ public function __construct()
 

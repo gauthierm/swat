@@ -38,23 +38,6 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
     // {{{ public properties
 
     /**
-     * The initial branch state of the tree
-     *
-     * @var boolean
-     *
-     * @see SwatExpandableCheckboxTree::$branch_state
-     *
-     * @deprecated This property is replaced by the
-     *             {@link SwatExpandableCheckboxTree::$branch_state} property.
-     *             If this boolean property is specified, it will override the
-     *             <i>$branch_state</i> property with either
-     *             {@link SwatExpandableCheckboxTree:BRANCH_STATE_OPEN} or
-     *             {@link SwatExpandableCheckboxTree:BRANCH_STATE_CLOSED}. This
-     *             property will be removed in later versions of Swat.
-     */
-    public $open;
-
-    /**
      * Initial state of tree branches
      *
      * Should be set to one of the SwatExpandableCheckboxTree::BRANCH_STATE_*
@@ -168,17 +151,12 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
     {
         $dependent_boxes = ($this->dependent_boxes) ? 'true' : 'false';
 
-        if ($this->open !== null) {
-            $branch_state = ($this->open) ?
-                self::BRANCH_STATE_OPEN : self::BRANCH_STATE_CLOSED;
-        } else {
-            if ($this->branch_state !== self::BRANCH_STATE_OPEN &&
-                $this->branch_state !== self::BRANCH_STATE_CLOSED &&
-                $this->branch_state !== self::BRANCH_STATE_AUTO)
-                $branch_state = self::BRANCH_STATE_AUTO;
-            else
-                $branch_state = $this->branch_state;
-        }
+        if ($this->branch_state !== self::BRANCH_STATE_OPEN &&
+            $this->branch_state !== self::BRANCH_STATE_CLOSED &&
+            $this->branch_state !== self::BRANCH_STATE_AUTO)
+            $branch_state = self::BRANCH_STATE_AUTO;
+        else
+            $branch_state = $this->branch_state;
 
         $expandable_node_ids = array_map(
             array('SwatString', 'quoteJavaScriptString'),

@@ -350,12 +350,6 @@ class SwatTableView extends SwatView implements SwatUIParent
 
         foreach ($this->extra_rows as $row)
             $row->process();
-
-        // this is part of the old selection API
-        if ($this->hasColumn('checkbox')) {
-            $items = $this->getColumn('checkbox');
-            $this->checked_items = $items->getItems();
-        }
     }
 
     // }}}
@@ -1545,7 +1539,6 @@ class SwatTableView extends SwatView implements SwatUIParent
         if ($column->id !== null)
             $this->columns_by_id[$column->id] = $column;
 
-        $column->view = $this; // deprecated reference
         $column->parent = $this;
     }
 
@@ -2002,7 +1995,6 @@ class SwatTableView extends SwatView implements SwatUIParent
         if ($row->id !== null)
             $this->rows_by_id[$row->id] = $row;
 
-        $row->view = $this; // deprecated reference
         $row->parent = $this;
     }
 

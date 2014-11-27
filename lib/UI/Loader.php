@@ -390,31 +390,6 @@ class SwatUI extends SwatObject
     }
 
     // }}}
-    // {{{ public function displayTidy()
-
-    /**
-     * Displays this interface with tidy XHTML
-     *
-     * The display() method is called and the output is cleaned up.
-     *
-     * @deprecated This method breaks some elements of swat by adding
-     *             whitespace between nodes. Use {@link SwatUI::display()}
-     *             instead.
-     */
-    public function displayTidy()
-    {
-        $breaking_tags =
-            '@</?(div|p|table|tr|td|ul|li|ol|dl|option)[^<>]*>@ui';
-
-        ob_start();
-        $this->display();
-        $buffer = ob_get_clean();
-        $tidy = preg_replace($breaking_tags, "\n\\0\n", $buffer);
-        $tidy = str_replace("\n\n", "\n", $tidy);
-        echo $tidy;
-    }
-
-    // }}}
     // {{{ public function setTranslationCallback()
 
     /**

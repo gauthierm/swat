@@ -203,22 +203,6 @@ class SwatNavBar extends SwatControl implements Countable
     }
 
     // }}}
-    // {{{ public function getCount()
-
-    /**
-     * Gets the number of entries in this navigational bar
-     *
-     * @return integer number of entries in this navigational bar.
-     *
-     * @deprecated this class now implements Countable. Use count($object)
-     *              instead of $object->getCount().
-     */
-    public function getCount()
-    {
-        return count($this->entries);
-    }
-
-    // }}}
     // {{{ public function count()
 
     /**

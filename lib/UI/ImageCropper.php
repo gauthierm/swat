@@ -90,51 +90,6 @@ class SwatImageCropper extends SwatInputControl
      */
     public $min_height = 50;
 
-    /**
-     * Alias for {@link SwatImageCropper::$crop_ratio}
-     *
-     * @var float
-     *
-     * @deprecated Use {@link SwatImageCropper::$crop_ratio} instead.
-     */
-    public $crop_box_ratio;
-
-    /**
-     * Alias for {@link SwatImageCropper::$crop_width}
-     *
-     * @var integer
-     *
-     * @deprecated Use {@link SwatImageCropper::$crop_width} instead.
-     */
-    public $crop_box_width;
-
-    /**
-     * Alias for {@link SwatImageCropper::$crop_height}
-     *
-     * @var integer
-     *
-     * @deprecated Use {@link SwatImageCropper::$crop_height} instead.
-     */
-    public $crop_box_height;
-
-    /**
-     * Alias for {@link SwatImageCropper::$crop_left}
-     *
-     * @var integer
-     *
-     * @deprecated Use {@link SwatImageCropper::$crop_left} instead.
-     */
-    public $crop_box_left;
-
-    /**
-     * Alias for {@link SwatImageCropper::$crop_top}
-     *
-     * @var integer
-     *
-     * @deprecated Use {@link SwatImageCropper::$crop_top} instead.
-     */
-    public $crop_box_top;
-
     // }}}
     // {{{ public function __construct()
 
@@ -170,12 +125,6 @@ class SwatImageCropper extends SwatInputControl
         $this->crop_height = $data[$this->id.'_height'];
         $this->crop_left   = $data[$this->id.'_x'];
         $this->crop_top    = $data[$this->id.'_y'];
-
-        // deprecated aliases
-        $this->crop_box_width  = $this->crop_width;
-        $this->crop_box_height = $this->crop_height;
-        $this->crop_box_left   = $this->crop_left;
-        $this->crop_box_top    = $this->crop_top;
     }
 
     // }}}
@@ -303,30 +252,9 @@ class SwatImageCropper extends SwatInputControl
      */
     protected function autoCropBoxDimensions()
     {
-        // support deprecated aliases
-        if ($this->crop_box_width !== null && $this->crop_width === null) {
-            $this->crop_width = $this->crop_box_width;
-        }
-
-        if ($this->crop_box_height !== null && $this->crop_height === null) {
-            $this->crop_height = $this->crop_box_height;
-        }
-
-        if ($this->crop_box_top !== null && $this->crop_top === null) {
-            $this->crop_top = $this->crop_box_top;
-        }
-
-        if ($this->crop_box_left !== null && $this->crop_left === null) {
-            $this->crop_left = $this->crop_box_left;
-        }
-
-        if ($this->crop_box_ratio !== null && $this->crop_ratio === null) {
-            $this->crop_ratio = $this->crop_box_ratio;
-        }
-
         // fix bad ratio
-        if ($this->crop_box_ratio == 0)
-            $this->crop_box_ratio = null;
+        if ($this->crop_ratio == 0)
+            $this->crop_ratio = null;
 
         // autoset width
         if ($this->crop_width === null) {

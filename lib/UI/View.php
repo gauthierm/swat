@@ -29,19 +29,6 @@ abstract class SwatView extends SwatControl
      */
     public $model = null;
 
-    /**
-     * The values of the checked checkboxes
-     *
-     * This array is set in the {@link SwatTableView::process()} method. For
-     * this to be set, this table-view must contain a
-     * {@link SwatCellRendererCheckbox} with an id of "checkbox".
-     *
-     * @var array
-     *
-     * @deprecated use {@link SwatView::getSelection()} instead.
-     */
-    public $checked_items = array();
-
     // }}}
     // {{{ protected properties
 

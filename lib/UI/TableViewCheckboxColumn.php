@@ -83,31 +83,8 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
      */
     public $check_all_unit;
 
-    /**
-     * Whether or not this column is responsible for highlighting selected
-     * table-view rows
-     *
-     * @var boolean
-     *
-     * @deprecated this property has no effect anymore. Table-view rows are
-     *             always highlighted when selected. The column does not
-     *             control row highlighting anymore.
-     */
-    public $highlight_row = true;
-
     // }}}
     // {{{ private properties
-
-    /**
-     * The selected rows of this checkbox column after processing this column
-     *
-     * @var array
-     *
-     * @see SwatView::getSelection()
-     *
-     * @deprecated this is part of the old selection API.
-     */
-    private $items = array();
 
     /**
      * Check-all row added by this column to the parent table-view
@@ -142,8 +119,6 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
     /**
      * Processes this checkbox column
      *
-     * Column-level processing is needed for the deprecated selection API.
-     *
      * @see SwatView::getSelection()
      */
     public function process()
@@ -152,11 +127,6 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
 
         if ($this->show_check_all)
             $this->check_all->process();
-
-        // this is part of the old selection API
-        $item_name = $this->getCheckboxRendererId();
-        if (isset($_POST[$item_name]) && is_array($_POST[$item_name]))
-            $this->items = $_POST[$item_name];
     }
 
     // }}}
@@ -190,24 +160,6 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
         $this->check_all->unit = $this->check_all_unit;
 
         parent::displayHeader();
-    }
-
-    // }}}
-    // {{{ public function getItems()
-
-    /**
-     * Gets the selected rows of this checkbox column
-     *
-     * @return array the selected rows of this checkbox column.
-     *
-     * @see SwatView::getSelection()
-     *
-     * @deprecated This is part of the old selection API. Use the selection API
-     *             defined in SwatView instead.
-     */
-    public function getItems()
-    {
-        return $this->items;
     }
 
     // }}}

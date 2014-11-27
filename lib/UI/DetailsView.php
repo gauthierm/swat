@@ -583,7 +583,6 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
         if ($field->id !== null)
             $this->fields_by_id[$field->id] = $field;
 
-        $field->view = $this; // deprecated reference
         $field->parent = $this;
     }
 

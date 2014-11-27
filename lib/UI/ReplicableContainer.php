@@ -18,18 +18,6 @@ class SwatReplicableContainer extends SwatDisplayableContainer
     // {{{ public properties
 
     /**
-     * An array of unique id => title pairs, one for each replication
-     *
-     * The ids are used to suffix the original widget ids to create unique
-     * ids for the replicated widgets. Some sub-classes use the titles on
-     * containers such as fieldsets which surround the replicated widgets.
-     *
-     * @var array
-     * @deprecated Use a SwatReplicableContainer::$replication_ids instead
-     */
-    public $replicators = null;
-
-    /**
      * An array of unique ids, one for each replication
      *
      * The ids are used to suffix the original widget ids to create unique
@@ -72,10 +60,6 @@ class SwatReplicableContainer extends SwatDisplayableContainer
      */
     public function init()
     {
-        // TODO: remove this when deprecated $replicators property is removed
-        if ($this->replication_ids === null && $this->replicators !== null)
-            $this->replication_ids = array_keys($this->replicators);
-
         if ($this->replication_ids === null)
             $this->replication_ids = array(0);
 

@@ -380,22 +380,6 @@ class SwatCellRendererSet extends SwatObject implements Iterator, Countable
     }
 
     // }}}
-    // {{{ public function getCount()
-
-    /**
-     * Gets the number of renderers in this set
-     *
-     * @return integer the number of renderers in this set.
-     *
-     * @deprecated this class now implements Countable. Use count($object)
-     *             instead of $object->getCount().
-     */
-    public function getCount()
-    {
-        return count($this);
-    }
-
-    // }}}
     // {{{ public function count()
 
     /**

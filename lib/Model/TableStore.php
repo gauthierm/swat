@@ -149,50 +149,6 @@ class SwatTableStore extends SwatObject implements SwatTableModel
     }
 
     // }}}
-    // {{{ public function getRowCount()
-
-    /**
-     * Gets the number of rows in this data structure
-     *
-     * @deprecated Use Countable::count()
-     */
-    public function getRowCount()
-    {
-        return count($this->rows);
-    }
-
-    // }}}
-    // {{{ public function &getRows()
-
-    /**
-     * Gets the rows of this data structure as an array
-     *
-     * @return array the rows of this data structure
-     *
-     * @deprecated Use as an Iterator
-     */
-    public function &getRows()
-    {
-        return $this->rows;
-    }
-
-    // }}}
-    // {{{ public function addRow()
-
-    /**
-     * Adds a row to this data structure
-     *
-     * @param stdClass $data the data of the row to add.
-     * @param string   $id   an optional unique id of the row to add.
-     *
-     * @deprecated Use SwatTableStore::add()
-     */
-    public function addRow($data, $id = null)
-    {
-        $this->add($data);
-    }
-
-    // }}}
 }
 
 ?>

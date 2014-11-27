@@ -824,90 +824,6 @@ class SwatString extends SwatObject
     }
 
     // }}}
-    // {{{ public static function moneyFormat()
-
-    /**
-     * Formats a numeric value as currency
-     *
-     * Note: This method does not work in some operating systems and in such
-     *       cases, this method will throw an exception.
-     *
-     * Note: This method is deprecated. Use {@link SwatI18NLocale::formatCurrency()}
-     *       instead. The newer method is more flexible and works across more
-     *       platforms.
-     *
-     * @param float   $value            the numeric value to format.
-     * @param string  $locale           optional locale to use to format the
-     *                                  value. If no locale is specified, the
-     *                                  current locale is used.
-     * @param boolean $display_currency optional flag specifing whether or not
-     *                                  the international currency symbol is
-     *                                  appended to the output. If not
-     *                                  specified, the international currency
-     *                                  symbol is omitted from the output.
-     * @param integer $decimal_places   optional number of decimal places to
-     *                                  display. If not specified, the locale's
-     *                                  default number of decimal places is
-     *                                  used.
-     *
-     * @return string a UTF-8 encoded string containing the formatted currency
-     *                value.
-     *
-     * @throws SwatException if the PHP money_format() function is undefined.
-     * @throws SwatException if the given locale could not be set.
-     * @throws SwatException if the locale-based output cannot be converted to
-     *                       UTF-8.
-     *
-     * @deprecated Use {@link SwatI18NLocale::formatCurrency()} instead. It is more
-     *             flexible and works across more platforms.
-     */
-    public static function moneyFormat($value, $locale = null,
-        $display_currency = false, $decimal_places = null)
-    {
-        if (!function_exists('money_format')) {
-            throw new SwatException('moneyFormat() method is not available '.
-                'on this operating system. See '.
-                'http://php.net/manual/en/function.money-format.php for '.
-                'details.');
-        }
-
-        if ($locale !== null) {
-            $old_locale = setlocale(LC_ALL, 0);
-            if (setlocale(LC_ALL, $locale) === false) {
-                throw new SwatException(sprintf('Locale %s passed to the '.
-                    'moneyFormat() method is not valid for this operating '.
-                    'system.', $locale));
-            }
-        }
-
-        // get character set of the locale that is used
-        $character_set = nl_langinfo(CODESET);
-
-        $format_string = ($decimal_places === null) ? '%n' :
-            '%.'.((int)$decimal_places).'n';
-
-        $output = money_format($format_string, $value);
-
-        if ($display_currency) {
-            $lc = localeconv();
-            $output.= ' '.$lc['int_curr_symbol'];
-        }
-
-        // convert output to UTF-8
-        if ($character_set !== 'UTF-8') {
-            $output = iconv($character_set, 'UTF-8', $output);
-            if ($output === false)
-                throw new SwatException(sprintf('Could not convert %s output '.
-                    'to UTF-8', $character_set));
-        }
-
-        if ($locale !== null)
-            setlocale(LC_ALL, $old_locale);
-
-        return $output;
-    }
-
-    // }}}
     // {{{ public static function getInternationalCurrencySymbol()
 
     /**
@@ -1023,23 +939,6 @@ class SwatString extends SwatObject
             setlocale(LC_ALL, $old_locale);
 
         return $output;
-    }
-
-    // }}}
-    // {{{ public static function ordinalNumberFormat()
-
-    /**
-     * Formats an integer as an ordinal number (1st, 2nd, 3rd)
-     *
-     * @param integer $value the numeric value to format.
-     *
-     * @see SwatNumber::ordinal()
-     *
-     * @deprecated Use {@link SwatNumber::ordinal()} instead.
-     */
-    public static function ordinalNumberFormat($value)
-    {
-        return SwatNumber::ordinal($value);
     }
 
     // }}}

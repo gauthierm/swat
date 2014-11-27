@@ -568,24 +568,6 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
     }
 
     // }}}
-
-    // deprecated
-    // {{{ protected function displayRequired()
-
-    /**
-     * @deprecated use the displayRequiredStatus() method instead
-     */
-    protected function displayRequired()
-    {
-        if ($this->required) {
-            $span_tag = new SwatHtmlTag('span');
-            $span_tag->class = 'swat-required';
-            $span_tag->setContent(sprintf(' (%s)', Swat::_('required')));
-            $span_tag->display();
-        }
-    }
-
-    // }}}
 }
 
 ?>
