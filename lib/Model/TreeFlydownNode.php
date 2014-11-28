@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/SwatTreeNode.php';
-require_once 'Swat/SwatOption.php';
+namespace Silverorange\Swat\Model;
+
+use Silverorange\Swat\Exception;
 
 /**
  * A tree node for a flydown
@@ -15,14 +15,14 @@ require_once 'Swat/SwatOption.php';
  * @copyright 2006 silverorange
  * @license
  */
-class SwatTreeFlydownNode extends SwatTreeNode
+class TreeFlydownNode extends TreeNode
 {
     // {{{ protected properties
 
     /**
      * The flydown option for this node
      *
-     * @var SwatOption
+     * @var Option
      */
     protected $flydown_option;
 
@@ -33,36 +33,39 @@ class SwatTreeFlydownNode extends SwatTreeNode
      * Creates a new tree flydown node
      *
      * This method is overloaded to accept either a value-title pair or a new
-     * {@link SwatOption} object. Example usage:
+     * {@link Option} object. Example usage:
      *
      * <code>
      * // using an already existing flydown option
-     * $option = new SwatOption(1, 'Apples');
-     * $node1 = new SwatTreeFlydownNode($option);
+     * $option = new Option(1, 'Apples');
+     * $node1 = new TreeFlydownNode($option);
      *
      * // creating a new flydown option
-     * $node2 = new SwatTreeFlydown(2, 'Oranges');
+     * $node2 = new TreeFlydown(2, 'Oranges');
      * </code>
      *
-     * @param mixed $param1 either a {@link SwatOption} object or an
-     *                      integer or string representing the value of a new
-     *                      flydown option.
-     * @param mixed $param2 if a SwatOption object is passed in for
-     *                      parameter one, this parameter must be ommitted.
+     * @param mixed $param1 either an {@link Option} object; or an integer or a
+     *                      string representing the value of a new flydown
+     *                      option.
+     * @param mixed $param2 if an Option object is passed in for the first
+     *                      parameter, this parameter must be ommitted.
      *                      Otherwise, this is a string title for a new
      *                      flydown option.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function __construct($param1, $param2 = null)
     {
-        if ($param2 === null && $param1 instanceof SwatOption)
+        if ($param2 === null && $param1 instanceof Option) {
             $this->flydown_option = $param1;
-        elseif ($param2 === null)
-            throw new SwatException('First parameter must be a '.
-                'SwatOption or second parameter must be specified.');
-        else
-            $this->flydown_option = new SwatOption($param1, $param2);
+        } elseif ($param2 === null) {
+            throw new Exception\Exception(
+                'First parameter must be a Silverorange\Swat\Model\Option or '.
+                'second parameter must be specified.'
+            );
+        } else {
+            $this->flydown_option = new Option($param1, $param2);
+        }
     }
 
     // }}}
@@ -71,7 +74,7 @@ class SwatTreeFlydownNode extends SwatTreeNode
     /**
      * Gets the option for this node
      *
-     * @return SwatOption the option for this node.
+     * @return Option the option for this node.
      */
     public function getOption()
     {
@@ -86,12 +89,13 @@ class SwatTreeFlydownNode extends SwatTreeNode
      *
      * The parent of the child node is set to this node.
      *
-     * @param SwatTreeNode $child the child node to add to this node.
+     * @param TreeNode $child the child node to add to this node.
      */
-    public function addChild($child)
+    public function addChild(TreeNode $child)
     {
-        if ($child instanceof SwatDataTreeNode)
-            $child = SwatTreeFlydownNode::convertFromDataTree($child);
+        if ($child instanceof DataTreeNode) {
+            $child = TreeFlydownNode::convertFromDataTree($child);
+        }
 
         parent::addChild($child);
     }
@@ -99,9 +103,9 @@ class SwatTreeFlydownNode extends SwatTreeNode
     // }}}
     // {{{ public staticfunction convertFromDataTree()
 
-    public static function convertFromDataTree(SwatDataTreeNode $tree)
+    public static function convertFromDataTree(DataTreeNode $tree)
     {
-        $new_tree = new SwatTreeFlydownNode($tree->value, $tree->title);
+        $new_tree = new TreeFlydownNode($tree->value, $tree->title);
 
         foreach ($tree->getChildren() as $child_node)
             $new_tree->addChild(self::convertFromDataTree($child_node));

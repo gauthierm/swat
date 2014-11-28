@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Model;
+
 /**
  * A simple class for building a tree structure
  *
@@ -11,7 +13,7 @@
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatTreeNode implements RecursiveIterator, Countable
+abstract class TreeNode implements \RecursiveIterator, \Countable
 {
     // {{{ protected properties
 
@@ -30,7 +32,7 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * The parent tree node of this tree node
      *
-     * @var SwatTreeNode
+     * @var TreeNode
      */
     private $parent = null;
 
@@ -52,9 +54,9 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
      *
      * The parent of the child node is set to this node.
      *
-     * @param SwatTreeNode $child the child node to add to this node.
+     * @param TreeNode $child the child node to add to this node.
      */
-    public function addChild($child)
+    public function addChild(TreeNode $child)
     {
         $child->parent = $this;
         $child->index = count($this->children);
@@ -70,9 +72,9 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
      * Identical to addChild() except that it removes the root node from
      * the passed tree.
      *
-     * @param SwatTreeNode $tree the tree to add to this node.
+     * @param TreeNode $tree the tree to add to this node.
      */
-    public function addTree($tree)
+    public function addTree(TreeNode $tree)
     {
         foreach ($tree->getChildren() as $child)
             $this->addChild($child);
@@ -112,7 +114,7 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Gets the parent node of this node
      *
-     * @return SwatTreeNode the parent node of this node.
+     * @return TreeNode the parent node of this node.
      */
     public function getParent()
     {
@@ -125,7 +127,7 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Gets this node's children
      *
-     * This method is needed to fulfill the RecursiveIterator interface.
+     * This method is needed to fulfill the \RecursiveIterator interface.
      *
      * @return this node's children.
      */
@@ -140,7 +142,7 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Whether or not this tree node has children
      *
-     * This method is needed to fulfill the RecursiveIterator interface.
+     * This method is needed to fulfill the \RecursiveIterator interface.
      *
      * @return boolean true if this node has children or false if this node
      *                  does not have children.
@@ -169,11 +171,11 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Gets the current child node in this node
      *
-     * This method is needed to fulfill the RecursiveIterator interface.
+     * This method is needed to fulfill the \RecursiveIterator interface.
      *
-     * @return mixed the current child node in this node as a
-     *                {@link SwatTreeNode} object. If the current child node is
-     *                invalid, false is returned.
+     * @return mixed the current child node in this node as a {@link TreeNode}
+     *               object. If the current child node is invalid, false is
+     *               returned.
      */
     public function current()
     {
@@ -186,7 +188,7 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Gets the key of the current child node in this node
      *
-     * This method is needed to fulfill the RecursiveIterator interface.
+     * This method is needed to fulfill the \RecursiveIterator interface.
      *
      * @reutrn integer the key (index) of the current child node in this node.
      */
@@ -220,11 +222,10 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
      * Sets the internal pointer in the child nodes array back to the
      * beginning
      *
-     * This method is needed to fulfill the RecursiveIterator interface.
+     * This method is needed to fulfill the \RecursiveIterator interface.
      *
-     * @return mixed the first child node in this node as a
-     *                {@link SwatTreeNode} object. If there are no child nodes,
-     *                false is returned.
+     * @return mixed the first child node in this node as a {@link TreeNode}
+     *               object. If there are no child nodes, false is returned.
      */
     public function rewind()
     {
@@ -237,10 +238,10 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Whether the current child node in this node is valid
      *
-     * This method is needed to fulfill the RecursiveIterator interface.
+     * This method is needed to fulfill the \RecursiveIterator interface.
      *
      * @return boolean true if the current child node is valid and false if it
-     *                  is not.
+     *                 is not.
      */
     public function valid()
     {
@@ -253,7 +254,7 @@ abstract class SwatTreeNode implements RecursiveIterator, Countable
     /**
      * Gets the number of nodes in this tree or subtree
      *
-     * This method is needed to fulfill the Countable interface.
+     * This method is needed to fulfill the \Countable interface.
      *
      * @return integer the number of nodes in this tree or subtree.
      */

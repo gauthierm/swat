@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatOption.php';
+namespace Silverorange\Swat\Model;
 
 /**
  * A class representing a blank option in a flydown
@@ -14,7 +14,7 @@ require_once 'Swat/SwatOption.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFlydownBlankOption extends SwatOption
+class FlydownBlankOption extends Option
 {
 }
 

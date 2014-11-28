@@ -2,10 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/exceptions/SwatIntegerOverflowException.php';
-require_once 'SwatI18N/SwatI18NNumberFormat.php';
-require_once 'SwatI18N/SwatI18NCurrencyFormat.php';
+namespace Silverorange\Swat\I18N;
+
+use Silverorange\Swat\Exception;
 
 /**
  * A locale object
@@ -17,7 +16,7 @@ require_once 'SwatI18N/SwatI18NCurrencyFormat.php';
  * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatI18NLocale
+class Locale
 {
     // {{{ protected properties
 
@@ -37,7 +36,7 @@ class SwatI18NLocale
 
     /**
      * The preferred locale as selected by the operating system if the
-     * {@link SwatI18NLocale::$locale} property is an array
+     * {@link Locale::$locale} property is an array
      *
      * @var string
      */
@@ -46,21 +45,21 @@ class SwatI18NLocale
     /**
      * The number format used by this locale
      *
-     * @var SwatI18NNumberFormat
+     * @var NumberFormat
      */
     protected $number_format;
 
     /**
      * The national currency format used by this locale
      *
-     * @var SwatI18NCurrencyFormat
+     * @var CurrencyFormat
      */
     protected $national_currency_format;
 
     /**
      * The international currency format used by this locale
      *
-     * @var SwatI18NCurrencyFormat
+     * @var CurrencyFormat
      */
     protected $international_currency_format;
 
@@ -68,9 +67,8 @@ class SwatI18NLocale
      * The previous locales indexed by the lc-type constant used to set the
      * locale
      *
-     * This is used by the {@link SwatI18NLocale::set()} and
-     * {@link SwatI18NLocale::reset()} methods to reset the locale back to the
-     * previous value.
+     * This is used by the {@link Locale::set()} and {@link Locale::reset()}
+     * methods to reset the locale back to the previous value.
      *
      * @var array
      */
@@ -82,12 +80,12 @@ class SwatI18NLocale
     /**
      * Cache of existing locale objects
      *
-     * This is an array of SwatI18NLocale objects indexed by the preferred
+     * This is an array of Locale objects indexed by the preferred
      * locale for this operating system.
      *
      * @var array
      *
-     * @see SwatI18NLocale::get()
+     * @see Locale::get()
      */
     private static $locales = array();
 
@@ -105,17 +103,17 @@ class SwatI18NLocale
      *                             may be specified in an array. In this case,
      *                             the first valid locale is used.
      *
-     * @return SwatI18NLocale a locale object for the requested <i>$locale</i>.
+     * @return Locale a locale object for the requested <i>$locale</i>.
      *
-     * @throws SwatException if the specified <i>$locale</i> is not valid for
-     *                       the current operating system.
+     * @throws Exception\Exception if the specified <i>$locale</i> is not valid
+     *         for the current operating system.
      */
     public static function get($locale = null)
     {
         $locale_object = null;
 
         if ($locale === null) {
-            $locale_key = self::setlocale(LC_ALL, '0');
+            $locale_key = self::setlocale(\LC_ALL, '0');
             if (array_key_exists($locale_key, self::$locales)) {
                 $locale_object = self::$locales[$locale_key];
             }
@@ -133,7 +131,7 @@ class SwatI18NLocale
         }
 
         if ($locale_object === null) {
-            $locale_object = new SwatI18NLocale($locale);
+            $locale_object = new Locale($locale);
             if ($locale === null) {
                 $locale_key = $locale_object->__toString();
                 self::$locales[$locale_key] = $locale_object;
@@ -175,16 +173,16 @@ class SwatI18NLocale
         $return = false;
 
         static $categories = array(
-            'LC_COLLATE'  => LC_COLLATE,
-            'LC_CTYPE'    => LC_CTYPE,
-            'LC_MONETARY' => LC_MONETARY,
-            'LC_NUMERIC'  => LC_NUMERIC,
-            'LC_TIME'     => LC_TIME,
-            'LC_MESSAGES' => LC_MESSAGES,
+            'LC_COLLATE'  => \LC_COLLATE,
+            'LC_CTYPE'    => \LC_CTYPE,
+            'LC_MONETARY' => \LC_MONETARY,
+            'LC_NUMERIC'  => \LC_NUMERIC,
+            'LC_TIME'     => \LC_TIME,
+            'LC_MESSAGES' => \LC_MESSAGES,
         );
 
         $parts = explode(';', $locale);
-        if ($category === LC_ALL && count($parts) > 1) {
+        if ($category === \LC_ALL && count($parts) > 1) {
 
             // Handle case when LC_ALL is undefined and we're passing a giant
             // string with all the separate lc-type values.
@@ -216,7 +214,7 @@ class SwatI18NLocale
      *                          system locale. If not specified, defaults to
      *                          LC_ALL.
      */
-    public function set($category = LC_ALL)
+    public function set($category = \LC_ALL)
     {
         $this->old_locale_by_category[$category] =
             self::setlocale($category, '0');
@@ -229,14 +227,14 @@ class SwatI18NLocale
 
     /**
      * Resets the system to the previous locale after a call to
-     * {@link SwatI18NLocale::set()}
+     * {@link Locale::set()}
      *
      * @param integer $category optional. The lc-type constant specifying the
      *                          category of functions affected by resetting
      *                          the system locale. If not specified, defaults
-     *                          to LC_ALL.
+     *                          to \LC_ALL.
      */
-    public function reset($category = LC_ALL)
+    public function reset($category = \LC_ALL)
     {
         self::setlocale($category, $this->old_locale_by_category[$category]);
     }
@@ -280,8 +278,8 @@ class SwatI18NLocale
      * @return string a UTF-8 encoded string containing the formatted monetary
      *                value.
      *
-     * @throws SwatException if a property name specified in the <i>$format</i>
-     *                       parameter is invalid.
+     * @throws Exception\Exception if a property name specified in the
+     *         <i>$format</i> parameter is invalid.
      */
     public function formatCurrency($value, $international = false,
         array $format = array())
@@ -291,7 +289,7 @@ class SwatI18NLocale
             $this->getNationalCurrencyFormat()->override($format);
 
         // default fractional digits to 2 if locale is missing value
-        $fractional_digits = ($format->fractional_digits === CHAR_MAX) ?
+        $fractional_digits = ($format->fractional_digits === \CHAR_MAX) ?
             2 : $format->fractional_digits;
 
         $value = $this->roundToEven($value, $fractional_digits);
@@ -320,15 +318,15 @@ class SwatI18NLocale
         }
 
         // default sign position if locale is missing value
-        if ($sign_position === CHAR_MAX)
+        if ($sign_position === \CHAR_MAX)
             $sign_position = 1;
 
         // default currency symbol position if locale is missing value
-        if ($cs_precedes === CHAR_MAX)
+        if ($cs_precedes === \CHAR_MAX)
             $sign_position = true;
 
         // default separate by space if locale is missing value
-        if ($separate_by_space === CHAR_MAX)
+        if ($separate_by_space === \CHAR_MAX)
             $separate_by_space = false;
 
         // trim spacing character off international currency symbol
@@ -475,8 +473,8 @@ class SwatI18NLocale
      * @return string a UTF-8 encoded string containing the formatted numeric
      *                value.
      *
-     * @throws SwatException if a property name specified in the <i>$format</i>
-     *                       parameter is invalid.
+     * @throws Exception\Exception if a property name specified in the
+     *         <i>$format</i> parameter is invalid.
      */
     public function formatNumber($value, $decimals = null,
         array $format = array())
@@ -621,9 +619,9 @@ class SwatI18NLocale
      * @return integer the numeric value of the parsed string. If the given
      *                 value could not be parsed, null is returned.
      *
-     * @throws SwatIntegerOverflowException if the converted number is too large
-     *         to fit in an integer or if the converted number is too small to
-     *         fit in an integer.
+     * @throws Exception\IntegerOverflowException if the converted number is
+     *         too large to fit in an integer or if the converted number is too
+     *         small to fit in an integer.
      */
     public function parseInteger($string)
     {
@@ -648,15 +646,20 @@ class SwatI18NLocale
         $string = str_replace($search, $replace, $string);
 
         if (is_numeric($string)) {
-            if ($string > (float)PHP_INT_MAX)
-                throw new SwatIntegerOverflowException(
+            if ($string > (float)\PHP_INT_MAX) {
+                throw new Exception\IntegerOverflowException(
                     'Floating point value is too big to be an integer',
-                    null, 1);
+                    null,
+                    1
+                );
+            }
 
-            if ($string < (float)(-PHP_INT_MAX - 1)) {
-                throw new SwatIntegerOverflowException(
+            if ($string < (float)(-\PHP_INT_MAX - 1)) {
+                throw new Exception\IntegerOverflowException(
                     'Floating point value is too small to be an integer',
-                    null, -1);
+                    null,
+                    -1
+                );
             }
 
             $value = intval($string);
@@ -671,9 +674,8 @@ class SwatI18NLocale
     /**
      * Gets the number format for this locale
      *
-     * @return SwatI18NNumberFormat the number format object for this locale.
-     *                              All string properties of the object are
-     *                              UTF-8 encoded.
+     * @return NumberFormat the number format object for this locale. All
+     *                      string properties of the object are UTF-8 encoded.
      */
     public function getNumberFormat()
     {
@@ -686,9 +688,8 @@ class SwatI18NLocale
     /**
      * Gets the national currency format for this locale
      *
-     * @return SwatI18NCurrencyFormat the national currency format for this
-     *                                locale. All string properties of the
-     *                                object are UTF-8 encoded.
+     * @return CurrencyFormat the national currency format for this locale. All
+     *                        string properties of the object are UTF-8 encoded.
      */
     public function getNationalCurrencyFormat()
     {
@@ -701,9 +702,9 @@ class SwatI18NLocale
     /**
      * Gets the international currency format for this locale
      *
-     * @return SwatI18NCurrencyFormat the international currency format for this
-     *                                locale. All string properties of the
-     *                                object are UTF-8 encoded.
+     * @return CurrencyFormat the international currency format for this
+     *                        locale. All string properties of the object are
+     *                        UTF-8 encoded.
      */
     public function getInternationalCurrencyFormat()
     {
@@ -778,13 +779,13 @@ class SwatI18NLocale
 
         if (function_exists('nl_langinfo') && is_callable('nl_langinfo')) {
 
-            $encoding = nl_langinfo(CODESET);
+            $encoding = nl_langinfo(\CODESET);
 
         } else {
 
             // try to detect encoding from locale identifier
             $lc_ctype = null;
-            $lc_all = self::setlocale(LC_ALL, '0');
+            $lc_all = self::setlocale(\LC_ALL, '0');
             $lc_all_exp = explode(';', $lc_all);
             if (count($lc_all_exp) === 1) {
                 $lc_ctype = reset($lc_all_exp);
@@ -860,7 +861,7 @@ class SwatI18NLocale
     {
         $lc = $this->getLocaleInfo();
 
-        $format = new SwatI18NNumberFormat();
+        $format = new NumberFormat();
 
         $format->decimal_separator     = $lc['decimal_point'];
         $format->thousands_separator   = $lc['thousands_sep'];
@@ -879,7 +880,7 @@ class SwatI18NLocale
     {
         $lc = $this->getLocaleInfo();
 
-        $format = new SwatI18NCurrencyFormat();
+        $format = new CurrencyFormat();
 
         $format->fractional_digits     = $lc['frac_digits'];
         $format->p_cs_precedes         = $lc['p_cs_precedes'];
@@ -922,7 +923,7 @@ class SwatI18NLocale
     {
         $lc = $this->getLocaleInfo();
 
-        $format = new SwatI18NCurrencyFormat();
+        $format = new CurrencyFormat();
 
         $format->fractional_digits     = $lc['int_frac_digits'];
         $format->p_cs_precedes         = $lc['p_cs_precedes'];
@@ -954,13 +955,12 @@ class SwatI18NLocale
      * grouping integer-part digits. Grouped digits are separated using the
      * thousands separator character specified by the format object.
      *
-     * @param float                $value  the value to format.
-     * @param SwatI18NNumberFormat $format the number format to use.
+     * @param float        $value  the value to format.
+     * @param NumberFormat $format the number format to use.
      *
      * @return string the grouped integer part of the value.
      */
-    protected function formatIntegerGroupings($value,
-        SwatI18NNumberFormat $format)
+    protected function formatIntegerGroupings($value, NumberFormat $format)
     {
         // group integer part with thousands separators
         $grouping_values = array();
@@ -978,7 +978,7 @@ class SwatI18NLocale
                 if ($grouping === 0) {
                     $grouping = $grouping_previous;
                 // a grouping of CHAR_MAX means no more grouping
-                } elseif ($grouping === CHAR_MAX) {
+                } elseif ($grouping === \CHAR_MAX) {
                     array_push($grouping_values, $grouping_total);
                     break;
                 } else {
@@ -990,8 +990,12 @@ class SwatI18NLocale
 
                 $grouping_total = floor($grouping_total / pow(10, $grouping));
                 if ($grouping_total > 0) {
-                    $grouping_value = str_pad($grouping_value, $grouping, '0',
-                        STR_PAD_LEFT);
+                    $grouping_value = str_pad(
+                        $grouping_value,
+                        $grouping,
+                        '0',
+                        \STR_PAD_LEFT
+                    );
                 }
 
                 array_push($grouping_values, $grouping_value);
@@ -1001,7 +1005,7 @@ class SwatI18NLocale
             $grouping = array_shift($groupings);
 
             // a grouping of CHAR_MAX means no more grouping
-            if ($grouping === CHAR_MAX) {
+            if ($grouping === \CHAR_MAX) {
                 array_push($grouping_values, $grouping_total);
             } else {
                 // a grouping of 0 means use previous grouping
@@ -1021,8 +1025,12 @@ class SwatI18NLocale
                             floor($grouping_total / pow(10, $grouping));
 
                         if ($grouping_total > 0) {
-                            $grouping_value = str_pad($grouping_value,
-                                $grouping, '0', STR_PAD_LEFT);
+                            $grouping_value = str_pad(
+                                $grouping_value,
+                                $grouping,
+                                '0',
+                                \STR_PAD_LEFT
+                            );
                         }
 
                         array_push($grouping_values, $grouping_value);
@@ -1046,13 +1054,12 @@ class SwatI18NLocale
     /**
      * Formats the fractional  part of a value
      *
-     * @param float                $value             the value to format.
-     * @param integer              $fractional_digits the number of fractional
-     *                                                digits to include in the
-     *                                                returned string.
-     * @param SwatI18NNumberFormat $format            the number formatting
-     *                                                object to use to format
-     *                                                the fractional digits.
+     * @param float        $value             the value to format.
+     * @param integer      $fractional_digits the number of fractional digits
+     *                                        to include in the returned string.
+     * @param NumberFormat $format            the number formatting object to
+     *                                        to use to format the fractional
+     *                                        digits.
      *
      * @return string the formatted fractional digits. If the number of
      *                displayed fractional digits is greater than zero, the
@@ -1060,15 +1067,19 @@ class SwatI18NLocale
      *                of the format object.
      */
     protected function formatFractionalPart($value, $fractional_digits,
-        SwatI18NNumberFormat $format)
+        NumberFormat $format)
     {
         if ($fractional_digits === 0) {
             $formatted_value = '';
         } else {
             $frac_part = abs(fmod($value, 1));
             $frac_part = round($frac_part * pow(10, $fractional_digits));
-            $frac_part = str_pad($frac_part, $fractional_digits, '0',
-                STR_PAD_LEFT);
+            $frac_part = str_pad(
+                $frac_part,
+                $fractional_digits,
+                '0',
+                STR_PAD_LEFT
+            );
 
             $formatted_value = $format->decimal_separator.$frac_part;
         }
@@ -1242,7 +1253,7 @@ class SwatI18NLocale
      * Creates a new locale object
      *
      * This constructor is private. Locale objects should be instantiated using
-     * the static {@link SwatI18NLocale::get()} method.
+     * the static {@link Locale::get()} method.
      *
      * @param array|string $locale the locale identifier of this locale object.
      *                             If the locale is not valid for the current
@@ -1252,23 +1263,25 @@ class SwatI18NLocale
      *                             may be specified in an array. In this case,
      *                             the first valid locale is used.
      *
-     * @throws SwatException if the specified <i>$locale</i> is not valid for
-     *                       the current operating system.
+     * @throws Exception\Exception if the specified <i>$locale</i> is not valid
+     *         for the current operating system.
      *
-     * @see SwatI18NLocale::get()
+     * @see Locale::get()
      */
     private function __construct($locale = null)
     {
         $this->locale = $locale;
 
         if ($this->locale === null) {
-            $this->preferred_locale = self::setlocale(LC_ALL, '0');
+            $this->preferred_locale = self::setlocale(\LC_ALL, '0');
         } else {
-            $old_locale = self::setlocale(LC_ALL, '0');
-            $this->preferred_locale = self::setlocale(LC_ALL, $this->locale);
+            $old_locale = self::setlocale(\LC_ALL, '0');
+            $this->preferred_locale = self::setlocale(\LC_ALL, $this->locale);
             if ($this->preferred_locale === false) {
-                throw new SwatException("The locale {$this->locale} is not ".
-                    "valid for this operating system.");
+                throw new Exception\Exception(
+                    "The locale {$this->locale} is not valid for this ".
+                    "operating system."
+                );
             }
         }
 
@@ -1278,7 +1291,7 @@ class SwatI18NLocale
         $this->buildInternationalCurrencyFormat();
 
         if ($this->locale !== null) {
-            self::setlocale(LC_ALL, $old_locale);
+            self::setlocale(\LC_ALL, $old_locale);
         }
     }
 
@@ -1295,9 +1308,9 @@ class SwatI18NLocale
      * @return array a new array with all strings converted to the given
      *               character encoding.
      *
-     * @throws SwatException if any component of the array can not be converted
-     *                       from the <i>$from</i> character encoding to the
-     *                       <i>$to</i> character encoding.
+     * @throws Exception\Exception if any component of the array can not be
+     *         converted from the <i>$from</i> character encoding to the
+     *         <i>$to</i> character encoding.
      */
     private function iconvArray($from, $to, array $array)
     {
@@ -1307,10 +1320,15 @@ class SwatI18NLocale
                     $array[$key] = $this->iconvArray($from, $to, $value);
                 } elseif (is_string($value)) {
                     $output = iconv($from, $to, $value);
-                    if ($output === false)
-                        throw new SwatException(sprintf('Could not convert '.
-                            '%s output to %s', $from, $to));
-
+                    if ($output === false) {
+                        throw new Exception\Exception(
+                            sprintf(
+                                'Could not convert %s output to %s',
+                                $from,
+                                $to
+                            )
+                        );
+                    }
                     $array[$key] = $output;
                 }
             }

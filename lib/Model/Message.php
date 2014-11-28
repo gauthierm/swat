@@ -2,12 +2,14 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Model;
+
 /**
  * A data class to store a message
  *
  * SwatMessage objects are used thoughout Swat. The most noticeable
  * place they are used is for validating entry widgets. See also
- * {@link SwatMessageDisplay}, a control for displaying messages.
+ * {@link UI\MessageDisplay}, a control for displaying messages.
  *
  * A message has primary text, optional secondary text and a type. In order to
  * ease the creation of new messages types, message types are not strictly
@@ -26,7 +28,7 @@
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatMessage
+class Message
 {
     // {{{ public properties
 
@@ -70,7 +72,7 @@ class SwatMessage
     // {{{ public function __construct()
 
     /**
-     * Creates a new SwatMessage
+     * Creates a new message
      *
      * @param string $primary_content the primary text of the message.
      * @param string $type            optional. The type of message. If not

@@ -2,8 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'MDB2.php';
-require_once 'SwatDB/exceptions/SwatDBException.php';
+namespace Silverorange\Swat\Data;
 
 /**
  * A database transaction that is safe to use with database drivers that do
@@ -11,10 +10,10 @@ require_once 'SwatDB/exceptions/SwatDBException.php';
  *
  * Example use:
  * <code>
- * $transaction = new SwatDBTransaction($database);
+ * $transaction = new Transaction($database);
  * try {
- *     SwatDB::query($database, $sql);
- * } catch (SwatDBException $e) {
+ *     DB::query($database, $sql);
+ * } catch (Exception\Exception $e) {
  *     $transaction->rollback();
  *     throw $e;
  * }
@@ -25,14 +24,14 @@ require_once 'SwatDB/exceptions/SwatDBException.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBTransaction
+class Transaction
 {
     // {{{ private properties
 
     /**
      * The database driver object to perform the transaction with
      *
-     * @var MDB2_Driver_Common
+     * @var \MDB2_Driver_Common
      */
     private $db;
 
@@ -63,10 +62,10 @@ class SwatDBTransaction
      * For databases that do not support nested transactions, this method
      * prevents opening a new transaction if we are already in a transaction.
      *
-     * @param MDB2_Driver_Common the database connection to perform the
-     *                           transaction with.
+     * @param \MDB2_Driver_Common the database connection to perform the
+     *                            transaction with.
      */
-    public function __construct(MDB2_Driver_Common $db)
+    public function __construct(\MDB2_Driver_Common $db)
     {
         $this->db = $db;
         $this->in_another_transaction = ($this->db->in_transaction);
@@ -87,13 +86,14 @@ class SwatDBTransaction
     public function commit()
     {
         if ($this->finished) {
-            throw new SwatDBException('Transaction objects cannot be reused. '.
-                'Create a new SwatDBTransaction object to begin a new '.
-                'transaction.');
+            throw new Exception\Exception(
+                'Transaction objects cannot be reused. Create a new '.
+                'Transaction object to begin a new transaction.'
+            );
         } else {
-            if (!$this->in_another_transaction)
+            if (!$this->in_another_transaction) {
                 $this->db->commit();
-
+            }
             $this->finished = true;
         }
     }
@@ -111,13 +111,14 @@ class SwatDBTransaction
     public function rollback()
     {
         if ($this->finished) {
-            throw new SwatDBException('Transaction objects cannot be reused. '.
-                'Create a new SwatDBTransaction object to begin a new '.
-                'transaction.');
+            throw new Exception\Exception(
+                'Transaction objects cannot be reused. Create a new '.
+                'Transaction object to begin a new transaction.'
+            );
         } else {
-            if (!$this->in_another_transaction)
+            if (!$this->in_another_transaction) {
                 $this->db->rollback();
-
+            }
             $this->finished = true;
         }
     }

@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Model;
+
 /**
  * A simple class for storing options used in various Swat controls
  *
@@ -9,7 +11,7 @@
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatOption
+class Option
 {
     // {{{ public properties
 

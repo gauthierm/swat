@@ -2,7 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\I18N;
+
+use Silverorange\Swat\Exception;
 
 /**
  * Information for formatting numeric values
@@ -13,7 +15,7 @@ require_once 'Swat/exceptions/SwatException.php';
  * @see       SwatLocale::formatNumber()
  * @see       SwatLocale::getNumberFormat()
  */
-class SwatI18NNumberFormat
+class NumberFormat
 {
     // {{{ public properties
 
@@ -60,11 +62,11 @@ class SwatI18NNumberFormat
      * @param array $format the format information with which to override thss
      *                      format.
      *
-     * @return SwatI18NNumberFormat a copy of this number format with the
-     *                              specified properties set to the new values.
+     * @return NumberFormat a copy of this number format with the specified
+     *                      properties set to the new values.
      *
-     * @throws SwatException if any of the array keys do not match a formatting
-     *                       property of this property.
+     * @throws Exception\Exception if any of the array keys do not match a
+     *         formatting property of this property.
      */
     public function override(array $format)
     {
@@ -72,9 +74,10 @@ class SwatI18NNumberFormat
 
         foreach ($format as $key => $value) {
             if (!array_key_exists($key, $vars)) {
-                throw new SwatException("Number formatting information ".
-                    "contains invalid property {$key} and cannot override ".
-                    "this number format.");
+                throw new Exception\Exception(
+                    "Number formatting information contains invalid ".
+                    "property {$key} and cannot override this number format."
+                );
             }
         }
 

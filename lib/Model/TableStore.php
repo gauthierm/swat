@@ -2,19 +2,19 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTableModel.php';
+namespace Silverorange\Swat\Model;
 
 /**
- * A data structure that can be used with the SwatTableView
+ * A data structure that can be used with the UI\TableView
  *
  * A new table store is empty by default. Use the
- * {@link SwatTableStore::add()} method to add rows to a table store.
+ * {@link TableStore::add()} method to add rows to a table store.
  *
  * @package   Swat
  * @copyright 2004-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableStore implements SwatTableModel
+class TableStore implements TableModel
 {
     // {{{ private properties
 
@@ -38,7 +38,7 @@ class SwatTableStore implements SwatTableModel
     /**
      * Gets the number of rows
      *
-     * This satisfies the Countable interface.
+     * This satisfies the \Countable interface.
      *
      * @return integer the number of rows in this data structure.
      */
@@ -53,7 +53,7 @@ class SwatTableStore implements SwatTableModel
     /**
      * Returns the current element
      *
-     * @return mixed the current element.
+     * @return \stdClass the current element.
      */
     public function current()
     {
@@ -126,7 +126,7 @@ class SwatTableStore implements SwatTableModel
     /**
      * Adds a row to this data structure
      *
-     * @param $data the data of the row to add.
+     * @param \stdClass $data the data of the row to add.
      */
     public function add($data)
     {
@@ -139,7 +139,7 @@ class SwatTableStore implements SwatTableModel
     /**
      * Adds a row to the beginning of this data structure
      *
-     * @param $data the data of the row to add.
+     * @param \stdClass $data the data of the row to add.
      */
     public function addToStart($data)
     {

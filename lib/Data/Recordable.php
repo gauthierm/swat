@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Data;
+
 /**
  * Interface for data-bound objects that are recordable (saveable and loadable)
  *
@@ -9,21 +11,21 @@
  * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-interface SwatDBRecordable
+interface Recordable
 {
     // {{{ public function setDatabase()
 
     /**
      * Sets the database driver to use for this object
      *
-     * @param MDB2_Driver_Common $db  the database driver to use for this
-     *                                object.
-     * @param array              $set optional array of objects passed through
-     *                                recursive call containing all objects that
-     *                                have been set already. Prevents infinite
-     *                                recursion.
+     * @param \MDB2_Driver_Common $db  the database driver to use for this
+     *                                 object.
+     * @param array               $set optional array of objects passed through
+     *                                 recursive call containing all objects
+     *                                 that have been set already. Prevents
+     *                                 infinite recursion.
      */
-    public function setDatabase(MDB2_Driver_Common $db, array $set = array());
+    public function setDatabase(\MDB2_Driver_Common $db, array $set = array());
 
     // }}}
     // {{{ public function save()

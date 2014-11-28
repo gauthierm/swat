@@ -1,5 +1,9 @@
 <?php
 
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+namespace Silverorange\Swat\Data;
+
 /**
  * A single object to represent a database query range
  *
@@ -8,7 +12,7 @@
  * intended that this object be used with MDB2 as follows:
  *
  * <code>
- * $range = $my_object->getRange(); // assigns a SwatDBRange
+ * $range = $my_object->getRange(); // assigns a Range
  * $db->setLimit($range->getLimit(), $range->getOffset());
  * </code>
  *
@@ -16,7 +20,7 @@
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBRange
+class Range
 {
     // {{{ private properties
 
@@ -25,7 +29,7 @@ class SwatDBRange
      *
      * @var integer
      *
-     * @see SwatDBRange::getLimit()
+     * @see Range::getLimit()
      */
     private $limit;
 
@@ -34,7 +38,7 @@ class SwatDBRange
      *
      * @var integer
      *
-     * @see SwatDBRange::getOffset()
+     * @see Range::getOffset()
      */
     private $offset;
 
@@ -109,11 +113,11 @@ class SwatDBRange
      * ..|=====================| combined range
      * </pre>
      *
-     * @param SwatDBRange $range the range to combine with this range.
+     * @param Range $range the range to combine with this range.
      *
-     * @return SwatDBRange the combined range.
+     * @return Range the combined range.
      */
-    public function combine(SwatDBRange $range)
+    public function combine(Range $range)
     {
         // find leftmost extent
         $offset = min($this->getOffset(), $range->getOffset());
@@ -128,7 +132,7 @@ class SwatDBRange
             $limit = max($this_limit, $range_limit) - $offset;
         }
 
-        return new SwatDBRange($limit, $offset);
+        return new Range($limit, $offset);
     }
 
     // }}}

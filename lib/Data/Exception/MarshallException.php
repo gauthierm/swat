@@ -1,8 +1,8 @@
 <?php
 
-require_once 'SwatDB/exceptions/SwatDBException.php';
-
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+namespace Silverorange\Swat\Data\Exception;
 
 /**
  * Thrown when a property that can not be marshalled is asked to be
@@ -12,7 +12,7 @@ require_once 'SwatDB/exceptions/SwatDBException.php';
  * @copyright 2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBMarshallException extends SwatDBException
+class MarshallException extends Exception
 {
     // {{{ protected properties
 

@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Model;
+
 /**
  * A mapping of a data field to property of a cell renderer.
  *
@@ -9,7 +11,7 @@
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCellRendererMapping
+class CellRendererMapping
 {
     // {{{ public properties
 

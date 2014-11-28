@@ -2,23 +2,17 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTableModel.php';
-require_once 'SwatDB/SwatDBTransaction.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDBRecordable.php';
-require_once 'SwatDB/SwatDBMarshallable.php';
-require_once 'SwatDB/SwatDBFlushable.php';
-require_once 'SwatDB/exceptions/SwatDBException.php';
-require_once 'SwatDB/exceptions/SwatDBNoDatabaseException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/exceptions/SwatInvalidTypeException.php';
+namespace Silverorange\Swat\Data;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Exception as SwatException;
 
 /**
  * MDB2 recordset wrapper
  *
  * Used to wrap an MDB2 recordset into a traversable collection of record
- * objects. Implements SwatTableModel so it can be used directly as a data
- * model for a recordset view. See {@link SwatView}.
+ * objects. Implements Model\TableModel so it can be used directly as a data
+ * model for a recordset view. See {@link UI\View}.
  *
  * Recordsets are iterable and accessible using array access notation. One
  * important point about recordsets is that <strong>iteration will always visit
@@ -32,8 +26,8 @@ require_once 'Swat/exceptions/SwatInvalidTypeException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
-    SwatTableModel, SwatDBRecordable, SwatDBMarshallable, SwatDBFlushable
+abstract class Recordset implements \Serializable, \ArrayAccess,
+    Model\TableModel, Recordable, Marshallable, Flushable
 {
     // {{{ protected properties
 
@@ -57,16 +51,16 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * The database driver to use for this recordset
      *
-     * @var MDB2_Driver_Common
+     * @var \MDB2_Driver_Common
      *
-     * @see SwatDBRecordsetWrapper::setDatabase()
+     * @see Recordset::setDatabase()
      */
     protected $db;
 
     /**
      * @var array
      *
-     * @see SwatDBRecordsetWrapper::setOptions()
+     * @see Recordset::setOptions()
      */
     protected $options = array();
 
@@ -118,18 +112,18 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Creates a new recordset wrapper
      *
-     * @param MDB2_Result_Common $rs      optional. The MDB2 result set to
-     *                                    wrap.
-     * @param array              $options optional. An array of options for
-     *                                    this recordset.
+     * @param \MDB2_Result_Common $rs      optional. The MDB2 result set to
+     *                                     wrap.
+     * @param array               $options optional. An array of options for
+     *                                     this recordset.
      */
-    public function __construct(MDB2_Result_Common $rs = null,
+    public function __construct(\MDB2_Result_Common $rs = null,
         array $options = array())
     {
         $this->init();
         $this->setOptions($options);
 
-        if ($rs instanceof MDB2_Result_Common) {
+        if ($rs instanceof \MDB2_Result_Common) {
             $this->initializeFromResultSet($rs);
         }
     }
@@ -137,10 +131,10 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     // }}}
     // {{{ public function initializeFromResultSet()
 
-    public function initializeFromResultSet(MDB2_Result_Common $rs)
+    public function initializeFromResultSet(\MDB2_Result_Common $rs)
     {
-        if (MDB2::isError($rs)) {
-            throw new SwatDBException($rs->getMessage());
+        if (\MDB2::isError($rs)) {
+            throw new Exception\Exception($rs->getMessage());
         }
 
         $this->objects = array();
@@ -149,10 +143,10 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         $this->setDatabase($rs->db);
 
         do {
-            while ($row = $rs->fetchRow(MDB2_FETCHMODE_OBJECT)) {
+            while ($row = $rs->fetchRow(\MDB2_FETCHMODE_OBJECT)) {
                 $object = $this->instantiateRowWrapperObject($row);
 
-                if ($object instanceof SwatDBRecordable) {
+                if ($object instanceof Recordable) {
                     $object->setDatabase($rs->db);
                 }
 
@@ -173,9 +167,9 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Duplicates this record set wrapper
      *
-     * @return SwatDBRecordsetWrapper a duplicate of this object.
+     * @return Recordset a duplicate of this object.
      *
-     * @see SwatDBDataobject::duplicate()
+     * @see Record::duplicate()
      */
     public function duplicate()
     {
@@ -211,7 +205,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      * @param mixed        $value   optional. If <kbd>$options</kbd> was passed
      *                              as a string, this is the option value.
      *
-     * @return SwatDBRecordsetWrapper the current object for fluent interface.
+     * @return Recordset the current object for fluent interface.
      */
     public function setOptions($options, $value = null)
     {
@@ -221,7 +215,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         }
 
         if (!is_array($options)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The $options parameter must either be an array or a string '.
                 'containing the option name.'
             );
@@ -266,7 +260,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Creates a new empty copy of this recordset wrapper
      *
-     * @return SwatDBRecordsetWrapper a new empty copy of this wrapper.
+     * @return Recordset a new empty copy of this wrapper.
      */
     public function copyEmpty()
     {
@@ -286,13 +280,13 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Creates a new dataobject
      *
-     * @param stdClass $row the data row to use.
+     * @param \stdClass $row the data row to use.
      *
      * @return mixed the instantiated data object or the original object if
      *               no <i>$row_wrapper_class</i> is defined for this
      *               recordset wrapper.
      */
-    protected function instantiateRowWrapperObject($row)
+    protected function instantiateRowWrapperObject(\stdClass $row)
     {
         if ($this->row_wrapper_class === null) {
             $object = $row;
@@ -312,13 +306,12 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Initializes this recordset wrapper
      *
-     * Subclasses are encouraged to specify a SwatDBDataObject subclass as this
-     * recordset's row wrapper class. See
-     * {@link SwatDBRecordsetWrapper::$row_wrapper_class}.
+     * Subclasses are encouraged to specify a Record subclass as this
+     * recordset's row wrapper class. See {@link Recordset::$row_wrapper_class}.
      *
      * Subclasses are also encoraged to specify an index field here. This
      * enables lookup of records in this recordset by the index field value.
-     * See {@link SwatDBRecordsetWrapper::$index_field}.
+     * See {@link Recordset::$index_field}.
      *
      * Other initialization may be performed here. This method is the first
      * thing called in the constructor.
@@ -332,10 +325,15 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
 
     protected function checkDB()
     {
-        if ($this->db === null)
-            throw new SwatDBNoDatabaseException(
-                sprintf('No database available to this wrapper (%s). '.
-                    'Call the setDatabase method.', get_class($this)));
+        if ($this->db === null) {
+            throw new Exception\NoDatabaseException(
+                sprintf(
+                    'No database available to this wrapper (%s). '.
+                    'Call the setDatabase method.',
+                    get_class($this)
+                )
+            );
+        }
     }
 
     // }}}
@@ -372,17 +370,21 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      *                      an index value. Otherwise, the offset is an
      *                      ordinal value.
      *
-     * @return SwatDBDataObject the record at the specified offset.
+     * @return Record the record at the specified offset.
      *
-     * @throws OutOfBoundsException if no record exists at the specified offset
-     *                              in this recordset.
+     * @throws \OutOfBoundsException if no record exists at the specified offset
+     *         in this recordset.
      */
     public function offsetGet($offset)
     {
-        if (!isset($this[$offset]))
-            throw new OutOfBoundsException(sprintf(
-                'Index %s is out of bounds.',
-                $offset));
+        if (!isset($this[$offset])) {
+            throw new \ OutOfBoundsException(
+                sprintf(
+                    'Index %s is out of bounds.',
+                    $offset
+                )
+            );
+        }
 
         if ($this->index_field === null)
             return $this->objects[$offset];
@@ -403,23 +405,25 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      *                      will be added at the end of this recordset.
      * @param mixed $value  the record to add.
      *
-     * @throws UnexpectedValueException if this recordset has a defined row
-     *                                  wrapper class and the specified value
-     *                                  is not an instance of the row wrapper
-     *                                  class.
+     * @throws \UnexpectedValueException if this recordset has a defined row
+     *         wrapper class and the specified value is not an instance of the
+     *         row wrapper class.
      *
-     * @throws OutOfBoundsException if the specified offset does not exist in
-     *                              this recordset. Records can only be added
-     *                              to the end of the recordset or replace
-     *                              existing records in this recordset.
+     * @throws \OutOfBoundsException if the specified offset does not exist in
+     *         this recordset. Records can only be added to the end of the
+     *         recordset or replace existing records in this recordset.
      */
     public function offsetSet($offset, $value)
     {
         if ($this->row_wrapper_class !== null &&
-            !($value instanceof $this->row_wrapper_class))
-            throw new UnexpectedValueException(sprintf(
-                'Value should be an instance of %s.',
-                $this->row_wrapper_class));
+            !($value instanceof $this->row_wrapper_class)) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'Value should be an instance of %s.',
+                    $this->row_wrapper_class
+                )
+            );
+        }
 
         // add
         if ($offset === null) {
@@ -438,10 +442,14 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
 
         // replace at offset
         } else {
-            if (!isset($this[$offset]))
-                throw new OutOfBoundsException(sprintf(
-                    'No record to replace exists at offset %s.',
-                    $offset));
+            if (!isset($this[$offset])) {
+                throw new \OutOfBoundsException(
+                    sprintf(
+                        'No record to replace exists at offset %s.',
+                        $offset
+                    )
+                );
+            }
 
             if ($this->index_field === null) {
                 $this->removed_objects[] = $this->objects[$offset];
@@ -463,8 +471,9 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         }
 
         // only set the db on added object if it is set for this recordset
-        if ($this->db !== null && $value instanceof SwatDBRecordable)
+        if ($this->db !== null && $value instanceof Recordable) {
             $value->setDatabase($this->db);
+        }
 
         // Remove object from removed list if it was on list of removed
         // objects. This step needs to happen after adding the new record
@@ -603,7 +612,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Gets the number of records in this recordset
      *
-     * This satisfies the Countable interface.
+     * This satisfies the \Countable interface.
      *
      * @return integer the number of records in this recordset.
      */
@@ -666,7 +675,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         $data['objects'] = array();
 
         foreach ($this->objects as $object) {
-            if ($object instanceof SwatDBMarshallable) {
+            if ($object instanceof Marshallable) {
                 $object_data = $object->marshall($tree);
                 $data['objects'][] = $object_data;
             }
@@ -696,7 +705,8 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
 
         $this->objects = array();
         $this->objects_by_index = array();
-        if (is_subclass_of($this->row_wrapper_class, 'SwatDBMarshallable')) {
+        $marshallable = 'Silverorange\Swat\Data\Marshallable';
+        if (is_subclass_of($this->row_wrapper_class, $marshallable)) {
             if (isset($data['objects'])) {
                 foreach ($data['objects'] as $object_data) {
                     $object = new $this->row_wrapper_class();
@@ -723,10 +733,10 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      *
      * @return array an array of values.
      *
-     * @throws SwatDBException if records in this recordset do not have an
-     *                         internal value with the specified <i>$name</i>.
+     * @throws Exception\Exception if records in this recordset do not have an
+     *         internal value with the specified <i>$name</i>.
      *
-     * @see SwatDBDataObject::getInternalValue()
+     * @see Record::getInternalValue()
      */
     public function getInternalValues($name)
     {
@@ -734,9 +744,10 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
 
         if (count($this) > 0) {
             if (!$this->getFirst()->hasInternalValue($name)) {
-                throw new SwatDBException(
+                throw new Exception\Exception(
                     "Records in this recordset do not contain an internal ".
-                    "field named '{$name}'.");
+                    "field named '{$name}'."
+                );
             }
 
             foreach ($this->objects as $object)
@@ -758,22 +769,22 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      * This is usually the case when there is a foreign key constraint in the
      * database table for the objects in this recordset.
      *
-     * @param string             $name    name of the internal property to load.
-     * @param MDB2_Driver_Common $db      database connection object.
-     * @param string             $sql     SQL to execute with placeholder for
-     *                                    the set of internal property values.
-     *                                    For example: <code>select * from Foo
-     *                                    where id in (%s)</code>.
-     * @param string             $wrapper the class name of the recordset
-     *                                    wrapper to use for the sub-data-
-     *                                    objects.
-     * @param string             $type    optional. The MDB2 data type of the
-     *                                    internal property values. If not
-     *                                    specified, 'integer' is used.
+     * @param string              $name    name of the internal property to load.
+     * @param \MDB2_Driver_Common $db      database connection object.
+     * @param string              $sql     SQL to execute with placeholder for
+     *                                     the set of internal property values.
+     *                                     For example: <code>select * from Foo
+     *                                     where id in (%s)</code>.
+     * @param string              $wrapper the class name of the recordset
+     *                                     wrapper to use for the sub-data-
+     *                                     objects.
+     * @param string              $type    optional. The MDB2 data type of the
+     *                                     internal property values. If not
+     *                                     specified, 'integer' is used.
      *
-     * @return SwatDBRecordsetWrapper an instance of the wrapper, or null.
+     * @return Recordset an instance of the wrapper, or null.
      */
-    public function loadAllSubDataObjects($name, MDB2_Driver_Common $db, $sql,
+    public function loadAllSubDataObjects($name, \MDB2_Driver_Common $db, $sql,
         $wrapper, $type = 'integer')
     {
         $sub_data_objects = null;
@@ -790,7 +801,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
             $quoted_values = $this->db->datatype->implodeArray($values, $type);
 
             $sql = sprintf($sql, $quoted_values);
-            $sub_data_objects = SwatDB::query($db, $sql, $wrapper);
+            $sub_data_objects = DB::query($db, $sql, $wrapper);
             $this->attachSubDataObjects($name, $sub_data_objects);
         }
 
@@ -804,19 +815,21 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      * Attach existing sub-dataobjects for an internal property of the
      * dataobjects in this recordset
      *
-     * @param string                 $name             name of the property to
-     *                                                 attach to.
-     * @param SwatDBRecordsetWrapper $sub_data_objects
+     * @param string    $name             name of the property to
+     *                                    attach to.
+     * @param Recordset $sub_data_objects
      */
-    public function attachSubDataObjects($name,
-        SwatDBRecordsetWrapper $sub_data_objects)
+    public function attachSubDataObjects($name, Recordset $sub_data_objects)
     {
         if ($sub_data_objects->index_field === null) {
-            throw new SwatDBException(sprintf(
-                'Index field must be specified in the sub-data-object '.
-                'recordset wrapper class (%s::init()) '.
-                'in order to attach recordset as sub-dataobjects.',
-                get_class($sub_data_objects)));
+            throw new Exception\Exception(
+                sprintf(
+                    'Index field must be specified in the sub-data-object '.
+                    'recordset wrapper class (%s::init()) '.
+                    'in order to attach recordset as sub-dataobjects.',
+                    get_class($sub_data_objects)
+                )
+            );
         }
 
         foreach ($this->objects as $object) {
@@ -854,10 +867,10 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      *                                  large text fields or a lot of fields
      *                                  that aren't used in this context.
      *
-     * @return SwatDBRecordsetWrapper a wrapper of the sub-recordsets, or null.
+     * @return Recordset a wrapper of the sub-recordsets, or null.
      *
-     * @throws SwatDBException if this recordset does not define an index
-     *                         field.
+     * @throws Exception\Exception if this recordset does not define an index
+     *         field.
      */
     public function loadAllSubRecordsets($name, $wrapper,
         $table, $binding_field, $where = '', $order_by = '',
@@ -866,14 +879,17 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         $this->checkDB();
 
         if ($this->index_field === null) {
-            throw new SwatDBException(sprintf(
-                'Index field must be specified in the recordset wrapper '.
-                'class (%s::init()) in order to attach sub-recordsets.',
-                get_class($this)));
+            throw new Exception\Exception(
+                sprintf(
+                    'Index field must be specified in the recordset wrapper '.
+                    'class (%s::init()) in order to attach sub-recordsets.',
+                    get_class($this)
+                )
+            );
         }
 
         // default binding field type is integer
-        $binding_field = new SwatDBField($binding_field, 'integer');
+        $binding_field = new Field($binding_field, 'integer');
 
         // return empty recordset if this is an empty recordset
         if (count($this) === 0) {
@@ -909,7 +925,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         }
 
         // get all records
-        $recordset = SwatDB::query($this->db, $sql, $wrapper);
+        $recordset = DB::query($this->db, $sql, $wrapper);
 
         return $this->attachSubRecordset(
             $name,
@@ -925,33 +941,29 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Efficiently loads sub-recordsets for records in this recordset
      *
-     * @param string                 $name          the name of the sub-
-     *                                              recordset.
-     * @param string                 $wrapper       the name of the recordset
-     *                                              wrapper class to use for
-     *                                              the sub-recordsets.
-     * @param string                 $binding_field the name of the binding
-     *                                              field in the table
-     *                                              containing sub-records.
-     *                                              This should be a field that
-     *                                              contains index values from
-     *                                              this recordset (i.e., a
-     *                                              foreign key).
-     * @param SwatDBRecordsetWrapper $recordset     the recordset to attach.
+     * @param string    $name          the name of the sub-recordset.
+     * @param string    $wrapper       the name of the recordset wrapper class
+     *                                 to use for the sub-recordsets.
+     * @param string    $binding_field the name of the binding field in the
+     *                                 table containing sub-records. This
+     *                                 should be a field that contains index
+     *                                 values from this recordset (i.e., a
+     *                                 foreign key).
+     * @param Recordset $recordset     the recordset to attach.
      *
-     * @return SwatDBRecordsetWrapper a wrapper of the sub-recordsets, or null.
+     * @return Recordset a wrapper of the sub-recordsets, or null.
      *
-     * @throws SwatDBException if this recordset does not define an index
-     *                         field.
+     * @throws Exception\Exception if this recordset does not define an index
+     *         field.
      */
     public function attachSubRecordset($name, $wrapper, $binding_field,
-        SwatDBRecordsetWrapper $recordset)
+        Recordset $recordset)
     {
         $this->checkDB();
 
         // assign empty recordsets for all records in this set
         foreach ($this as $record) {
-            if ($wrapper instanceof SwatDBRecordsetWrapper) {
+            if ($wrapper instanceof Recordset) {
                 $empty_recordset = $wrapper->copyEmpty();
             } else {
                 $empty_recordset = new $wrapper(null);
@@ -995,12 +1007,14 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     public function getIndexes()
     {
         if ($this->index_field === null) {
-            throw new SwatDBException(sprintf(
-                'Index field must be specified in the recordset wrapper '.
-                'class (%s::init()) in order to get the record indexes.',
-                get_class($this)));
+            throw new Exception\Exception(
+                sprintf(
+                    'Index field must be specified in the recordset wrapper '.
+                    'class (%s::init()) in order to get the record indexes.',
+                    get_class($this)
+                )
+            );
         }
-
         return array_keys($this->objects_by_index);
     }
 
@@ -1095,11 +1109,11 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      * $set[] = $new_record;
      * </code>
      *
-     * @param SwatDBDataObject $object the object to add. If this recordset has
-     *                                 a row wrapper class defined, the object
-     *                                 must be an instance of that class.
+     * @param Record $object the object to add. If this recordset has a row
+     *                       wrapper class defined, the object must be an
+     *                       instance of that class.
      */
-    public function add(SwatDBDataObject $object)
+    public function add(Record $object)
     {
         $this[] = $object;
     }
@@ -1110,9 +1124,9 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     /**
      * Removes a record from this recordset
      *
-     * @param SwatDBDataObject $remove_object the record to remove.
+     * @param Record $remove_object the record to remove.
      */
-    public function remove(SwatDBDataObject $remove_object)
+    public function remove(Record $remove_object)
     {
         if (in_array($remove_object, $this->objects, true)) {
             $this->removed_objects[] = $remove_object;
@@ -1204,14 +1218,14 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      * The database is automatically set for all recordable records of this
      * recordset.
      *
-     * @param MDB2_Driver_Common $db  the database driver to use for this
-     *                                recordset.
-     * @param array              $set optional array of objects passed through
-     *                                recursive call containing all objects that
-     *                                have been set already. Prevents infinite
-     *                                recursion.
+     * @param \MDB2_Driver_Common $db  the database driver to use for this
+     *                                 recordset.
+     * @param array               $set optional array of objects passed through
+     *                                 recursive call containing all objects
+     *                                 that have been set already. Prevents
+     *                                 infinite recursion.
      */
-    public function setDatabase(MDB2_Driver_Common $db, array $set = array())
+    public function setDatabase(\MDB2_Driver_Common $db, array $set = array())
     {
         $key = spl_object_hash($this);
 
@@ -1224,7 +1238,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
         $set[$key] = true;
 
         foreach ($this->objects as $object) {
-            if ($object instanceof SwatDBRecordable) {
+            if ($object instanceof Recordable) {
                 $object->setDatabase($db, $set);
             }
         }
@@ -1248,7 +1262,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
     public function save()
     {
         $this->checkDB();
-        $transaction = new SwatDBTransaction($this->db);
+        $transaction = new Transaction($this->db);
         try {
             foreach ($this->removed_objects as $object) {
                 $object->setDatabase($this->db);
@@ -1261,7 +1275,7 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
             }
 
             $transaction->commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $transaction->rollback();
             throw $e;
         }
@@ -1288,27 +1302,32 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      *                 or more records could not be loaded. If any records
      *                 fail to load, the recordset state remains unchanged.
      *
-     * @throws SwatInvalidTypeException if the <i>$object_indexes</i> property
-     *                                  is not an array.
+     * @throws SwatException\InvalidTypeException if the <i>$object_indexes</i>
+     *         property is not an array.
      *
-     * @throws SwatInvalidClassException if this recordset's
-     *                                   {@link SwatDBRecordsetWrapper::$row_wrapper_class}
-     *                                   is not an instance of
-     *                                   {@link SwatDBRecordable}.
+     * @throws SwatException\InvalidClassException if this recordset's
+     *         {@link Recordset::$row_wrapper_class} is not an instance of
+     *         {@link Recordable}.
      */
     public function load($object_indexes)
     {
-        if (!is_array($object_indexes))
-            throw new SwatInvalidTypeException(
+        if (!is_array($object_indexes)) {
+            throw new SwatException\InvalidTypeException(
                 'The $object_indexes property must be an array.',
-                0, $object_indexes);
+                0,
+                $object_indexes
+            );
+        }
 
         $interfaces = class_implements($this->row_wrapper_class);
-        if (!in_array('SwatDBRecordable', $interfaces)) {
-            throw new SwatInvalidClassException(
+        if (!in_array('Silverorange\Swat\Data\Recordable', $interfaces)) {
+            throw new SwatException\InvalidClassException(
                 'The recordset must define a row wrapper class that is an '.
-                'instance of SwatDBRecordable for recordset loading to work.',
-                0, $this->row_wrapper_class);
+                'instance of Silverorange\Swat\Data\Recordable for recordset '.
+                'loading to work.',
+                0,
+                $this->row_wrapper_class
+            );
         }
 
         $success = true;
@@ -1392,13 +1411,13 @@ abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
      * Using a flushable cache allows clearing the cache when the records
      * are modified or deleted.
      *
-     * @param SwatDBCacheNsFlushable $cache The flushable cache to use for
-     *                                      this dataobject.
+     * @param CacheNsFlushable $cache The flushable cache to use for this
+     *                                recordset.
      */
-    public function setFlushableCache(SwatDBCacheNsFlushable $cache)
+    public function setFlushableCache(CacheNsFlushable $cache)
     {
         foreach ($this->objects as $object) {
-            if ($object instanceof SwatDBFlushable) {
+            if ($object instanceof Flushable) {
                 $object->setFlushableCache($cache);
             }
         }

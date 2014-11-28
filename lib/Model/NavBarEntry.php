@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Model;
+
 /**
  * Entry for the navbar navigation tool
  *
@@ -9,9 +11,9 @@
  * @copyright 2005-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatNavBar
+ * @see UI\NavBar
  */
-class SwatNavBarEntry
+class NavBarEntry
 {
     // {{{ public properties
 

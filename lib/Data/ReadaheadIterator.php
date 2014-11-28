@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Data;
+
 /**
  * Readahead iterator
  *
@@ -24,7 +26,7 @@
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBReadaheadIterator
+class ReadaheadIterator
 {
     // {{{ private properties
 
@@ -55,11 +57,11 @@ class SwatDBReadaheadIterator
     /**
      * Creates a new readahead iterator
      *
-     * @param array|Iterator either an array or Iterator object to use for
-     *                       readahead iteration.
+     * @param array|\Iterator either an array or \Iterator object to use for
+     *                        readahead iteration.
      *
-     * @throws InvalidArgumentException if the <i>$iterator</i> is not an array
-     *                                  or an Iterator.
+     * @throws \InvalidArgumentException if the <i>$iterator</i> is not an array
+     *         or an Iterator.
      */
     public function __construct($iterator)
     {
@@ -67,9 +69,10 @@ class SwatDBReadaheadIterator
             $iterator = new ArrayIterator($iterator);
         }
 
-        if (!($iterator instanceof Iterator)) {
+        if (!$iterator instanceof \Iterator) {
             throw new InvalidArgumentException(
-                '$iterator must be either an array or an Iterator.');
+                '$iterator must be either an array or an \Iterator.'
+            );
         }
 
         $this->iterator = $iterator;
@@ -100,7 +103,7 @@ class SwatDBReadaheadIterator
      * @return mixed the key of the current item. If the iterator contains no
      *               items this will return null.
      *
-     * @see SwatDBReadaheadIterator::getCurrent()
+     * @see ReadaheadIterator::getCurrent()
      */
     public function getKey()
     {
@@ -116,7 +119,7 @@ class SwatDBReadaheadIterator
      * @return mixed the next item in the iterator. If there is no next item,
      *               null is returned. This may or may not mean the current
      *               item is the last item. Use
-     *               {@link SwatDBReadaheadIterator::isLast()} to check if
+     *               {@link ReadaheadIterator::isLast()} to check if
      *               the current item is the last item.
      */
     public function getNext()
@@ -133,7 +136,7 @@ class SwatDBReadaheadIterator
      * @return mixed the key of the next item in the iterator. If there is no
      *               next item, null is returned.
      *
-     * @see SwatDBReadaheadIterator::getNext();
+     * @see ReadaheadIterator::getNext();
      */
     public function getNextKey()
     {

@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Data;
+
 /**
  * Interface that supports flushing cache name-spaces
  *
@@ -9,7 +11,7 @@
  * @copyright 2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-interface SwatDBCacheNsFlushable
+interface CacheNsFlushable
 {
     // {{{ public function flushNs()
 

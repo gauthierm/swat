@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'SwatDB/SwatDBRecordsetWrapper.php';
+namespace Silverorange\Swat\Data;
 
 /**
  * MDB2 Recordset Wrapper
@@ -13,7 +13,7 @@ require_once 'SwatDB/SwatDBRecordsetWrapper.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBDefaultRecordsetWrapper extends SwatDBRecordsetWrapper
+class DefaultRecordset extends Recordset
 {
     // {{{ public function __construct()
 

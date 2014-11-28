@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'SwatI18N/SwatI18NNumberFormat.php';
+namespace Silverorange\Swat\I18N;
 
 /**
  * Information for formatting currency values
@@ -10,10 +10,10 @@ require_once 'SwatI18N/SwatI18NNumberFormat.php';
  * @package   SwatI18N
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatLocale::formatCurrency()
- * @see       SwatLocale::getCurrencyFormat()
+ * @see       Locale::formatCurrency()
+ * @see       Locale::getCurrencyFormat()
  */
-class SwatI18NCurrencyFormat extends SwatI18NNumberFormat
+class CurrencyFormat extends NumberFormat
 {
     // {{{ public properties
 

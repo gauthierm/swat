@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Model;
+
 /**
  * Interface for controls that can store and restore their state.
  *
@@ -9,7 +11,7 @@
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-interface SwatState
+interface State
 {
     // {{{ public function setState()
 
@@ -32,7 +34,7 @@ interface SwatState
      * Get the state of the control
      *
      * Used to remember the current state of the control. For example,
-     * {@link SwatEntry} implements this method to return its $value property,
+     * {@link UI\Entry} implements this method to return its $value property,
      * but can return any variable type, including array, that represents the
      * control's current state. Sub-classes should override and implement this
      * method to store their state.

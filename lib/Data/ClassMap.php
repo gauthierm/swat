@@ -1,7 +1,10 @@
 <?php
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+namespace Silverorange\Swat\Data;
+
+use Silverorange\Swat\Exception;
 
 /**
  * Maps class names to overridden class names
@@ -10,14 +13,14 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
  *
  * This class also attempts to require class-definition files for mapped
  * class names. You can modify the behaviour of automatic class-definition
- * file requiring using the {@link SwatDBClassMap::addPath()} and
- * {@link SwatDBClassMap::removePath()} methods.
+ * file requiring using the {@link ClassMap::addPath()} and
+ * {@link ClassMap::removePath()} methods.
  *
  * @package   SwatDB
  * @copyright 2006-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBClassMap
+class ClassMap
 {
     // {{{ private properties
 
@@ -44,14 +47,14 @@ class SwatDBClassMap
     /**
      * Maps a class name to another class name
      *
-     * Subsequent calls to {@link SwatDBClassMap::get()} using the
+     * Subsequent calls to {@link ClassMap::get()} using the
      * <i>$from_class_name</i> will return the <i>$to_class_name</i>. Class
      * names may be mapped to already mapped class names. For example:
      *
      * <code>
-     * SwatDBClassMap::add('Object', 'MyObject');
-     * SwatDBClassMap::add('MyObject', 'MyOtherObject');
-     * echo SwatDBClassMap::get('Object'); // MyOtherObject
+     * ClassMap::add('Object', 'MyObject');
+     * ClassMap::add('MyObject', 'MyOtherObject');
+     * echo ClassMap::get('Object'); // MyOtherObject
      * </code>
      *
      * If a circular dependency is created, an exception is thrown. If the
@@ -63,10 +66,11 @@ class SwatDBClassMap
      *                                class must be a subclass of the
      *                                <i>$from_class_name</i> otherwise class
      *                                resolution using
-     *                                {@link SwatDBClassMap::get()} will throw
+     *                                {@link ClassMap::get()} will throw
      *                                an exception.
      *
-     * @throws SwatException if the added mapping creates a circular dependency.
+     * @throws Exception\Exception if the added mapping creates a circular
+     *         dependency.
      */
     public static function add($from_class_name, $to_class_name)
     {
@@ -80,9 +84,13 @@ class SwatDBClassMap
             }
 
             if (in_array($from_class_name, $child_class_names)) {
-                throw new SwatException(sprintf(
-                    'Circular class dependency detected: %s => %s',
-                    $from_class_name, implode(' => ', $child_class_names)));
+                throw new Exception\Exception(
+                    sprintf(
+                        'Circular class dependency detected: %s => %s',
+                        $from_class_name,
+                        implode(' => ', $child_class_names)
+                    )
+                );
             }
         }
 
@@ -101,8 +109,8 @@ class SwatDBClassMap
      *                for the given class name, the same class name is
      *                returned.
      *
-     * @throws SwatInvalidClassException if a mapped class is not a subclass of
-     *                                   its original class.
+     * @throws Exception\InvalidClassException if a mapped class is not a
+     *         subclass of its original class.
      */
     public static function get($from_class_name)
     {
@@ -140,10 +148,16 @@ class SwatDBClassMap
                 }
             }
 
-            if (!is_subclass_of($to_class_name, $from_class_name))
-                throw new SwatInvalidClassException(sprintf('Invalid '.
-                    'class-mapping detected. %s is not a subclass of %s.',
-                    $to_class_name, $from_class_name));
+            if (!is_subclass_of($to_class_name, $from_class_name)) {
+                throw new Exception\InvalidClassException(
+                    sprintf(
+                        'Invalid class-mapping detected. %s is not a '.
+                        'subclass of %s.',
+                        $to_class_name,
+                        $from_class_name
+                    )
+                );
+            }
 
             $from_class_name = $to_class_name;
         }
@@ -165,7 +179,7 @@ class SwatDBClassMap
      *
      * @param string $search_path the path to search for class-definition files.
      *
-     * @see SwatDBClassMap::removePath()
+     * @see ClassMap::removePath()
      */
     public static function addPath($search_path)
     {
@@ -184,7 +198,7 @@ class SwatDBClassMap
      *
      * @param string $search_path the path to remove.
      *
-     * @see SwatDBClassMap::addPath()
+     * @see ClassMap::addPath()
      */
     public static function removePath($search_path)
     {

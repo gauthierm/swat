@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatOption.php';
+namespace Silverorange\Swat\Model;
 
 /**
  * A class representing a divider in a flydown
@@ -14,7 +14,7 @@ require_once 'Swat/SwatOption.php';
  * @copyright 2005-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFlydownDivider extends SwatOption
+class FlydownDivider extends Option
 {
     // {{{ public function __construct()
 

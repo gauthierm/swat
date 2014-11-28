@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'PEAR.php';
+namespace Silverorange\Swat\Data\Exception;
+
+use Silverorange\Swat\Exception as SwatException;
 
 /**
  * A SwatDB Exception.
@@ -12,13 +13,13 @@ require_once 'PEAR.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBException extends SwatException
+class Exception extends SwatException\Exception
 {
-    // {{{ private function ___construct()
+    // {{{ private function __construct()
 
     public function __construct($message = null, $code = 0)
     {
-        if (is_object($message) && ($message instanceof PEAR_Error)) {
+        if (is_object($message) && ($message instanceof \PEAR_Error)) {
             $error = $message;
             $message = $error->getMessage();
             $message .= "\n".$error->getUserInfo();

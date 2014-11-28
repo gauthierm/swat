@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTreeNode.php';
+namespace Silverorange\Swat\Model;
 
 /**
  * A tree node containing a value and a title
@@ -11,7 +11,7 @@ require_once 'Swat/SwatTreeNode.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDataTreeNode extends SwatTreeNode
+class DataTreeNode extends TreeNode
 {
     // {{{ public properties
 

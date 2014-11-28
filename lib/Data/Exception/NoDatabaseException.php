@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'SwatDB/exceptions/SwatDBException.php';
+namespace Silverorange\Swat\Data\Exception;
 
 /**
  * Exception thrown when no database is available
@@ -11,7 +11,7 @@ require_once 'SwatDB/exceptions/SwatDBException.php';
  * @copyright 2008 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBNoDatabaseException extends SwatDBException
+class NoDatabaseException extends Exception
 {
 }
 

@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'SwatDB/exceptions/SwatDBMarshallException.php';
+namespace Silverorange\Swat\Data;
 
 /**
  * Interface for marshalling and unmarshalling data-objects
@@ -18,7 +18,7 @@ require_once 'SwatDB/exceptions/SwatDBMarshallException.php';
  * @copyright 2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-interface SwatDBMarshallable
+interface Marshallable
 {
     // {{{ public function marshall()
     /**
@@ -42,7 +42,7 @@ interface SwatDBMarshallable
      *
      * @return array the marshalled data.
      *
-     * @throws SwatDBMarshallException if one of the sub-tree properties
+     * @throws Exception\MarshallException if one of the sub-tree properties
      *         cannot be marshalled.
      */
     public function marshall(array $tree = array());

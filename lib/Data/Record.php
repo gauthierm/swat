@@ -2,18 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDate.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/exceptions/SwatClassNotFoundException.php';
-require_once 'SwatDB/SwatDB.php';
-require_once 'SwatDB/SwatDBClassMap.php';
-require_once 'SwatDB/SwatDBTransaction.php';
-require_once 'SwatDB/SwatDBRecordable.php';
-require_once 'SwatDB/SwatDBMarshallable.php';
-require_once 'SwatDB/SwatDBCacheNsFlushable.php';
-require_once 'SwatDB/SwatDBFlushable.php';
-require_once 'SwatDB/exceptions/SwatDBException.php';
-require_once 'SwatDB/exceptions/SwatDBNoDatabaseException.php';
+namespace Silverorange\Swat\Data;
+
+use Silverorange\Swat\Exception as SwatException;
+use Silverorange\Swat\Util;
 
 /**
  * All public properties correspond to database fields
@@ -22,8 +14,7 @@ require_once 'SwatDB/exceptions/SwatDBNoDatabaseException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBDataObject implements Serializable, SwatDBRecordable,
-    SwatDBMarshallable, SwatDBFlushable
+class Record implements \Serializable, Recordable, Marshallable, Flushable
 {
     // {{{ private properties
 
@@ -76,7 +67,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     // {{{ protected properties
 
     /**
-     * @var MDB2
+     * @var \MDB2_Driver_Common
      */
     protected $db = null;
 
@@ -86,7 +77,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     /**
      * A class-mapping object
      *
-     * @var SwatDBClassMap
+     * @var ClassMap
      */
     protected $class_map;
 
@@ -96,8 +87,8 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     protected $read_only = false;
 
     /**
-     * @var SwatDBCacheNsFlushable
-     * @see SwatDBDataObject::setFlushableCache()
+     * @var CacheNsFlushable
+     * @see Record::setFlushableCache()
      */
     protected $flushable_cache;
 
@@ -123,7 +114,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
      */
     public function __construct($data = null, $read_only = false)
     {
-        $this->class_map = SwatDBClassMap::instance();
+        $this->class_map = ClassMap::instance();
         $this->read_only = $read_only;
 
         $this->init();
@@ -187,14 +178,21 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
         if ($value === false) {
             $loader_method = $this->getLoaderMethod($key);
-            throw new SwatDBException(sprintf("A property named '%s' does not ".
-                "exist on the %s data-object. If the property corresponds ".
-                "directly to a database field it should be added as a public ".
-                "property of this data object. If the property should access ".
-                "a sub-data-object, either specify a class when registering ".
-                "the internal property named '%s' or define a custom loader ".
-                "method named '%s()'.",
-                $key, get_class($this), $key, $loader_method));
+            throw new Exception\Exception(
+                sprintf(
+                    "A property named '%s' does not exist on the %s ".
+                    "data-object. If the property corresponds directly to a ".
+                    "database field it should be added as a public property ".
+                    "of this data object. If the property should access a ".
+                    "sub-data-object, either specify a class when registering ".
+                    "the internal property named '%s' or define a custom ".
+                    "loader method named '%s()'.",
+                    $key,
+                    get_class($this),
+                    $key,
+                    $loader_method
+                )
+            );
         }
 
         return $value;
@@ -233,14 +231,14 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             }
 
         } else {
-
-            throw new SwatDBException(
+            throw new Exception\Exception(
                 "A property named '{$key}' does not exist on this ".
                 'dataobject.  If the property corresponds directly to '.
                 'a database field it should be added as a public property '.
                 'of this data object.  If the property should access a '.
                 'sub-dataobject, specify a class when registering the '.
-                "internal field named '{$key}'.");
+                "internal field named '{$key}'."
+            );
         }
     }
 
@@ -308,8 +306,8 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             $value = (string)$value;
 
             printf("%s = %s%s<br />\n",
-                SwatString::minimizeEntities($name),
-                SwatString::minimizeEntities($value),
+                Util\String::minimizeEntities($name),
+                Util\String::minimizeEntities($value),
                 $modified ? ' (modified)' : '');
         }
         /*
@@ -401,13 +399,13 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
      * database as a new row. This method recursively duplicates
      * sub-dataobjects which were registered with <i>$autosave</i> set to true.
      *
-     * @return SwatDBDataobject a duplicate of this object.
+     * @return Record a duplicate of this object.
      */
     public function duplicate()
     {
         $class = get_class($this);
         $new_object = new $class();
-        $id_field = new SwatDBField($this->id_field, 'integer');
+        $id_field = new Field($this->id_field, 'integer');
 
         // public properties
         $properties = $this->getPublicProperties();
@@ -509,9 +507,11 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
      */
     protected function initFromRow($row)
     {
-        if ($row === null)
-            throw new SwatDBException(
-                'Attempting to initialize dataobject with a null row.');
+        if ($row === null) {
+            throw new Exception\Exception(
+                'Attempting to initialize dataobject with a null row.'
+            );
+        }
 
         $property_array = $this->getPublicProperties();
 
@@ -612,12 +612,16 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
     protected function getId()
     {
-        if ($this->id_field === null)
-            throw new SwatDBException(
-                sprintf('Property $id_field is not set for class %s.',
-                get_class($this)));
+        if ($this->id_field === null) {
+            throw new Exception\Exception(
+                sprintf(
+                    'Property $id_field is not set for class %s.',
+                    get_class($this)
+                )
+            );
+        }
 
-        $id_field = new SwatDBField($this->id_field, 'integer');
+        $id_field = new Field($this->id_field, 'integer');
         $temp = $id_field->name;
         return $this->$temp;
     }
@@ -638,7 +642,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         // Can't add type-hinting because dataobjects may not be dataobjects.
         // Go figure.
         $this->sub_data_objects[$name] = $value;
-        if ($value instanceof SwatDBRecordable && $this->db !== null) {
+        if ($value instanceof Recordable && $this->db !== null) {
             $value->setDatabase($this->db);
         }
     }
@@ -702,7 +706,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         if (!array_key_exists($class, self::$public_properties_cache)) {
             $public_properties = array();
 
-            $reflector = new ReflectionClass($class);
+            $reflector = new \ReflectionClass($class);
             foreach ($reflector->getProperties() as $property) {
                 if ($property->isPublic() && !$property->isStatic()) {
                     $public_properties[] = $property->getName();
@@ -815,10 +819,16 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
                     $class = $this->internal_property_classes[$key];
 
                     if (!class_exists($class)) {
-                        throw new SwatClassNotFoundException(sprintf(
-                            "Class '%s' registered for internal property '%s' ".
-                            "does not exist.",
-                            $class, $key), 0, $class);
+                        throw new SwatException\ClassNotFoundException(
+                            sprintf(
+                                "Class '%s' registered for internal property ".
+                                "'%s' does not exist.",
+                                $class,
+                                $key
+                            ),
+                            0,
+                            $class
+                        );
                     }
 
                     $this->checkDB();
@@ -847,14 +857,14 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
      * The database is automatically set for all recordable sub-objects of this
      * data-object.
      *
-     * @param MDB2_Driver_Common $db  the database driver to use for this
-     *                                data-object.
-     * @param array              $set optional array of objects passed through
-     *                                recursive call containing all objects that
-     *                                have been set already. Prevents infinite
-     *                                recursion.
+     * @param \MDB2_Driver_Common $db  the database driver to use for this
+     *                                 data-object.
+     * @param array               $set optional array of objects passed through
+     *                                 recursive call containing all object
+     *                                 that have been set already. Prevents
+     *                                 infinite recursion.
      */
-    public function setDatabase(MDB2_Driver_Common $db, array $set = array())
+    public function setDatabase(\MDB2_Driver_Common $db, array $set = array())
     {
         $key = spl_object_hash($this);
 
@@ -867,7 +877,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         $set[$key] = true;
 
         foreach ($this->sub_data_objects as $name => $object) {
-            if ($object instanceof SwatDBRecordable) {
+            if ($object instanceof Recordable) {
                 $object->setDatabase($db, $set);
             }
         }
@@ -884,13 +894,14 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     public function save()
     {
         if ($this->read_only) {
-            throw new SwatDBException('This dataobject was loaded read-only '.
-                'and cannot be saved.');
+            throw new Exception\Exception(
+                'This dataobject was loaded read-only and cannot be saved.'
+            );
         }
 
         $this->checkDB();
 
-        $transaction = new SwatDBTransaction($this->db);
+        $transaction = new Transaction($this->db);
         try {
             $property_hashes = $this->property_hashes;
             $this->saveInternalProperties();
@@ -904,7 +915,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             }
 
             $transaction->commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->property_hashes = $property_hashes;
             $transaction->rollback();
             throw $e;
@@ -946,18 +957,19 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     public function delete()
     {
         if ($this->read_only) {
-            throw new SwatDBException('This dataobject was loaded read-only '.
-                'and cannot be deleted.');
+            throw new Exception\Exception(
+                'This dataobject was loaded read-only and cannot be deleted.'
+            );
         }
 
         $this->checkDB();
 
-        $transaction = new SwatDBTransaction($this->db);
+        $transaction = new Transaction($this->db);
         try {
             $property_hashes = $this->property_hashes;
             $this->deleteInternal();
             $transaction->commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->property_hashes = $property_hashes;
             $transaction->rollback();
             throw $e;
@@ -990,8 +1002,9 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         foreach ($this->internal_property_autosave as $name => $autosave) {
             if ($autosave && isset($this->sub_data_objects[$name])) {
                 $object = $this->sub_data_objects[$name];
-                if ($object instanceof SwatDBRecordable && $object->isModified())
+                if ($object instanceof Recordable && $object->isModified()) {
                     return true;
+                }
             }
         }
 
@@ -1001,8 +1014,9 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
             if (method_exists($this, $saver_method)) {
                 $object = $this->sub_data_objects[$name];
-                if ($object instanceof SwatDBRecordable && $object->isModified())
+                if ($object instanceof Recordable && $object->isModified()) {
                     return true;
+                }
             }
         }
 
@@ -1014,10 +1028,15 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
     protected function checkDB()
     {
-        if ($this->db === null)
-            throw new SwatDBNoDatabaseException(
-                sprintf('No database available to this dataobject (%s). '.
-                    'Call the setDatabase method.', get_class($this)));
+        if ($this->db === null) {
+            throw new Exception\NoDatabaseException(
+                sprintf(
+                    'No database available to this dataobject (%s). '.
+                    'Call the setDatabase method.',
+                    get_class($this)
+                )
+            );
+        }
     }
 
     // }}}
@@ -1034,7 +1053,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     protected function loadInternal($id)
     {
         if ($this->table !== null && $this->id_field !== null) {
-            $id_field = new SwatDBField($this->id_field, 'integer');
+            $id_field = new Field($this->id_field, 'integer');
             $sql = 'select * from %s where %s = %s';
 
             $sql = sprintf($sql,
@@ -1042,8 +1061,8 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
                 $id_field->name,
                 $this->db->quote($id, $id_field->type));
 
-            $rs = SwatDB::query($this->db, $sql, null);
-            $row = $rs->fetchRow(MDB2_FETCHMODE_ASSOC);
+            $rs = DB::query($this->db, $sql, null);
+            $row = $rs->fetchRow(\MDB2_FETCHMODE_ASSOC);
 
             return $row;
         }
@@ -1067,9 +1086,12 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
         if ($this->table === null) {
             trigger_error(
-                sprintf('No table defined for %s', get_class($this)),
-                E_USER_NOTICE);
-
+                sprintf(
+                    'No table defined for %s',
+                    get_class($this)
+                ),
+                \E_USER_NOTICE
+            );
             return;
         }
 
@@ -1080,20 +1102,26 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             }
 
             trigger_error(
-                sprintf('No id_field defined for %s', get_class($this)),
-                E_USER_NOTICE);
-
+                sprintf(
+                    'No id_field defined for %s',
+                    get_class($this)
+                ),
+                \E_USER_NOTICE
+            );
             return;
         }
 
-        $id_field = new SwatDBField($this->id_field, 'integer');
+        $id_field = new Field($this->id_field, 'integer');
 
         if (!property_exists($this, $id_field->name)) {
             trigger_error(
-                sprintf("The id_field '%s' is not defined for %s",
-                    $id_field->name, get_class($this)),
-                E_USER_NOTICE);
-
+                sprintf(
+                    "The id_field '%s' is not defined for %s",
+                    $id_field->name,
+                    get_class($this)
+                ),
+                \E_USER_NOTICE
+            );
             return;
         }
 
@@ -1118,11 +1146,22 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
         if ($id === null) {
             $this->$id_ref =
-                SwatDB::insertRow($this->db, $this->table, $fields, $values,
-                    $id_field->__toString());
+                DB::insertRow(
+                    $this->db,
+                    $this->table,
+                    $fields,
+                    $values,
+                    $id_field->__toString()
+                );
         } else {
-            SwatDB::updateRow($this->db, $this->table, $fields, $values,
-                $id_field->__toString(), $id);
+            DB::updateRow(
+                $this->db,
+                $this->table,
+                $fields,
+                $values,
+                $id_field->__toString(),
+                $id
+            );
         }
 
         // Note: This flushes any name-spaces with the newly saved
@@ -1169,7 +1208,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         foreach (array_keys($this->internal_properties) as $name) {
             if ($this->hasSubDataObject($name)) {
                 $sub_data_object = $this->getSubDataObject($name);
-                if ($sub_data_object instanceof SwatDBDataObject) {
+                if ($sub_data_object instanceof Record) {
                     $id = $sub_data_object->getId();
                     $this->setInternalValue($name, $id);
                 }
@@ -1188,7 +1227,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         if ($this->table === null || $this->id_field === null)
             return;
 
-        $id_field = new SwatDBField($this->id_field, 'integer');
+        $id_field = new Field($this->id_field, 'integer');
 
         if (!property_exists($this, $id_field->name))
             return;
@@ -1199,8 +1238,12 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         if ($id !== null) {
             $ns_array = $this->getCacheNamespaces();
 
-            SwatDB::deleteRow($this->db, $this->table,
-                $id_field->__toString(), $id);
+            DB::deleteRow(
+                $this->db,
+                $this->table,
+                $id_field->__toString(),
+                $id
+            );
 
             $this->flushCacheNamespaces($ns_array);
         }
@@ -1232,7 +1275,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             $values[$name] = $value;
         }
 
-        SwatDB::insertRow($this->db, $this->table, $fields, $values);
+        DB::insertRow($this->db, $this->table, $fields, $values);
         $this->flushCacheNamespaces();
     }
 
@@ -1268,10 +1311,10 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
      * Using a flushable cache allows clearing the cache when the dataobject
      * is modified or deleted.
      *
-     * @param SwatDBCacheNsFlushable $cache The flushable cache to use for
-     *                                      this dataobject.
+     * @param CacheNsFlushable $cache The flushable cache to use for this
+     *                                record.
      */
-    public function setFlushableCache(SwatDBCacheNsFlushable $cache)
+    public function setFlushableCache(CacheNsFlushable $cache)
     {
         $this->flushable_cache = $cache;
     }
@@ -1311,11 +1354,11 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
      *
      * @param array $ns_array An optional array of name-spaces to flush.
      *                        If no name-spaces are specified,
-     *                        {@link SwatDBDataObject::getCacheNamespaces()} is
-     *                        used to get the array of name-spaces.
+     *                        {@link Record::getCacheNamespaces()} is used to
+     *                        get the array of name-spaces.
      *
-     * @see SwatDBDataObject::setFlushableCache()
-     * @see SwatDBDataObject::getCacheNamespaces()
+     * @see Record::setFlushableCache()
+     * @see Record::getCacheNamespaces()
      */
     public function flushCacheNamespaces($ns_array = null)
     {
@@ -1323,7 +1366,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             $ns_array = $this->getCacheNamespaces();
         }
 
-        if ($this->flushable_cache instanceof SwatDBCacheNsFlushable) {
+        if ($this->flushable_cache instanceof CacheNsFlushable) {
             $ns_array = array_unique($ns_array);
             foreach ($ns_array as $ns) {
                 $this->flushable_cache->flushNs($ns);
@@ -1337,9 +1380,9 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     /**
      * Flushes all possible cache name-spaces for this object.
      *
-     * @see SwatDBDataObject::setFlushableCache()
-     * @see SwatDBDataObject::getAvailableCacheNamespaces()
-     * @see SwatDBDataObject::flushCacheNamespaces()
+     * @see Record::setFlushableCache()
+     * @see Record::getAvailableCacheNamespaces()
+     * @see Record::flushCacheNamespaces()
      */
     public function flushAvailableCacheNamespaces()
     {
@@ -1370,7 +1413,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             $data[$property] = &$this->$property;
         }
 
-        $reflector = new ReflectionObject($this);
+        $reflector = new \ReflectionObject($this);
         foreach ($reflector->getProperties() as $property) {
             if ($property->isPublic() && !$property->isStatic()) {
                 $name = $property->getName();
@@ -1458,7 +1501,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
             if ($this->hasSubDataObject($key)) {
                 $sub_data_object = $this->getSubDataObject($key);
-                if ($sub_data_object instanceof SwatDBMarshallable) {
+                if ($sub_data_object instanceof Marshallable) {
                     // need to save class name here because magic loaders
                     // have completely dynamic return classes.
                     $data['sub_data_objects'][$key] =
@@ -1470,7 +1513,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
                     $data['sub_data_objects'][$key] =
                         $sub_data_object;
                 } else {
-                    throw new SwatDBMarshallException(
+                    throw new Exception\MarshallException(
                         sprintf(
                             'Unable to marshall requested property "%s" '.
                             'for object of class %s.',
@@ -1493,7 +1536,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
         }
 
         // public properties
-        $reflector = new ReflectionObject($this);
+        $reflector = new \ReflectionObject($this);
         foreach ($reflector->getProperties() as $property) {
             if ($property->isPublic() && !$property->isStatic()) {
                 $name = $property->getName();
@@ -1510,7 +1553,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
     public function unmarshall(array $data = array())
     {
         // public properties
-        $reflector = new ReflectionObject($this);
+        $reflector = new \ReflectionObject($this);
         foreach ($reflector->getProperties() as $property) {
             if ($property->isPublic() && !$property->isStatic()) {
                 $name = $property->getName();
@@ -1542,7 +1585,8 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
             foreach ($data['sub_data_objects'] as $key => $object_data) {
                 if (is_array($object_data)) {
                     $class_name = $object_data[0];
-                    if (is_subclass_of($class_name, 'SwatDBMarshallable')) {
+                    $marshallable = 'Silverorange\Swat\Data\Marshallable';
+                    if (is_subclass_of($class_name, $marshallable)) {
                         $object_data = $object_data[1];
                         $object = new $class_name();
                         $object->unmarshall($object_data);
@@ -1560,7 +1604,7 @@ class SwatDBDataObject implements Serializable, SwatDBRecordable,
 
     protected function wakeup()
     {
-        $this->class_map = SwatDBClassMap::instance();
+        $this->class_map = ClassMap::instance();
     }
 
     // }}}

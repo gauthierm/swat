@@ -2,10 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
+namespace Silverorange\Swat\Model;
+
+use Silverorange\Swat\Exception;
 
 /**
- * A data structure that can be used with the SwatDetailsView
+ * A data structure that can be used with the DetailsView
  *
  * A new details store is empty by default unless is it initialized with
  * another object.
@@ -15,7 +17,7 @@ require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @todo      Document parsePath().
  */
-class SwatDetailsStore
+class DetailsStore
 {
     // {{{ private properties
 
@@ -25,7 +27,7 @@ class SwatDetailsStore
      * Properties of this details store are taken from this base object unless
      * they are manually specified.
      *
-     * @var stdClass
+     * @var \stdClass
      */
     private $base_object;
 
@@ -42,11 +44,11 @@ class SwatDetailsStore
     /**
      * Creates a new details store
      *
-     * @param stdClass $base_object optional. The object to initialize this
-     *                              details store with. Properties in this
-     *                              details store will be taken from the base
-     *                              object unless they are manually set on
-     *                              this details store.
+     * @param \stdClass $base_object optional. The object to initialize this
+     *                               details store with. Properties in this
+     *                               details store will be taken from the base
+     *                               object unless they are manually set on
+     *                               this details store.
      */
     public function __construct($base_object = null)
     {
@@ -62,7 +64,7 @@ class SwatDetailsStore
      *
      * Properties are retrieved in the following manner:
      * 1. If the property name contains a dot (.) the results of
-     *    {@link SwatDetailsStore::parsePath()} are returned.
+     *    {@link DetailsStore::parsePath()} are returned.
      * 2. If the property was manually set on this details store, the manually
      *    set value is returned.
      * 3. If the property exists on the base object of this details store, the
@@ -74,8 +76,8 @@ class SwatDetailsStore
      *
      * @return mixed the value of the property.
      *
-     * @throws SwatInvalidPropertyException if the property does not exist in
-     *                                      this details store.
+     * @throws Exception\InvalidPropertyException if the property does not
+     *         exist in this details store.
      */
     public function __get($name)
     {
@@ -93,9 +95,12 @@ class SwatDetailsStore
                 return $this->base_object->$name;
         }
 
-        throw new SwatInvalidPropertyException(
+        throw new Exception\InvalidPropertyException(
             "Property '{$name}' does not exist in details store.",
-            0, $this, $name);
+            0,
+            $this,
+            $name
+        );
     }
 
     // }}}
@@ -106,7 +111,7 @@ class SwatDetailsStore
      *
      * If a base object is used, it is not modified by this method. Manually
      * set properties override properties of the base object when calling
-     * {@link SwatDetailsStore::__get()} or {@link SwatDetailsStore::__isset()}.
+     * {@link DetailsStore::__get()} or {@link DetailsStore::__isset()}.
      *
      * @param string $name  the name of the property to set.
      * @param mixed  $value the value of the property.
