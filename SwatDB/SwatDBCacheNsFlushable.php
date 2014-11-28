@@ -1,9 +1,9 @@
 <?php
 
-/* vim: set noexpandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Interface that supports flushing cache name-spaces 
+ * Interface that supports flushing cache name-spaces
  *
  * @package   SwatDB
  * @copyright 2014 silverorange
@@ -11,16 +11,16 @@
  */
 interface SwatDBCacheNsFlushable
 {
-	// {{{ public function flushNs()
+    // {{{ public function flushNs()
 
-	/**
-	 * Flushes a cache name-space
-	 *
-	 * @param string $ns The name-space to flush
-	 */
-	public function flushNs($ns);
+    /**
+     * Flushes a cache name-space
+     *
+     * @param string $ns the name-space to flush.
+     */
+    public function flushNs($ns);
 
-	// }}}
+    // }}}
 }
 
 ?>

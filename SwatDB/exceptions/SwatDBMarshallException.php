@@ -2,7 +2,7 @@
 
 require_once 'SwatDB/exceptions/SwatDBException.php';
 
-/* vim: set noexpandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
  * Thrown when a property that can not be marshalled is asked to be
@@ -14,31 +14,31 @@ require_once 'SwatDB/exceptions/SwatDBException.php';
  */
 class SwatDBMarshallException extends SwatDBException
 {
-	// {{{ protected properties
+    // {{{ protected properties
 
-	/**
-	 * @var string
-	 */
-	protected $property = '';
+    /**
+     * @var string
+     */
+    protected $property = '';
 
-	// }}}
-	// {{{ public function __construct()
+    // }}}
+    // {{{ public function __construct()
 
-	public function __construct($message, $code = 0, $property = '')
-	{
-		parent::__construct($message, $code);
-		$this->property = $property;
-	}
+    public function __construct($message, $code = 0, $property = '')
+    {
+        parent::__construct($message, $code);
+        $this->property = $property;
+    }
 
-	// }}}
-	// {{{ public function getProperty()
+    // }}}
+    // {{{ public function getProperty()
 
-	public function getProperty()
-	{
-		return $this->property;
-	}
+    public function getProperty()
+    {
+        return $this->property;
+    }
 
-	// }}}
+    // }}}
 }
 
 ?>

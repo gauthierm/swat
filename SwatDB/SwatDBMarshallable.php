@@ -1,6 +1,6 @@
 <?php
 
-/* vim: set noexpandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 require_once 'SwatDB/exceptions/SwatDBMarshallException.php';
 
@@ -20,50 +20,50 @@ require_once 'SwatDB/exceptions/SwatDBMarshallException.php';
  */
 interface SwatDBMarshallable
 {
-	// {{{ public function marshall()
-	/**
-	 * Marshalls this object
-	 *
-	 * <code>
-	 * <?php
-	 * $data = $object->marshall(
-	 *     array(
-	 *         'daughters',
-	 *         'sons' => array(
-	 *             'grandkids'
-	 *         )
-	 *     )
-	 * );
-	 * ?>
-	 * </code>
-	 *
-	 * @param array $tree optional. An array representing the data-structure
-	 *                    sub-tree to include in the marshalled data.
-	 *
-	 * @return array the marshalled data.
-	 *
-	 * @throws SwatDBMarshallException if one of the sub-tree properties
-	 *         cannot be marshalled.
-	 */
-	public function marshall(array $tree = array());
+    // {{{ public function marshall()
+    /**
+     * Marshalls this object
+     *
+     * <code>
+     * <?php
+     * $data = $object->marshall(
+     *     array(
+     *         'daughters',
+     *         'sons' => array(
+     *             'grandkids'
+     *         )
+     *     )
+     * );
+     * ?>
+     * </code>
+     *
+     * @param array $tree optional. An array representing the data-structure
+     *                    sub-tree to include in the marshalled data.
+     *
+     * @return array the marshalled data.
+     *
+     * @throws SwatDBMarshallException if one of the sub-tree properties
+     *         cannot be marshalled.
+     */
+    public function marshall(array $tree = array());
 
-	// }}}
-	// {{{ public function unmarshall()
+    // }}}
+    // {{{ public function unmarshall()
 
-	/**
-	 * Unmarshalls this object using the specified data
-	 *
-	 * <code>
-	 * <?php
-	 * $object->unmarshall($data);
-	 * ?>
-	 * </code>
-	 *
-	 * @param array $data optional. The marshalled object data.
-	 */
-	public function unmarshall(array $data = array());
+    /**
+     * Unmarshalls this object using the specified data
+     *
+     * <code>
+     * <?php
+     * $object->unmarshall($data);
+     * ?>
+     * </code>
+     *
+     * @param array $data optional. The marshalled object data.
+     */
+    public function unmarshall(array $data = array());
 
-	// }}}
+    // }}}
 }
 
 ?>
