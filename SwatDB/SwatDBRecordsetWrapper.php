@@ -600,22 +600,6 @@ abstract class SwatDBRecordsetWrapper extends SwatObject
     // }}}
 
     // counting
-    // {{{ public function getCount()
-
-    /**
-     * Gets the number of records in this recordset
-     *
-     * @return integer the number of records in this recordset.
-     *
-     * @deprecated this class now implements Countable. Use count($object)
-     *              instead of $object->getCount().
-     */
-    public function getCount()
-    {
-        return count($this);
-    }
-
-    // }}}
     // {{{ public function count()
 
     /**
