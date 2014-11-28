@@ -120,7 +120,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      *
      * @see SwatUIParent
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatNoteBookChild) {
             $this->children[] = $child;

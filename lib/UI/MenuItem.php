@@ -130,7 +130,7 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      * @see SwatUIParent
      * @see SwatMenuItem::setSubMenu()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($this->sub_menu === null) {
             if ($child instanceof SwatAbstractMenu)

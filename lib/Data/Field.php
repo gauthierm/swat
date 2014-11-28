@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * Database field
  *
@@ -13,7 +11,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBField extends SwatObject
+class SwatDBField
 {
     // {{{ public properties
 

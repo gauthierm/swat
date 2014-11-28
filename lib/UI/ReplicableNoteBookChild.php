@@ -54,7 +54,7 @@ class SwatReplicableNoteBookChild extends SwatReplicableContainer
      *
      * @see SwatUIParent
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if (!($child instanceof SwatNoteBookChild))
             throw new SwatInvalidClassException(

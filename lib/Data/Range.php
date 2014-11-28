@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * A single object to represent a database query range
  *
@@ -18,7 +16,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBRange extends SwatObject
+class SwatDBRange
 {
     // {{{ private properties
 

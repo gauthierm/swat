@@ -279,7 +279,7 @@ class SwatActions extends SwatControl implements SwatUIParent
      * @see SwatUIParent
      * @see SwatActions::addActionItem()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatActionItem)
             $this->addActionItem($child);

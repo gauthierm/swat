@@ -3,7 +3,6 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 require_once 'Concentrate/Concentrator.php';
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatHtmlHeadEntrySet.php';
 require_once 'Swat/SwatInlineJavaScriptHtmlHeadEntry.php';
 
@@ -17,7 +16,7 @@ require_once 'Swat/SwatInlineJavaScriptHtmlHeadEntry.php';
  * @copyright 2010-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatHtmlHeadEntrySetDisplayer extends SwatObject
+class SwatHtmlHeadEntrySetDisplayer
 {
     // {{{ protected properties
 

@@ -513,7 +513,7 @@ class SwatContainer extends SwatWidget implements SwatUIParent
      *
      * @throws SwatInvalidClassException
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatWidget) {
             $this->add($child);

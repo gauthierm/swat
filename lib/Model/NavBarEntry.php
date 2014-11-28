@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * Entry for the navbar navigation tool
  *
@@ -13,7 +11,7 @@ require_once 'Swat/SwatObject.php';
  *
  * @see SwatNavBar
  */
-class SwatNavBarEntry extends SwatObject
+class SwatNavBarEntry
 {
     // {{{ public properties
 

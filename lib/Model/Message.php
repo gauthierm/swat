@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * A data class to store a message
  *
@@ -28,7 +26,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatMessage extends SwatObject
+class SwatMessage
 {
     // {{{ public properties
 

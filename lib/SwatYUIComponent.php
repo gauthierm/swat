@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatJavaScriptHtmlHeadEntry.php';
 require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
 require_once 'Swat/SwatHtmlHeadEntrySet.php';
@@ -20,7 +19,7 @@ require_once 'Swat/SwatYUI.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @see       SwatYUI
  */
-class SwatYUIComponent extends SwatObject
+class SwatYUIComponent
 {
     // {{{ private properties
 

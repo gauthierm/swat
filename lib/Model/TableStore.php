@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatTableModel.php';
 
 /**
@@ -15,7 +14,7 @@ require_once 'Swat/SwatTableModel.php';
  * @copyright 2004-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableStore extends SwatObject implements SwatTableModel
+class SwatTableStore implements SwatTableModel
 {
     // {{{ private properties
 

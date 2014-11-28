@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * A simple class for building a tree structure
  *
@@ -13,8 +11,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatTreeNode extends SwatObject implements RecursiveIterator,
-    Countable
+abstract class SwatTreeNode implements RecursiveIterator, Countable
 {
     // {{{ protected properties
 

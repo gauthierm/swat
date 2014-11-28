@@ -74,7 +74,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      * @see SwatUIParent
      * @see SwatMenuGroup::addItem()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatMenuItem)
             $this->addItem($child);

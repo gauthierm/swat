@@ -91,7 +91,7 @@ class SwatInputCell extends SwatUIObject implements SwatUIParent, SwatTitleable
      * @throws SwatException if you try to add more than one prototype widget
      *                       to this input cell.
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($this->widget === null)
             $this->setWidget($child);

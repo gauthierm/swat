@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatString.php';
 
 /**
@@ -12,7 +11,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2004-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatHtmlTag extends SwatObject
+class SwatHtmlTag
 {
     // {{{ private properties
 

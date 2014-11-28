@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * Stores and outputs an HTML head entry
  *
@@ -14,7 +12,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatHtmlHeadEntry extends SwatObject
+abstract class SwatHtmlHeadEntry
 {
     // {{{ protected properties
 

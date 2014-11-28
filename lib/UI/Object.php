@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatHtmlHeadEntry.php';
 require_once 'Swat/SwatHtmlHeadEntrySet.php';
 require_once 'Swat/SwatCommentHtmlHeadEntry.php';
@@ -19,7 +18,7 @@ require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatUIObject extends SwatObject
+abstract class SwatUIObject
 {
     // {{{ public properties
 
@@ -242,27 +241,6 @@ abstract class SwatUIObject extends SwatObject
             return ($this->parent->isVisible() && $this->visible);
         else
             return $this->visible;
-    }
-
-    // }}}
-    // {{{ public function __toString()
-
-    /**
-     * Gets this object as a string
-     *
-     * @see SwatObject::__toString()
-     * @return string this object represented as a string.
-     */
-    public function __toString()
-    {
-        // prevent recursion up the widget tree for UI objects
-        $parent = $this->parent;
-        $this->parent = get_class($parent);
-
-        return parent::__toString();
-
-        // set parent back again
-        $this->parent = $parent;
     }
 
     // }}}

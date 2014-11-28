@@ -95,7 +95,7 @@ class SwatWidgetCellRenderer extends SwatCellRenderer implements SwatUIParent,
      *
      * @throws SwatException
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($this->prototype_widget === null) {
             $this->setPrototypeWidget($child);

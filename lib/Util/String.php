@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatNumber.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/exceptions/SwatException.php';
@@ -15,7 +14,7 @@ require_once 'Swat/exceptions/SwatInvalidSerializedDataException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatString extends SwatObject
+class SwatString
 {
     // {{{ public static properties
 

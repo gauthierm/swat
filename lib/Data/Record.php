@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatDate.php';
 require_once 'Swat/SwatString.php';
 require_once 'Swat/exceptions/SwatClassNotFoundException.php';
@@ -23,9 +22,8 @@ require_once 'SwatDB/exceptions/SwatDBNoDatabaseException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBDataObject extends SwatObject
-    implements Serializable, SwatDBRecordable, SwatDBMarshallable,
-        SwatDBFlushable
+class SwatDBDataObject implements Serializable, SwatDBRecordable,
+    SwatDBMarshallable, SwatDBFlushable
 {
     // {{{ private properties
 
@@ -270,8 +268,6 @@ class SwatDBDataObject extends SwatObject
      * Gets a string representation of this data-object
      *
      * @return string this data-object represented as a string.
-     *
-     * @see SwatObject::__toString()
      */
     public function __toString()
     {

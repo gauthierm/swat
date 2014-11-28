@@ -376,7 +376,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      * @see SwatTableView::appendGroup()
      * @see SwatTableView::appendRow()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatTableViewGroup)
             $this->appendGroup($child);

@@ -3,7 +3,6 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 require_once 'MDB2.php';
-require_once 'Swat/SwatObject.php';
 require_once 'SwatDB/exceptions/SwatDBException.php';
 
 /**
@@ -26,7 +25,7 @@ require_once 'SwatDB/exceptions/SwatDBException.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBTransaction extends SwatObject
+class SwatDBTransaction
 {
     // {{{ private properties
 

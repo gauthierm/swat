@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatContainer.php';
 require_once 'Swat/SwatCellRendererMapping.php';
 require_once 'Swat/SwatDate.php';
@@ -27,7 +26,7 @@ require_once 'Swat/exceptions/SwatInvalidConstantExpressionException.php';
  * @copyright 2004-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatUI extends SwatObject
+class SwatUI
 {
     // {{{ private properties
 

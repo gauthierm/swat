@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/exceptions/SwatException.php';
 require_once 'Swat/exceptions/SwatInvalidClassException.php';
 
@@ -18,7 +17,7 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
  * @copyright 2006-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBClassMap extends SwatObject
+class SwatDBClassMap
 {
     // {{{ private properties
 

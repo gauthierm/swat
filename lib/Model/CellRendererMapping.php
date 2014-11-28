@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'SwatObject.php';
-
 /**
  * A mapping of a data field to property of a cell renderer.
  *
@@ -11,7 +9,7 @@ require_once 'SwatObject.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCellRendererMapping extends SwatObject
+class SwatCellRendererMapping
 {
     // {{{ public properties
 

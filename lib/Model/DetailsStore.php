@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
 
 /**
@@ -16,7 +15,7 @@ require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @todo      Document parsePath().
  */
-class SwatDetailsStore extends SwatObject
+class SwatDetailsStore
 {
     // {{{ private properties
 

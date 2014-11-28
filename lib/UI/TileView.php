@@ -421,7 +421,7 @@ class SwatTileView extends SwatView implements SwatUIParent
      * @see SwatTileView::setTile()
      * @see SwatTileView::appendGroup()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatTileViewGroup)
             $this->appendGroup($child);

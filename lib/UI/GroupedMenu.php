@@ -60,7 +60,7 @@ class SwatGroupedMenu extends SwatAbstractMenu implements SwatUIParent
      * @see SwatUIParent
      * @see SwatGroupedMenu::addGroup()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatMenuGroup)
             $this->addGroup($child);

@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * A simple class for storing options used in various Swat controls
  *
@@ -11,7 +9,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatOption extends SwatObject
+class SwatOption
 {
     // {{{ public properties
 

@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/exceptions/SwatException.php';
 
 /**
@@ -14,7 +13,7 @@ require_once 'Swat/exceptions/SwatException.php';
  * @see       SwatLocale::formatNumber()
  * @see       SwatLocale::getNumberFormat()
  */
-class SwatI18NNumberFormat extends SwatObject
+class SwatI18NNumberFormat
 {
     // {{{ public properties
 

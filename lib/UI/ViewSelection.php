@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * A selection on a view
  *
@@ -31,7 +29,7 @@ require_once 'Swat/SwatObject.php';
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  * @see       SwatView::getSelection()
  */
-class SwatViewSelection extends SwatObject implements Countable, Iterator
+class SwatViewSelection implements Countable, Iterator
 {
     // {{{ private properties
 

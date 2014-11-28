@@ -3,7 +3,6 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/exceptions/SwatIntegerOverflowException.php';
 require_once 'SwatI18N/SwatI18NNumberFormat.php';
 require_once 'SwatI18N/SwatI18NCurrencyFormat.php';
@@ -18,7 +17,7 @@ require_once 'SwatI18N/SwatI18NCurrencyFormat.php';
  * @copyright 2007-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatI18NLocale extends SwatObject
+class SwatI18NLocale
 {
     // {{{ protected properties
 

@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * Readahead iterator
  *
@@ -26,7 +24,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDBReadaheadIterator extends SwatObject
+class SwatDBReadaheadIterator
 {
     // {{{ private properties
 

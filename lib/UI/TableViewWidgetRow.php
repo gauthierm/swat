@@ -88,7 +88,7 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
      *
      * @see SwatTableViewWidgetRow::setWidget()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if (!($child instanceof SwatWidget))
             throw new SwatInvalidClassException(sprintf(

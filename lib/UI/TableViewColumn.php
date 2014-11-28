@@ -402,7 +402,7 @@ class SwatTableViewColumn extends SwatCellRendererContainer
      *
      * @see SwatUIParent::addChild()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatCellRenderer) {
             $this->addRenderer($child);

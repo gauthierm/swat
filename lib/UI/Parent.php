@@ -20,9 +20,9 @@ interface SwatUIParent
      * does not need to be called elsewhere. To add a field to a field view,
      * use {@link SwatFieldView::appendField()}.
      *
-     * @param SwatObject $child the child object to add to this parent object.
+     * @param SwatUIObject $child the child object to add to this parent object.
      */
-    public function addChild(SwatObject $child);
+    public function addChild(SwatUIObject $child);
 
     // }}}
     // {{{ public function getDescendants()

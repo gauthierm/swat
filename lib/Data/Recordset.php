@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
 require_once 'Swat/SwatTableModel.php';
 require_once 'SwatDB/SwatDBTransaction.php';
 require_once 'SwatDB/SwatDBClassMap.php';
@@ -33,9 +32,8 @@ require_once 'Swat/exceptions/SwatInvalidTypeException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatDBRecordsetWrapper extends SwatObject
-    implements Serializable, ArrayAccess, SwatTableModel, SwatDBRecordable,
-    SwatDBMarshallable, SwatDBFlushable
+abstract class SwatDBRecordsetWrapper implements Serializable, ArrayAccess,
+    SwatTableModel, SwatDBRecordable, SwatDBMarshallable, SwatDBFlushable
 {
     // {{{ protected properties
 

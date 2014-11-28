@@ -271,7 +271,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *
      * @see SwatUIParent::addChild()
      */
-    public function addChild(SwatObject $child)
+    public function addChild(SwatUIObject $child)
     {
         if ($child instanceof SwatDetailsViewField) {
             $this->appendField($child);

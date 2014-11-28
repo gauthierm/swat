@@ -2,8 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatObject.php';
-
 /**
  * Number tools
  *
@@ -11,7 +9,7 @@ require_once 'Swat/SwatObject.php';
  * @copyright 2008-2011 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatNumber extends SwatObject
+class SwatNumber
 {
     // {{{ public static function roundUp()
 
