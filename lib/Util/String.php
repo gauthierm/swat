@@ -2,10 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNumber.php';
+namespace Silverorange\Swat\Util;
+
+use Silverorange\Swat\Exception;
 require_once 'Swat/SwatDate.php';
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/exceptions/SwatInvalidSerializedDataException.php';
 
 /**
  * String Tools
@@ -14,7 +14,7 @@ require_once 'Swat/exceptions/SwatInvalidSerializedDataException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatString
+class String
 {
     // {{{ public static properties
 
@@ -216,12 +216,20 @@ class SwatString
             } else {
                 // split paragraph into tags and text
                 $tags = array();
-                preg_match_all($all_tags, $paragraph, $tags,
-                    PREG_OFFSET_CAPTURE);
+                preg_match_all(
+                    $all_tags,
+                    $paragraph,
+                    $tags,
+                    \PREG_OFFSET_CAPTURE
+                );
 
                 $tags = $tags[0];
-                $text = preg_split($all_tags, $paragraph, -1,
-                    PREG_SPLIT_OFFSET_CAPTURE);
+                $text = preg_split(
+                    $all_tags,
+                    $paragraph,
+                    -1,
+                    \PREG_SPLIT_OFFSET_CAPTURE
+                );
 
                 $paragraph = '';
 
@@ -296,11 +304,11 @@ class SwatString
     public static function minimizeEntities($text)
     {
         // decode any entities that might already exist
-        $text = html_entity_decode($text, ENT_COMPAT, 'UTF-8');
+        $text = html_entity_decode($text, \ENT_COMPAT, 'UTF-8');
 
         // encode all ampersands (&), less than (<), greater than (>),
         // and double quote (") characters as their XML entities
-        $text = htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+        $text = htmlspecialchars($text, \ENT_COMPAT, 'UTF-8');
 
         return $text;
     }
@@ -321,7 +329,7 @@ class SwatString
     {
         $pattern = sprintf('/(<\/?(%s) ?.*>)/uU', implode('|', $tags));
 
-        $parts = preg_split($pattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split($pattern, $text, -1, \PREG_SPLIT_DELIM_CAPTURE);
         $output = '';
 
         foreach ($parts as $index => $part) {
@@ -453,7 +461,7 @@ class SwatString
         $text    = preg_replace($search, $replace, $text);
 
         if ($max_length !== null) {
-            $text = SwatString::ellipsizeRight($text, $max_length, $ellipses);
+            $text = self::ellipsizeRight($text, $max_length, $ellipses);
         }
 
         return $text;
@@ -472,7 +480,7 @@ class SwatString
      * <code>
      * $string = 'The quick brown fox jumped over the lazy dogs.';
      * // displays 'thequickbrown'
-     * echo SwatString::condenseToName($string);
+     * echo String::condenseToName($string);
      * </code>
      *
      * @param string  $string     the string to condense to a name.
@@ -494,7 +502,7 @@ class SwatString
         // remove tags and make lowercase
         $string = strip_tags(strtolower($string));
 
-        if (class_exists('Net_IDNA')) {
+        if (class_exists('\Net_IDNA')) {
             // we have Net_IDNA, convert words to punycode
 
             // convert entities to utf-8
@@ -513,7 +521,7 @@ class SwatString
             // during preg_replace()
             $string = trim($string);
 
-            $idna = Net_IDNA::getInstance();
+            $idna = \Net_IDNA::getInstance();
 
             // split into words
             $string_utf8_exp = explode(' ', $string);
@@ -584,14 +592,14 @@ class SwatString
      * <code>
      * $string = 'The quick brown fox jumped over the lazy dogs.';
      * // displays 'The quick brown ...'
-     * echo SwatString::ellipsizeRight($string, 18, ' ...');
+     * echo String::ellipsizeRight($string, 18, ' ...');
      * </code>
      *
      * XHTML example:
      * <code>
      * $string = 'The &#8220;quick&#8221; brown fox jumped over the lazy dogs.';
      * // displays 'The &#8220;quick&#8221; brown ...'
-     * echo SwatString::ellipsizeRight($string, 18, ' ...');
+     * echo String::ellipsizeRight($string, 18, ' ...');
      * </code>
      *
      * @param string  $string     the string to ellipsize.
@@ -643,7 +651,7 @@ class SwatString
         if ($chop_pos !== false)
             $string = substr($string, 0, $chop_pos);
 
-        $string = SwatString::removeTrailingPunctuation($string);
+        $string = self::removeTrailingPunctuation($string);
 
         self::insertEntities($string, $matches, strlen($string));
 
@@ -667,14 +675,14 @@ class SwatString
      * <code>
      * $string = 'The quick brown fox jumped over the lazy dogs.';
      * // displays 'The quick ... dogs.'
-     * echo SwatString::ellipsizeMiddle($string, 18, ' ... ');
+     * echo String::ellipsizeMiddle($string, 18, ' ... ');
      * </code>
      *
      * XHTML example:
      * <code>
      * $string = 'The &#8220;quick&#8221 brown fox jumped over the lazy dogs.';
      * // displays 'The &#8220;quick&#8221; ... dogs.'
-     * echo SwatString::ellipsizeMiddle($string, 18, ' ... ');
+     * echo String::ellipsizeMiddle($string, 18, ' ... ');
      * </code>
      *
      * @param string  $string     the string to ellipsize.
@@ -817,8 +825,8 @@ class SwatString
      */
     public static function removePunctuation($string)
     {
-        $string = SwatString::removeTrailingPunctuation($string);
-        $string = SwatString::removeLeadingPunctuation($string);
+        $string = self::removeTrailingPunctuation($string);
+        $string = self::removeLeadingPunctuation($string);
         return $string;
     }
 
@@ -836,21 +844,26 @@ class SwatString
      *                locale. The symbol is UTF-8 encoded and does not include
      *                the spacing character specified in the C99 standard.
      *
-     * @throws SwatException if the given locale could not be set.
+     * @throws Exception\Exception if the given locale could not be set.
      */
     public static function getInternationalCurrencySymbol($locale = null)
     {
         if ($locale !== null) {
-            $old_locale = setlocale(LC_MONETARY, 0);
-            if (setlocale(LC_MONETARY, $locale) === false) {
-                throw new SwatException(sprintf('Locale %s passed to the '.
-                    'getInternationalCurrencySymbol() method is not valid '.
-                    'for this operating system.', $locale));
+            $old_locale = setlocale(\LC_MONETARY, 0);
+            if (setlocale(\LC_MONETARY, $locale) === false) {
+                throw new Exception\Exception(
+                    sprintf(
+                        'Locale %s passed to the '.
+                        'getInternationalCurrencySymbol() method is not '.
+                        'valid for this operating system.',
+                        $locale
+                    )
+                );
             }
         }
 
         // get character set of the locale that is used
-        $character_set = nl_langinfo(CODESET);
+        $character_set = nl_langinfo(\CODESET);
 
         $lc = localeconv();
         $symbol = $lc['int_curr_symbol'];
@@ -858,16 +871,21 @@ class SwatString
         // convert output to UTF-8
         if ($character_set !== 'UTF-8') {
             $symbol = iconv($character_set, 'UTF-8', $symbol);
-            if ($symbol === false)
-                throw new SwatException(sprintf('Could not convert %s output '.
-                    'to UTF-8', $character_set));
+            if ($symbol === false) {
+                throw new Exception\Exception(
+                    sprintf(
+                        'Could not convert %s output to UTF-8',
+                        $character_set
+                    )
+                );
+            }
         }
 
         // strip C99-defined spacing character
         $symbol = substr($symbol, 0, 3);
 
         if ($locale !== null)
-            setlocale(LC_ALL, $old_locale);
+            setlocale(\LC_ALL, $old_locale);
 
         return $symbol;
     }
@@ -893,32 +911,37 @@ class SwatString
      *
      * @return string a UTF-8 encoded string containing the formatted number.
      *
-     * @throws SwatException if the given locale could not be set.
-     * @throws SwatException if the locale-based output cannot be converted to
-     *                       UTF-8.
+     * @throws Exception\Exception if the given locale could not be set.
+     * @throws Exception\Exception if the locale-based output cannot be
+     *         converted to UTF-8.
      */
     public static function numberFormat($value, $decimals = null,
         $locale = null, $show_thousands_separator = true)
     {
         // look up decimal precision if none is provided
-        if ($decimals === null)
-            $decimals = SwatString::getDecimalPrecision($value);
+        if ($decimals === null) {
+            $decimals = self::getDecimalPrecision($value);
+        }
 
         // number_format can't handle UTF-8 separators, so insert placeholders
         $output =  number_format($value, $decimals, '.',
             $show_thousands_separator ? ',' : '');
 
         if ($locale !== null) {
-            $old_locale = setlocale(LC_ALL, 0);
-            if (setlocale(LC_ALL, $locale) === false) {
-                throw new SwatException(sprintf('Locale %s passed to the '.
-                    'numberFormat() method is not valid for this operating '.
-                    'system.', $locale));
+            $old_locale = setlocale(\LC_ALL, 0);
+            if (setlocale(\LC_ALL, $locale) === false) {
+                throw new Exception\Exception(
+                    sprintf(
+                        'Locale %s passed to the numberFormat() method is '.
+                        'not valid for this operating system.',
+                        $locale
+                    )
+                );
             }
         }
 
         // get character set of the locale that is used
-        $character_set = nl_langinfo(CODESET);
+        $character_set = nl_langinfo(\CODESET);
 
         // replace placeholder separators with locale-specific ones which
         // might contain non-ASCII
@@ -929,13 +952,19 @@ class SwatString
         // convert output to UTF-8
         if ($character_set !== 'UTF-8') {
             $output = iconv($character_set, 'UTF-8', $output);
-            if ($output === false)
-                throw new SwatException(sprintf('Could not convert %s output '.
-                    'to UTF-8', $character_set));
+            if ($output === false) {
+                throw new Exception\Exception(
+                    sprintf(
+                        'Could not convert %s output to UTF-8',
+                        $character_set
+                    )
+                );
+            }
         }
 
-        if ($locale !== null)
-            setlocale(LC_ALL, $old_locale);
+        if ($locale !== null) {
+            setlocale(\LC_ALL, $old_locale);
+        }
 
         return $output;
     }
@@ -1068,7 +1097,7 @@ class SwatString
      * @return string the padded string.
      */
     public static function pad($input, $pad_length, $pad_string = ' ',
-        $pad_type = STR_PAD_RIGHT)
+        $pad_type = \STR_PAD_RIGHT)
     {
         $output = '';
         $length = $pad_length - strlen($input);
@@ -1078,12 +1107,12 @@ class SwatString
 
         if ($length > 0) {
             switch ($pad_type) {
-            case STR_PAD_LEFT:
+            case \STR_PAD_LEFT:
                 $padding = str_repeat($pad_string, ceil($length / strlen($pad_string)));
                 $output = substr($padding, 0, $length) . $input;
                 break;
 
-            case STR_PAD_BOTH:
+            case \STR_PAD_BOTH:
                 $left_length = floor($length / 2);
                 $right_length = ceil($length / 2);
                 $padding = str_repeat($pad_string,
@@ -1094,7 +1123,7 @@ class SwatString
 
                 break;
 
-            case STR_PAD_RIGHT:
+            case \STR_PAD_RIGHT:
             default:
                 $padding = str_repeat($pad_string, ceil($length / strlen($pad_string)));
                 $output = $input . substr($padding, 0, $length);
@@ -1124,8 +1153,8 @@ class SwatString
      * @return integer the converted value or null if it could not be
      *                 converted.
      *
-     * @throws SwatException if the converted number is too large to fit in an
-     *                       integer.
+     * @throws Exception\Exception if the converted number is too large to fit
+     *         in an integer.
      */
     public static function toInteger($string)
     {
@@ -1148,13 +1177,17 @@ class SwatString
         // rejected because it wasn't formatted 1,000
 
         if (is_numeric($value)) {
-            if ($value > (float)PHP_INT_MAX)
-                throw new SwatException(
-                    'Floating point value is too big to be an integer');
+            if ($value > (float)\PHP_INT_MAX) {
+                throw new Exception\Exception(
+                    'Floating point value is too big to be an integer'
+                );
+            }
 
-            if ($value < (float)(-PHP_INT_MAX - 1))
-                throw new SwatException(
-                    'Floating point value is too small to be an integer');
+            if ($value < (float)(-\PHP_INT_MAX - 1)) {
+                throw new Exception\Exception(
+                    'Floating point value is too small to be an integer'
+                );
+            }
 
             $value = intval($value);
         } else {
@@ -1206,24 +1239,25 @@ class SwatString
      * Convert an iterable object or array into a human-readable, delimited
      * list.
      *
-     * @param array|Iterator $iterator                the object to convert to
-     *                                                a list.
-     * @param string         $conjunction             the list's conjunction.
-     *                                                Usually 'and' or 'or'.
-     * @param string         $delimiter               the list delimiter. If
-     *                                                list items should
-     *                                                additionally be padded
-     *                                                with a space, the
-     *                                                delimiter should also
-     *                                                include the space.
-     * @param boolean        $display_final_delimiter whether or not the final
-     *                                                list item should be
-     *                                                separated from the list
-     *                                                with a delimiter.
+     * @param array|\Iterator $iterator                the object to convert to
+     *                                                 a list.
+     * @param string          $conjunction             the list's conjunction.
+     *                                                 Usually 'and' or 'or'.
+     * @param string          $delimiter               the list delimiter. If
+     *                                                 list items should
+     *                                                 additionally be padded
+     *                                                 with a space, the
+     *                                                 delimiter should also
+     *                                                 include the space.
+     * @param boolean         $display_final_delimiter whether or not the final
+     *                                                 list item should be
+     *                                                 separated from the list
+     *                                                 with a delimiter.
      *
      * @return string The formatted list.
      *
-     * @throws SwatException if the iterator value is not an array or Iterator
+     * @throws Exception\Exception if the iterator value is not an array or
+     *         \Iterator.
      *
      * @todo Think about using a mask to make this as flexible as possible for
      *       different locales.
@@ -1231,11 +1265,13 @@ class SwatString
     public static function toList($iterator, $conjunction = 'and',
         $delimiter = ', ', $display_final_delimiter = true)
     {
-        if (is_array($iterator))
-            $iterator = new ArrayIterator($iterator);
+        if (is_array($iterator)) {
+            $iterator = new \ArrayIterator($iterator);
+        }
 
-        if (!($iterator instanceof Iterator))
-            throw new SwatException('Value is not an Iterator or array');
+        if (!$iterator instanceof \Iterator) {
+            throw new Exception\Exception('Value is not an Iterator or array');
+        }
 
         if (count($iterator) == 1) {
             $iterator->rewind();
@@ -1265,6 +1301,7 @@ class SwatString
 
         return $list;
     }
+
     // }}}
     // {{{ public static function getTimePeriodParts()
 
@@ -1751,7 +1788,7 @@ class SwatString
      *
      * @return string the signed serialized value.
      *
-     * @see SwatString::signedSerialize()
+     * @see String::signedSerialize()
      */
     public static function signedSerialize($data, $salt)
     {
@@ -1773,88 +1810,35 @@ class SwatString
      *
      * @return mixed the unserialized value.
      *
-     * @throws SwatInvalidSerializedDataException if the signed serialized data
-     *                                            has been tampered with.
+     * @throws Exception\InvalidSerializedDataException if the signed
+     *         serialized data has been tampered with.
      *
-     * @see SwatString::signedSerialize()
+     * @see String::signedSerialize()
      */
     public static function signedUnserialize($data, $salt)
     {
         $data_exp = explode('|', (string)$data, 2);
 
-        if (count($data_exp) != 2)
-            throw new SwatInvalidSerializedDataException(
-                "Invalid signed serialized data '{$data}'.", 0, $data);
+        if (count($data_exp) != 2) {
+            throw new Exception\InvalidSerializedDataException(
+                "Invalid signed serialized data '{$data}'.",
+                0,
+                $data
+            );
+        }
 
         $signature_data = $data_exp[0];
         $serialized_data = $data_exp[1];
 
-        if (self::hash($serialized_data.(string)$salt) != $signature_data)
-            throw new SwatInvalidSerializedDataException(
-                "Invalid signed serialized data '{$data}'.", 0, $data);
+        if (self::hash($serialized_data.(string)$salt) != $signature_data) {
+            throw new Exception\InvalidSerializedDataException(
+                "Invalid signed serialized data '{$data}'.",
+                0,
+                $data
+            );
+        }
 
         return unserialize($serialized_data);
-    }
-
-    // }}}
-    // {{{ public static function quoteJavaScriptString()
-
-    /**
-     * Safely quotes a PHP string into a JavaScript string
-     *
-     * Strings are always quoted using single quotes. The characters documented
-     * at {@link http://code.google.com/p/doctype/wiki/ArticleXSSInJavaScript}
-     * are escaped to prevent XSS attacks.
-     *
-     * @param string $string the PHP string to quote as a JavaScript string.
-     *
-     * @return string the quoted JavaScript string. The quoted string is
-     *                wrapped in single quotation marks and is safe to display
-     *                in inline JavaScript.
-     */
-    public static function quoteJavaScriptString($string)
-    {
-        $search = array(
-            '\\',           // backslash quote
-            '&',            // ampersand
-            '<',            // less than
-            '>',            // greater than
-            '=',            // equal
-            '"',            // double quote
-            "'",            // single quote
-            "\t",           // tab
-            "\r\n",         // line ending (Windows)
-            "\r",           // carriage return
-            "\n",           // line feed
-            "\xc2\x85",     // next line
-            "\xe2\x80\xa8", // line separator
-            "\xe2\x80\xa9", // paragraph separator
-        );
-
-        $replace = array(
-            '\\\\',   // backslash quote
-            '\x26',   // ampersand
-            '\x3c',   // less than
-            '\x3e',   // greater than
-            '\x3d',   // equal
-            '\x22',   // double quote
-            '\x27',   // single quote
-            '\t',     // tab
-            '\n',     // line ending (Windows, transformed to line feed)
-            '\n',     // carriage return (transformed to line feed)
-            '\n',     // line feed
-            '\u0085', // next line
-            '\u2028', // line separator
-            '\u2029', // paragraph separator
-        );
-
-        // escape XSS vectors
-        $string = str_replace($search, $replace, $string);
-
-        // quote string
-        $string = "'".$string."'";
-
-        return $string;
     }
 
     // }}}
@@ -1989,7 +1973,7 @@ class SwatString
     {
         $reg_exp = '/&#?[a-z0-9]*?;/su';
 
-        preg_match_all($reg_exp, $string, $matches, PREG_OFFSET_CAPTURE);
+        preg_match_all($reg_exp, $string, $matches, \PREG_OFFSET_CAPTURE);
 
         $string = preg_replace($reg_exp, '*', $string);
     }
@@ -2104,7 +2088,7 @@ class SwatString
     // {{{ private function __construct()
 
     /**
-     * Don't allow instantiation of the SwatString object
+     * Don't allow instantiation of this object
      *
      * This class contains only static methods and should not be instantiated.
      */

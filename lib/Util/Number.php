@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Util;
+
 /**
  * Number tools
  *
@@ -9,7 +11,7 @@
  * @copyright 2008-2011 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatNumber
+abstract class Number
 {
     // {{{ public static function roundUp()
 
@@ -101,17 +103,20 @@ class SwatNumber
 
             static $formatters = array();
             if (!isset($formatter[$locale])) {
-                $formatter[$locale] =
-                    new NumberFormatter($locale, NumberFormatter::ORDINAL);
+                $formatter[$locale] = new \NumberFormatter(
+                    $locale,
+                    \NumberFormatter::ORDINAL
+                );
             }
 
             // format ordinal
             $ordinal_value = $formatter[$locale]->format($value);
 
             // decompose to latin-1 characters (removes superscripts)
-            $ordinal_value = Normalizer::normalize(
+            $ordinal_value = \Normalizer::normalize(
                 $ordinal_value,
-                Normalizer::FORM_KC);
+                \Normalizer::FORM_KC
+            );
 
         } else {
 
@@ -154,7 +159,7 @@ class SwatNumber
     // {{{ private function __construct()
 
     /**
-     * Don't allow instantiation of the SwatNumber object
+     * Don't allow instantiation of this object
      *
      * This class contains only static methods and should not be instantiated.
      */
