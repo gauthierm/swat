@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatError.php';
+namespace Silverorange\Swat\Error;
 
 /**
  * Abstract base class for displaying SwatError objects
@@ -14,18 +14,20 @@ require_once 'Swat/SwatError.php';
  * @package   Swat
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatError::setDisplayer()
+ * @see       Error::setDisplayer()
  */
-abstract class SwatErrorDisplayer
+abstract class Displayer
 {
     // {{{ public abstract function display()
 
     /**
-     * Displays a SwatError
+     * Displays an error
      *
-     * This is called by SwatError::process().
+     * This is called by {@link Error::process()}.
+     *
+     * @param Error $e the error to display.
      */
-    public abstract function display(SwatError $e);
+    public abstract function display(Error $e);
 
     // }}}
 }

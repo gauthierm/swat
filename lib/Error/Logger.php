@@ -2,10 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatError.php';
+namespace Silverorange\Swat\Error;
 
 /**
- * Abstract base class for logging SwatError objects
+ * Abstract base class for logging error objects
  *
  * A custom error logger can be used to change how uncaught errors are logged
  * in an application. For example, you may want to log errors in a database
@@ -14,18 +14,20 @@ require_once 'Swat/SwatError.php';
  * @package   Swat
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatError::setLogger()
+ * @see       Error::setLogger()
  */
-abstract class SwatErrorLogger
+abstract class Logger
 {
     // {{{ public abstract function log()
 
     /**
-     * Logs a SwatError
+     * Logs an error
      *
-     * This is called by SwatError::process().
+     * This is called by {@link Error::process()}.
+     *
+     * @param Error $e the error to log.
      */
-    public abstract function log(SwatError $e);
+    public abstract function log(Error $e);
 
     // }}}
 }

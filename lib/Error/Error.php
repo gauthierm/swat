@@ -2,32 +2,32 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatErrorDisplayer.php';
-require_once 'Swat/SwatErrorLogger.php';
+namespace Silverorange\Swat\Error;
 
 /**
  * An error in Swat
  *
- * Unlike {@link SwatException} objects, errors do not interrupt the flow of
+ * Unlike {@link Exception} objects, errors do not interrupt the flow of
  * execution and can not be caught. Errors in Swat have handy methods for
  * outputting nicely formed error messages and logging errors.
  *
- * Like {@link SwatException}, SwatError filters sensitive data from stack
- * trace parameters. See the class-level documentation of SwatException for
- * details on how this works.
+ * Like {@link Exception}, Error filters sensitive data from stack trace
+ * parameters. See the class-level documentation of
+ * {@link \Silverorange\Swat\Exception\Exception} for details on how this
+ * works.
  *
  * @package   Swat
  * @copyright 2006-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatError
+class Error
 {
     // {{{ protected properties
 
     /**
      * The message of this error
      *
-     * Set in {@link SwatError::__construct()}
+     * Set in {@link Error::__construct()}
      *
      * @var string
      */
@@ -37,7 +37,7 @@ class SwatError
      * The severity of this error
      *
      * Error severity should be one of the E_* constants defined by PHP.
-     * Set in {@link SwatError::__construct()}
+     * Set in {@link Error::__construct()}
      *
      * @var integer
      */
@@ -46,7 +46,7 @@ class SwatError
     /**
      * The file this error occurred in
      *
-     * Set in {@link SwatError::__construct()}
+     * Set in {@link Error::__construct()}
      *
      * @var string
      */
@@ -55,7 +55,7 @@ class SwatError
     /**
      * The line this error occurred at
      *
-     * Set in {@link SwatError::__construct()}
+     * Set in {@link Error::__construct()}
      *
      * @var integer
      */
@@ -67,41 +67,41 @@ class SwatError
      * This should be an array of the form provided by the built-in PHP
      * function debug_backtrace().
      *
-     * Set in {@link SwatError::__construct()}
+     * Set in {@link Error::__construct()}
      *
      * @var array
      */
     protected $backtrace;
 
     /**
-     * @var SwatErrorDisplayer
+     * @var Displayer
      */
     protected static $displayer = null;
 
     /**
-     * @var SwatErrorLogger
+     * @var Logger
      */
     protected static $logger = null;
 
     /**
      * @var integer
      */
-    protected static $fatal_severity = E_USER_ERROR;
+    protected static $fatal_severity = \E_USER_ERROR;
 
     // }}}
     // {{{ public static function setLogger()
 
     /**
-     * Sets the object that logs SwatError objects when they are processed
+     * Sets the object that logs Error objects when they are processed
      *
      * For example:
      * <code>
-     * SwatError::setLogger(new CustomLogger());
+     * Error::setLogger(new MyLogger());
      * </code>
      *
-     * @param SwatErrorLogger $logger the object to use to log exceptions.
+     * @param Logger $logger the object to use to log exceptions.
      */
-    public static function setLogger(SwatErrorLogger $logger)
+    public static function setLogger(Logger $logger)
     {
         self::$logger = $logger;
     }
@@ -110,18 +110,16 @@ class SwatError
     // {{{ public static function setDisplayer()
 
     /**
-     * Sets the object that displays SwatError objects when they are
-     * processed
+     * Sets the object that displays Error objects when they are processed
      *
      * For example:
      * <code>
-     * SwatError::setDisplayer(new SilverorangeDisplayer());
+     * Error::setDisplayer(new MyDisplayer());
      * </code>
      *
-     * @param SwatErrorDisplayer $displayer the object to use to display
-     *                                      exceptions.
+     * @param Displayer $displayer the object to use to display errors.
      */
-    public static function setDisplayer(SwatErrorDisplayer $displayer)
+    public static function setDisplayer(Displayer $displayer)
     {
         self::$displayer = $displayer;
     }
@@ -130,7 +128,7 @@ class SwatError
     // {{{ public static function setFatalSeverity()
 
     /**
-     * Sets the severity of SwatError that should be fatal
+     * Sets the severity of an error that should be fatal
      *
      * @param integer $severity a bitwise combination of PHP error severities
      *                          to be considered fatal.
@@ -317,7 +315,7 @@ class SwatError
                 $arguments = '';
 
             printf("%s. In file '%s' on line %s.\n%sMethod: %s%s%s(%s)\n",
-                str_pad(--$count, 6, ' ', STR_PAD_LEFT),
+                str_pad(--$count, 6, ' ', \STR_PAD_LEFT),
                 array_key_exists('file', $entry) ? $entry['file'] : 'unknown',
                 array_key_exists('line', $entry) ? $entry['line'] : 'unknown',
                 str_repeat(' ', 8),
@@ -401,7 +399,7 @@ class SwatError
     /**
      * Handles an error
      *
-     * When an error occurs, a SwatError object is created and processed.
+     * When an error occurs, an Error object is created and processed.
      *
      * @param integer $errno   the severity code of the handled error.
      * @param string  $errstr  the message of the handled error.
@@ -412,7 +410,7 @@ class SwatError
     {
         // only handle error if error reporting is not suppressed
         if (error_reporting() != 0) {
-            $error = new SwatError($errno, $errstr, $errfile, $errline);
+            $error = new Error($errno, $errstr, $errfile, $errline);
             $error->process();
         }
     }
@@ -439,13 +437,13 @@ class SwatError
 
         // try to get function or method parameter list using reflection
         if ($class !== null && $function !== null && class_exists($class)) {
-            $class_reflector = new ReflectionClass($class);
+            $class_reflector = new \ReflectionClass($class);
             if ($class_reflector->hasMethod($function)) {
                 $method = $class_reflector->getMethod($function);
                 $params = $method->getParameters();
             }
         } elseif ($function !== null && function_exists($function)) {
-            $method = new ReflectionFunction($function);
+            $method = new \ReflectionFunction($function);
             $params = $method->getParameters();
         }
 
@@ -489,7 +487,7 @@ class SwatError
      *
      * @return string the filtered formatted version of the parameter.
      *
-     * @see SwatException::$sensitive_param_names
+     * @see \Silverorange\Swat\Exception\Exception::$sensitive_param_names
      */
     protected function formatSensitiveParam($name, $value)
     {
@@ -601,12 +599,12 @@ class SwatError
     protected function getSeverityString()
     {
         static $error_types = array(
-            E_WARNING         => 'Warning',
-            E_NOTICE          => 'Notice',
-            E_USER_ERROR      => 'User Fatal Error',
-            E_USER_WARNING    => 'User Warning',
-            E_USER_NOTICE     => 'User Notice',
-            E_STRICT          => 'Forward Compatibility Notice'
+            \E_WARNING      => 'Warning',
+            \E_NOTICE       => 'Notice',
+            \E_USER_ERROR   => 'User Fatal Error',
+            \E_USER_WARNING => 'User Warning',
+            \E_USER_NOTICE  => 'User Notice',
+            \E_STRICT       => 'Forward Compatibility Notice'
         );
 
         $out = null;
@@ -632,14 +630,14 @@ class SwatError
      * ?>
      * </code>
      *
-     * @param ReflectionFunctionAbstract $method the method the parameter to
-     *                                           which the parameter belongs.
-     * @param string                     $name   the name of the parameter.
+     * @param \ReflectionFunctionAbstract $method the method the parameter to
+     *                                            which the parameter belongs.
+     * @param string                      $name   the name of the parameter.
      *
      * @return boolean true if the parameter is sensitive and false if the
      *                 method is not sensitive.
      */
-    protected function isSensitiveParameter(ReflectionFunctionAbstract $method,
+    protected function isSensitiveParameter(\ReflectionFunctionAbstract $method,
         $name)
     {
         $sensitive = false;
@@ -666,7 +664,7 @@ class SwatError
     // {{{ public static function setupHandler()
 
     /**
-     * Set the PHP error handler to use SwatError
+     * Set the PHP error handler to use Swat's Error class
      */
     public static function setupHandler()
     {
@@ -674,7 +672,13 @@ class SwatError
          * All run-time errors as specified in the error_reporting directive
          * are handled.
          */
-        set_error_handler(array('SwatError', 'handle'), error_reporting());
+        set_error_handler(
+            array(
+                'Silverorange\Swat\Error\Error',
+                'handle'
+            ),
+            error_reporting()
+        );
     }
 
     // }}}
