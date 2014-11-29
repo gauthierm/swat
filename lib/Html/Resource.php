@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Html;
+
 /**
  * Stores and outputs an HTML head entry
  *
@@ -12,7 +14,7 @@
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatHtmlHeadEntry
+abstract class Resource
 {
     // {{{ protected properties
 

@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
+namespace Silverorange\Swat\Html;
 
 /**
  * Stores and outputs an HTML head entry for a LESS stylesheet include
@@ -11,7 +11,7 @@ require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
  * @copyright 2012-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatLessStyleSheetHtmlHeadEntry extends SwatStyleSheetHtmlHeadEntry
+class LessResource extends StyleSheetResource
 {
     // {{{ public function display()
 
@@ -32,11 +32,11 @@ class SwatLessStyleSheetHtmlHeadEntry extends SwatStyleSheetHtmlHeadEntry
     }
 
     // }}}
-    // {{{ public function getStyleSheetHeadEntry()
+    // {{{ public function getStyleSheetResource()
 
-    public function getStyleSheetHeadEntry()
+    public function getStyleSheetResource()
     {
-        return new SwatStyleSheetHtmlHeadEntry($this->uri);
+        return new StyleSheetResource($this->uri);
     }
 
     // }}}

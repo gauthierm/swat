@@ -2,7 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\Html;
+
+use Silverorange\Swat\Util;
 
 /**
  * Stores and outputs an HTML tag
@@ -11,7 +13,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2004-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatHtmlTag
+class Tag
 {
     // {{{ private properties
 
@@ -73,12 +75,12 @@ class SwatHtmlTag
      * Set content for the body of the XHTML tag
      *
      * This property is a UTF-8 encoded XHTML fragment. It is not escaped
-     * before display so the user of SwatHtmlTag is responsible for any
-     * escaping that must occur.
+     * before display so the user of Tag is responsible for any escaping
+     * that must occur.
      *
-     * When this value is set {@link SwatHtmlTag::display()} displays this
-     * content after displaying the opening tag. Then it displays an explicit
-     * closing tag.
+     * When this value is set {@link Tag::display()} displays this content
+     * after displaying the opening tag. Then it displays an explicit closing
+     * tag.
      *
      * @param string $content content for the body of the XHTML tag
      * @param string $type    mime type of the content.  Default is
@@ -132,13 +134,12 @@ class SwatHtmlTag
      * Displays this tag
      *
      * Output the opening tag including all its attributes and implicitly
-     * close the tag. If explicit closing is desired, use
-     * {@link SwatHtmlTag::open()} and {@link SwatHtmlTag::close()} instead.
-     * If {@link SwatHtmlTag::content} is set then the content is displayed
-     * between an opening and closing tag, otherwise a self-closing tag is
-     * displayed.
+     * close the tag. If explicit closing is desired, use {@link Tag::open()}
+     * and {@link Tag::close()} instead. If {@link Tag::$content} is set then
+     * the content is displayed between an opening and closing tag, otherwise a
+     * self-closing tag is displayed.
      *
-     * @see SwatHtmlTag::open()
+     * @see Tag::open()
      */
     public function display()
     {
@@ -157,15 +158,15 @@ class SwatHtmlTag
     /**
      * Displays the content of this tag
      *
-     * If {@link SwatHtmlTag::content} is set then the content is displayed.
+     * If {@link Tag::$content} is set then the content is displayed.
      *
-     * @see SwatHtmlTag::display()
+     * @see Tag::display()
      */
     public function displayContent()
     {
         if ($this->content !== null) {
             if ($this->content_type === 'text/plain')
-                echo SwatString::minimizeEntities($this->content);
+                echo Util\String::minimizeEntities($this->content);
             else
                 echo $this->content;
         }
@@ -178,10 +179,10 @@ class SwatHtmlTag
      * Opens this tag
      *
      * Outputs the opening tag including all its attributes. Should be paired
-     * with a call to {@link SwatHtmlTag::close()}. If implicit closing
-     * is desired, use {@link SwatHtmlTag::display()} instead.
+     * with a call to {@link Tag::close()}. If implicit closing is desired, use
+     * {@link Tag::display()} instead.
      *
-     * @see SwatHtmlTag::close()
+     * @see Tag::close()
      */
     public function open()
     {
@@ -195,9 +196,9 @@ class SwatHtmlTag
      * Closes this tag
      *
      * Outputs the closing tag. Should be paired with a call to
-     * {@link SwatHtmlTag::open()}.
+     * {@link Tag::open()}.
      *
-     * @see SwatHtmlTag::open()
+     * @see Tag::open()
      */
     public function close()
     {
@@ -211,11 +212,11 @@ class SwatHtmlTag
      * Gets this tag as a string
      *
      * The string is the same as the displayed content of
-     * {@link SwatHtmlString::display()}. It is not possible to get paired tags
-     * as strings as this object has no knowledge of what is displayed between
-     * the opening and closing tags.
+     * {@link Tag::display()}. It is not possible to get paired tags as strings
+     * as this object has no knowledge of what is displayed between the opening
+     * and closing tags.
      *
-     * @see SwatHtmlTag::display()
+     * @see Tag::display()
      *
      * @return string this tag as a string.
      */
@@ -276,18 +277,18 @@ class SwatHtmlTag
      * in string context. For example:
      *
      * <code>
-     * $img = new SwatHtmlTag('img');
+     * $img = new Tag('img');
      * $img->alt = 'example image';
      * $img->src = 'http://example.com/example.png';
      * echo $img;
      * </code>
      *
-     * Note: It is more efficient to simply call {@link SwatHtmlTag::display()}
-     * instead of using <code>echo $tag;</code>.
+     * Note: It is more efficient to simply call {@link Tag::display()} instead
+     * of using <code>echo $tag;</code>.
      *
      * @return string this tag as a string.
      *
-     * @see SwatHtmlTag::toString()
+     * @see Tag::toString()
      */
     public function __toString()
     {
@@ -313,7 +314,7 @@ class SwatHtmlTag
         foreach ($this->attributes as $attribute => $value) {
             if ($value !== null) {
                 echo ' ', $attribute, '="',
-                    SwatString::minimizeEntities($value), '"';
+                    Util\String::minimizeEntities($value), '"';
             }
         }
 

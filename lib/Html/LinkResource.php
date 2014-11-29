@@ -2,8 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlHeadEntry.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\Html;
 
 /**
  * Stores and outputs an HTML head entry for an XHTML link element
@@ -12,7 +11,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2008-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatLinkHtmlHeadEntry extends SwatHtmlHeadEntry
+class LinkResource extends Resource
 {
     // {{{ protected properties
 
@@ -74,7 +73,7 @@ class SwatLinkHtmlHeadEntry extends SwatHtmlHeadEntry
 
     public function display($uri_prefix = '', $tag = null)
     {
-        $link = new SwatHtmlTag('link');
+        $link = new Tag('link');
         $link->title = $this->title;
         $link->rel = $this->relationship;
         $link->type = $this->type;

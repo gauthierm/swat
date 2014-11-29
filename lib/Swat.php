@@ -163,24 +163,6 @@ class Swat
     }
 
     // }}}
-    // {{{ public static function displayInlineJavaScript()
-
-    /**
-     * Displays inline JavaScript properly encapsulating the script in a CDATA
-     * section
-     *
-     * @param string $javascript the inline JavaScript to display.
-     */
-    public static function displayInlineJavaScript($javascript)
-    {
-        if ($javascript != '') {
-            echo '<script type="text/javascript">', "\n//<![CDATA[\n",
-                rtrim($javascript),
-                "\n//]]>\n</script>";
-        }
-    }
-
-    // }}}
     // {{{ private function __construct()
 
     /**

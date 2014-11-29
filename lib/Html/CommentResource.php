@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlHeadEntry.php';
+namespace Silverorange\Swat\Html;
 
 /**
  * Stores and outputs an HTML head entry for an XML comment
@@ -11,7 +11,7 @@ require_once 'Swat/SwatHtmlHeadEntry.php';
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCommentHtmlHeadEntry extends SwatHtmlHeadEntry
+class CommentResource extends Resource
 {
     // {{{ protected properties
 

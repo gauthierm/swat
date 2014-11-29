@@ -2,15 +2,16 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/Swat.php';
-require_once 'Swat/SwatHtmlHeadEntry.php';
+namespace Silverorange\Swat\Html;
+
+use Silverorange\Swat\Util;
 
 /**
  * @package   Swat
  * @copyright 2012-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatInlineJavaScriptHtmlHeadEntry extends SwatHtmlHeadEntry
+class InlineJavaScriptResource extends Resource
 {
     // {{{ protected properties
 
@@ -38,7 +39,7 @@ class SwatInlineJavaScriptHtmlHeadEntry extends SwatHtmlHeadEntry
 
     public function display($uri_prefix = '', $tag = null)
     {
-        Swat::displayInlineJavaScript($this->script);
+        Util\JavaScript::displayInline($this->script);
     }
 
     // }}}
