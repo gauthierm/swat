@@ -2,11 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatForm.php';
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\Exception;
+
+use Silverorange\Swat\UI;
 
 /**
- * Thrown by {@link SwatForm} when a possible cross-site request forgery is
+ * Thrown by {@link UI\Form} when a possible cross-site request forgery is
  * detected
  *
  * By design, it is not possible to get the correct authentication token from
@@ -18,14 +19,14 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCrossSiteRequestForgeryException extends SwatException
+class CrossSiteRequestForgeryException extends Exception
 {
     // {{{ protected properties
 
     /**
      * The form that did not authenticate
      *
-     * @var SwatForm
+     * @var UI\Form
      */
     protected $form = null;
 
@@ -35,11 +36,11 @@ class SwatCrossSiteRequestForgeryException extends SwatException
     /**
      * Creates a new cross-site request forgery exception
      *
-     * @param string   $message the message of the exception.
-     * @param integer  $code    the code of the exception.
-     * @param SwatForm $form    the form that did not authenticate.
+     * @param string  $message the message of the exception.
+     * @param integer $code    the code of the exception.
+     * @param UI\Form $form    the form that did not authenticate.
      */
-    public function __construct($message = null, $code = 0, SwatForm $form)
+    public function __construct($message = null, $code = 0, UI\Form $form)
     {
         parent::__construct($message, $code);
         $this->form = $form;
@@ -51,7 +52,7 @@ class SwatCrossSiteRequestForgeryException extends SwatException
     /**
      * Gets the form that did not authenticate
      *
-     * @return SwatForm the form that did not authenticate.
+     * @return UI\Form the form that did not authenticate.
      */
     public function getForm()
     {

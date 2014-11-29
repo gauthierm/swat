@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\Exception;
 
 /**
  * Thrown when a users tries to set a callback to a value that is not a
@@ -12,7 +12,7 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatInvalidCallbackException extends SwatException
+class InvalidCallbackException extends Exception
 {
     // {{{ protected properties
 

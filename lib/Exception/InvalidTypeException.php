@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\Exception;
 
 /**
  * Thrown when a value is of the wrong type
@@ -11,7 +11,7 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatInvalidTypeException extends SwatException
+class InvalidTypeException extends Exception
 {
     // {{{ protected properties
 

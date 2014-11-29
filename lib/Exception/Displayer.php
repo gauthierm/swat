@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\Exception;
 
 /**
  * Abstract base class for displaying SwatException objects
@@ -15,18 +15,20 @@ require_once 'Swat/exceptions/SwatException.php';
  * @package   Swat
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatException::setDisplayer()
+ * @see       Exception::setDisplayer()
  */
-abstract class SwatExceptionDisplayer
+abstract class Displayer
 {
     // {{{ public abstract function display()
 
     /**
-     * Displays a SwatException
+     * Displays a Swat exception
      *
-     * This is called by SwatException::process().
+     * This is called by {@link Exception::process()}.
+     *
+     * @param Exception $e the exception to display.
      */
-    public abstract function display(SwatException $e);
+    public abstract function display(Exception $e);
 
     // }}}
 }

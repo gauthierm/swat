@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\Exception;
+
 /**
  * Thrown when a integer causes an arithmetic/buffer overflow
  *
@@ -9,7 +11,7 @@
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatIntegerOverflowException extends OverflowException
+class IntegerOverflowException extends \OverflowException
 {
     // {{{ protected properties
 

@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\Exception;
 
 /**
  * Thrown when a file is not found
@@ -11,7 +11,7 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFileNotFoundException extends SwatException
+class FileNotFoundException extends Exception
 {
     // {{{ protected properties
 
