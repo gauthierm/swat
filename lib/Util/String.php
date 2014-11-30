@@ -5,7 +5,6 @@
 namespace Silverorange\Swat\Util;
 
 use Silverorange\Swat\Exception;
-require_once 'Swat/SwatDate.php';
 
 /**
  * String Tools
@@ -1334,16 +1333,16 @@ class String
     public static function getTimePeriodParts($seconds,
         $interval_parts = null)
     {
-        $interval = SwatDate::getIntervalFromSeconds($seconds);
+        $interval = Date::getIntervalFromSeconds($seconds);
 
         if ($interval_parts === null) {
             $interval_parts =
-                SwatDate::DI_YEARS   |
-                SwatDate::DI_MONTHS  |
-                SwatDate::DI_DAYS    |
-                SwatDate::DI_HOURS   |
-                SwatDate::DI_MINUTES |
-                SwatDate::DI_SECONDS;
+                Date::DI_YEARS   |
+                Date::DI_MONTHS  |
+                Date::DI_DAYS    |
+                Date::DI_HOURS   |
+                Date::DI_MINUTES |
+                Date::DI_SECONDS;
         }
 
         // DateInterval cannot have overflow values for each part, so store
@@ -1358,10 +1357,10 @@ class String
         $parts = array();
 
         if ($years > 0) {
-            if ($interval_parts & SwatDate::DI_YEARS) {
+            if ($interval_parts & Date::DI_YEARS) {
                 $parts['years'] = $years;
             } else {
-                // SwatDate::getIntervalFromSeconds() treats years as 365 days,
+                // Date::getIntervalFromSeconds() treats years as 365 days,
                 // so convert back to days, not months.
                 $days += $years * 365;
             }
@@ -1371,7 +1370,7 @@ class String
         // and there are enough days to make at least one month, convert those
         // days into months, and leave the remainder in the days variable.
         if ($months > 0 || $days >= 30) {
-            if ($interval_parts & SwatDate::DI_MONTHS) {
+            if ($interval_parts & Date::DI_MONTHS) {
                 $months += (int)floor($days / 30);
                 $days = $days % 30;
 
@@ -1382,7 +1381,7 @@ class String
         }
 
         if ($days > 0) {
-            if ($interval_parts & SwatDate::DI_WEEKS &&
+            if ($interval_parts & Date::DI_WEEKS &&
                 $days >= 7) {
 
                 $weeks = (int)floor($days / 7);
@@ -1392,7 +1391,7 @@ class String
             }
 
             if ($days > 0) {
-                if ($interval_parts & SwatDate::DI_DAYS) {
+                if ($interval_parts & Date::DI_DAYS) {
                     $parts['days'] = $days;
                 } else {
                     $hours += $days * 24;
@@ -1401,7 +1400,7 @@ class String
         }
 
         if ($hours > 0) {
-            if ($interval_parts & SwatDate::DI_HOURS) {
+            if ($interval_parts & Date::DI_HOURS) {
                 $parts['hours'] = $hours;
             } else {
                 $minutes += $hours * 60;
@@ -1409,7 +1408,7 @@ class String
         }
 
         if ($minutes > 0) {
-            if ($interval_parts & SwatDate::DI_MINUTES) {
+            if ($interval_parts & Date::DI_MINUTES) {
                 $parts['minutes'] = $minutes;
             } else {
                 $seconds += $minutes * 60;
@@ -1417,7 +1416,7 @@ class String
         }
 
         if ($seconds > 0) {
-            if ($interval_parts & SwatDate::DI_SECONDS) {
+            if ($interval_parts & Date::DI_SECONDS) {
                 $parts['seconds'] = $seconds;
             }
         }
@@ -1576,12 +1575,12 @@ class String
         $largest_part = false)
     {
         $interval_parts =
-            SwatDate::DI_YEARS   |
-            SwatDate::DI_WEEKS   |
-            SwatDate::DI_DAYS    |
-            SwatDate::DI_HOURS   |
-            SwatDate::DI_MINUTES |
-            SwatDate::DI_SECONDS;
+            Date::DI_YEARS   |
+            Date::DI_WEEKS   |
+            Date::DI_DAYS    |
+            Date::DI_HOURS   |
+            Date::DI_MINUTES |
+            Date::DI_SECONDS;
 
         $parts = self::getHumanReadableTimePeriodParts(
             $seconds,
@@ -1612,12 +1611,12 @@ class String
     public static function toHumanReadableTimePeriodWithWeeksAndDays($seconds)
     {
         $interval_parts =
-            SwatDate::DI_YEARS   |
-            SwatDate::DI_WEEKS   |
-            SwatDate::DI_DAYS    |
-            SwatDate::DI_HOURS   |
-            SwatDate::DI_MINUTES |
-            SwatDate::DI_SECONDS;
+            Date::DI_YEARS   |
+            Date::DI_WEEKS   |
+            Date::DI_DAYS    |
+            Date::DI_HOURS   |
+            Date::DI_MINUTES |
+            Date::DI_SECONDS;
 
         $parts = self::getHumanReadableTimePeriodParts(
             $seconds,

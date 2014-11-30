@@ -527,7 +527,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
             if (array_key_exists($name, $row)) {
                 if (in_array($name, $this->date_properties) &&
                     $row[$name] !== null) {
-                    $this->$name = new SwatDate($row[$name]);
+                    $this->$name = new Util\Date($row[$name]);
                 } else {
                     $this->$name = $row[$name];
                 }
@@ -1292,7 +1292,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         case 'float':
             return 'float';
         case 'object':
-            if ($value instanceof SwatDate)
+            if ($value instanceof Util\Date)
                 return 'date';
         case 'string':
         default:
@@ -1452,7 +1452,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
         foreach ($data as $property => $value) {
 
-            if ($value instanceof SwatDate && isset($value->year)) {
+            if ($value instanceof Util\Date && isset($value->year)) {
                 // convert old dates to new dates
                 $date_string = sprintf(
                     '%04d-%02d-%02dT%02d:%02d:%02d',
@@ -1465,7 +1465,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
                 $tz_id = $value->tz->id;
 
-                $value = new SwatDate($date_string);
+                $value = new Util\Date($date_string);
                 $value->setTZById($tz_id);
             }
 

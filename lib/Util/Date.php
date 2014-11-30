@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/Swat.php';
+namespace Silverorange\Swat\Util;
 
 /**
  * Date class and PEAR-compatibility layer
@@ -16,7 +16,7 @@ require_once 'Swat/Swat.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDate extends DateTime implements Serializable
+class Date extends \DateTime implements \Serializable
 {
     // {{{ time zone format constants
 
@@ -31,7 +31,7 @@ class SwatDate extends DateTime implements Serializable
     const TZ_SHORT                  = 2;
 
     /**
-     * Alias for {@link SwatDate::TZ_SHORT}
+     * Alias for {@link Date::TZ_SHORT}
      *
      * @deprecated
      */
@@ -43,7 +43,7 @@ class SwatDate extends DateTime implements Serializable
     const TZ_DST_SHORT              = 4;
 
     /**
-     * Alias for {@link SwatDate::TZ_DST_SHORT}
+     * Alias for {@link Date::TZ_DST_SHORT}
      *
      * @deprecated
      */
@@ -60,7 +60,7 @@ class SwatDate extends DateTime implements Serializable
     const TZ_CURRENT_SHORT          = 7;
 
     /**
-     * Alias for {@link SwatDate::TZ_CURRENT_SHORT}
+     * Alias for {@link Date::TZ_CURRENT_SHORT}
      *
      * @deprecated
      */
@@ -160,21 +160,21 @@ class SwatDate extends DateTime implements Serializable
     /**
      * Value to use for no options.
      *
-     * @see SwatDate::getISO8601()
+     * @see Date::getISO8601()
      */
     const ISO_BASIC     = 0;
 
     /**
      * Include '-' and ':' separator characters.
      *
-     * @see SwatDate::getISO8601()
+     * @see Date::getISO8601()
      */
     const ISO_EXTENDED  = 1;
 
     /**
      * Include microseconds.
      *
-     * @see SwatDate::getISO8601()
+     * @see Date::getISO8601()
      */
     const ISO_MICROTIME = 2;
 
@@ -184,7 +184,7 @@ class SwatDate extends DateTime implements Serializable
      * Time zone offset will be 'Z' for 0, otherwise
      * will be +-HH:MM.
      *
-     * @see SwatDate::getISO8601()
+     * @see Date::getISO8601()
      */
     const ISO_TIME_ZONE = 4;
 
@@ -193,9 +193,9 @@ class SwatDate extends DateTime implements Serializable
 
     /**
      * A set of bitwise contants to control which parts of the interval we want
-     * when returning a DateInterval.
+     * when returning a \DateInterval.
      *
-     * @see SwatString::getHumanReadableTimePeriodParts()
+     * @see String::getHumanReadableTimePeriodParts()
      */
     const DI_YEARS   = 1;
     const DI_MONTHS  = 2;
@@ -344,8 +344,8 @@ class SwatDate extends DateTime implements Serializable
      * Formats this date given either a format string or a format id
      *
      * Note: The results of this method are not localized. For a localized
-     * formatted date, use {@link SwatDate::formatLikeIntl()} or
-     * {@link SwatDate::formatLikeStrftime()}.
+     * formatted date, use {@link Date::formatLikeIntl()} or
+     * {@link Date::formatLikeStrftime()}.
      *
      * @param mixed $format either a format string or an integer format id.
      * @param integer $tz_format optional time zone format id.
@@ -391,8 +391,8 @@ class SwatDate extends DateTime implements Serializable
         }
 
         if ($locale != '') {
-            $old_locale = setlocale(LC_ALL, 0);
-            setlocale(LC_ALL, $locale);
+            $old_locale = setlocale(\LC_ALL, 0);
+            setlocale(\LC_ALL, $locale);
         }
 
         $timestamp = $this->getTimestamp();
@@ -403,7 +403,7 @@ class SwatDate extends DateTime implements Serializable
         }
 
         if ($locale != '') {
-            setlocale(LC_ALL, $old_locale);
+            setlocale(\LC_ALL, $old_locale);
         }
 
         return $out;
@@ -413,7 +413,7 @@ class SwatDate extends DateTime implements Serializable
     // {{{ public function formatLikeIntl()
 
     /**
-     * Formats this date using the ICU IntlDateFormater given either a format
+     * Formats this date using the ICU \IntlDateFormater given either a format
      * string or a format id
      *
      * This method returns localized results.
@@ -433,16 +433,17 @@ class SwatDate extends DateTime implements Serializable
         }
 
         if ($locale == '') {
-            $locale = setlocale(LC_TIME, 0);
+            $locale = setlocale(\LC_TIME, 0);
         }
 
         static $formatters = array();
 
         if (!isset($formatters[$locale])) {
-            $formatters[$locale] = new IntlDateFormatter(
+            $formatters[$locale] = new \IntlDateFormatter(
                 $locale,
-                IntlDateFormatter::FULL,
-                IntlDateFormatter::FULL);
+                \IntlDateFormatter::FULL,
+                \IntlDateFormatter::FULL
+            );
         }
 
         $formatter = $formatters[$locale];
@@ -531,7 +532,7 @@ class SwatDate extends DateTime implements Serializable
     /**
      * Clears the time portion of the date object
      *
-     * @deprecated Use <kbd>SwatDate::setTime(0, 0, 0);</kbd> instead.
+     * @deprecated Use <kbd>Date::setTime(0, 0, 0);</kbd> instead.
      */
     public function clearTime()
     {
@@ -559,19 +560,19 @@ class SwatDate extends DateTime implements Serializable
      * 50 seconds returns "50 seconds" while a difference of 90 seconds
      * returns "1 minute".
      *
-     * @param SwatDate $compare_date Optional date to compare to. If null, the
-     *                               the current date/time will be used.
+     * @param Date $compare_date optional date to compare to. If null, the
+     *                           current date/time will be used.
      *
      * @return string A human-readable date diff.
      */
-    public function getHumanReadableDateDiff(SwatDate $compare_date = null)
+    public function getHumanReadableDateDiff(Date $compare_date = null)
     {
         if ($compare_date === null) {
-            $compare_date = new SwatDate();
+            $compare_date = new Date();
         }
 
         $seconds = $compare_date->getTime() - $this->getTime();
-        return SwatString::toHumanReadableTimePeriod($seconds, true);
+        return String::toHumanReadableTimePeriod($seconds, true);
     }
 
     // }}}
@@ -587,20 +588,19 @@ class SwatDate extends DateTime implements Serializable
      * 50 seconds returns "50 seconds" while a difference of 90 seconds
      * returns "1 minute".
      *
-     * @param SwatDate $compare_date Optional date to compare to. If null, the
-     *                               the current date/time will be used.
+     * @param Date $compare_date optional date to compare to. If null, the
+     *                           current date/time will be used.
      *
      * @return string A human-readable date diff.
      */
-    public function getHumanReadableDateDiffWithWeeks(
-        SwatDate $compare_date = null)
+    public function getHumanReadableDateDiffWithWeeks(Date $compare_date = null)
     {
         if ($compare_date === null) {
-            $compare_date = new SwatDate();
+            $compare_date = new Date();
         }
 
         $seconds = $compare_date->getTime() - $this->getTime();
-        return SwatString::toHumanReadableTimePeriodWithWeeks($seconds, true);
+        return String::toHumanReadableTimePeriodWithWeeks($seconds, true);
     }
 
     // }}}
@@ -616,20 +616,20 @@ class SwatDate extends DateTime implements Serializable
      * 50 seconds returns "50 seconds" while a difference of 90 seconds
      * returns "1 minute".
      *
-     * @param SwatDate $compare_date Optional date to compare to. If null, the
-     *                               the current date/time will be used.
+     * @param Date $compare_date optional date to compare to. If null, the
+     *                           current date/time will be used.
      *
      * @return string A human-readable date diff.
      */
     public function getHumanReadableDateDiffWithWeeksAndDays(
-        SwatDate $compare_date = null)
+        Date $compare_date = null)
     {
         if ($compare_date === null) {
-            $compare_date = new SwatDate();
+            $compare_date = new Date();
         }
 
         $seconds = $compare_date->getTime() - $this->getTime();
-        return SwatString::toHumanReadableTimePeriodWithWeeksAndDays($seconds);
+        return String::toHumanReadableTimePeriodWithWeeksAndDays($seconds);
     }
 
     // }}}
@@ -642,7 +642,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * @return string the formatting string that was requested.
      *
-     * @throws SwatException
+     * @throws \Exception
      */
     public static function getFormatById($id)
     {
@@ -685,7 +685,7 @@ class SwatDate extends DateTime implements Serializable
         case self::DF_RFC_2822:
             return 'r';
         default:
-            throw new Exception("Unknown date format id '$id'.");
+            throw new \Exception("Unknown date format id '$id'.");
         }
     }
 
@@ -699,7 +699,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * @return string the formatting string that was requested.
      *
-     * @throws SwatException
+     * @throws \Exception
      */
     public static function getFormatLikeStrftimeById($id)
     {
@@ -739,7 +739,7 @@ class SwatDate extends DateTime implements Serializable
         case self::DF_RFC_2822:
             return Swat::_('%a, %d %b %Y %T');
         default:
-            throw new Exception("Unknown date format id '$id'.");
+            throw new \Exception("Unknown date format id '$id'.");
         }
     }
 
@@ -753,7 +753,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * @return string the formatting string that was requested.
      *
-     * @throws SwatException
+     * @throws \Exception
      */
     public static function getFormatLikeIntlById($id)
     {
@@ -793,7 +793,7 @@ class SwatDate extends DateTime implements Serializable
         case self::DF_RFC_2822:
             return Swat::_('EEE, dd MMM yyyy HH:mm:ss');
         default:
-            throw new Exception("Unknown date format id '$id'.");
+            throw new \Exception("Unknown date format id '$id'.");
         }
     }
 
@@ -820,7 +820,7 @@ class SwatDate extends DateTime implements Serializable
 
             self::$tz_abbreviations = array();
 
-            $abbreviations = DateTimeZone::listAbbreviations();
+            $abbreviations = \DateTimeZone::listAbbreviations();
             foreach ($abbreviations as $abbreviation => $time_zones) {
 
                 if (isset(self::$valid_tz_abbreviations[$abbreviation])) {
@@ -851,13 +851,13 @@ class SwatDate extends DateTime implements Serializable
     /**
      * Gets an array of time zone abbreviations for a specific time zone
      *
-     * @param DateTimeZone $time_zone the new time zone.
+     * @param \DateTimeZone $time_zone the new time zone.
      *
      * @return array an array containing one or both of
      *               - 'st' for the standard time abbreviation, and
      *               - 'dt' for the daylight time abbreviation.
      */
-    public static function getTimeZoneAbbreviation(DateTimeZone $time_zone)
+    public static function getTimeZoneAbbreviation(\DateTimeZone $time_zone)
     {
         $abbreviations = self::getTimeZoneAbbreviations();
         $key = $time_zone->getName();
@@ -873,18 +873,18 @@ class SwatDate extends DateTime implements Serializable
     // {{{ public static function compare()
 
     /**
-     * Compares two SwatDates
+     * Compares two date objects
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @param DateTime $date1 the first date to compare.
-     * @param DateTime $date2 the second date to compare.
+     * @param \DateTime $date1 the first date to compare.
+     * @param \DateTime $date2 the second date to compare.
      *
      * @return integer a tri-value where -1 indicates $date1 is before $date2,
      *                 0 indicates $date1 is equivalent to $date2 and 1
      *                 indicates $date1 is after $date2.
      */
-    public static function compare(DateTime $date1, DateTime $date2)
+    public static function compare(\DateTime $date1, \DateTime $date2)
     {
         // Not using getTimestamp() here because it is clamped to the 32-bit
         // signed integer range. Float compaison should be safe here as the
@@ -917,7 +917,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * @param integer $seconds seconds for which to get interval.
      *
-     * @return DateInterval a date interval with the relevant parts set.
+     * @return \DateInterval a date interval with the relevant parts set.
      */
     public static function getIntervalFromSeconds($seconds)
     {
@@ -968,7 +968,7 @@ class SwatDate extends DateTime implements Serializable
             $interval_spec.= $seconds.'S';
         }
 
-        return new DateInterval($interval_spec);
+        return new \DateInterval($interval_spec);
     }
 
     // }}}
@@ -1069,13 +1069,13 @@ class SwatDate extends DateTime implements Serializable
      *
      * Options are:
      *
-     * - <kbd>{@link SwatDate::ISO_EXTENDED}</kbd>  - include '-' and ':'
-     *                                                separators.
-     * - <kbd>{@link SwatDate::ISO_MICROTIME}</kbd> - include microseconds.
-     * - <kbd>{@link SwatDate::ISO_TIME_ZONE}</kbd> - include time zone.
+     * - <kbd>{@link Date::ISO_EXTENDED}</kbd>  - include '-' and ':'
+     *                                            separators.
+     * - <kbd>{@link Date::ISO_MICROTIME}</kbd> - include microseconds.
+     * - <kbd>{@link Date::ISO_TIME_ZONE}</kbd> - include time zone.
      *
      * @param integer $options optional. A bitwise combination of options.
-     *                         Options include the SwatDate::ISO_* constants.
+     *                         Options include the Date::ISO_* constants.
      *                         Default options are to use extended formatting
      *                         and to include time zone offset.
      *
@@ -1126,6 +1126,8 @@ class SwatDate extends DateTime implements Serializable
      * @param integer $format an integer date format id.
      *
      * @return string the formatted timezone offset.
+     *
+     * @throws \Exception
      */
     public function getFormattedOffsetById($id)
     {
@@ -1151,7 +1153,7 @@ class SwatDate extends DateTime implements Serializable
 
             return $offset;
         default:
-            throw new Exception("Unknown offset format for id '$id'.");
+            throw new \Exception("Unknown offset format for id '$id'.");
         }
     }
 
@@ -1210,7 +1212,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @return a new SwatDate object on the next day of this date.
+     * @return a new Date object on the next day of this date.
      */
     public function getNextDay()
     {
@@ -1227,7 +1229,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @return a new SwatDate object on the previous day of this date.
+     * @return Date a new date object on the previous day of this date.
      */
     public function getPrevDay()
     {
@@ -1249,9 +1251,9 @@ class SwatDate extends DateTime implements Serializable
      *
      * @return string a PEAR-conanical formatted version of this date.
      *
-     * @deprecated Use {@link SwatDate::formatLikeIntl()} instead. The format
-     *             code <i>yyyy-MM-dd HH:mm:ss</i> is equivalent. Alternatively,
-     *             just cast the SwatDate object to a string.
+     * @deprecated Use {@link Date::formatLikeIntl()} instead. The format code
+     *             <i>yyyy-MM-dd HH:mm:ss</i> is equivalent. Alternatively,
+     *             just cast the date object to a string.
      */
     public function getDate()
     {
@@ -1268,7 +1270,7 @@ class SwatDate extends DateTime implements Serializable
      *
      * @return integer the number of seconds since the UNIX epoch for this date.
      *
-     * @deprecated Use {@link DateTime::getTimestamp()} instead.
+     * @deprecated Use {@link \DateTime::getTimestamp()} instead.
      */
     public function getTime()
     {
@@ -1283,14 +1285,14 @@ class SwatDate extends DateTime implements Serializable
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @param DateTimeZone $time_zone the new time zone.
+     * @param \DateTimeZone $time_zone the new time zone.
      *
      * @return mixed this object on success, or false if the time zone is
      *               invalid.
      *
-     * @deprecated Use {@link SwatDate::setTimezone()} instead.
+     * @deprecated Use {@link Date::setTimezone()} instead.
      */
-    public function convertTZ(DateTimeZone $time_zone)
+    public function convertTZ(\DateTimeZone $time_zone)
     {
         return $this->setTimezone($time_zone);
     }
@@ -1308,11 +1310,11 @@ class SwatDate extends DateTime implements Serializable
      * @return mixed this object on success, or false if the time zone name is
      *               invalid.
      *
-     * @deprecated Use {@link SwatDate::setTimezone()} instead.
+     * @deprecated Use {@link Date::setTimezone()} instead.
      */
     public function convertTZById($time_zone_name)
     {
-        return $this->setTimezone(new DateTimeZone($time_zone_name));
+        return $this->setTimezone(new \DateTimeZone($time_zone_name));
     }
 
     // }}}
@@ -1322,12 +1324,12 @@ class SwatDate extends DateTime implements Serializable
      * Sets the time zone for this date and updates this date's time so the
      * hours are the same as with the old time zone
      *
-     * @param DateTimeZone $time_zone the new time zone.
+     * @param \DateTimeZone $time_zone the new time zone.
      *
      * @return mixed this object on success, or false if the time zone name is
      *               invalid.
      */
-    public function setTZ(DateTimeZone $time_zone)
+    public function setTZ(\DateTimeZone $time_zone)
     {
         $this->addSeconds($this->format('Z'));
         $result = $this->setTimezone($time_zone);
@@ -1349,7 +1351,7 @@ class SwatDate extends DateTime implements Serializable
      */
     public function setTZById($time_zone_name)
     {
-        $this->setTZ(new DateTimeZone($time_zone_name));
+        $this->setTZ(new \DateTimeZone($time_zone_name));
     }
 
     // }}}
@@ -1363,7 +1365,7 @@ class SwatDate extends DateTime implements Serializable
      */
     public function toUTC()
     {
-        return $this->setTimezone(new DateTimeZone('UTC'));
+        return $this->setTimezone(new \DateTimeZone('UTC'));
     }
 
     // }}}
@@ -1395,7 +1397,7 @@ class SwatDate extends DateTime implements Serializable
     public function addYears($years)
     {
         $years = (integer)$years;
-        $interval = new DateInterval('P'.abs($years).'Y');
+        $interval = new \DateInterval('P'.abs($years).'Y');
 
         if ($years < 0) {
             $interval->invert = 1;
@@ -1434,7 +1436,7 @@ class SwatDate extends DateTime implements Serializable
     public function addMonths($months)
     {
         $months = (integer)$months;
-        $interval = new DateInterval('P'.abs($months).'M');
+        $interval = new \DateInterval('P'.abs($months).'M');
 
         if ($months < 0) {
             $interval->invert = 1;
@@ -1473,7 +1475,7 @@ class SwatDate extends DateTime implements Serializable
     public function addDays($days)
     {
         $days = (integer)$days;
-        $interval = new DateInterval('P'.abs($days).'D');
+        $interval = new \DateInterval('P'.abs($days).'D');
 
         if ($days < 0) {
             $interval->invert = 1;
@@ -1512,7 +1514,7 @@ class SwatDate extends DateTime implements Serializable
     public function addHours($hours)
     {
         $hours = (integer)$hours;
-        $interval = new DateInterval('PT'.abs($hours).'H');
+        $interval = new \DateInterval('PT'.abs($hours).'H');
 
         if ($hours < 0) {
             $interval->invert = 1;
@@ -1551,7 +1553,7 @@ class SwatDate extends DateTime implements Serializable
     public function addMinutes($minutes)
     {
         $minutes = (integer)$minutes;
-        $interval = new DateInterval('PT'.abs($minutes).'M');
+        $interval = new \DateInterval('PT'.abs($minutes).'M');
 
         if ($minutes < 0) {
             $interval->invert = 1;
@@ -1590,7 +1592,7 @@ class SwatDate extends DateTime implements Serializable
     public function addSeconds($seconds)
     {
         $seconds = (float)$seconds;
-        $interval = new DateInterval('PT'.abs($seconds).'S');
+        $interval = new \DateInterval('PT'.abs($seconds).'S');
 
         if ($seconds < 0) {
             $interval->invert = 1;
@@ -1622,7 +1624,7 @@ class SwatDate extends DateTime implements Serializable
     /**
      * Sets the date fields for this date
      *
-     * This differs from PHP's DateTime in that it returns false if the
+     * This differs from PHP's \DateTime in that it returns false if the
      * parameters are not a valid date (i.e. February 31st).
      *
      * @param integer $year the year.
@@ -1648,7 +1650,7 @@ class SwatDate extends DateTime implements Serializable
      * Sets the year of this date without affecting the other date parts
      *
      * This method is provided for backwards compatibility with PEAR::Date. You
-     * may be able to use the method {@link DateTime::setDate()} instead.
+     * may be able to use the method {@link \DateTime::setDate()} instead.
      *
      * @param integer $year the new year. This should be the full four-digit
      *                      representation of the year.
@@ -1672,7 +1674,7 @@ class SwatDate extends DateTime implements Serializable
      * Sets the month of this date without affecting the other date parts
      *
      * This method is provided for backwards compatibility with PEAR::Date. You
-     * may be able to use the method {@link DateTime::setDate()} instead.
+     * may be able to use the method {@link \DateTime::setDate()} instead.
      *
      * @param integer $month the new month. This must be a value between
      *                       1 and 12.
@@ -1696,7 +1698,7 @@ class SwatDate extends DateTime implements Serializable
      * Sets the day of this date without affecting the other date parts
      *
      * This method is provided for backwards compatibility with PEAR::Date. You
-     * may be able to use the method {@link DateTime::setDate()} instead.
+     * may be able to use the method {@link \DateTime::setDate()} instead.
      *
      * @param integer $day the new day. This must be a value between 1 and 31.
      *
@@ -1719,7 +1721,7 @@ class SwatDate extends DateTime implements Serializable
      * Sets the hour of this date without affecting the other date parts
      *
      * This method is provided for backwards compatibility with PEAR::Date. You
-     * may be able to use the method {@link DateTime::setTime()} instead.
+     * may be able to use the method {@link \DateTime::setTime()} instead.
      *
      * @param integer $hour the new hour. This must be a value between 0 and 23.
      *
@@ -1742,7 +1744,7 @@ class SwatDate extends DateTime implements Serializable
      * Sets the minute of this date without affecting the other date parts
      *
      * This method is provided for backwards compatibility with PEAR::Date. You
-     * may be able to use the method {@link DateTime::setTime()} instead.
+     * may be able to use the method {@link \DateTime::setTime()} instead.
      *
      * @param integer $minute the new minute. This must be a value between
      *                        0 and 59.
@@ -1766,7 +1768,7 @@ class SwatDate extends DateTime implements Serializable
      * Sets the second of this date without affecting the other date parts
      *
      * This method is provided for backwards compatibility with PEAR::Date. You
-     * may be able to use the method {@link DateTime::setTime()} instead.
+     * may be able to use the method {@link \DateTime::setTime()} instead.
      *
      * @param float $second the new second. This must be a value between
      *                      0 and 59. Microseconds are accepted.
@@ -1791,12 +1793,12 @@ class SwatDate extends DateTime implements Serializable
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @param DateTime $when the date to check.
+     * @param \DateTime $when the date to check.
      *
      * @return boolean true if this date is before the specified date,
      *                 otherwise false.
      */
-    public function before(DateTime $when)
+    public function before(\DateTime $when)
     {
         return (self::compare($this, $when) == -1);
     }
@@ -1809,12 +1811,12 @@ class SwatDate extends DateTime implements Serializable
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @param DateTime $when the date to check.
+     * @param \DateTime $when the date to check.
      *
      * @return boolean true if this date is after the specified date, otherwise
      *                 false.
      */
-    public function after(DateTime $when)
+    public function after(\DateTime $when)
     {
         return (self::compare($this, $when) == 1);
     }
@@ -1827,12 +1829,12 @@ class SwatDate extends DateTime implements Serializable
      *
      * This method is provided for backwards compatibility with PEAR::Date.
      *
-     * @param DateTime $when the date to check.
+     * @param \DateTime $when the date to check.
      *
      * @return boolean true if this date is equivalent to the specified date,
      *                 otherwise false.
      */
-    public function equals(DateTime $when)
+    public function equals(\DateTime $when)
     {
         return (self::compare($this, $when) == 0);
     }
@@ -1843,8 +1845,8 @@ class SwatDate extends DateTime implements Serializable
     /**
      * Adds months to this date without affecting the day of the month
      *
-     * This differs from {@link SwatDate::addMonths()} in how dates at the end
-     * of a month are handled. In SwatDate::addMonths(), if one month is added
+     * This differs from {@link Date::addMonths()} in how dates at the end
+     * of a month are handled. In Date::addMonths(), if one month is added
      * to January 31, the resulting date will be March 2 or 3 depending on
      * if it is a leap year.
      *
@@ -1853,10 +1855,10 @@ class SwatDate extends DateTime implements Serializable
      *
      * @param integer $months the number of months to add.
      *
-     * @return SwatDate this object.
+     * @return Date this object.
      *
-     * @throws Exception if the resulting date is invalid (i.e. February 30) an
-     *                   exception is thrown.
+     * @throws \Exception if the resulting date is invalid (i.e. February 30)
+     *                    an exception is thrown.
      */
     public function addStrictMonths($months)
     {
@@ -1883,7 +1885,7 @@ class SwatDate extends DateTime implements Serializable
         );
 
         if (!$success) {
-            throw new Exception(
+            throw new \Exception(
                 sprintf(
                     'Can not add %d whole months to %s.',
                     $months,
@@ -1901,8 +1903,8 @@ class SwatDate extends DateTime implements Serializable
     /**
      * Subtracts months to this date without affecting the day of the month
      *
-     * This differs from {@link SwatDate::subtractMonths()} in how dates at the
-     * end of a month are handled. In SwatDate::subtractMonths(), if one month
+     * This differs from {@link Date::subtractMonths()} in how dates at the
+     * end of a month are handled. In Date::subtractMonths(), if one month
      * is subtracted from March 30, the resulting date will be March 1 or 2
      * depending on if it is a leap year.
      *
@@ -1911,10 +1913,10 @@ class SwatDate extends DateTime implements Serializable
      *
      * @param integer $months the number of months to subtract.
      *
-     * @return SwatDate this object.
+     * @return Date this object.
      *
-     * @throws Exception if the resulting date is invalid (i.e. February 30) an
-     *                   exception is thrown.
+     * @throws \Exception if the resulting date is invalid (i.e. February 30)
+     *                    an exception is thrown.
      */
     public function subtractStrictMonths($months)
     {
@@ -1928,8 +1930,8 @@ class SwatDate extends DateTime implements Serializable
      * Serializes this date
      *
      * Serialization is provided for backwards compatibility with the
-     * transitional and now depreciated HotDate package. The SwatDate serialize
-     * format is not compatible with PHP 5.3+ native DateTime serialization.
+     * transitional and now depreciated HotDate package. The Date serialize
+     * format is not compatible with PHP 5.3+ native \DateTime serialization.
      */
     public function serialize()
     {
@@ -1954,13 +1956,13 @@ class SwatDate extends DateTime implements Serializable
         $data = unserialize($serialized);
 
         // Calling __construct here is required to avoid PHP warnings. See
-        // PHP bug #65151. DateTime objects that are created through
+        // PHP bug #65151. \DateTime objects that are created through
         // unserialization are not properly initialized until __construct() is
         // called.
         $this->__construct('@'.$data[0]);
 
-        // DateTime constructor with timestamp is always UTC so set time zone
-        $this->setTimezone(new DateTimeZone($data[1]));
+        // \DateTime constructor with timestamp is always UTC so set time zone
+        $this->setTimezone(new \DateTimeZone($data[1]));
     }
 
     // }}}
