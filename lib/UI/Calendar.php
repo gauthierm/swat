@@ -6,6 +6,7 @@ namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Html;
 use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * Pop-up calendar widget
@@ -195,14 +196,14 @@ class Calendar extends Control
         }
         $month_names = "['".implode("', '", $month_names)."']";
 
-        $prev_alt_text     = Swat::_('Previous Month');
-        $next_alt_text     = Swat::_('Next Month');
-        $close_text        = Swat::_('Close');
-        $nodate_text       = Swat::_('No Date');
-        $today_text        = Swat::_('Today');
+        $prev_alt_text     = L::_('Previous Month');
+        $next_alt_text     = L::_('Next Month');
+        $close_text        = L::_('Close');
+        $nodate_text       = L::_('No Date');
+        $today_text        = L::_('Today');
 
-        $open_toggle_text  = Swat::_('open calendar');
-        $close_toggle_text = Swat::_('close calendar');
+        $open_toggle_text  = L::_('open calendar');
+        $close_toggle_text = L::_('close calendar');
 
         return
             "SwatCalendar.week_names = {$week_names};\n".

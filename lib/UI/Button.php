@@ -6,6 +6,7 @@ namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Exception;
 use Silverorange\Swat\Html;
+use Silverorange\Swat\L;
 
 /**
  * A button widget
@@ -237,32 +238,32 @@ class Button extends InputControl
     {
         switch ($stock_id) {
         case 'submit':
-            $title = Swat::_('Submit');
+            $title = L::_('Submit');
             $class = 'swat-button-submit';
             break;
 
         case 'create':
-            $title = Swat::_('Create');
+            $title = L::_('Create');
             $class = 'swat-button-create';
             break;
 
         case 'add':
-            $title = Swat::_('Add');
+            $title = L::_('Add');
             $class = 'swat-button-add';
             break;
 
         case 'apply':
-            $title = Swat::_('Apply');
+            $title = L::_('Apply');
             $class = 'swat-button-apply';
             break;
 
         case 'delete':
-            $title = Swat::_('Delete');
+            $title = L::_('Delete');
             $class = 'swat-button-delete';
             break;
 
         case 'cancel':
-            $title = Swat::_('Cancel');
+            $title = L::_('Cancel');
             $class = 'swat-button-cancel';
             break;
 

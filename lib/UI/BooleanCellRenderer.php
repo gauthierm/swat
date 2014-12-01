@@ -7,6 +7,7 @@ namespace Silverorange\Swat\UI;
 use Silverorange\Swat\Exception;
 use Silverorange\Swat\Html;
 use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A cell renderer for a boolean value
@@ -90,8 +91,8 @@ class BooleanCellRenderer extends CellRenderer
 
         switch ($stock_id) {
         case 'yes-no':
-            $false_content = Swat::_('No');
-            $true_content = Swat::_('Yes');
+            $false_content = L::_('No');
+            $true_content = L::_('Yes');
             break;
 
         case 'check-only':
@@ -211,7 +212,7 @@ class BooleanCellRenderer extends CellRenderer
     {
         $image_tag = new Html\Tag('img');
         $image_tag->src = 'packages/swat/images/check.png';
-        $image_tag->alt = Swat::_('Yes');
+        $image_tag->alt = L::_('Yes');
         $image_tag->height = '14';
         $image_tag->width = '14';
         $image_tag->display();

@@ -2,20 +2,20 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
 
 /**
- * A single entry in a {@link SwatActions} widget
+ * A single entry in a {@link Actions} widget
  *
  * @package   Swat
  * @copyright 2005-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatActions
+ * @see Actions
  */
-class SwatActionItem extends SwatControl implements SwatUIParent
+class ActionItem extends Control implements UIParent
 {
     // {{{ public properties
 
@@ -34,9 +34,9 @@ class SwatActionItem extends SwatControl implements SwatUIParent
     public $title = '';
 
     /**
-     * A SwatWidget associated with this action item
+     * A Widget associated with this action item
      *
-     * @var SwatWidget
+     * @var Widget
      */
     public $widget = null;
 
@@ -81,18 +81,20 @@ class SwatActionItem extends SwatControl implements SwatUIParent
     /**
      * Sets the widget to use for this item
      *
-     * Each SwatActionItem can have one associated SwatWidget. This method
-     * sets the widget for this item.
+     * Each ActionItem can have one associated Widget. This method sets the
+     * widget for this item.
      *
-     * @param SwatWidget $widget the widget associated with this action.
+     * @param Widget $widget the widget associated with this action.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
-    public function setWidget(SwatWidget $widget)
+    public function setWidget(Widget $widget)
     {
-        if ($this->widget !== null)
-            throw new SwatException('SwatUI: Only one widget can be nested '.
-                'within a SwatActionItem');
+        if ($this->widget !== null) {
+            throw new Exception\Exception(
+                'Loader: Only one widget can be nested within an ActionItem'
+            );
+        }
 
         $this->widget = $widget;
         $widget->parent = $this;
@@ -104,38 +106,42 @@ class SwatActionItem extends SwatControl implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used by
+     * {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To set the a widget in an action item, use
-     * {@link SwatActionItem::setWidget()}.
+     * {@link ActionItem::setWidget()}.
      *
-     * @param SwatWidget $child a reference to a child object to add.
+     * @param Widget $child a reference to a child object to add.
      *
-     * @throws SwatInvalidClassException
+     * @throws Exception\InvalidClassException
      *
-     * @see SwatUIParent
-     * @see SwatActionItem::setWidget()
+     * @see UIParent
+     * @see ActionItem::setWidget()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(UIObject $child)
     {
-        if ($child instanceof SwatWidget)
+        if ($child instanceof Widget) {
             $this->setWidget($child);
-        else
-            throw new SwatInvalidClassException(
-                'Only SwatWidget objects may be nested within a '.
-                'SwatActionItem object.', 0, $child);
+        } else {
+            throw new Exception\InvalidClassException(
+                'Only Widget objects may be nested within an ActionItem '.
+                'object.',
+                0,
+                $child
+            );
+        }
     }
 
     // }}}
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this action item
+     * Gets the Html\Resource objects needed by this action item
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this action item.
+     * @return Html\ResourceSet the Html\Resource objects needed by this action
+     *                          item.
      *
-     * @see SwatWidget::getHtmlHeadEntrySet()
+     * @see Widget::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -152,12 +158,12 @@ class SwatActionItem extends SwatControl implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this action item
+     * Gets the Html\Resource objects that may be needed by this action item
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              neededthis action item.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed
+     *                          for this action item.
      *
-     * @see SwatWidget::getAvailableHtmlHeadEntrySet()
+     * @see Widget::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -184,7 +190,7 @@ class SwatActionItem extends SwatControl implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -202,9 +208,12 @@ class SwatActionItem extends SwatControl implements SwatUIParent
                     $out[$this->widget->id] = $this->widget;
             }
 
-            if ($this->widget instanceof SwatUIParent)
-                $out = array_merge($out,
-                    $this->widget->getDescendants($class_name));
+            if ($this->widget instanceof UIParent) {
+                $out = array_merge(
+                    $out,
+                    $this->widget->getDescendants($class_name)
+                );
+            }
         }
 
         return $out;
@@ -218,10 +227,10 @@ class SwatActionItem extends SwatControl implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant widget or null if no matching
+     * @return UIObject the first descendant widget or null if no matching
      *                      descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -233,8 +242,9 @@ class SwatActionItem extends SwatControl implements SwatUIParent
         if ($this->widget instanceof $class_name)
             $out = $this->widget;
 
-        if ($out === null && $this->widget instanceof SwatUIParent)
+        if ($out === null && $this->widget instanceof UIParent) {
             $out = $this->widget->getFirstDescendant($class_name);
+        }
 
         return $out;
     }
@@ -255,8 +265,10 @@ class SwatActionItem extends SwatControl implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -275,9 +287,12 @@ class SwatActionItem extends SwatControl implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -289,10 +304,10 @@ class SwatActionItem extends SwatControl implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
+     * @return UIObject a deep copy of the UI tree starting with this UI
      *                      object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {

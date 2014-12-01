@@ -5,6 +5,7 @@
 namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Exception;
+use Silverorange\Swat\L;
 
 /**
  * A password confirmation entry widget
@@ -52,9 +53,9 @@ class ConfirmPasswordEntry extends PasswordEntry
 
         if ($this->password_widget->value !== null) {
             if (strcmp($this->password_widget->value, $this->value) != 0) {
-                $message = Swat::_('Password and confirmation password do not '.
-                    'match.');
-
+                $message = L::_(
+                    'Password and confirmation password do not match.'
+                );
                 $this->addMessage(new Model\Message($message, 'error'));
             }
         }

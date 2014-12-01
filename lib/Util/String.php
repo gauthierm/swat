@@ -5,6 +5,7 @@
 namespace Silverorange\Swat\Util;
 
 use Silverorange\Swat\Exception;
+use Silverorange\Swat\L;
 
 /**
  * String Tools
@@ -1466,7 +1467,7 @@ class String
         if (isset($parts['years'])) {
             $years = $parts['years'];
             $parts['years'] = sprintf(
-                Swat::ngettext('%s year', '%s years', $years),
+                L::ngettext('%s year', '%s years', $years),
                 $years
             );
         }
@@ -1474,7 +1475,7 @@ class String
         if (isset($parts['months'])) {
             $months = $parts['months'];
             $parts['months'] = sprintf(
-                Swat::ngettext('%s month', '%s months', $months),
+                L::ngettext('%s month', '%s months', $months),
                 $months
             );
         }
@@ -1482,7 +1483,7 @@ class String
         if (isset($parts['weeks'])) {
             $weeks = $parts['weeks'];
             $parts['weeks'] = sprintf(
-                Swat::ngettext('%s week', '%s weeks', $weeks),
+                L::ngettext('%s week', '%s weeks', $weeks),
                 $weeks
             );
         }
@@ -1490,7 +1491,7 @@ class String
         if (isset($parts['days'])) {
             $days = $parts['days'];
             $parts['days'] = sprintf(
-                Swat::ngettext('%s day', '%s days', $days),
+                L::ngettext('%s day', '%s days', $days),
                 $days
             );
         }
@@ -1498,7 +1499,7 @@ class String
         if (isset($parts['hours'])) {
             $hours = $parts['hours'];
             $parts['hours'] = sprintf(
-                Swat::ngettext('%s hour', '%s hours', $hours),
+                L::ngettext('%s hour', '%s hours', $hours),
                 $hours
             );
         }
@@ -1506,7 +1507,7 @@ class String
         if (isset($parts['minutes'])) {
             $minutes = $parts['minutes'];
             $parts['minutes'] = sprintf(
-                Swat::ngettext('%s minute', '%s minutes', $minutes),
+                L::ngettext('%s minute', '%s minutes', $minutes),
                 $minutes
             );
         }
@@ -1514,7 +1515,7 @@ class String
         if (isset($parts['seconds'])) {
             $seconds = $parts['seconds'];
             $parts['seconds'] = sprintf(
-                Swat::ngettext('%s second', '%s seconds', $seconds),
+                L::ngettext('%s second', '%s seconds', $seconds),
                 $seconds
             );
         }

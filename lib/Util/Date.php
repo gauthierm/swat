@@ -705,39 +705,39 @@ class Date extends \DateTime implements \Serializable
     {
         switch ($id) {
         case self::DF_MDY:
-            return Swat::_('%m/%d/%y');
+            return L::_('%m/%d/%y');
         case self::DF_MDY_SHORT:
-            return Swat::_('%m%d%y');
+            return L::_('%m%d%y');
         case self::DF_DATE:
-            return Swat::_('%B %e, %Y');
+            return L::_('%B %e, %Y');
         case self::DF_DATE_LONG:
-            return Swat::_('%A, %B %e, %Y');
+            return L::_('%A, %B %e, %Y');
         case self::DF_DATE_TIME:
-            return Swat::_('%B %e, %Y %i:%M %p');
+            return L::_('%B %e, %Y %i:%M %p');
         case self::DF_DATE_TIME_LONG:
-            return Swat::_('%A, %B %e, %Y %i:%M %p');
+            return L::_('%A, %B %e, %Y %i:%M %p');
         case self::DF_TIME:
-            return Swat::_('%i:%M %p');
+            return L::_('%i:%M %p');
         case self::DF_DATE_SHORT:
-            return Swat::_('%b %e %Y');
+            return L::_('%b %e %Y');
         case self::DF_DATE_SHORT_NOYEAR:
-            return Swat::_('%b %e');
+            return L::_('%b %e');
         case self::DF_DATE_TIME_SHORT:
-            return Swat::_('%b %e, %Y %i:%M %p');
+            return L::_('%b %e, %Y %i:%M %p');
         case self::DF_DATE_TIME_SHORT_NOYEAR:
-            return Swat::_('%b %e, %i:%M %p');
+            return L::_('%b %e, %i:%M %p');
         case self::DF_MY:
-            return Swat::_('%B %Y');
+            return L::_('%B %Y');
         case self::DF_CC_MY:
-            return Swat::_('%m / %Y');
+            return L::_('%m / %Y');
         case self::DF_Y:
-            return Swat::_('%Y');
+            return L::_('%Y');
         case self::DF_ISO_8601_BASIC:
-            return Swat::_('%Y%m%dT%H%M%S');
+            return L::_('%Y%m%dT%H%M%S');
         case self::DF_ISO_8601_EXTENDED:
-            return Swat::_('%Y-%m-%dT%H:%M:%S');
+            return L::_('%Y-%m-%dT%H:%M:%S');
         case self::DF_RFC_2822:
-            return Swat::_('%a, %d %b %Y %T');
+            return L::_('%a, %d %b %Y %T');
         default:
             throw new \Exception("Unknown date format id '$id'.");
         }
@@ -759,39 +759,39 @@ class Date extends \DateTime implements \Serializable
     {
         switch ($id) {
         case self::DF_MDY:
-            return Swat::_('MM/dd/yy');
+            return L::_('MM/dd/yy');
         case self::DF_MDY_SHORT:
-            return Swat::_('MMddyy');
+            return L::_('MMddyy');
         case self::DF_DATE:
-            return Swat::_('MMMM d, yyyy');
+            return L::_('MMMM d, yyyy');
         case self::DF_DATE_LONG:
-            return Swat::_('EEEE, MMMM d, yyyy');
+            return L::_('EEEE, MMMM d, yyyy');
         case self::DF_DATE_TIME:
-            return Swat::_('MMMM d, yyyy h:mm a');
+            return L::_('MMMM d, yyyy h:mm a');
         case self::DF_DATE_TIME_LONG:
-            return Swat::_('EEEE, MMMM d, yyyy h:mm a');
+            return L::_('EEEE, MMMM d, yyyy h:mm a');
         case self::DF_TIME:
-            return Swat::_('h:mm a');
+            return L::_('h:mm a');
         case self::DF_DATE_SHORT:
-            return Swat::_('MMM d yyyy');
+            return L::_('MMM d yyyy');
         case self::DF_DATE_SHORT_NOYEAR:
-            return Swat::_('MMM d');
+            return L::_('MMM d');
         case self::DF_DATE_TIME_SHORT:
-            return Swat::_('MMM d, yyyy h:mm a');
+            return L::_('MMM d, yyyy h:mm a');
         case self::DF_DATE_TIME_SHORT_NOYEAR:
-            return Swat::_('MMM d, h:mm a');
+            return L::_('MMM d, h:mm a');
         case self::DF_MY:
-            return Swat::_('MMMM yyyy');
+            return L::_('MMMM yyyy');
         case self::DF_CC_MY:
-            return Swat::_('MM / yyyy');
+            return L::_('MM / yyyy');
         case self::DF_Y:
-            return Swat::_('yyyy');
+            return L::_('yyyy');
         case self::DF_ISO_8601_BASIC:
-            return Swat::_('yyyyMMdd\'T\'HHmmss');
+            return L::_('yyyyMMdd\'T\'HHmmss');
         case self::DF_ISO_8601_EXTENDED:
-            return Swat::_('yyyy-MM-dd\'T\'HH:mm:ss');
+            return L::_('yyyy-MM-dd\'T\'HH:mm:ss');
         case self::DF_RFC_2822:
-            return Swat::_('EEE, dd MMM yyyy HH:mm:ss');
+            return L::_('EEE, dd MMM yyyy HH:mm:ss');
         default:
             throw new \Exception("Unknown date format id '$id'.");
         }

@@ -5,6 +5,7 @@
 namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Exception;
+use Silverorange\Swat\L;
 
 /**
  * An email address confirmation entry widget
@@ -55,8 +56,9 @@ class ConfirmEmailEntry extends EmailEntry
 
         if ($this->email_widget->value !== null) {
             if (strcmp($this->email_widget->value, $this->value) != 0) {
-                $message = Swat::_('Email address and confirmation email '.
-                    'address do not match.');
+                $message = L::_(
+                    'Email address and confirmation email address do not match.'
+                );
 
                 $this->addMessage(new Model\Message($message, 'error'));
             }

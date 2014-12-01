@@ -6,6 +6,7 @@ namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Html;
 use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * Abstract javascript overlay widget.
@@ -145,7 +146,7 @@ abstract class AbstractOverlay extends InputControl implements Model\State
     {
         return sprintf(
             "SwatAbstractOverlay.close_text = %s;\n",
-            Util\JavaScript::quoteString(Swat::_('Close'))
+            Util\JavaScript::quoteString(L::_('Close'))
         );
     }
 

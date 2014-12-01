@@ -2,19 +2,19 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatActionItem.php';
+namespace Silverorange\Swat\UI;
 
 /**
- * A divider entry in a SwatActions widget
+ * A divider entry in a Actions widget
  *
  * @package   Swat
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatActions
- * @see SwatActionItem
+ * @see Actions
+ * @see ActionItem
  */
-class SwatActionItemDivider extends SwatActionItem
+class ActionItemDivider extends ActionItem
 {
 }
 

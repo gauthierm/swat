@@ -7,6 +7,7 @@ namespace Silverorange\Swat\Data;
 use Silverorange\Swat\Model;
 use Silverorange\Swat\UI;
 use Silverorange\Swat\I18N;
+use Silverorange\Swat\L;
 
 /**
  * Database helper class
@@ -1109,7 +1110,7 @@ class DB
         if ($tree !== null && $tree instanceof Model\DataTreeNode) {
             $base_parent = $tree;
         } else {
-            $base_parent = new Model\DataTreeNode(null, Swat::_('Root'));
+            $base_parent = new Model\DataTreeNode(null, L::_('Root'));
         }
 
         $current_group = null;
@@ -1237,7 +1238,7 @@ class DB
         if ($tree !== null && $tree instanceof Model\DataTreeNode) {
             $current_parent = $tree;
         } else {
-            $current_parent = new Model\DataTreeNode('', Swat::_('Root'));
+            $current_parent = new Model\DataTreeNode('', L::_('Root'));
         }
 
         $base_parent = $current_parent;
@@ -1480,9 +1481,13 @@ class DB
 
                         echo '<p><strong>';
 
-                        printf(Swat::_('Total time: %s ms (includes '.
-                            'queries within the wrapper)'),
-                            $locale->formatNumber($ms, 3));
+                        printf(
+                            L::_(
+                                'Total time: %s ms (includes '.
+                                'queries within the wrapper)'
+                            ),
+                            $locale->formatNumber($ms, 3)
+                        );
 
                         echo '</strong></p>';
                     }

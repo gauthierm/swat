@@ -7,6 +7,7 @@ namespace Silverorange\Swat\UI;
 use Silverorange\Swat\Html;
 use Silverorange\Swat\I18N;
 use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A "check all" JavaScript powered checkbox
@@ -80,7 +81,7 @@ class CheckAll extends Checkbox
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->title = Swat::_('Select All');
+        $this->title = L::_('Select All');
         $yui = new SwatYUI(array('event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript('packages/swat/javascript/swat-check-all.js');
@@ -151,7 +152,7 @@ class CheckAll extends Checkbox
     protected function getExtendedTitle()
     {
         $locale = I18N\Locale::get();
-        $entity = ($this->unit === null) ? Swat::_('items') : $this->unit;
+        $entity = ($this->unit === null) ? L::_('items') : $this->unit;
 
         $checkbox = $this->getCompositeWidget('extended_checkbox');
         $checkbox->tabindex = $this->tab_index;
@@ -159,21 +160,25 @@ class CheckAll extends Checkbox
         ob_start();
         $label_tag = new Html\Tag('label');
         $label_tag->for = $checkbox->id;
-        $label_tag->setContent(sprintf(Swat::_('select all %s %s'),
-            $locale->formatNumber($this->extended_count), $entity));
-
+        $label_tag->setContent(
+            sprintf(
+                L::_('select all %s %s'),
+                $locale->formatNumber($this->extended_count),
+                $entity
+            )
+        );
         $label_tag->open();
         $checkbox->display();
         $label_tag->displayContent();
         $label_tag->close();
         $checkbox_display = ob_get_clean();
 
-        $title = Swat::_('All %s %s on this page are selected. (%s)');
-
-        return sprintf($title,
+        return sprintf(
+            L::_('All %s %s on this page are selected. (%s)'),
             $locale->formatNumber($this->visible_count),
             $entity,
-            $checkbox_display);
+            $checkbox_display
+        );
     }
 
     // }}}

@@ -6,6 +6,7 @@ namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Model;
 use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A cascading flydown (aka combo-box) selection widget
@@ -236,8 +237,9 @@ class CascadeFlydown extends Flydown
 
     protected function getBlankOption()
     {
-        $blank_title = ($this->blank_title === null) ?
-            Swat::_('choose one ...') : $this->blank_title;
+        $blank_title = ($this->blank_title === null)
+            ? L::_('choose one ...')
+            : $this->blank_title;
 
         return new FlydownBlankOption(null, $blank_title);
     }
@@ -282,8 +284,9 @@ class CascadeFlydown extends Flydown
                     $value = '';
                 }
 
-                $blank_title = ($this->blank_title === null) ?
-                    Swat::_('choose one ...') : $this->blank_title;
+                $blank_title = ($this->blank_title === null)
+                    ? L::_('choose one ...')
+                    : $this->blank_title;
 
                 $javascript.= sprintf(
                     "\n%s_cascade.addChild(%s, %s, %s);",

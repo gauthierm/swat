@@ -7,6 +7,7 @@ namespace Silverorange\Swat\UI;
 use Silverorange\Swat\Html;
 use Silverorange\Swat\Model;
 use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * An element ordering widget
@@ -177,8 +178,9 @@ class ChangeOrder extends OptionControl implements Model\State
      */
     public function getNote()
     {
-        $message = Swat::_('Items can be ordered by dragging-and-dropping '.
-            'with the mouse.');
+        $message = L::_(
+            'Items can be ordered by dragging-and-dropping with the mouse.'
+        );
 
         return new Model\Message($message);
     }
@@ -290,7 +292,7 @@ class ChangeOrder extends OptionControl implements Model\State
         if (!$this->isSensitive())
             $btn_tag->disabled = 'disabled';
 
-        $btn_tag->value = Swat::_('Move to Top');
+        $btn_tag->value = L::_('Move to Top');
         $btn_tag->onclick = "{$this->id}_obj.moveToTop();";
         $btn_tag->name = "{$this->id}_buttons";
         $btn_tag->class = 'swat-change-order-top';
@@ -298,7 +300,7 @@ class ChangeOrder extends OptionControl implements Model\State
 
         echo '<br />';
 
-        $btn_tag->value = Swat::_('Move Up');
+        $btn_tag->value = L::_('Move Up');
         $btn_tag->onclick = "{$this->id}_obj.moveUp();";
         $btn_tag->name = "{$this->id}_buttons";
         $btn_tag->class = 'swat-change-order-up';
@@ -306,7 +308,7 @@ class ChangeOrder extends OptionControl implements Model\State
 
         echo '<br />';
 
-        $btn_tag->value = Swat::_('Move Down');
+        $btn_tag->value = L::_('Move Down');
         $btn_tag->onclick = "{$this->id}_obj.moveDown();";
         $btn_tag->name = "{$this->id}_buttons";
         $btn_tag->class = 'swat-change-order-down';
@@ -314,7 +316,7 @@ class ChangeOrder extends OptionControl implements Model\State
 
         echo '<br />';
 
-        $btn_tag->value = Swat::_('Move to Bottom');
+        $btn_tag->value = L::_('Move to Bottom');
         $btn_tag->onclick = "{$this->id}_obj.moveToBottom();";
         $btn_tag->name = "{$this->id}_buttons";
         $btn_tag->class = 'swat-change-order-bottom';
