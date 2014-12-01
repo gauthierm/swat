@@ -2,7 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatEmailEntry.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
 
 /**
  * An email address confirmation entry widget
@@ -14,14 +16,14 @@ require_once 'Swat/SwatEmailEntry.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatConfirmEmailEntry extends SwatEmailEntry
+class ConfirmEmailEntry extends EmailEntry
 {
     // {{{ public properties
 
     /**
      * A reference to the matching email entry widget
      *
-     * @var SwatEmailEntry
+     * @var EmailEntry
      */
     public $email_widget = null;
 
@@ -35,7 +37,7 @@ class SwatConfirmEmailEntry extends SwatEmailEntry
      * same. If an associated email entry widget is not set, an exception is
      * thrown. If the addresses do not match, an error is added to this widget.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function process()
     {
@@ -44,16 +46,19 @@ class SwatConfirmEmailEntry extends SwatEmailEntry
         if ($this->value === null)
             return;
 
-        if ($this->email_widget === null)
-            throw new SwatException("Property 'email_widget' is null. ".
-                'Expected a reference to a SwatEmailEntry.');
+        if ($this->email_widget === null) {
+            throw new Exception\Exception(
+                "Property 'email_widget' is null. Expected a reference to ".
+                "an EmailEntry."
+            );
+        }
 
         if ($this->email_widget->value !== null) {
             if (strcmp($this->email_widget->value, $this->value) != 0) {
                 $message = Swat::_('Email address and confirmation email '.
                     'address do not match.');
 
-                $this->addMessage(new SwatMessage($message, 'error'));
+                $this->addMessage(new Model\Message($message, 'error'));
             }
         }
     }

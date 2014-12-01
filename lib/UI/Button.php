@@ -2,22 +2,22 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatUndefinedStockTypeException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
 
 /**
  * A button widget
  *
  * This widget displays as an XHTML form submit button, so it must be used
- * within {@link SwatForm}.
+ * within {@link Form}.
  *
  * @package   Swat
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatButton extends SwatInputControl
+class Button extends InputControl
 {
     // {{{ public properties
 
@@ -31,12 +31,12 @@ class SwatButton extends SwatInputControl
     /**
      * The stock id of this button
      *
-     * Specifying a stock id before the {@link SwatButton::init()} method is
+     * Specifying a stock id before the {@link Button::init()} method is
      * called causes this button to be initialized with a set of stock values.
      *
      * @var string
      *
-     * @see SwatToolLink::setFromStock()
+     * @see Button::setFromStock()
      */
     public $stock_id = null;
 
@@ -74,7 +74,7 @@ class SwatButton extends SwatInputControl
      *
      * @var string
      *
-     * @see SwatButton::$show_processing_throbber
+     * @see Button::$show_processing_throbber
      */
     public $processing_throbber_message = null;
 
@@ -104,7 +104,7 @@ class SwatButton extends SwatInputControl
      *
      * This is set to true after processing if this button was clicked.
      * The form will also contain a refernce to the clicked button in the
-     * {@link SwatForm::$button} class variable.
+     * {@link Form::$button} class variable.
      *
      * @var boolean
      */
@@ -118,7 +118,7 @@ class SwatButton extends SwatInputControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -140,7 +140,7 @@ class SwatButton extends SwatInputControl
      * Loads properties from stock if $stock_id is set, otherwise sets a
      * default stock title.
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     public function init()
     {
@@ -172,7 +172,7 @@ class SwatButton extends SwatInputControl
 
         if ($this->show_processing_throbber ||
             $this->confirmation_message !== null) {
-            Swat::displayInlineJavaScript($this->getInlineJavaScript());
+            Util\JavaScript::displayInline($this->getInlineJavaScript());
         }
     }
 
@@ -231,7 +231,7 @@ class SwatButton extends SwatInputControl
      * @param boolean $overwrite_properties whether to overwrite properties if
      *                                      they are already set.
      *
-     * @throws SwatUndefinedStockTypeException
+     * @throws Exception\UndefinedStockTypeException
      */
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
@@ -267,9 +267,11 @@ class SwatButton extends SwatInputControl
             break;
 
         default:
-            throw new SwatUndefinedStockTypeException(
+            throw new Exception\UndefinedStockTypeException(
                 "Stock type with id of '{$stock_id}' not found.",
-                0, $stock_id);
+                0,
+                $stock_id
+            );
         }
 
         if ($overwrite_properties || ($this->title === null))
@@ -286,14 +288,14 @@ class SwatButton extends SwatInputControl
      *
      * Can be used by sub-classes to change the setup of the input tag.
      *
-     * @return SwatHtmlTag the HTML tag to display for this button.
+     * @return Html\Tag the HTML tag to display for this button.
      */
     protected function getInputTag()
     {
         // We do not use a 'button' element because it is broken differently in
         // different versions of Internet Explorer
 
-        $tag = new SwatHtmlTag('input');
+        $tag = new Html\Tag('input');
 
         $tag->type = 'submit';
         $tag->name = $this->id;
@@ -322,9 +324,11 @@ class SwatButton extends SwatInputControl
     {
         $classes = array('swat-button');
 
-        $form = $this->getFirstAncestor('SwatForm');
-        $primary = ($form !== null &&
-            $form->getFirstDescendant('SwatButton') === $this);
+        $form = $this->getFirstAncestor('\Silverorange\Swat\UI\Form');
+        $primary = (
+            $form !== null &&
+            $form->getFirstDescendant('\Silverorange\Swat\UI\Button') === $this
+        );
 
         if ($primary)
             $classes[] = 'swat-primary';
@@ -374,15 +378,24 @@ class SwatButton extends SwatInputControl
             $show_processing_throbber);
 
         if ($this->show_processing_throbber) {
-            $javascript.= sprintf("\n%s_obj.setProcessingMessage(%s);",
-                $this->id, SwatString::quoteJavaScriptString(
-                    $this->processing_throbber_message));
+            $javascript.= sprintf(
+                "\n%s_obj.setProcessingMessage(%s);",
+                $this->id,
+                Util\JavaScript::quoteString(
+                    $this->processing_throbber_message
+                )
+            );
         }
 
-        if ($this->confirmation_message !== null)
-            $javascript.= sprintf("\n%s_obj.setConfirmationMessage(%s);",
-                $this->id, SwatString::quoteJavaScriptString(
-                    $this->confirmation_message));
+        if ($this->confirmation_message !== null) {
+            $javascript.= sprintf(
+                "\n%s_obj.setConfirmationMessage(%s);",
+                $this->id,
+                Util\JavaScript::quoteString(
+                    $this->confirmation_message
+                )
+            );
+        }
 
         return $javascript;
     }

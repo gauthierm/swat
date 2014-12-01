@@ -2,10 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
 
 /**
  * Abstract javascript overlay widget.
@@ -17,13 +17,13 @@ require_once 'Swat/SwatHtmlTag.php';
  *
  * Subclasses should, at the very least, sub-class swat-abstract-overlay.js
  * and add the new java-script class using the
- * SwatAbstractOverlay::getInlineJavaScript() method.
+ * AbstractOverlay::getInlineJavaScript() method.
  *
  * @package   Swat
  * @copyright 2010-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
+abstract class AbstractOverlay extends InputControl implements Model\State
 {
     // {{{ public properties
 
@@ -51,7 +51,7 @@ abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -84,12 +84,12 @@ abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
 
         parent::display();
 
-        $container_div_tag = new SwatHtmlTag('div');
+        $container_div_tag = new Html\Tag('div');
         $container_div_tag->id = $this->id;
         $container_div_tag->class = $this->getCSSClassString();
         $container_div_tag->open();
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
         $input_tag->id = $this->id.'_value';
         $input_tag->name = $this->id;
@@ -100,7 +100,7 @@ abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
 
         $container_div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -111,7 +111,7 @@ abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
      *
      * @return string the current state of this simple color selector widget.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -126,7 +126,7 @@ abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
      *
      * @param string $state the new state of this simple color selector widget.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -143,8 +143,10 @@ abstract class SwatAbstractOverlay extends SwatInputControl implements SwatState
      */
     protected function getInlineJavaScript()
     {
-        return sprintf("SwatAbstractOverlay.close_text = %s;\n",
-            SwatString::quoteJavaScriptString(Swat::_('Close')));
+        return sprintf(
+            "SwatAbstractOverlay.close_text = %s;\n",
+            Util\JavaScript::quoteString(Swat::_('Close'))
+        );
     }
 
     // }}}

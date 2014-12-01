@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCheckbox.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\I18N;
+use Silverorange\Swat\Util;
 
 /**
  * A "check all" JavaScript powered checkbox
@@ -13,7 +15,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCheckAll extends SwatCheckbox
+class CheckAll extends Checkbox
 {
     // {{{ public properties
 
@@ -73,7 +75,7 @@ class SwatCheckAll extends SwatCheckbox
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -108,12 +110,12 @@ class SwatCheckAll extends SwatCheckbox
         if (!$this->visible)
             return;
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
 
-        $label_tag = new SwatHtmlTag('label');
+        $label_tag = new Html\Tag('label');
         $label_tag->for = $this->id.'_value';
         $label_tag->open();
 
@@ -122,7 +124,7 @@ class SwatCheckAll extends SwatCheckbox
         parent::display();
         $this->id = $old_id;
 
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->class = 'swat-check-all-title';
         $span_tag->setContent($this->title, $this->content_type);
         $span_tag->display();
@@ -130,7 +132,7 @@ class SwatCheckAll extends SwatCheckbox
         $label_tag->close();
 
         if ($this->extended_count > $this->visible_count) {
-            $div_tag = new SwatHtmlTag('div');
+            $div_tag = new Html\Tag('div');
             $div_tag->id = $this->id.'_extended';
             $div_tag->class = 'swat-hidden swat-extended-check-all';
             $div_tag->open();
@@ -140,7 +142,7 @@ class SwatCheckAll extends SwatCheckbox
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -148,14 +150,14 @@ class SwatCheckAll extends SwatCheckbox
 
     protected function getExtendedTitle()
     {
-        $locale = SwatI18NLocale::get();
+        $locale = I18N\Locale::get();
         $entity = ($this->unit === null) ? Swat::_('items') : $this->unit;
 
         $checkbox = $this->getCompositeWidget('extended_checkbox');
         $checkbox->tabindex = $this->tab_index;
 
         ob_start();
-        $label_tag = new SwatHtmlTag('label');
+        $label_tag = new Html\Tag('label');
         $label_tag->for = $checkbox->id;
         $label_tag->setContent(sprintf(Swat::_('select all %s %s'),
             $locale->formatNumber($this->extended_count), $entity));
@@ -210,7 +212,7 @@ class SwatCheckAll extends SwatCheckbox
 
     protected function createCompositeWidgets()
     {
-        $extended_checkbox = new SwatCheckbox();
+        $extended_checkbox = new Checkbox();
         $this->addCompositeWidget($extended_checkbox, 'extended_checkbox');
     }
 

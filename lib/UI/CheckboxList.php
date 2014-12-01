@@ -2,13 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatOptionControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatCheckAll.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
 
 /**
  * A checkbox list widget
@@ -17,14 +16,14 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCheckboxList extends SwatOptionControl implements SwatState
+class CheckboxList extends OptionControl implements Model\State
 {
     // {{{ private properties
 
     /**
      * Used for displaying checkbox labels
      *
-     * @var SwatHtmlTag
+     * @var Html\Tag
      */
     private $label_tag;
 
@@ -70,7 +69,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -88,7 +87,8 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
     /**
      * Initializes this checkbox list
      *
-     * @throws SwatException if there are duplicate values in the options array
+     * @throws Exception\Exception if there are duplicate values in the
+     *         options array.
      */
     public function init()
     {
@@ -100,9 +100,14 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
             $options_count[] = $option->value;
 
         foreach ((array_count_values($options_count)) as $count) {
-            if ($count > 1)
-                throw new SwatException(sprintf('Duplicate option values '.
-                    'found in %s', $this->id));
+            if ($count > 1) {
+                throw new Exception\Exception(
+                    sprintf(
+                        'Duplicate option values found in %s',
+                        $this->id
+                    )
+                );
+            }
         }
     }
 
@@ -126,7 +131,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
 
         // outer div is required because the check-all widget is outside the
         // unordered list
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
@@ -139,7 +144,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
         $multiple_columns = (count($options) > $columns[0]);
         $maximum_options  = array_shift($columns);
 
-        $ul_tag = new SwatHtmlTag('ul');
+        $ul_tag = new Html\Tag('ul');
         if ($multiple_columns) {
             $ul_tag->id = sprintf('%s_column_%s', $this->id, $current_column);
             $ul_tag->class = 'swat-checkbox-list-column';
@@ -181,7 +186,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -227,7 +232,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
      *
      * @param array $state the new state of this checkbox list.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -242,7 +247,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
      *
      * @return array the current state of this checkbox list.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -279,13 +284,13 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
     /**
      * Helper method to display a single option of this checkbox list
      *
-     * @param SwatOption $option the option to display.
-     * @param integer    $index  a numeric index indicating which option is
-     *                           being displayed. Starts as 0.
+     * @param Model\Option $option the option to display.
+     * @param integer      $index  a numeric index indicating which option is
+     *                             being displayed. Starts as 0.
      */
-    protected function displayOption(SwatOption $option, $index)
+    protected function displayOption(Model\Option $option, $index)
     {
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'checkbox';
         $input_tag->name = $this->id.'['.$index.']';
         $input_tag->value = (string)$option->value;
@@ -315,14 +320,14 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
     /**
      * Displays an option in the checkbox list
      *
-     * @param SwatOption $option the option for which to display the label.
-     * @param integer    $index  the numeric index of the option in this list.
-     *                           Starts at 0.
+     * @param Model\Option $option the option for which to display the label.
+     * @param integer      $index  the numeric index of the option in this list.
+     *                             Starts at 0.
      */
-    protected function displayOptionLabel(SwatOption $option, $index)
+    protected function displayOptionLabel(Model\Option $option, $index)
     {
-        if (!$this->label_tag instanceof SwatHtmlTag) {
-            $this->label_tag = new SwatHtmlTag('label');
+        if (!$this->label_tag instanceof Html\Tag) {
+            $this->label_tag = new Html\Tag('label');
             $this->label_tag->class = 'swat-control';
         }
 
@@ -334,9 +339,9 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
     // }}}
     // {{{ protected function getLiTag()
 
-    protected function getLiTag(SwatOption $option)
+    protected function getLiTag(Model\Option $option)
     {
-        $tag = new SwatHtmlTag('li');
+        $tag = new Html\Tag('li');
 
         // add option-specific CSS classes from option metadata
         $classes = $this->getOptionMetadata($option, 'classes');
@@ -372,7 +377,7 @@ class SwatCheckboxList extends SwatOptionControl implements SwatState
             'var %s_obj = new %s(%s);',
             $this->id,
             $this->getJavaScriptClassName(),
-            SwatString::quoteJavaScriptString($this->id));
+            Util\JavaScript::quoteString($this->id));
 
         // set check-all controller if it is visible
         $check_all = $this->getCompositeWidget('check_all');

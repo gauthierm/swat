@@ -2,10 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatOptionControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
 
 /**
  * An element ordering widget
@@ -20,7 +21,7 @@ require_once 'Swat/SwatYUI.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatChangeOrder extends SwatOptionControl implements SwatState
+class ChangeOrder extends OptionControl implements Model\State
 {
     // {{{ public properties
 
@@ -56,7 +57,7 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -88,18 +89,18 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
 
         $ordered_options = $this->getOrderedOptions();
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
 
-        $list_div = new SwatHtmlTag('div');
+        $list_div = new Html\Tag('div');
         $list_div->style = "width: {$this->width}; height: {$this->height};";
         $list_div->id = "{$this->id}_list";
         $list_div->class = 'swat-change-order-list';
         $list_div->open();
 
-        $option_div = new SwatHtmltag('div');
+        $option_div = new Html\Tag('div');
         $option_div->class = 'swat-change-order-item';
 
         foreach ($ordered_options as $option) {
@@ -116,18 +117,20 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
 
         $values = array();
         foreach ($ordered_options as $option) {
-            $values[] = SwatString::signedSerialize($option->value,
-                $this->getForm()->getSalt());
+            $values[] = Util\String::signedSerialize(
+                $option->value,
+                $this->getForm()->getSalt()
+            );
         }
 
-        $hidden_tag = new SwatHtmlTag('input');
+        $hidden_tag = new Html\Tag('input');
         $hidden_tag->type = 'hidden';
         $hidden_tag->id = $this->id.'_value';
         $hidden_tag->name = $this->id;
         $hidden_tag->value = implode(',', $values);
         $hidden_tag->display();
 
-        $hidden_items_tag = new SwatHtmlTag('input');
+        $hidden_items_tag = new Html\Tag('input');
         $hidden_items_tag->type = 'hidden';
         $hidden_items_tag->id = $this->id.'_dynamic_items';
         $hidden_items_tag->value = '';
@@ -135,7 +138,7 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -151,9 +154,10 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
         if ($data[$this->id] !== '') {
             $values = explode(',', $data[$this->id]);
             foreach ($values as $value) {
-                $value = SwatString::signedUnserialize($value,
-                    $form->getSalt());
-
+                $value = Util\String::signedUnserialize(
+                    $value,
+                    $form->getSalt()
+                );
                 $this->values[] = $value;
             }
         }
@@ -166,17 +170,17 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
      * Gets a note letting the user know drag-and-drop is available for
      * ordering items
      *
-     * @return SwatMessage a note letting the user know drag-and-drop is
-     *                     available for ordering items.
+     * @return Model\Message a note letting the user know drag-and-drop is
+     *                       available for ordering items.
      *
-     * @see SwatControl::getNote()
+     * @see Control::getNote()
      */
     public function getNote()
     {
         $message = Swat::_('Items can be ordered by dragging-and-dropping '.
             'with the mouse.');
 
-        return new SwatMessage($message);
+        return new Model\Message($message);
     }
 
     // }}}
@@ -277,11 +281,11 @@ class SwatChangeOrder extends SwatOptionControl implements SwatState
 
     private function displayButtons()
     {
-        $buttons_div = new SwatHtmlTag('div');
+        $buttons_div = new Html\Tag('div');
         $buttons_div->class = 'swat-change-order-buttons';
         $buttons_div->open();
 
-        $btn_tag = new SwatHtmlTag('input');
+        $btn_tag = new Html\Tag('input');
         $btn_tag->type = 'button';
         if (!$this->isSensitive())
             $btn_tag->disabled = 'disabled';

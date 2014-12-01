@@ -2,7 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatPasswordEntry.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
 
 /**
  * A password confirmation entry widget
@@ -14,14 +16,14 @@ require_once 'Swat/SwatPasswordEntry.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatConfirmPasswordEntry extends SwatPasswordEntry
+class ConfirmPasswordEntry extends PasswordEntry
 {
     // {{{ public properties
 
     /**
      * A reference to the matching password widget
      *
-     * @var SwatPasswordEntry
+     * @var PasswordEntry
      */
     public $password_widget = null;
 
@@ -35,22 +37,25 @@ class SwatConfirmPasswordEntry extends SwatPasswordEntry
      * If an associated password widget is not set, an exception is thrown. If
      * the passwords do not match, an error is added to this widget.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function process()
     {
         parent::process();
 
-        if ($this->password_widget === null)
-            throw new SwatException("Property 'password_widget' is null. ".
-                'Expected a reference to a SwatPasswordEntry.');
+        if ($this->password_widget === null) {
+            throw new Exception\Exception(
+                "Property 'password_widget' is null. Expected a reference to ".
+                "a PasswordEntry."
+            );
+        }
 
         if ($this->password_widget->value !== null) {
             if (strcmp($this->password_widget->value, $this->value) != 0) {
                 $message = Swat::_('Password and confirmation password do not '.
                     'match.');
 
-                $this->addMessage(new SwatMessage($message, 'error'));
+                $this->addMessage(new Model\Message($message, 'error'));
             }
         }
     }

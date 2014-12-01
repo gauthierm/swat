@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatState.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
 
 /**
  * A checkbox entry widget
@@ -13,7 +14,7 @@ require_once 'Swat/SwatState.php';
  * @copyright 2004-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCheckbox extends SwatInputControl implements SwatState
+class Checkbox extends InputControl implements Model\State
 {
     // {{{ public properties
 
@@ -54,7 +55,7 @@ class SwatCheckbox extends SwatInputControl implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -79,7 +80,7 @@ class SwatCheckbox extends SwatInputControl implements SwatState
 
         $this->getForm()->addHiddenField($this->id.'_submitted', 1);
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'checkbox';
         $input_tag->class = $this->getCSSClassString();
         $input_tag->name = $this->id;
@@ -127,7 +128,7 @@ class SwatCheckbox extends SwatInputControl implements SwatState
      *
      * @return boolean the current state of this checkbox.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -142,7 +143,7 @@ class SwatCheckbox extends SwatInputControl implements SwatState
      *
      * @param boolean $state the new state of this checkbox.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -160,7 +161,7 @@ class SwatCheckbox extends SwatInputControl implements SwatState
      *                widget that should receive focus or null if there is
      *                no such element.
      *
-     * @see SwatWidget::getFocusableHtmlId()
+     * @see Widget::getFocusableHtmlId()
      */
     public function getFocusableHtmlId()
     {

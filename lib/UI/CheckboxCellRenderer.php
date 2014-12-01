@@ -2,12 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatViewSelector.php';
-require_once 'Swat/SwatViewSelection.php';
-require_once 'Swat/SwatCheckbox.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Exception;
 
 /**
  * A view selector cell renderer displayed as a checkbox
@@ -15,10 +14,9 @@ require_once 'Swat/exceptions/SwatException.php';
  * @package   Swat
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatViewSelector
+ * @see       ViewSelector
  */
-class SwatCheckboxCellRenderer extends SwatCellRenderer
-    implements SwatViewSelector
+class CheckboxCellRenderer extends CellRenderer implements ViewSelector
 {
     // {{{ public properties
 
@@ -123,9 +121,9 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
             if (isset($data[$this->id]) && is_array($data[$this->id])) {
                 $this->selected_values = $data[$this->id];
 
-                $view = $this->getFirstAncestor('SwatView');
+                $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
                 if ($view !== null) {
-                    $selection = new SwatViewSelection($this->selected_values);
+                    $selection = new ViewSelection($this->selected_values);
                     $view->setSelection($selection, $this);
                 }
             }
@@ -146,13 +144,13 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
         parent::render();
 
         if ($this->title !== null) {
-            $label_tag = new SwatHtmlTag('label');
+            $label_tag = new Html\Tag('label');
             $label_tag->for = $this->id.'_checkbox_'.$this->value;
             $label_tag->setContent($this->title, $this->content_type);
             $label_tag->open();
         }
 
-        $checkbox_tag = new SwatHtmlTag('input');
+        $checkbox_tag = new Html\Tag('input');
         $checkbox_tag->type = 'checkbox';
         $checkbox_tag->name = $this->id.'[]';
         $checkbox_tag->id = $this->id.'_checkbox_'.$this->value;
@@ -162,7 +160,7 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
         if (!$this->sensitive)
             $checkbox_tag->disabled = 'disabled';
 
-        $view = $this->getFirstAncestor('SwatView');
+        $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
         if ($view !== null) {
             $selection = $view->getSelection($this);
             if ($selection->contains($this->value))
@@ -186,7 +184,7 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
     /**
      * Gets the identifier of this checkbox cell renderer
      *
-     * Satisfies the {@link SwatViewSelector} interface.
+     * Satisfies the {@link ViewSelector} interface.
      *
      * @return string the identifier of this checkbox cell renderer.
      */
@@ -206,7 +204,7 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
      */
     public function getInlineJavaScript()
     {
-        $view = $this->getFirstAncestor('SwatView');
+        $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
         if ($view !== null) {
             $javascript = sprintf(
                 "var %s = new SwatCheckboxCellRenderer('%s', %s);",
@@ -227,10 +225,10 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return UIObject a deep copy of the UI tree starting with this UI
+     *                  object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -248,18 +246,20 @@ class SwatCheckboxCellRenderer extends SwatCellRenderer
     /**
      * Gets the form this checkbox cell renderer is contained in
      *
-     * @return SwatForm the form this checkbox cell renderer is contained in.
+     * @return Form the form this checkbox cell renderer is contained in.
      *
-     * @throws SwatException if this checkbox cell renderer does not have a
-     *                       SwatForm ancestor.
+     * @throws Exception\Exception if this checkbox cell renderer does not have
+     *         a Form ancestor.
      */
     private function getForm()
     {
-        $form = $this->getFirstAncestor('SwatForm');
+        $form = $this->getFirstAncestor('\Silverorange\Swat\UI\Form');
 
-        if ($form === null)
-            throw new SwatException('SwatCheckboxCellRenderer must have '.
-                'a SwatForm ancestor in the UI tree.');
+        if ($form === null) {
+            throw new Exception\Exception(
+                'CheckboxCellRenderer must have a Form ancestor in the UI tree.'
+            );
+        }
 
         return $form;
     }

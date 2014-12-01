@@ -2,36 +2,36 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatDate.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * Pop-up calendar widget
  *
  * This widget uses JavaScript to display a popup date selector. It is used
- * inside the {@link SwatDateEntry} widget but can be used by itself as well.
+ * inside the {@link Util\DateEntry} widget but can be used by itself as well.
  *
  * @package   Swat
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCalendar extends SwatControl
+class Calendar extends Control
 {
     // {{{ public properties
 
     /**
      * Start date of the valid range (inclusive).
      *
-     * @var SwatDate
+     * @var Util\Date
      */
     public $valid_range_start;
 
     /**
      * End date of the valid range (exclusive).
      *
-     * @var SwatDate
+     * @var Util\Date
      */
     public $valid_range_end;
 
@@ -43,7 +43,7 @@ class SwatCalendar extends SwatControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -74,7 +74,7 @@ class SwatCalendar extends SwatControl
 
         parent::display();
 
-        $container_div_tag = new SwatHtmlTag('div');
+        $container_div_tag = new Html\Tag('div');
         $container_div_tag->id = $this->id;
         $container_div_tag->class = $this->getCSSClassString();
         $container_div_tag->open();
@@ -82,13 +82,13 @@ class SwatCalendar extends SwatControl
         // toggle button content is displayed with JavaScript
 
         if ($this->valid_range_start === null) {
-            $today = new SwatDate();
+            $today = new Util\Date();
             $value = $today->formatLikeIntl('MM/dd/yyyy');
         } else {
             $value = $this->valid_range_start->formatLikeIntl('MM/dd/yyyy');
         }
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
         $input_tag->id = $this->id.'_value';
         $input_tag->name = $this->id.'_value';
@@ -97,7 +97,7 @@ class SwatCalendar extends SwatControl
 
         $container_div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -174,7 +174,7 @@ class SwatCalendar extends SwatControl
          * This date is arbitrary and is just used for getting week and
          * month names.
          */
-        $date = new SwatDate();
+        $date = new Util\Date();
         $date->setDay(1);
         $date->setMonth(1);
         $date->setYear(1995);

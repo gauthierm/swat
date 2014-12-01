@@ -2,12 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCheckboxList.php';
-require_once 'Swat/SwatEntry.php';
-require_once 'Swat/SwatFormField.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A checkbox list widget with entries per option
@@ -17,16 +16,16 @@ require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
  *
  * Selecting options works just like a normal checkbox list. Accessing the
  * associated text field is done using the
- * {@link SwatCheckboxEntryList::getEntryValue()} and
- * {@link SwatCheckboxEntryList::setEntryValue()} methods. For setting large
+ * {@link CheckboxEntryList::getEntryValue()} and
+ * {@link CheckboxEntryList::setEntryValue()} methods. For setting large
  * numbers of text fields (during initialization, for example) use the
- * {@link SwatCheckboxEntryList::setEntryValuesByArray()} method.
+ * {@link CheckboxEntryList::setEntryValuesByArray()} method.
  *
  * @package   Swat
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCheckboxEntryList extends SwatCheckboxList
+class CheckboxEntryList extends CheckboxList
 {
     // {{{ public properties
 
@@ -71,7 +70,7 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatCheckboxList::__construct()
+     * @see CheckboxList::__construct()
      */
     public function __construct($id = null)
     {
@@ -95,7 +94,7 @@ class SwatCheckboxEntryList extends SwatCheckboxList
     /**
      * Displays this checkbox list
      *
-     * @see SwatCheckboxList::display()
+     * @see CheckboxList::display()
      */
     public function display()
     {
@@ -104,19 +103,19 @@ class SwatCheckboxEntryList extends SwatCheckboxList
         if (!$this->visible || count($options) == 0)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $this->getForm()->addHiddenField($this->id.'_submitted', 1);
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'checkbox';
 
-        $label_tag = new SwatHtmlTag('label');
+        $label_tag = new Html\Tag('label');
         $label_tag->class = 'swat-control';
 
         echo '<table>';
@@ -170,7 +169,7 @@ class SwatCheckboxEntryList extends SwatCheckboxList
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -182,7 +181,7 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      * Processes the checkboxes as well as each entry widget for each checked
      * checkbox. The entry widgets for unchecked checkboxes are not processed.
      *
-     * @see SwatCheckboxList::process()
+     * @see CheckboxList::process()
      */
     public function process()
     {
@@ -201,9 +200,9 @@ class SwatCheckboxEntryList extends SwatCheckboxList
     /**
      * Gets all messages
      *
-     * @return array an array of gathered {@link SwatMessage} objects.
+     * @return array an array of gathered {@link Model\Message} objects.
      *
-     * @see SwatWidget::getMessages()
+     * @see Widget::getMessages()
      */
     public function getMessages()
     {
@@ -227,7 +226,7 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      * @return boolean true if this checkbox list or any of the entry widgets
      *                 in this checkbox list have one or more messages.
      *
-     * @see SwatWidget::hasMessages()
+     * @see Widget::hasMessages()
      */
     public function hasMessage()
     {
@@ -279,9 +278,8 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      *                             the entry widget value.
      * @param string $entry_value  the value to set on the entry widget.
      *
-     * @throws SwatInvalidPropertyException if the option value does not match
-     *                                      an existing option value in this
-     *                                      checkbox entry list.
+     * @throws Exception\InvalidPropertyException if the option value does not
+     *         match an existing option value in this checkbox entry list.
      */
     public function setEntryValue($option_value, $entry_value)
     {
@@ -291,10 +289,13 @@ class SwatCheckboxEntryList extends SwatCheckboxList
             $option_values[] = $option->value;
 
         if (!in_array($option_value, $option_values)) {
-            throw new SwatInvalidPropertyException(sprintf(
-                'No option with a value of "%s" exists in this checkbox '.
-                'entry list',
-                $option_value));
+            throw new Exception\InvalidPropertyException(
+                sprintf(
+                    'No option with a value of "%s" exists in this checkbox '.
+                    'entry list',
+                    $option_value
+                )
+            );
         }
 
         $this->getEntryWidget($option_value)->getFirst()->value = $entry_value;
@@ -308,16 +309,16 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      *
      * This is a convenience method to quickly set the entry values for one
      * or more options in this checkbox entry list. This calls
-     * {@link SwatCheckboxEntryList::setEntryValue()} internally for each
+     * {@link CheckboxEntryList::setEntryValue()} internally for each
      * entry in the <i>$entry_values</i> array.
      *
      * @param array $entry_values an array indexed by option values of this
      *                            checkbox entry list with values of the entry
      *                            widget values.
      *
-     * @throws SwatInvalidPropertyException if any option value (array key)
-     *                                      does not match an existing option
-     *                                      value in this checkbox entry list.
+     * @throws Exception\InvalidPropertyException if any option value
+     *         (array key) does not match an existing option value in this
+     *         checkbox entry list.
      */
     public function setEntryValuesByArray(array $entry_values)
     {
@@ -388,19 +389,19 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      * Gets a widget tree for the entry widget of this checkbox entry list
      *
      * This is used internally to create the widget tree containing a
-     * {@link SwatEntry} widget for display and processing.
+     * {@link Entry} widget for display and processing.
      *
      * @param string $option_value the value of the option for which to get
      *                             the entry widget. If no entry widget exists
      *                             for the given option value, one is created.
      *
-     * @return SwatContainer the widget tree containing the entry widget for
-     *                       the given option value.
+     * @return Container the widget tree containing the entry widget for the
+     *                   given option value.
      */
     protected function getEntryWidget($option_value)
     {
         if (!$this->hasEntryWidget($option_value)) {
-            $container = new SwatFormField($this->id.'_field_'.$option_value);
+            $container = new FormField($this->id.'_field_'.$option_value);
             $container->add($this->createEntryWidget($option_value));
             $container->parent = $this;
             $container->init();
@@ -421,11 +422,11 @@ class SwatCheckboxEntryList extends SwatCheckboxList
      * @param string $option_value the value of the option for which to get
      *                             the entry widget.
      *
-     * @return SwatEntry the new entry widget for the given option value.
+     * @return Entry the new entry widget for the given option value.
      */
     protected function createEntryWidget($option_value)
     {
-        $widget = new SwatEntry($this->id.'_entry_'.$option_value);
+        $widget = new Entry($this->id.'_entry_'.$option_value);
         $widget->size = $this->entry_size;
         $widget->maxlength = $this->entry_maxlength;
         return $widget;

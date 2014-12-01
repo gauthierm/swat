@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Util;
 
 /**
  * A cell renderer for rendering base-2 units of information
@@ -15,7 +16,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatByteCellRenderer extends SwatCellRenderer
+class ByteCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -32,7 +33,7 @@ class SwatByteCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -41,8 +42,9 @@ class SwatByteCellRenderer extends SwatCellRenderer
 
         parent::render();
 
-        echo SwatString::minimizeEntities(
-            SwatString::byteFormat($this->value));
+        echo Util\String::minimizeEntities(
+            Util\String::byteFormat($this->value)
+        );
     }
 
     // }}}

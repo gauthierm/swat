@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatWidget.php';
-require_once 'Swat/SwatTitleable.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
 
 /**
  * Abstract base class for control widgets (non-container)
@@ -13,7 +14,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2004-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatControl extends SwatWidget
+abstract class Control extends Widget
 {
     // {{{ public function addMessage()
 
@@ -22,13 +23,13 @@ abstract class SwatControl extends SwatWidget
      *
      * Before the message is added, the content is updated with the name of
      * this controls's parent title field if the parent implements the
-     * {@link SwatTitleable} interface.
+     * {@link Titleable} interface.
      *
-     * @param SwatMessage $message the message to add.
+     * @param Model\Message $message the message to add.
      *
-     * @see SwatWidget::addMessage()
+     * @see Widget::addMessage()
      */
-    public function addMessage(SwatMessage $message)
+    public function addMessage(Model\Message $message)
     {
         if ($this->parent instanceof SwatTitleable) {
             $title = $this->parent->getTitle();
@@ -41,17 +42,18 @@ abstract class SwatControl extends SwatWidget
                 } else {
                     $field_title =
                         '<strong>'.
-                        SwatString::minimizeEntities($this->parent->getTitle()).
+                        Util\String::minimizeEntities($this->parent->getTitle()).
                         '</strong>';
                 }
         } else {
             $field_title = '';
         }
 
-        if ($message->content_type === 'text/plain')
-            $content = SwatString::minimizeEntities($message->primary_content);
-        else
+        if ($message->content_type === 'text/plain') {
+            $content = Util\String::minimizeEntities($message->primary_content);
+        } else {
             $content = $message->primary_content;
+        }
 
         $message->primary_content = sprintf($content, $field_title);
         $message->content_type = 'text/xml';
@@ -75,8 +77,8 @@ abstract class SwatControl extends SwatWidget
      *
      * By default, controls return null, meaning no note.
      *
-     * @return SwatMessage an informative note of how to use this control or
-     *                     null if this control has no note.
+     * @return Model\Message an informative note of how to use this control or
+     *                       null if this control has no note.
      */
     public function getNote()
     {

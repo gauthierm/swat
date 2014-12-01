@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Util;
 
 /**
  * Abstract base class for menus in Swat
@@ -17,10 +18,10 @@ require_once 'Swat/SwatYUI.php';
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatMenu
- * @see SwatGroupedMenu
+ * @see Menu
+ * @see GroupedMenu
  */
-abstract class SwatAbstractMenu extends SwatControl
+abstract class AbstractMenu extends Control
 {
     // {{{ public properties
 
@@ -52,7 +53,7 @@ abstract class SwatAbstractMenu extends SwatControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -69,7 +70,7 @@ abstract class SwatAbstractMenu extends SwatControl
     // {{{ public function setMenuItemValues()
 
     /**
-     * Sets the value of all {@link SwatMenuItem} objects within this menu
+     * Sets the value of all {@link MenuItem} objects within this menu
      *
      * This is usually easier than setting all the values manually if the
      * values are dynamic.
@@ -78,7 +79,7 @@ abstract class SwatAbstractMenu extends SwatControl
      */
     public function setMenuItemValues($value)
     {
-        $items = $this->getDescendants('SwatMenuItem');
+        $items = $this->getDescendants('\Silverorange\Swat\UI\MenuItem');
         foreach ($items as $item) {
             $item->value = $value;
         }
@@ -133,9 +134,9 @@ abstract class SwatAbstractMenu extends SwatControl
             "\t\tmenu_obj.show();\n".
             "\t}\n".
             ");\n",
-            SwatString::quoteJavaScriptString($this->id),
+            Util\JavaScript::quoteString($this->id),
             $this->getJavaScriptClass(),
-            SwatString::quoteJavaScriptString($this->id),
+            Util\JavaScript::quoteString($this->id),
             $parameters
         );
     }

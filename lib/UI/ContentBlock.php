@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Util;
 
 /**
  * A block of content in the widget tree
@@ -12,7 +13,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatContentBlock extends SwatControl
+class ContentBlock extends Control
 {
     // {{{ public properties
 
@@ -47,10 +48,11 @@ class SwatContentBlock extends SwatControl
 
         parent::display();
 
-        if ($this->content_type === 'text/plain')
-            echo SwatString::minimizeEntities($this->content);
-        else
+        if ($this->content_type === 'text/plain') {
+            echo Util\String::minimizeEntities($this->content);
+        } else {
             echo $this->content;
+        }
     }
 
     // }}}

@@ -2,8 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A cell renderer for a boolean value
@@ -12,7 +15,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2004-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatBooleanCellRenderer extends SwatCellRenderer
+class BooleanCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -49,14 +52,14 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
     public $content_type = 'text/plain';
 
     /**
-     * The stock id of this SwatBooleanCellRenderer
+     * The stock id of this BooleanCellRenderer
      *
      * Specifying a stock id initializes this boolean cell renderer with a set
      * of stock values.
      *
      * @var string
      *
-     * @see SwatBooleanCellRenderer::setFromStock()
+     * @see BooleanCellRenderer::setFromStock()
      */
     public $stock_id = null;
 
@@ -78,8 +81,8 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
      *                                      By default, properties are
      *                                      overwritten.
      *
-     * @throws SwatUndefinedStockTypeException if an undefined <i>$stock_id</i>
-     *                                         is used.
+     * @throws Exception\UndefinedStockTypeException if an undefined
+     *         <i>$stock_id</i> is used.
      */
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
@@ -101,9 +104,11 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
             break;
 
         default:
-            throw new SwatUndefinedStockTypeException(
+            throw new Exception\UndefinedStockTypeException(
                 "Stock type with id of '{$stock_id}' not found.",
-                0, $stock_id);
+                0,
+                $stock_id
+            );
         }
 
         if ($overwrite_properties || ($this->false_content === null))
@@ -122,7 +127,7 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -174,7 +179,7 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
     protected function renderTrue()
     {
         if ($this->content_type === 'text/plain')
-            echo SwatString::minimizeEntities($this->true_content);
+            echo Util\String::minimizeEntities($this->true_content);
         else
             echo $this->true_content;
     }
@@ -188,7 +193,7 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
     protected function renderFalse()
     {
         if ($this->content_type === 'text/plain')
-            echo SwatString::minimizeEntities($this->false_content);
+            echo Util\String::minimizeEntities($this->false_content);
         else
             echo $this->false_content;
     }
@@ -200,11 +205,11 @@ class SwatBooleanCellRenderer extends SwatCellRenderer
      * Renders a checkmark image for this boolean cell renderer
      *
      * This is used when this cell renderer has a
-     * {@link SwatBooleanCellRenderer::$stock_id} of 'check-only'.
+     * {@link BooleanCellRenderer::$stock_id} of 'check-only'.
      */
     protected function displayCheck()
     {
-        $image_tag = new SwatHtmlTag('img');
+        $image_tag = new Html\Tag('img');
         $image_tag->src = 'packages/swat/images/check.png';
         $image_tag->alt = Swat::_('Yes');
         $image_tag->height = '14';

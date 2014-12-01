@@ -8,7 +8,7 @@ require_once 'Swat/SwatFlydown.php';
 require_once 'Swat/SwatActionItem.php';
 require_once 'Swat/SwatActionItemDivider.php';
 require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatHtmlTag.php';
+require_once 'Swat/Html\Tag.php';
 require_once 'Swat/exceptions/SwatInvalidClassException.php';
 require_once 'Swat/SwatYUI.php';
 require_once 'Swat/exceptions/SwatException.php';
@@ -170,14 +170,14 @@ class SwatActions extends SwatControl implements SwatUIParent
         else
             $this->selected = null;
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
 
         echo '<div class="swat-actions-controls">';
 
-        $label = new SwatHtmlTag('label');
+        $label = new Html\Tag('label');
         $label->for = $flydown->getFocusableHtmlId();
         $label->setContent(Swat::_('Action: '));
         $label->display();
@@ -190,7 +190,7 @@ class SwatActions extends SwatControl implements SwatUIParent
 
         foreach ($this->action_items as $item) {
             if ($item->widget !== null) {
-                $div = new SwatHtmlTag('div');
+                $div = new Html\Tag('div');
 
                 $div->class = ($item == $this->selected) ?
                     'swat-visible' : 'swat-hidden';
@@ -209,7 +209,7 @@ class SwatActions extends SwatControl implements SwatUIParent
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -619,16 +619,16 @@ class SwatActions extends SwatControl implements SwatUIParent
 
         foreach ($this->action_items as $item) {
             if ($item->visible) {
-                $values[] = SwatString::quoteJavaScriptString($item->id);
+                $values[] = Util\JavaScript::quoteString($item->id);
             }
         }
 
         $selected_value = ($this->selected === null) ?
-            'null' : SwatString::quoteJavaScriptString($this->selected->id);
+            'null' : Util\JavaScript::quoteString($this->selected->id);
 
         $javascript.= sprintf("var %s_obj = new SwatActions(%s, [%s], %s);",
             $this->id,
-            SwatString::quoteJavaScriptString($this->id),
+            Util\JavaScript::quoteString($this->id),
             implode(', ', $values),
             $selected_value);
 

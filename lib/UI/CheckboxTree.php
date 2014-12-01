@@ -2,11 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDataTreeNode.php';
-require_once 'Swat/SwatCheckboxList.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
 
 /**
  * A checkbox array widget formatted into a tree
@@ -15,35 +16,35 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatCheckboxTree extends SwatCheckboxList implements SwatState
+class CheckboxTree extends CheckboxList implements Model\State
 {
     // {{{ protected properties
 
     /**
      * Checkbox tree structure
      *
-     * An tree structure of {@link SwatTreeNode} objects.
-     * This structure overwrites the public options property.
+     * An tree structure of {@link Model\TreeNode} objects. This structure
+     * overwrites the public options property.
      *
-     * @var SwatDataTreeNode
+     * @var Model\DataTreeNode
      */
     protected $tree = null;
 
     /**
      * A label tag used for displaying tree nodes
      *
-     * @var SwatHtmltag
+     * @var Html\Tag
      *
-     * @see SwatCheckboxTree::displayNode()
+     * @see CheckboxTree::displayNode()
      */
     protected $label_tag = null;
 
     /**
      * An input tag used for displaying tree nodes
      *
-     * @var SwatHtmltag
+     * @var Html\Tag
      *
-     * @see SwatCheckboxTree::displayNode()
+     * @see CheckboxTree::displayNode()
      */
     protected $input_tag = null;
 
@@ -55,12 +56,12 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatCheckboxList::__construct()
+     * @see CheckboxList::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->setTree(new SwatDataTreeNode(null, 'root'));
+        $this->setTree(new Model\DataTreeNode(null, 'root'));
     }
 
     // }}}
@@ -71,19 +72,19 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $this->getForm()->addHiddenField($this->id.'_submitted', 1);
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
 
-        $this->label_tag = new SwatHtmlTag('label');
+        $this->label_tag = new Html\Tag('label');
         $this->label_tag->class = 'swat-control';
 
-        $this->input_tag = new SwatHtmlTag('input');
+        $this->input_tag = new Html\Tag('input');
         $this->input_tag->type = 'checkbox';
         $this->input_tag->name = $this->id.'[]';
 
@@ -100,7 +101,7 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -109,9 +110,9 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
     /**
      * Sets the tree to use for display
      *
-     * @param SwatDataTreeNode $tree the tree to use for display.
+     * @param Model\DataTreeNode $tree the tree to use for display.
      */
-    public function setTree(SwatDataTreeNode $tree)
+    public function setTree(Model\DataTreeNode $tree)
     {
         $this->tree = $tree;
     }
@@ -120,10 +121,10 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
     // {{{ public function getTree()
 
     /**
-     * Gets the tree collection of {@link SwatTreeNode} objects for this
+     * Gets the tree collection of {@link Model\TreeNode} objects for this
      * tree flydown
      *
-     * @return SwatTreeNode Tree of nodes
+     * @return Model\TreeNode Tree of nodes
      */
     public function getTree()
     {
@@ -152,13 +153,13 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
     /**
      * Displays a node in a tree as a checkbox input
      *
-     * @param SwatDataTreeNode $node         the node to display.
-     * @param integer          $nodes        the current number of nodes.
-     * @param string           $parent_index the path of the parent node.
+     * @param Model\DataTreeNode $node         the node to display.
+     * @param integer            $nodes        the current number of nodes.
+     * @param string             $parent_index the path of the parent node.
      *
      * @return integer the number of checkable nodes in the tree.
      */
-    private function displayNode(SwatDataTreeNode $node, $nodes = 0,
+    private function displayNode(Model\DataTreeNode $node, $nodes = 0,
         $parent_index = '')
     {
         // build a unique id of the indexes of the tree
@@ -192,7 +193,7 @@ class SwatCheckboxTree extends SwatCheckboxList implements SwatState
                 echo '</span>';
                 $this->label_tag->display();
             } else {
-                echo SwatString::minimizeEntities($node->title);
+                echo Util\String::minimizeEntities($node->title);
             }
         }
 

@@ -72,7 +72,7 @@ class SwatAccordion extends SwatNoteBook
 
         $li_counter = 0;
 
-        $ul_tag = new SwatHtmlTag('ul');
+        $ul_tag = new Html\Tag('ul');
         $ul_tag->id = $this->id;
         $ul_tag->class = 'swat-accordion';
         $ul_tag->open();
@@ -82,7 +82,7 @@ class SwatAccordion extends SwatNoteBook
                 continue;
 
             $li_counter++;
-            $li_tag = new SwatHtmlTag('li');
+            $li_tag = new Html\Tag('li');
             $li_tag->id = $page->id;
 
             if ($page->id === $this->selected_page) {
@@ -97,10 +97,10 @@ class SwatAccordion extends SwatNoteBook
 
             // toggle link
             $title = ($page->title === null) ? '' : $page->title;
-            $anchor_tag = new SwatHtmlTag('a');
+            $anchor_tag = new Html\Tag('a');
             $anchor_tag->class = 'swat-accordion-page-toggle';
             $anchor_tag->href = '#'.$page->id;
-            $em_tag = new SwatHtmlTag('em');
+            $em_tag = new Html\Tag('em');
             $em_tag->setContent($title, $page->title_content_type);
             $anchor_tag->open();
             $em_tag->display();
@@ -117,7 +117,7 @@ class SwatAccordion extends SwatNoteBook
         }
 
         $ul_tag->close();
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
