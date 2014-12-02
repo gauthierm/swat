@@ -2,8 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNumericEntry.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\I18N;
+use Silverorange\Swat\L;
 
 /**
  * An integer entry widget
@@ -12,7 +15,7 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  * @copyright 2004-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatIntegerEntry extends SwatNumericEntry
+class IntegerEntry extends NumericEntry
 {
     // {{{ public function process()
 
@@ -37,7 +40,7 @@ class SwatIntegerEntry extends SwatNumericEntry
             else
                 $this->value = $integer_value;
 
-        } catch (SwatIntegerOverflowException $e) {
+        } catch (Exception\IntegerOverflowException $e) {
             if ($e->getSign() > 0)
                 $this->addMessage($this->getValidationMessage(
                     'integer-maximum'));
@@ -62,7 +65,7 @@ class SwatIntegerEntry extends SwatNumericEntry
     protected function getDisplayValue($value)
     {
         if (is_int($value)) {
-            $locale = SwatI18NLocale::get();
+            $locale = I18N\Locale::get();
             $thousands_separator =
                 ($this->show_thousands_separator) ? null : '';
 
@@ -91,7 +94,7 @@ class SwatIntegerEntry extends SwatNumericEntry
      */
     protected function getNumericValue($value)
     {
-        $locale = SwatI18NLocale::get();
+        $locale = I18N\Locale::get();
         return $locale->parseInteger($value);
     }
 
@@ -101,41 +104,41 @@ class SwatIntegerEntry extends SwatNumericEntry
     /**
      * Gets a validation message for this integer entry
      *
-     * @see SwatEntry::getValidationMessage()
+     * @see Entry::getValidationMessage()
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'integer':
             if ($this->minimum_value < 0) {
-                $text = $this->show_field_title_in_messages ?
-                    Swat::_('The %s field must be an integer.') :
-                    Swat::_('This field must be an integer.');
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %s field must be an integer.')
+                    : L::_('This field must be an integer.');
             } else {
-                $text = $this->show_field_title_in_messages ?
-                    Swat::_('The %s field must be a whole number.') :
-                    Swat::_('This field must be a whole number.');
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %s field must be a whole number.')
+                    : L::_('This field must be a whole number.');
             }
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         case 'integer-maximum':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %s field is too big.') :
-                Swat::_('This field is too big.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %s field is too big.')
+                : L::_('This field is too big.');
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         case 'integer-minimum':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %s field is too small.') :
-                Swat::_('The this field is too small.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %s field is too small.')
+                : L::_('The this field is too small.');
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         default:

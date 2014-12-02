@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * An image cropping widget
@@ -16,7 +17,7 @@ require_once 'Swat/SwatYUI.php';
  * @copyright 2008-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatImageCropper extends SwatInputControl
+class ImageCropper extends InputControl
 {
     // {{{ public properties
 
@@ -98,7 +99,7 @@ class SwatImageCropper extends SwatInputControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -142,20 +143,20 @@ class SwatImageCropper extends SwatInputControl
 
         $this->autoCropBoxDimensions();
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = 'swat-image-cropper yui-skin-sam';
         $div_tag->open();
 
-        $image_tag = new SwatHtmlTag('img');
+        $image_tag = new Html\Tag('img');
         $image_tag->id = $this->id.'_image';
         $image_tag->src = $this->image_uri;
         $image_tag->width = $this->image_width;
         $image_tag->height = $this->image_height;
-        $image_tag->alt = Swat::_('Crop Image');
+        $image_tag->alt = L::_('Crop Image');
         $image_tag->display();
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
 
         $input_tag->id = $this->id.'_width';
@@ -180,7 +181,7 @@ class SwatImageCropper extends SwatInputControl
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}

@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatImageCellRenderer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A renderer that displays a hyperlinked image
@@ -12,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatImageLinkCellRenderer extends SwatImageCellRenderer
+class ImageLinkCellRenderer extends ImageCellRenderer
 {
     // {{{ public properties
 
@@ -26,7 +27,7 @@ class SwatImageLinkCellRenderer extends SwatImageCellRenderer
      *
      * @var string
      *
-     * @see SwatLinkCellRenderer::$link_value
+     * @see LinkCellRenderer::$link_value
      */
     public $link;
 
@@ -35,12 +36,12 @@ class SwatImageLinkCellRenderer extends SwatImageCellRenderer
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatImageLinkCellRenderer::$link} property. If the value
-     * is a string a single sprintf() call is made.
+     * on the {@link ImageLinkCellRenderer::$link} property. If the value is a
+     * string a single sprintf() call is made.
      *
      * @var mixed
      *
-     * @see SwatImageLinkCellRenderer::$link
+     * @see ImageLinkCellRenderer::$link
      */
     public $link_value = null;
 
@@ -50,7 +51,7 @@ class SwatImageLinkCellRenderer extends SwatImageCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -58,7 +59,7 @@ class SwatImageLinkCellRenderer extends SwatImageCellRenderer
             return;
 
         if ($this->sensitive) {
-            $anchor = new SwatHtmlTag('a');
+            $anchor = new Html\Tag('a');
 
             if ($this->link_value === null)
                 $anchor->href = $this->link;

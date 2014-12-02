@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatTitleable.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A container with a decorative frame and optional title
@@ -13,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2004-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
+class Frame extends DisplayableContainer implements Titleable
 {
     // {{{ public properties
 
@@ -63,7 +63,7 @@ class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
     /**
      * Gets the title of this frame
      *
-     * Implements the {@link SwatTitleable::getTitle()} interface.
+     * Implements the {@link Titleable::getTitle()} interface.
      *
      * @return string the title of this frame.
      */
@@ -84,7 +84,7 @@ class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
     /**
      * Gets the title content-type of this frame
      *
-     * Implements the {@link SwatTitleable::getTitleContentType()} interface.
+     * Implements the {@link Titleable::getTitleContentType()} interface.
      *
      * @return string the title content-type of this frame.
      */
@@ -104,9 +104,9 @@ class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
-        $outer_div = new SwatHtmlTag('div');
+        $outer_div = new Html\Tag('div');
         $outer_div->id = $this->id;
         $outer_div->class = $this->getCSSClassString();
 
@@ -126,14 +126,14 @@ class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
     {
         if ($this->title !== null) {
 
-            $header_tag = new SwatHtmlTag('h'.$this->getHeaderLevel());
+            $header_tag = new Html\Tag('h'.$this->getHeaderLevel());
             $header_tag->class = 'swat-frame-title';
             $header_tag->setContent($this->title, $this->title_content_type);
 
             if ($this->subtitle === null) {
                 $header_tag->display();
             } else {
-                $span_tag = new SwatHtmlTag('span');
+                $span_tag = new Html\Tag('span');
                 $span_tag->class = 'swat-frame-subtitle';
                 $span_tag->setContent($this->subtitle,
                     $this->title_content_type);
@@ -155,7 +155,7 @@ class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
      */
     protected function displayContent()
     {
-        $inner_div = new SwatHtmlTag('div');
+        $inner_div = new Html\Tag('div');
         $inner_div->class = 'swat-frame-contents';
         $inner_div->open();
         $this->displayChildren();
@@ -190,7 +190,7 @@ class SwatFrame extends SwatDisplayableContainer implements SwatTitleable
 
             // get appropriate header level, limit to h6
             while ($ancestor !== null) {
-                if ($ancestor instanceof SwatFrame) {
+                if ($ancestor instanceof Frame) {
                     $level = $ancestor->getHeaderLevel() + 1;
                     $level = min($level, 6);
                     break;

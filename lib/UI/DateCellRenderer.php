@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatDate.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Util;
 
 /**
  * A text renderer.
@@ -13,35 +13,35 @@ require_once 'Swat/SwatString.php';
  * @copyright 2005-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDateCellRenderer extends SwatCellRenderer
+class DateCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
     /**
      * Date to render
      *
-     * This may either be a {@link SwatDate} object, or may be an
-     * ISO-formatted date string that can be passed into the SwatDate
+     * This may either be a {@link Util\Date} object, or may be an
+     * ISO-formatted date string that can be passed into the Util\Date
      * constructor.
      *
-     * @var string|SwatDate
+     * @var string|Util\Date
      */
     public $date = null;
 
     /**
      * Format
      *
-     * Either a {@link SwatDate} format mask, or class constant. Class
+     * Either a {@link Util\Date} format mask, or class constant. Class
      * constants are preferable for sites that require translation.
      *
      * @var mixed
      */
-    public $format = SwatDate::DF_DATE_TIME;
+    public $format = Util\Date::DF_DATE_TIME;
 
     /**
      * Time zone format
      *
-     * A time zone format class constant from SwatDate.
+     * A time zone format class constant from Util\Date.
      *
      * @var integer
      */
@@ -51,10 +51,10 @@ class SwatDateCellRenderer extends SwatCellRenderer
      * The time zone to render the date in
      *
      * The time zone may be specified either as a valid time zone identifier
-     * or as a DateTimeZone object. If the render time zone is null, no
+     * or as a \DateTimeZone object. If the render time zone is null, no
      * time zone conversion is performed.
      *
-     * @var string|DateTimeZone
+     * @var string|\DateTimeZone
      */
     public $display_time_zone = null;
 
@@ -64,7 +64,7 @@ class SwatDateCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -76,28 +76,34 @@ class SwatDateCellRenderer extends SwatCellRenderer
         if ($this->date !== null) {
 
             if (is_string($this->date)) {
-                $date = new SwatDate($this->date);
-            } elseif ($this->date instanceof SwatDate) {
+                $date = new Util\Date($this->date);
+            } elseif ($this->date instanceof Util\Date) {
                 // Time zone conversion mutates the original object so create
                 // a new date for display.
                 $date = clone $this->date;
             } else {
-                throw new InvalidArgumentException(
-                    'The $date must be either a string or a SwatDate object.');
+                throw new \InvalidArgumentException(
+                    'The $date must be either a string or a Util\Date object.'
+                );
             }
 
-            if ($this->display_time_zone instanceof DateTimeZone) {
+            if ($this->display_time_zone instanceof \DateTimeZone) {
                 $date->convertTZ($this->display_time_zone);
             } elseif (is_string($this->display_time_zone)) {
                 $date->convertTZById($this->display_time_zone);
             } elseif ($this->display_time_zone !== null) {
-                throw new InvalidArgumentException(
+                throw new \InvalidArgumentException(
                     'The $display_time_zone must be either a string or a '.
-                    'DateTimeZone object.');
+                    '\DateTimeZone object.'
+                );
             }
 
-            echo SwatString::minimizeEntities(
-                $date->formatLikeIntl($this->format, $this->time_zone_format));
+            echo Util\String::minimizeEntities(
+                $date->formatLikeIntl(
+                    $this->format,
+                    $this->time_zone_format
+                )
+            );
         }
     }
 

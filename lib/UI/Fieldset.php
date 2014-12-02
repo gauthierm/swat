@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatTitleable.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * Fieldset tag container
@@ -15,7 +16,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFieldset extends SwatDisplayableContainer implements SwatTitleable
+class Fieldset extends DisplayableContainer implements Titleable
 {
     // {{{ public properties
 
@@ -54,7 +55,7 @@ class SwatFieldset extends SwatDisplayableContainer implements SwatTitleable
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -74,7 +75,7 @@ class SwatFieldset extends SwatDisplayableContainer implements SwatTitleable
     /**
      * Gets the title of this fieldset
      *
-     * Implements the {SwatTitleable::getTitle()} interface.
+     * Implements the {Titleable::getTitle()} interface.
      *
      * @return the title of this fieldset.
      */
@@ -89,7 +90,7 @@ class SwatFieldset extends SwatDisplayableContainer implements SwatTitleable
     /**
      * Gets the title content-type of this fieldset
      *
-     * Implements the {@link SwatTitleable::getTitleContentType()} interface.
+     * Implements the {@link Titleable::getTitleContentType()} interface.
      *
      * @return string the title content-type of this fieldset.
      */
@@ -106,15 +107,15 @@ class SwatFieldset extends SwatDisplayableContainer implements SwatTitleable
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
-        $fieldset_tag = new SwatHtmlTag('fieldset');
+        $fieldset_tag = new Html\Tag('fieldset');
         $fieldset_tag->id = $this->id;
         $fieldset_tag->class = $this->getCSSClassString();
         $fieldset_tag->open();
 
         if ($this->title !== null) {
-            $legend_tag = new SwatHtmlTag('legend');
+            $legend_tag = new Html\Tag('legend');
 
             if ($this->access_key != '')
                 $legend_tag->accesskey = $this->access_key;
@@ -125,7 +126,7 @@ class SwatFieldset extends SwatDisplayableContainer implements SwatTitleable
 
         $this->displayChildren();
 
-        Swat::displayInlineJavaScript($this->getInlineJavascript());
+        Util\JavaScript::displayInline($this->getInlineJavascript());
 
         $fieldset_tag->close();
     }

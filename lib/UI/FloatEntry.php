@@ -2,8 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNumericEntry.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\I18N;
+use Silverorange\Swat\L;
 
 /**
  * A float entry widget
@@ -12,7 +16,7 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  * @copyright 2004-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFloatEntry extends SwatNumericEntry
+class FloatEntry extends NumericEntry
 {
     // {{{ public function process()
 
@@ -50,7 +54,7 @@ class SwatFloatEntry extends SwatNumericEntry
     protected function getDisplayValue($value)
     {
         if (is_numeric($value)) {
-            $locale = SwatI18NLocale::get();
+            $locale = I18N\Locale::get();
             $thousands_separator =
                 ($this->show_thousands_separator) ? null : '';
 
@@ -79,7 +83,7 @@ class SwatFloatEntry extends SwatNumericEntry
      */
     protected function getNumericValue($value)
     {
-        $locale = SwatI18NLocale::get();
+        $locale = I18N\Locale::get();
         return $locale->parseFloat($value);
     }
 
@@ -91,20 +95,19 @@ class SwatFloatEntry extends SwatNumericEntry
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      *
-     * @see SwatEntry::getValidationMessage()
+     * @see Entry::getValidationMessage()
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'float':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %s field must be a number.') :
-                Swat::_('This field must be a number.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %s field must be a number.')
+                : L::_('This field must be a number.');
 
-            $message = new SwatMessage($text, 'error');
-
+            $message = new Model\Message($text, 'error');
             break;
 
         default:

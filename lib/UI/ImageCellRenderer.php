@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * An image renderer
@@ -12,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2004-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatImageCellRenderer extends SwatCellRenderer
+class ImageCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -28,22 +29,22 @@ class SwatImageCellRenderer extends SwatCellRenderer
      *
      * @var string
      *
-     * @see SwatImageCellRenderer::$value
+     * @see ImageCellRenderer::$value
      */
     public $image;
 
     /**
      * A value or array of values to substitute into the
-     * {@link SwatImageCellRenderer::$image} property of this cell
+     * {@link ImageCellRenderer::$image} property of this cell
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatImageCellRenderer::$image} property. If the value
-     * is a string a single sprintf() call is made.
+     * on the {@link ImageCellRenderer::$image} property. If the value is a
+     * string a single sprintf() call is made.
      *
      * @var mixed
      *
-     * @see SwatImageCellRenderer::$image
+     * @see ImageCellRenderer::$image
      */
     public $value = null;
 
@@ -111,7 +112,7 @@ class SwatImageCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -120,7 +121,7 @@ class SwatImageCellRenderer extends SwatCellRenderer
 
         parent::render();
 
-        $image_tag = new SwatHtmlTag('img');
+        $image_tag = new Html\Tag('img');
 
         if ($this->value === null)
             $image_tag->src = $this->image;

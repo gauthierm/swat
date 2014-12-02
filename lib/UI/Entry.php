@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatState.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * A single line text entry widget
@@ -13,7 +15,7 @@ require_once 'Swat/SwatState.php';
  * @copyright 2004-2009 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatEntry extends SwatInputControl implements SwatState
+class Entry extends InputControl implements Model\State
 {
     // {{{ public properties
 
@@ -141,7 +143,7 @@ class SwatEntry extends SwatInputControl implements SwatState
         $input_tag->display();
 
         if (!$this->autocomplete) {
-            $nonce_tag = new SwatHtmlTag('input');
+            $nonce_tag = new Html\Tag('input');
             $nonce_tag->type = 'hidden';
             $nonce_tag->name = $this->id.'_nonce';
             $nonce_tag->value = $this->getNonce();
@@ -208,7 +210,7 @@ class SwatEntry extends SwatInputControl implements SwatState
      *
      * @return string the current state of this entry widget.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -223,7 +225,7 @@ class SwatEntry extends SwatInputControl implements SwatState
      *
      * @param string $state the new state of this entry widget.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -241,7 +243,7 @@ class SwatEntry extends SwatInputControl implements SwatState
      *                widget that should receive focus or null if there is
      *                no such element.
      *
-     * @see SwatWidget::getFocusableHtmlId()
+     * @see Widget::getFocusableHtmlId()
      */
     public function getFocusableHtmlId()
     {
@@ -261,22 +263,22 @@ class SwatEntry extends SwatInputControl implements SwatState
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'too-short':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %%s must be at least %s characters long.') :
-                Swat::_('This field must be at least %s characters long.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %%s must be at least %s characters long.')
+                : L::_('This field must be at least %s characters long.');
 
             break;
         default:
             return parent::getValidationMessage($id);
         }
 
-        $message = new SwatMessage($text, 'error');
+        $message = new Model\Message($text, 'error');
         return $message;
     }
 
@@ -288,11 +290,11 @@ class SwatEntry extends SwatInputControl implements SwatState
      *
      * Can be used by sub-classes to change the setup of the input tag.
      *
-     * @return SwatHtmlTag Input tag to display.
+     * @return Html\Tag Input tag to display.
      */
     protected function getInputTag()
     {
-        $tag = new SwatHtmlTag('input');
+        $tag = new Html\Tag('input');
         $tag->type = 'text';
         $tag->name = ($this->autocomplete) ? $this->id : $this->getNonce();
         $tag->id = ($this->autocomplete) ? $this->id : $this->getNonce();
@@ -386,7 +388,7 @@ class SwatEntry extends SwatInputControl implements SwatState
      * @return string the raw value entred by the user before processing or
      *                null if no value was entered by the user.
      *
-     * @see SwatEntry::hasRawValue()
+     * @see Entry::hasRawValue()
      */
     protected function getRawValue()
     {
@@ -423,7 +425,7 @@ class SwatEntry extends SwatInputControl implements SwatState
      * @return boolean true if a value was submitted by the user for this entry
      *                 and false if no value was submitted by the user.
      *
-     * @see SwatEntry::getRawValue()
+     * @see Entry::getRawValue()
      */
     protected function hasRawValue()
     {

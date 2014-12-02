@@ -2,8 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatImageDisplay.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * Image preview display control
@@ -15,7 +17,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatImagePreviewDisplay extends SwatImageDisplay
+class ImagePreviewDisplay extends ImageDisplay
 {
     // {{{ public properties
 
@@ -74,8 +76,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
      *
      * The visible title is only displayed if JavaScript is enabled. The
      * default title is "View Larger Image", but this may be changed by setting
-     * the {@link SwatImageDisplay::$title} property of this image preview
-     * display.
+     * the {@link ImageDisplay::$title} property of this image preview display.
      *
      * @var boolean
      */
@@ -94,7 +95,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
      *
      * @var string
      *
-     * @see SwatImagePreviewDisplay::$link_value
+     * @see ImagePreviewDisplay::$link_value
      */
     public $link;
 
@@ -103,12 +104,12 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatImageLinkCellRenderer::$link} property. If the value
-     * is a string a single sprintf() call is made.
+     * on the {@link ImageLinkCellRenderer::$link} property. If the value is a
+     * string a single sprintf() call is made.
      *
      * @var mixed
      *
-     * @see SwatImagePreviewDisplay::$link
+     * @see ImagePreviewDisplay::$link
      */
     public $link_value = null;
 
@@ -153,7 +154,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -176,7 +177,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
             'packages/swat/styles/swat-image-preview-display.css'
         );
 
-        $this->title = Swat::_('View Larger Image');
+        $this->title = L::_('View Larger Image');
     }
 
     // }}}
@@ -194,7 +195,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
             parent::display();
         } else {
             if ($this->link !== null) {
-                $tag = new SwatHtmlTag('a');
+                $tag = new Html\Tag('a');
                 if ($this->link_value === null) {
                     $tag->href = $this->link;
                 } elseif (is_array($this->link_value)) {
@@ -203,7 +204,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
                     $tag->href = sprintf($this->link, $this->link_value);
                 }
             } else {
-                $tag = new SwatHtmlTag('span');
+                $tag = new Html\Tag('span');
             }
 
             $tag->id = $this->id.'_wrapper';
@@ -219,7 +220,7 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
             parent::display();
             $tag->close();
 
-            Swat::displayInlineJavaScript($this->getInlineJavaScript());
+            Util\JavaScript::displayInline($this->getInlineJavaScript());
         }
     }
 
@@ -291,12 +292,12 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
                 "%s, %s, %s, %s, %s, %s);\n",
             $this->id,
             $this->getJavaScriptClass(),
-            SwatString::quoteJavaScriptString($this->id),
-            SwatString::quoteJavaScriptString($this->preview_image),
+            Util\JavaScript::quoteString($this->id),
+            Util\JavaScript::quoteString($this->preview_image),
             intval($this->preview_width),
             intval($this->preview_height),
             (($this->show_title) ? 'true' : 'false'),
-            SwatString::quoteJavaScriptString($this->preview_title));
+            Util\JavaScript::quoteString($this->preview_title));
 
         if ($this->container_width !== null) {
             $javascript.= sprintf("%s.width = %s;",
@@ -322,8 +323,9 @@ class SwatImagePreviewDisplay extends SwatImageDisplay
      */
     protected function getInlineJavaScriptTranslations()
     {
-        $close_text = ($this->close_text === null) ?
-            Swat::_('Close') : $this->close_text;
+        $close_text = ($this->close_text === null)
+            ? L::_('Close')
+            : $this->close_text;
 
         return sprintf(
             "SwatImagePreviewDisplay.close_text = '%s';\n",

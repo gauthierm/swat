@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatControl.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * Image display control
@@ -14,7 +15,7 @@ require_once 'Swat/SwatControl.php';
  * @copyright 2005-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatImageDisplay extends SwatControl
+class ImageDisplay extends Control
 {
     // {{{ public properties
 
@@ -110,7 +111,7 @@ class SwatImageDisplay extends SwatControl
 
         parent::display();
 
-        $image_tag = new SwatHtmlTag('img');
+        $image_tag = new Html\Tag('img');
         $image_tag->id = $this->id;
         $image_tag->class = $this->getCSSClassString();
 
@@ -125,9 +126,12 @@ class SwatImageDisplay extends SwatControl
         if ($this->width !== null)
             $image_tag->width = $this->width;
 
-        $image_tag->style = SwatImageDisplay::getOccupyMargin(
-            $this->width, $this->height, $this->occupy_width,
-            $this->occupy_height);
+        $image_tag->style = self::getOccupyMargin(
+            $this->width,
+            $this->height,
+            $this->occupy_width,
+            $this->occupy_height
+        );
 
         if ($this->title !== null)
             $image_tag->title = $this->title;

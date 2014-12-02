@@ -2,13 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatDetailsViewField.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/exceptions/SwatDuplicateIdException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Exception;
 
 /**
  * A widget to display field-value pairs
@@ -17,21 +14,21 @@ require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDetailsView extends SwatControl implements SwatUIParent
+class DetailsView extends Control implements UIParent
 {
     // {{{ public properties
 
     /**
      * An object containing values to display
      *
-     * A data object contains properties and values. The SwatDetailsViewField
-     * objects inside this SwatDetailsView contain mappings between their
+     * A data object contains properties and values. The DetailsViewField
+     * objects inside this DetailsView contain mappings between their
      * properties and the properties of this data object. This allows the
      * to display specific values from this data object.
      *
      * @var object
      *
-     * @see SwatDetailsViewField
+     * @see DetailsViewField
      */
     public $data = null;
 
@@ -65,7 +62,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -82,7 +79,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *
      * This initializes all fields.
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     public function init()
     {
@@ -121,7 +118,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
 
         parent::display();
 
-        $table_tag = new SwatHtmlTag('table');
+        $table_tag = new Html\Tag('table');
         $table_tag->id = $this->id;
         $table_tag->class = $this->getCSSClassString();
 
@@ -129,7 +126,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
         $this->displayContent();
         $table_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -140,12 +137,12 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *
      * The field is appended below existing fields.
      *
-     * @param SwatDetailViewField $field the field to append.
+     * @param DetailViewField $field the field to append.
      *
-     * @throws SwatDuplicateIdException if the field has the same id as a field
-     *                                  already in this details-view.
+     * @throws Exception\DuplicateIdException if the field has the same id as
+     *         a field already in this details-view.
      */
-    public function appendField(SwatDetailsViewField $field)
+    public function appendField(DetailsViewField $field)
     {
         $this->insertField($field);
     }
@@ -156,18 +153,18 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     /**
      * Inserts a field before an existing field in this details-view
      *
-     * @param SwatDetailsViewField $field           the field to insert.
-     * @param SwatDetailsViewField $reference_field the field before which the
-     *                                              field will be inserted.
+     * @param DetailsViewField $field           the field to insert.
+     * @param DetailsViewField $reference_field the field before which the
+     *                                          field will be inserted.
      *
-     * @throws SwatWidgetNotFoundException if the reference field does not
-     *                                     exist in this details-view.
+     * @throws Exception\WidgetNotFoundException if the reference field does
+     *         not exist in this details-view.
      *
-     * @throws SwatDuplicateIdException if the field has the same id as a field
-     *                                  already in this details-view.
+     * @throws Exception\DuplicateIdException if the field has the same id as
+     *         a field already in this details-view.
      */
-    public function insertFieldBefore(SwatDetailsViewField $field,
-        SwatDetailsViewField $reference_field)
+    public function insertFieldBefore(DetailsViewField $field,
+        DetailsViewField $reference_field)
     {
         $this->insertField($field, $reference_field, false);
     }
@@ -178,18 +175,18 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     /**
      * Inserts a field after an existing field in this details-view
      *
-     * @param SwatDetailsViewField $field           the field to insert.
-     * @param SwatDetailsViewField $reference_field the field after which the
-     *                                              field will be inserted.
+     * @param DetailsViewField $field           the field to insert.
+     * @param DetailsViewField $reference_field the field after which the
+     *                                          field will be inserted.
      *
-     * @throws SwatWidgetNotFoundException if the reference field does not
-     *                                     exist in this details-view.
+     * @throws Exception\WidgetNotFoundException if the reference field does
+     *         not exist in this details-view.
      *
-     * @throws SwatDuplicateIdException if the field has the same id as a field
-     *                                  already in this details-view.
+     * @throws Exception\DuplicateIdException if the field has the same id as
+     *         a field already in this details-view.
      */
-    public function insertFieldAfter(SwatDetailsViewField $field,
-        SwatDetailsViewField $reference_field)
+    public function insertFieldAfter(DetailsViewField $field,
+        DetailsViewField $reference_field)
     {
         $this->insertField($field, $reference_field, true);
     }
@@ -228,17 +225,19 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *
      * @param string $id the id of the field in this details-view to get.
      *
-     * @return SwatDetailsViewField the field in this details-view with the
-     *                              specified id.
+     * @return DetailsViewField the field in this details-view with the
+     *                          specified id.
      *
-     * @throws SwatWidgetNotFoundException if no field with the given id exists
-     *                                     in this details view.
+     * @throws Exception\WidgetNotFoundException if no field with the given id
+     *         exists in this details view.
      */
     public function getField($id)
     {
-        if (!array_key_exists($id, $this->fields_by_id))
-            throw new SwatWidgetNotFoundException(
-                "Field with an id of '{$id}' not found.");
+        if (!array_key_exists($id, $this->fields_by_id)) {
+            throw new Exception\WidgetNotFoundException(
+                "Field with an id of '{$id}' not found."
+            );
+        }
 
         return $this->fields_by_id[$id];
     }
@@ -264,24 +263,25 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     /**
      * Adds a child object to this object
      *
-     * @param SwatDetailsViewField $child the child object to add to this
-     *                                    object.
+     * @param DetailsViewField $child the child object to add to this object.
      *
-     * @throws SwatInvalidClassException
+     * @throws Exception\InvalidClassException
      *
-     * @see SwatUIParent::addChild()
+     * @see UIParent::addChild()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(UIObject $child)
     {
-        if ($child instanceof SwatDetailsViewField) {
+        if ($child instanceof DetailsViewField) {
             $this->appendField($child);
         } else {
             $class_name = get_class($child);
-
-            throw new SwatInvalidClassException(
-                "Unable to add '{$class_name}' object to SwatDetailsView. ".
-                'Only SwatDetailsViewField objects may be nested within '.
-                'SwatDetailsView objects.', 0, $child);
+            throw new Exception\InvalidClassException(
+                "Unable to add '{$class_name}' object to DetailsView. Only ".
+                "DetailsViewField objects may be nested within DetailsView ".
+                "objects.",
+                0,
+                $child
+            );
         }
     }
 
@@ -289,12 +289,12 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this details-view
+     * Gets the Html\Resource objects needed by this details-view
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this details-view.
+     * @return Html\ResourceSet the Html\Resource objects needed by this
+     *                          details-view.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see UIObject::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -311,13 +311,13 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this
+     * Gets the Html\Resource objects that may be needed by this
      * details-view
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              needed by this details-view.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed by
+     *                          this details-view.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see UIObject::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -344,7 +344,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -362,8 +362,9 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
                     $out[$field->id] = $field;
             }
 
-            if ($field instanceof SwatUIParent)
+            if ($field instanceof UIParent) {
                 $out = array_merge($out, $field->getDescendants($class_name));
+            }
         }
 
         return $out;
@@ -377,10 +378,10 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
+     * @return UIObject the first descendant UI-object or null if no
      *                      matching descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -395,7 +396,7 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
                 break;
             }
 
-            if ($field instanceof SwatUIParent) {
+            if ($field instanceof UIParent) {
                 $out = $field->getFirstDescendant($class_name);
                 if ($out !== null)
                     break;
@@ -421,8 +422,10 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -441,9 +444,12 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -455,10 +461,9 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return UIObject a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -484,21 +489,24 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
      * Ensures a field added to this details-view is valid for this
      * details-view
      *
-     * @param SwatDetailsViewField $field the field to check.
+     * @param DetailsViewField $field the field to check.
      *
-     * @throws SwatDuplicateIdException if the field has the same id as a
-     *                                  field already in this details-view.
+     * @throws DuplicateIdException if the field has the same id as a field
+     *         already in this details-view.
      */
-    protected function validateField(SwatDetailsViewField $field)
+    protected function validateField(DetailsViewField $field)
     {
         // note: This works because the id property is set before children are
-        // added to parents in SwatUI.
+        // added to parents in Loader.
         if ($field->id !== null) {
-            if (array_key_exists($field->id, $this->fields_by_id))
-                throw new SwatDuplicateIdException(
+            if (array_key_exists($field->id, $this->fields_by_id)) {
+                throw new Exception\DuplicateIdException(
                     "A field with the id '{$field->id}' already exists ".
-                    'in this details-view.',
-                    0, $field->id);
+                    "in this details-view.",
+                    0,
+                    $field->id
+                );
+            }
         }
     }
 
@@ -508,48 +516,47 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
     /**
      * Helper method to insert fields into this details-view
      *
-     * @param SwatDetailsViewField $field           the field to insert.
-     * @param SwatDetailsViewField $reference_field optional. An existing field
-     *                                              within this details-view to
-     *                                              which the inserted field
-     *                                              is relatively positioned.
-     *                                              If not specified, the
-     *                                              field is inserted at the
-     *                                              beginning or the end of
-     *                                              this details-view's list of
-     *                                              fields.
-     * @param boolean              $after           optional. If true and a
-     *                                              reference field is
-     *                                              specified, the field is
-     *                                              inserted immediately before
-     *                                              the reference field. If true
-     *                                              and no reference field is
-     *                                              specified, the field is
-     *                                              inserted at the beginning of
-     *                                              the field list. If false and
-     *                                              a reference field is
-     *                                              specified, the field is
-     *                                              inserted immediately after
-     *                                              the reference field. If
-     *                                              false and no reference field
-     *                                              is specified, the field is
-     *                                              inserted at the end of the
-     *                                              field list. Defaults to
-     *                                              false.
+     * @param DetailsViewField $field           the field to insert.
+     * @param DetailsViewField $reference_field optional. An existing field
+     *                                          within this details-view to
+     *                                          which the inserted field
+     *                                          is relatively positioned.
+     *                                          If not specified, the
+     *                                          field is inserted at the
+     *                                          beginning or the end of
+     *                                          this details-view's list of
+     *                                          fields.
+     * @param boolean              $after       optional. If true and a
+     *                                          reference field is
+     *                                          specified, the field is
+     *                                          inserted immediately before
+     *                                          the reference field. If true
+     *                                          and no reference field is
+     *                                          specified, the field is
+     *                                          inserted at the beginning of
+     *                                          the field list. If false and
+     *                                          a reference field is
+     *                                          specified, the field is
+     *                                          inserted immediately after
+     *                                          the reference field. If
+     *                                          false and no reference field
+     *                                          is specified, the field is
+     *                                          inserted at the end of the
+     *                                          field list. Defaults to
+     *                                          false.
      *
-     * @throws SwatWidgetNotFoundException if the reference field does not
-     *                                     exist in this details-view.
+     * @throws Exception\WidgetNotFoundException if the reference field does
+     *         not exist in this details-view.
      *
-     * @throws SwatDuplicateIdException if the field to be inserted has the
-     *                                  same id as a field already in this
-     *                                  details-view.
+     * @throws Exception\DuplicateIdException if the field to be inserted has
+     *         the same id as a field already in this details-view.
      *
-     * @see SwatDetailsView::appendField()
-     * @see SwatDetailsView::insertFieldBefore()
-     * @see SwatDetailsView::insertFieldAfter()
+     * @see DetailsView::appendField()
+     * @see DetailsView::insertFieldBefore()
+     * @see DetailsView::insertFieldAfter()
      */
-    protected function insertField(SwatDetailsViewField $field,
-        SwatDetailsViewField $reference_field = null, $after = true)
+    protected function insertField(DetailsViewField $field,
+        DetailsViewField $reference_field = null, $after = true)
     {
         $this->validateField($field);
 
@@ -557,8 +564,10 @@ class SwatDetailsView extends SwatControl implements SwatUIParent
             $key = array_search($reference_field, $this->fields, true);
 
             if ($key === false) {
-                throw new SwatWidgetNotFoundException('The reference field '.
-                    'could not be found in this details-view.');
+                throw new Exception\WidgetNotFoundException(
+                    'The reference field could not be found in this '.
+                    'details-view.'
+                );
             }
 
             if ($after) {

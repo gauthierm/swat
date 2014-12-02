@@ -2,8 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisclosure.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A frame-like container to show and hide child widgets
@@ -12,7 +14,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFrameDisclosure extends SwatDisclosure
+class FrameDisclosure extends Disclosure
 {
     // {{{ public function __construct()
 
@@ -21,7 +23,7 @@ class SwatFrameDisclosure extends SwatDisclosure
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -47,7 +49,7 @@ class SwatFrameDisclosure extends SwatDisclosure
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         // default header level is h2
         $level = 2;
@@ -55,13 +57,14 @@ class SwatFrameDisclosure extends SwatDisclosure
 
         // get appropriate header level, limit to h6
         while ($ancestor !== null && $level < 6) {
-            if ($ancestor instanceof SwatFrame)
+            if ($ancestor instanceof Frame) {
                 $level++;
+            }
 
             $ancestor = $ancestor->parent;
         }
 
-        $header_tag = new SwatHtmlTag('h'.$level);
+        $header_tag = new Html\Tag('h'.$level);
         $header_tag->class = 'swat-frame-title';
 
         $control_div = $this->getControlDivTag();
@@ -87,7 +90,7 @@ class SwatFrameDisclosure extends SwatDisclosure
         echo '</div>';
         $animate_div->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavascript());
+        Util\JavaScript::displayInline($this->getInlineJavascript());
 
         $control_div->close();
     }
@@ -97,7 +100,7 @@ class SwatFrameDisclosure extends SwatDisclosure
 
     protected function getContainerDivTag()
     {
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->class = 'swat-disclosure-container '.
             'swat-frame-disclosure-container';
 

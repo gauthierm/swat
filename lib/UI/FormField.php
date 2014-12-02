@@ -2,11 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatTitleable.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatMessage.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * A container to use around control widgets in a form
@@ -17,7 +17,7 @@ require_once 'Swat/SwatMessage.php';
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
+class FormField extends DisplayableContainer implements Titleable
 {
     // {{{ constants
 
@@ -67,10 +67,10 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
      *
      * This is a bitwise combination of the following options:
      *
-     *  - {@link SwatFormField::SHOW_REQUIRED}
-     *  - {@link SwatFormField::SHOW_OPTIONAL}
+     *  - {@link FormField::SHOW_REQUIRED}
+     *  - {@link FormField::SHOW_OPTIONAL}
      *
-     * For convenience, {@link SwatFormField::SHOW_NONE} may be used to
+     * For convenience, {@link FormField::SHOW_NONE} may be used to
      * entirely hide required status for this field.
      *
      * @var integer
@@ -188,7 +188,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
      *
      * @var string
      *
-     * @see SwatFormField::notifyOfAdd()
+     * @see FormField::notifyOfAdd()
      */
     protected $widget_class;
 
@@ -200,7 +200,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -215,7 +215,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
     /**
      * Gets the title of this form field
      *
-     * Satisfies the {SwatTitleable::getTitle()} interface.
+     * Satisfies the {@link Titleable::getTitle()} interface.
      *
      * @return string the title of this form field.
      */
@@ -230,7 +230,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
     /**
      * Gets the title content-type of this form field
      *
-     * Implements the {@link SwatTitleable::getTitleContentType()} interface.
+     * Implements the {@link Titleable::getTitleContentType()} interface.
      *
      * @return string the title content-type of this form field.
      */
@@ -257,9 +257,9 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
             return;
         }
 
-        SwatWidget::display();
+        Widget::display();
 
-        $container_tag = new SwatHtmlTag($this->container_tag);
+        $container_tag = new Html\Tag($this->container_tag);
         $container_tag->id = $this->id;
         $container_tag->class = $this->getCSSClassString();
 
@@ -267,7 +267,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
 
         $content_wrapper = null;
         if ($this->wrap_content_and_notes) {
-            $content_wrapper = new SwatHtmlTag('div');
+            $content_wrapper = new Html\Tag('div');
             $content_wrapper->class = 'swat-form-field-content-wrapper';
         }
 
@@ -374,16 +374,16 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
         if ($this->required &&
             $this->required_status_display & self::SHOW_REQUIRED) {
 
-            $span_tag = new SwatHtmlTag('span');
+            $span_tag = new Html\Tag('span');
             $span_tag->class = 'swat-required';
-            $span_tag->setContent(sprintf(' (%s)', Swat::_('required')));
+            $span_tag->setContent(sprintf(' (%s)', L::_('required')));
             $span_tag->display();
         } elseif (!$this->required &&
             $this->required_status_display & self::SHOW_OPTIONAL) {
 
-            $span_tag = new SwatHtmlTag('span');
+            $span_tag = new Html\Tag('span');
             $span_tag->class = 'swat-optional';
-            $span_tag->setContent(sprintf(' (%s)', Swat::_('optional')));
+            $span_tag->setContent(sprintf(' (%s)', L::_('optional')));
             $span_tag->display();
         }
     }
@@ -393,7 +393,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
 
     protected function displayContent()
     {
-        $contents_tag = new SwatHtmlTag($this->contents_tag);
+        $contents_tag = new Html\Tag($this->contents_tag);
         $contents_tag->class = 'swat-form-field-contents';
 
         $contents_tag->open();
@@ -411,9 +411,9 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
 
         $messages = $this->getMessages();
 
-        $message_ul = new SwatHtmlTag('ul');
+        $message_ul = new Html\Tag('ul');
         $message_ul->class = 'swat-form-field-messages';
-        $message_li = new SwatHtmlTag('li');
+        $message_li = new Html\Tag('li');
 
         $message_ul->open();
 
@@ -423,7 +423,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
                 $message->content_type);
 
             if ($message->secondary_content !== null) {
-                $secondary_span = new SwatHtmlTag('span');
+                $secondary_span = new Html\Tag('span');
                 $secondary_span->setContent($message->secondary_content,
                     $message->content_type);
 
@@ -448,12 +448,13 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
         $notes = array();
 
         if ($this->note !== null) {
-            $note = new SwatMessage($this->note);
+            $note = new Model\Message($this->note);
             $note->content_type = $this->note_content_type;
             $notes[] = $note;
         }
 
-        $control = $this->getFirstDescendant('SwatControl');
+        $control_class = '\Silverorange\Swat\UI\Control';
+        $control = $this->getFirstDescendant($control_class);
         if ($control !== null) {
             $note = $control->getNote();
             if ($note !== null)
@@ -462,16 +463,16 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
 
         if (count($notes) == 1) {
             $note = reset($notes);
-            $note_div = new SwatHtmlTag('div');
+            $note_div = new Html\Tag('div');
             $note_div->class = 'swat-note';
             $note_div->setContent($note->primary_content, $note->content_type);
             $note_div->display();
         } elseif (count($notes) > 1) {
-            $note_list = new SwatHtmlTag('ul');
+            $note_list = new Html\Tag('ul');
             $note_list->class = 'swat-note';
             $note_list->open();
 
-            $li_tag = new SwatHtmlTag('li');
+            $li_tag = new Html\Tag('li');
             foreach ($notes as $note) {
                 $li_tag->setContent($note->primary_content,
                     $note->content_type);
@@ -513,19 +514,19 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
     // {{{ protected function getTitleTag()
 
     /**
-     * Get a SwatHtmlTag to display the title
+     * Get a Html\Tag to display the title
      *
      * Subclasses can change this to change their appearance.
      *
-     * @return SwatHtmlTag a tag object containing the title.
+     * @return Html\Tag a tag object containing the title.
      */
     protected function getTitleTag()
     {
-        $label_tag = new SwatHtmlTag('label');
+        $label_tag = new Html\Tag('label');
 
         if ($this->title !== null) {
             if ($this->show_colon)
-                $label_tag->setContent(sprintf(Swat::_('%s: '), $this->title),
+                $label_tag->setContent(sprintf(L::_('%s: '), $this->title),
                     $this->title_content_type);
             else
                 $label_tag->setContent($this->title, $this->title_content_type);
@@ -546,13 +547,13 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
      * This sets class propertes on this form field when certain classes of
      * widgets are added.
      *
-     * @param SwatWidget $widget the widget that has been added.
+     * @param Widget $widget the widget that has been added.
      *
-     * @see SwatContainer::notifyOfAdd()
+     * @see Container::notifyOfAdd()
      */
     protected function notifyOfAdd($widget)
     {
-        if (class_exists('SwatCheckbox') && $widget instanceof SwatCheckbox) {
+        if ($widget instanceof Checkbox) {
             $this->widget_class = 'swat-form-field-checkbox';
 
             // don't set these properties if title_reversed is explicitly set in
@@ -561,8 +562,7 @@ class SwatFormField extends SwatDisplayableContainer implements SwatTitleable
                 $this->title_reversed = true;
                 $this->show_colon = false;
             }
-        } elseif (class_exists('SwatSearchEntry') &&
-            $widget instanceof SwatSearchEntry) {
+        } elseif ($widget instanceof SearchEntry) {
             $this->show_colon = false;
         }
     }

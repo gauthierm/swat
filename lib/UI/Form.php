@@ -2,29 +2,26 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/exceptions/SwatInvalidCharacterEncodingException.php';
-require_once 'Swat/exceptions/SwatInvalidTypeException.php';
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatMessageDisplay.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A form widget which can contain other widgets
  *
- * SwatForms are very useful for processing widgets. For most widgets, if they
- * are not inside a SwatForm they will not be able to be processed properly.
+ * Swat forms are very useful for processing widgets. For most widgets, if they
+ * are not inside a form they will not be able to be processed properly.
  *
- * With Swat's default style, SwatForm widgets have no visible margins, padding
+ * With Swat's default style, form widgets have no visible margins, padding
  * or borders.
  *
  * @package   Swat
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatForm extends SwatDisplayableContainer
+class Form extends DisplayableContainer
 {
     // {{{ constants
 
@@ -77,8 +74,8 @@ class SwatForm extends SwatDisplayableContainer
     public $accept_charset = 'utf-8';
 
     /**
-     * Whether or not to automatically focus the a default SwatControl when
-     * this form loads
+     * Whether or not to automatically focus the a default Control when this
+     * form loads
      *
      * Autofocusing is good for applications or pages that are keyboard driven
      * -- such as data entry forms -- as it immediatly places the focus on the
@@ -91,10 +88,9 @@ class SwatForm extends SwatDisplayableContainer
     /**
      * A reference to the default control to focus when the form loads
      *
-     * If this is not set then it defaults to the first SwatControl
-     * in the form.
+     * If this is not set then it defaults to the first Control in this form.
      *
-     * @var SwatControl
+     * @var Control
      */
     public $default_focused_control = null;
 
@@ -105,7 +101,7 @@ class SwatForm extends SwatDisplayableContainer
      * You usually do not want to explicitly set this in your code because
      * other parts of Swat set this property automatically.
      *
-     * @var SwatButton
+     * @var Button
      */
     public $button = null;
 
@@ -126,7 +122,7 @@ class SwatForm extends SwatDisplayableContainer
      * The default value to use for signature salt
      *
      * If this value is not null, all newly instantiated forms will call the
-     * {@link SwatForm::setSalt()} method with this value as the <i>$salt</i>
+     * {@link Form::setSalt()} method with this value as the <i>$salt</i>
      * parameter.
      *
      * @var string
@@ -145,8 +141,8 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @var array
      *
-     * @see SwatForm::addHiddenField()
-     * @see SwatForm::getHiddenField()
+     * @see Form::addHiddenField()
+     * @see Form::getHiddenField()
      */
     protected $hidden_fields = array();
 
@@ -168,8 +164,8 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @var string
      *
-     * @see SwatForm::setDefault8BitEncoding()
-     * @see SwatForm::set8BitEncoding()
+     * @see Form::setDefault8BitEncoding()
+     * @see Form::set8BitEncoding()
      */
     protected static $default_8bit_encoding = 'windows-1252';
 
@@ -181,7 +177,7 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @var string
      *
-     * @see SwatForm::set8BitEncoding()
+     * @see Form::set8BitEncoding()
      */
     protected $_8bit_encoding = null;
 
@@ -193,12 +189,12 @@ class SwatForm extends SwatDisplayableContainer
      * {@link https://bugs.webkit.org/show_bug.cgi?id=5760 Webkit bug #5760}.
      *
      * By default, no Connection: close URI is specified. In this case, no
-     * workaround is attempted when SwatForm forms are submitted.
+     * workaround is attempted when forms are submitted.
      *
      * @var string
      *
-     * @see SwatForm::setDefaultConnectionCloseUri()
-     * @see SwatForm::setConnectionCloseUri()
+     * @see Form::setDefaultConnectionCloseUri()
+     * @see Form::setConnectionCloseUri()
      */
     protected static $default_connection_close_uri = null;
 
@@ -210,7 +206,7 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @var string
      *
-     * @see SwatForm::setConnectionCloseUri()
+     * @see Form::setConnectionCloseUri()
      */
     protected $connection_close_uri = null;
 
@@ -220,11 +216,11 @@ class SwatForm extends SwatDisplayableContainer
     /**
      * The method to use for this form
      *
-     * Is one of SwatForm::METHOD_* constants.
+     * Is one of Form::METHOD_* constants.
      *
      * @var string
      */
-    private $method = SwatForm::METHOD_POST;
+    private $method = Form::METHOD_POST;
 
     /**
      * The token value used to prevent cross-site request forgeries
@@ -234,9 +230,9 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @var string
      *
-     * @see SwatForm::setAuthenticationToken()
-     * @see SwatForm::clearAuthenticationToken()
-     * @see SwatForm::isAuthenticated()
+     * @see Form::setAuthenticationToken()
+     * @see Form::clearAuthenticationToken()
+     * @see Form::isAuthenticated()
      */
     private static $authentication_token = null;
 
@@ -248,7 +244,7 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -278,16 +274,19 @@ class SwatForm extends SwatDisplayableContainer
      * Sets the HTTP method this form uses to send data
      *
      * @param string $method a method constant. Must be one of
-     *                       SwatForm::METHOD_* otherwise an error is thrown.
+     *                       Form::METHOD_* otherwise an error is thrown.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function setMethod($method)
     {
-        $valid_methods = array(SwatForm::METHOD_POST, SwatForm::METHOD_GET);
+        $valid_methods = array(Form::METHOD_POST, Form::METHOD_GET);
 
-        if (!in_array($method, $valid_methods))
-            throw new SwatException("‘{$method}’ is not a valid form method.");
+        if (!in_array($method, $valid_methods)) {
+            throw new Exception\Exception(
+                "‘{$method}’ is not a valid form method."
+            );
+        }
 
         $this->method = $method;
     }
@@ -323,7 +322,7 @@ class SwatForm extends SwatDisplayableContainer
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $this->addHiddenField(self::PROCESS_FIELD, $this->id);
 
@@ -340,7 +339,7 @@ class SwatForm extends SwatDisplayableContainer
                 $yui->getHtmlHeadEntrySet());
         }
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -356,7 +355,7 @@ class SwatForm extends SwatDisplayableContainer
      *
      * @return true if this form was actually submitted, false otherwise.
      *
-     * @see SwatContainer::process()
+     * @see Container::process()
      */
     public function process()
     {
@@ -382,25 +381,28 @@ class SwatForm extends SwatDisplayableContainer
      * form fields are outputted as <i>type="hidden"</i> input tags. Values are
      * serialized before being output so the value can be either a primitive
      * type or an object. Unserialization happens automatically when
-     * {@link SwatForm::getHiddenField()} is used to retrieve the value. For
+     * {@link Form::getHiddenField()} is used to retrieve the value. For
      * non-array and non-object types, the value is also stored as an
      * unserialized value that can be retrieved without using
-     * SwatForm::getHiddenField().
+     * Form::getHiddenField().
      *
      * @param string $name  the name of the field.
      * @param mixed  $value the value of the field, either a string or an array.
      *
-     * @see SwatForm::getHiddenField()
+     * @see Form::getHiddenField()
      *
-     * @throws SwatInvalidTypeException if an attempt is made to add a value
-     *                                  of type 'resource'.
+     * @throws Exception\InvalidTypeException if an attempt is made to add a
+     *         value of type 'resource'.
      */
     public function addHiddenField($name, $value)
     {
-        if (is_resource($value))
-            throw new SwatInvalidTypeException(
-                'Cannot add a hidden field of type ‘resource’ to a SwatForm.',
-                0, $value);
+        if (is_resource($value)) {
+            throw new Exception\InvalidTypeException(
+                'Cannot add a hidden field of type ‘resource’ to a Form.',
+                0,
+                $value
+            );
+        }
 
         $this->hidden_fields[$name] = $value;
     }
@@ -414,14 +416,13 @@ class SwatForm extends SwatDisplayableContainer
      * @param string $name the name of the field whose value to get.
      *
      * @return mixed the value of the field. The type of the field is preserved
-     *               from the call to {@link SwatForm::addHiddenField()}. If
+     *               from the call to {@link Form::addHiddenField()}. If
      *               the field does not exist, null is returned.
      *
-     * @throws SwatInvalidSerializedDataException if the serialized form data
-     *                                            does not match the signature
-     *                                            data.
+     * @throws Exception\InvalidSerializedDataException if the serialized form
+     *         data does not match the signature data.
      *
-     * @see SwatForm::addHiddenField()
+     * @see Form::addHiddenField()
      */
     public function getHiddenField($name)
     {
@@ -461,20 +462,19 @@ class SwatForm extends SwatDisplayableContainer
     // {{{ public function addWithField()
 
     /**
-     * Adds a widget within a new SwatFormField
+     * Adds a widget within a new FormField
      *
      * This is a convenience method that does the following:
-     * - creates a new SwatFormField,
+     * - creates a new FormField,
      * - adds the widget as a child of the form field,
-     * - and then adds the SwatFormField to this form.
+     * - and then adds the FormField to this form.
      *
-     * @param SwatWidget $widget a reference to a widget to add.
-     * @param string     $title  the visible title of the form field.
+     * @param Widget $widget a reference to a widget to add.
+     * @param string $title  the visible title of the form field.
      */
-    public function addWithField(SwatWidget $widget, $title)
+    public function addWithField(Widget $widget, $title)
     {
-        require_once 'Swat/SwatFormField.php';
-        $field = new SwatFormField();
+        $field = new FormField();
         $field->add($widget);
         $field->title = $title;
         $this->add($field);
@@ -497,10 +497,10 @@ class SwatForm extends SwatDisplayableContainer
         $data = null;
 
         switch ($this->method) {
-        case SwatForm::METHOD_POST:
+        case Form::METHOD_POST:
             $data = &$_POST;
             break;
-        case SwatForm::METHOD_GET:
+        case Form::METHOD_GET:
             $data = &$_GET;
             break;
         }
@@ -514,9 +514,9 @@ class SwatForm extends SwatDisplayableContainer
     /**
      * Whether or not this form was submitted on the previous page request
      *
-     * This method may be called before or after the SwatForm::process() method.
-     * and is thus sometimes more useful than SwatForm::isProcessed() which
-     * only returns a meaningful value after SwatForm::process() is called.
+     * This method may be called before or after the Form::process() method.
+     * and is thus sometimes more useful than Form::isProcessed() which
+     * only returns a meaningful value after Form::process() is called.
      *
      * @return boolean true if this form was submitted on the previous page
      *                 request and false if it was not.
@@ -536,7 +536,7 @@ class SwatForm extends SwatDisplayableContainer
      * Whether or not this form is authenticated
      *
      * This can be used to catch cross-site request forgeries if the
-     * {@link SwatForm::setAuthenticationToken()} method was previously called.
+     * {@link Form::setAuthenticationToken()} method was previously called.
      *
      * If form authentication is used, processing should only be performed on
      * authenticated forms. An unauthenticated form may be a malicious
@@ -558,9 +558,12 @@ class SwatForm extends SwatDisplayableContainer
         $raw_data = $this->getFormData();
 
         $token = null;
-        if (isset($raw_data[self::AUTHENTICATION_TOKEN_FIELD]))
-            $token = SwatString::signedUnserialize(
-                $raw_data[self::AUTHENTICATION_TOKEN_FIELD], $this->salt);
+        if (isset($raw_data[self::AUTHENTICATION_TOKEN_FIELD])) {
+            $token = Util\String::signedUnserialize(
+                $raw_data[self::AUTHENTICATION_TOKEN_FIELD],
+                $this->salt
+            );
+        }
 
         /*
          * If this form's authentication token is set, the token in submitted
@@ -589,7 +592,7 @@ class SwatForm extends SwatDisplayableContainer
     /**
      * Gets the salt value to use when salting signature data
      *
-     * {@link SwatInputControl} widgets may want ot use this value for salting
+     * {@link InputControl} widgets may want to use this value for salting
      * their own data. This can be done using:
      *
      * <code>
@@ -615,7 +618,7 @@ class SwatForm extends SwatDisplayableContainer
      * @param string $encoding the encoding to use. If null is specified, no
      *                         character encoding conversion is performed.
      *
-     * @see SwatForm::setDefault8BitEncoding()
+     * @see Form::setDefault8BitEncoding()
      */
     public function set8BitEncoding($encoding)
     {
@@ -636,7 +639,7 @@ class SwatForm extends SwatDisplayableContainer
      *                                     no workarounds will be performed
      *                                     for Safari.
      *
-     * @see SwatForm::setDefaultConnectionCloseUri()
+     * @see Form::setDefaultConnectionCloseUri()
      */
     public function setConnectionCloseUri($connection_close_uri)
     {
@@ -656,7 +659,7 @@ class SwatForm extends SwatDisplayableContainer
      * @param string $encoding the encoding to use. If null is specified, no
      *                         character encoding conversion is performed.
      *
-     * @see SwatForm::set8BitEncoding()
+     * @see Form::set8BitEncoding()
      */
     public static function setDefault8BitEncoding($encoding)
     {
@@ -678,7 +681,7 @@ class SwatForm extends SwatDisplayableContainer
      *                                     for Safari. The null behavior is
      *                                     the default behavior.
      *
-     * @see SwatForm::setConnectionCloseUri()
+     * @see Form::setConnectionCloseUri()
      */
     public static function setDefaultConnectionCloseUri($connection_close_uri)
     {
@@ -732,9 +735,8 @@ class SwatForm extends SwatDisplayableContainer
      * Checks submitted form data for hidden fields. If hidden fields are
      * found, properly re-adds them to this form.
      *
-     * @throws SwatInvalidSerializedDataException if the serialized form data
-     *                                            does not match the signature
-     *                                            data.
+     * @throws Exception\InvalidSerializedDataException if the serialized form
+     *         data does not match the signature data.
      */
     protected function processHiddenFields()
     {
@@ -742,8 +744,10 @@ class SwatForm extends SwatDisplayableContainer
 
         $serialized_field_name = self::HIDDEN_FIELD;
         if (isset($raw_data[$serialized_field_name])) {
-            $fields = SwatString::signedUnserialize(
-                $raw_data[$serialized_field_name], $this->salt);
+            $fields = Util\String::signedUnserialize(
+                $raw_data[$serialized_field_name],
+                $this->salt
+            );
         } else {
             return;
         }
@@ -764,14 +768,14 @@ class SwatForm extends SwatDisplayableContainer
      * Detects 8-bit character encoding in form data and converts data to UTF-8
      *
      * Conversion is only performed if this form's 8-bit encoding is set. This
-     * form's 8-bit encoding may be set automatically if the SwatForm default
+     * form's 8-bit encoding may be set automatically if the form default
      * 8-bit encoding is set.
      *
      * This algorithm is adapted from a blog post at
      * {@link http://blogs.sun.com/shankar/entry/how_to_handle_utf_8}.
      *
-     * @throws SwatException if an 8-bit encoding is set and the form data is
-     *                       neither 8-bit nor UTF-8.
+     * @throws Exception\Exception if an 8-bit encoding is set and the form
+     *         data is neither 8-bit nor UTF-8.
      */
     protected function processEncoding()
     {
@@ -791,14 +795,13 @@ class SwatForm extends SwatDisplayableContainer
                         // encoding. This can happen, for example, if robots
                         // submit the 8-bit detection value and then submit
                         // UTF-8 encoded values.
-                        throw new SwatInvalidCharacterEncodingException(
+                        throw new Exception\InvalidCharacterEncodingException(
                             sprintf(
                                 "Form submitted with 8-bit encoding but form ".
                                 "data is not valid %s. If this form data is ".
-                                "expected, use the ".
-                                "SwatForm::set8BitEncoding() method to set an ".
-                                "appropriate 8-bit encoding value.\n\nForm ".
-                                "data: \n%s",
+                                "expected, use the Form::set8BitEncoding() ".
+                                "method to set an appropriate 8-bit encoding ".
+                                "value.\n\nForm data: \n%s",
                                 $this->_8bit_encoding,
                                 file_get_contents('php://input')
                             )
@@ -815,14 +818,13 @@ class SwatForm extends SwatDisplayableContainer
                         // encoding. This can happen, for example, if robots
                         // submit the 8-bit detection value and then submit
                         // UTF-8 encoded values.
-                        throw new SwatInvalidCharacterEncodingException(
+                        throw new Exception\InvalidCharacterEncodingException(
                             sprintf(
                                 "Form submitted with 8-bit encoding but form ".
                                 "data is not valid %s. If this form data is ".
-                                "expected, use the ".
-                                "SwatForm::set8BitEncoding() method to set an ".
-                                "appropriate 8-bit encoding value.\n\nForm ".
-                                "data: \n%s",
+                                "expected, use the Form::set8BitEncoding() ".
+                                "method to set an appropriate 8-bit encoding ".
+                                "value.\n\nForm data: \n%s",
                                 $this->_8bit_encoding,
                                 file_get_contents('php://input')
                             )
@@ -837,9 +839,10 @@ class SwatForm extends SwatDisplayableContainer
 
             } elseif ($value !== self::ENCODING_UTF8_VALUE) {
                 // it's not 8-bit or UTF-8. Time to panic!
-                throw new SwatInvalidCharacterEncodingException(
+                throw new Exception\InvalidCharacterEncodingException(
                     "Unknown form data character encoding. Form data: \n".
-                    file_get_contents('php://input'));
+                    file_get_contents('php://input')
+                );
             }
         }
     }
@@ -853,23 +856,20 @@ class SwatForm extends SwatDisplayableContainer
      * If any of the widgets in the added subtree are file entry widgets then
      * set this form's encoding accordingly.
      *
-     * @param SwatWidget $widget the widget that has been added.
+     * @param Widget $widget the widget that has been added.
      *
-     * @see SwatContainer::notifyOfAdd()
+     * @see Container::notifyOfAdd()
      */
     protected function notifyOfAdd($widget)
     {
-        if (class_exists('SwatFileEntry')) {
-
-            if ($widget instanceof SwatFileEntry) {
-                $this->encoding_type = 'multipart/form-data';
-            } elseif ($widget instanceof SwatUIParent) {
-                $descendants = $widget->getDescendants();
-                foreach ($descendants as $sub_widget) {
-                    if ($sub_widget instanceof SwatFileEntry) {
-                        $this->encoding_type = 'multipart/form-data';
-                        break;
-                    }
+        if ($widget instanceof FileEntry) {
+            $this->encoding_type = 'multipart/form-data';
+        } elseif ($widget instanceof UIParent) {
+            $descendants = $widget->getDescendants();
+            foreach ($descendants as $sub_widget) {
+                if ($sub_widget instanceof FileEntry) {
+                    $this->encoding_type = 'multipart/form-data';
+                    break;
                 }
             }
         }
@@ -893,14 +893,14 @@ class SwatForm extends SwatDisplayableContainer
      */
     protected function displayHiddenFields()
     {
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
 
         echo '<div class="swat-hidden">';
 
         if ($this->_8bit_encoding !== null) {
             // The character encoding detection field is intentionally not using
-            // SwatHtmlTag to avoid minimizing entities.
+            // Html\Tag to avoid minimizing entities.
             echo '<input type="hidden" ',
                 'name="', self::ENCODING_FIELD, '" ',
                 'value="', self::ENCODING_ENTITY_VALUE, '" />';
@@ -910,7 +910,7 @@ class SwatForm extends SwatDisplayableContainer
             // display unserialized value for primative types
             if ($value !== null && !is_array($value) && !is_object($value)) {
 
-                // SwatHtmlTag uses SwatString::minimizeEntities(), which
+                // Html\Tag uses Util\String::minimizeEntities(), which
                 // prevents double-escaping entities. For hidden form-fields,
                 // we want data to be returned exactly as it was specified. This
                 // necessitates double-escaping to ensure any entities that were
@@ -925,7 +925,7 @@ class SwatForm extends SwatDisplayableContainer
             // display serialized value
             $serialized_data = $this->serializeHiddenField($value);
 
-            // SwatHtmlTag uses SwatString::minimizeEntities(), which prevents
+            // Html\Tag uses Util\String::minimizeEntities(), which prevents
             // double-escaping entities. For hidden form-fields, we want data
             // to be returned exactly as it was specified. This  necessitates
             // double-escaping to ensure any entities that were specified in
@@ -941,9 +941,10 @@ class SwatForm extends SwatDisplayableContainer
         // display hidden field names
         if (count($this->hidden_fields) > 0) {
             // array of field names
-            $serialized_data = SwatString::signedSerialize(
-                array_keys($this->hidden_fields), $this->salt);
-
+            $serialized_data = Util\String::signedSerialize(
+                array_keys($this->hidden_fields),
+                $this->salt
+            );
             $input_tag->name = self::HIDDEN_FIELD;
             $input_tag->value = $serialized_data;
             $input_tag->display();
@@ -951,10 +952,11 @@ class SwatForm extends SwatDisplayableContainer
 
         // display authentication token
         if (self::$authentication_token !== null) {
-            $serialized_data = SwatString::signedSerialize(
-                self::$authentication_token, $this->salt);
-
-            $input_tag = new SwatHtmlTag('input');
+            $serialized_data = Util\String::signedSerialize(
+                self::$authentication_token,
+                $this->salt
+            );
+            $input_tag = new Html\Tag('input');
             $input_tag->type = 'hidden';
             $input_tag->name = self::AUTHENTICATION_TOKEN_FIELD;
             $input_tag->value = $serialized_data;
@@ -970,11 +972,11 @@ class SwatForm extends SwatDisplayableContainer
     /**
      * Gets the XHTML form tag used to display this form
      *
-     * @return SwatHtmlTag the XHTML form tag used to display this form.
+     * @return Html\Tag the XHTML form tag used to display this form.
      */
     protected function getFormTag()
     {
-        $form_tag = new SwatHtmlTag('form');
+        $form_tag = new Html\Tag('form');
 
         $form_tag->addAttributes(
             array(
@@ -1015,7 +1017,7 @@ class SwatForm extends SwatDisplayableContainer
     /**
      * Gets inline JavaScript required for this form
      *
-     * Right now, this JavaScript focuses the first SwatControl in the form.
+     * Right now, this JavaScript focuses the first Control in the form.
      *
      * @return string inline JavaScript required for this form.
      */
@@ -1024,13 +1026,14 @@ class SwatForm extends SwatDisplayableContainer
         $javascript = sprintf("var %s_obj = new %s(%s, %s);",
             $this->id,
             $this->getJavaScriptClass(),
-            SwatString::quoteJavaScriptString($this->id),
-            SwatString::quoteJavaScriptString($this->connection_close_uri));
+            Util\JavaScript::quoteString($this->id),
+            Util\JavaScript::quoteString($this->connection_close_uri));
 
         if ($this->autofocus) {
             $focusable = true;
             if ($this->default_focused_control === null) {
-                $control = $this->getFirstDescendant('SwatControl');
+                $control_class = '\Silverorange\Swat\UI\Control';
+                $control = $this->getFirstDescendant($control_class);
                 if ($control === null) {
                     $focusable = false;
                 } else {
@@ -1090,7 +1093,7 @@ class SwatForm extends SwatDisplayableContainer
      */
     protected function serializeHiddenField($value)
     {
-        $value = SwatString::signedSerialize($value, $this->salt);
+        $value = Util\String::signedSerialize($value, $this->salt);
 
         // escape special characters that confuse browsers (mostly IE;
         // null characters confuse all browsers)
@@ -1107,15 +1110,14 @@ class SwatForm extends SwatDisplayableContainer
 
     /**
      * Unserializes a hidden field value that was serialized using
-     * {@link SwatForm::serializeHiddenField()}
+     * {@link Form::serializeHiddenField()}
      *
      * @param string $value the hidden field value to unserialize.
      *
      * @return mixed the unserialized value.
      *
-     * @throws SwatInvalidSerializedDataException if the serialized form data
-     *                                            does not match the signature
-     *                                            data.
+     * @throws Exception\InvalidSerializedDataException if the serialized form
+     *         data does not match the signature data.
      */
     protected function unserializeHiddenField($value)
     {
@@ -1125,7 +1127,7 @@ class SwatForm extends SwatDisplayableContainer
         $value = str_replace('\x0d', "\x0d", $value);
         $value = str_replace('\\\\', '\\',   $value);
 
-        $value = SwatString::signedUnserialize($value, $this->salt);
+        $value = Util\String::signedUnserialize($value, $this->salt);
 
         return $value;
     }

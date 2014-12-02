@@ -2,10 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCheckboxTree.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A checkbox array widget formatted into a tree where each branch can
@@ -15,7 +16,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatExpandableCheckboxTree extends SwatCheckboxTree
+class ExpandableCheckboxTree extends CheckboxTree
 {
     // {{{ class constants
 
@@ -40,9 +41,9 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
     /**
      * Initial state of tree branches
      *
-     * Should be set to one of the SwatExpandableCheckboxTree::BRANCH_STATE_*
+     * Should be set to one of the ExpandableCheckboxTree::BRANCH_STATE_*
      * constants. The default branch state is
-     * {@link SwatExpandableCheckboxTree::BRANCH_STATE_AUTO}.
+     * {@link ExpandableCheckboxTree::BRANCH_STATE_AUTO}.
      *
      * @var integer
      */
@@ -70,7 +71,7 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -94,17 +95,17 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $this->getForm()->addHiddenField($this->id.'_submitted', 1);
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
 
-        $this->label_tag = new SwatHtmlTag('label');
+        $this->label_tag = new Html\Tag('label');
 
-        $this->input_tag = new SwatHtmlTag('input');
+        $this->input_tag = new Html\Tag('input');
         $this->input_tag->type = 'checkbox';
         $this->input_tag->name = $this->id.'[]';
 
@@ -119,7 +120,7 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -159,8 +160,9 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
             $branch_state = $this->branch_state;
 
         $expandable_node_ids = array_map(
-            array('SwatString', 'quoteJavaScriptString'),
-            $this->getExpandableNodeIds($this->tree));
+            array('\Silverorange\Util\JavaScript', 'quoteString'),
+            $this->getExpandableNodeIds($this->tree)
+        );
 
         $expandable_node_ids = implode(', ', $expandable_node_ids);
 
@@ -181,13 +183,13 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
     /**
      * Displays a node in a tree as a checkbox input
      *
-     * @param SwatDataTreeNode $node         the node to display.
-     * @param integer          $nodes        the current number of nodes.
-     * @param string           $parent_index the path of the parent node.
+     * @param Model\DataTreeNode $node         the node to display.
+     * @param integer            $nodes        the current number of nodes.
+     * @param string             $parent_index the path of the parent node.
      *
      * @return integer the number of checkable nodes in the tree.
      */
-    private function displayNode(SwatDataTreeNode $node, $nodes = 0,
+    private function displayNode(Model\DataTreeNode $node, $nodes = 0,
         $parent_index = '')
     {
         $child_nodes = $node->getChildren();
@@ -200,7 +202,7 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
             // index of other nodes is a combination of parent indexes
             $index = $parent_index.'.'.$node->getIndex();
 
-            $li_tag = new SwatHtmlTag('li');
+            $li_tag = new Html\Tag('li');
             if (count($child_nodes) > 0)
                 $li_tag->id = $this->id.'_'.$index.'_container';
 
@@ -226,7 +228,7 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
                     $this->input_tag->display();
                     $this->label_tag->display();
                 } else {
-                    $span_tag = new SwatHtmlTag('span');
+                    $span_tag = new Html\Tag('span');
                     $span_tag->id = $this->id.'_'.$index;
                     $span_tag->class =
                         'swat-expandable-checkbox-tree-null-node';
@@ -255,8 +257,8 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
         // display children
         if (count($child_nodes) > 0) {
 
-            $ul_tag = new SwatHtmlTag('ul');
-            $div_tag = new SwatHtmlTag('div');
+            $ul_tag = new Html\Tag('ul');
+            $div_tag = new Html\Tag('div');
 
             // don't make expandable if it is the root node
             if ($parent_index !== '') {
@@ -292,11 +294,11 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
     /**
      * Check whether the checkbox should be checked
      *
-     * @param SwatDataTreeNode $node the node to check.
+     * @param Model\DataTreeNode $node the node to check.
      *
      * @return boolean Whether the checkbox is checked or not.
      */
-    private function nodeIsChecked(SwatDataTreeNode $node)
+    private function nodeIsChecked(Model\DataTreeNode $node)
     {
         $checked = false;
 
@@ -326,14 +328,14 @@ class SwatExpandableCheckboxTree extends SwatCheckboxTree
      * Gets the node XHTML ids of all expandable nodes in this expandable
      * checkbox tree
      *
-     * @param SwatDataTreeNode $node      the root node.
-     * @param string           $parent_id optional. The XHTML id of the parent
-     *                                    node. Not required for the checkbox
-     *                                    tree root node.
+     * @param Model\DataTreeNode $node      the root node.
+     * @param string             $parent_id optional. The XHTML id of the parent
+     *                                      node. Not required for the checkbox
+     *                                      tree root node.
      *
      * @return array an array of expandable node XHTML ids.
      */
-    private function getExpandableNodeIds(SwatDataTreeNode $node,
+    private function getExpandableNodeIds(Model\DataTreeNode $node,
         $parent_id = '')
     {
         $expandable_ids = array();

@@ -2,19 +2,23 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatButton.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * An image button widget
  *
  * This widget displays as an XHTML form image button, so it must be used
- * within {@link SwatForm}.
+ * within {@link Form}.
  *
  * @package   Swat
  * @copyright 2008-2011 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatImageButton extends SwatButton
+class ImageButton extends Button
 {
     // {{{ public properties
 
@@ -62,7 +66,7 @@ class SwatImageButton extends SwatButton
      */
     public function process()
     {
-        SwatWidget::process();
+        Widget::process();
 
         $data = &$this->getForm()->getFormData();
 
@@ -80,23 +84,25 @@ class SwatImageButton extends SwatButton
      * Displays this image button
      *
      * Outputs an XHTML input tag.
+     *
+     * @throws Exception\Exception if the alt property is not set.
      */
     public function display()
     {
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         if ($this->alt == '') {
-            throw new SwatException(
-                'The $alt property of SwatImageButton must be set to an '.
+            throw new Exception\Exception(
+                'The $alt property of ImageButton must be set to an '.
                 'appropriate value. The "alt" attribute is required in '.
                 'HTML5 and can not be an empty string.'
             );
         }
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'image';
         $input_tag->id = $this->id;
         $input_tag->name = $this->id;
@@ -119,7 +125,7 @@ class SwatImageButton extends SwatButton
 
         if ($this->show_processing_throbber ||
             $this->confirmation_message !== null) {
-            Swat::displayInlineJavaScript($this->getInlineJavaScript());
+            Util\JavaScript::displayInline($this->getInlineJavaScript());
         }
     }
 

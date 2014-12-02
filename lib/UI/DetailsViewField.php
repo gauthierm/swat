@@ -2,17 +2,20 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatCellRendererContainer.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\L;
 
 /**
- * A visible field in a SwatDetailsView
+ * A visible field in a DetailsView
  *
  * @package   Swat
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDetailsViewField extends SwatCellRendererContainer
+class DetailsViewField extends CellRendererContainer
 {
     // {{{ public properties
 
@@ -59,7 +62,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      * Whether or not to include CSS classes from the first cell renderer
      * of this field in this field's CSS classes
      *
-     * @see SwatDetailsViewField::getCSSClassNames()
+     * @see DetailsViewField::getCSSClassNames()
      */
     public $show_renderer_classes = true;
 
@@ -129,7 +132,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
 
         $this->odd = $odd;
 
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->id = $this->id;
         $tr_tag->class = $this->getCSSClassString();
 
@@ -147,7 +150,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      */
     public function displayHeader()
     {
-        $th_tag = new SwatHtmlTag('th');
+        $th_tag = new Html\Tag('th');
         $th_tag->scope = 'row';
         if ($this->title == '') {
             $th_tag->setContent('&nbsp;');
@@ -174,9 +177,11 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      */
     public function displayValue($data)
     {
-        if (count($this->renderers) == 0)
-            throw new SwatException('No renderer has been provided for this '.
-                'field.');
+        if (count($this->renderers) === 0) {
+            throw new Exception\Exception(
+                'No renderer has been provided for this field.'
+            );
+        }
 
         $sensitive = $this->parent->isSensitive();
 
@@ -210,12 +215,12 @@ class SwatDetailsViewField extends SwatCellRendererContainer
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this field
+     * Gets the Html\Resource objects needed by this field
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this details-view field.
+     * @return Html\ResourceSet the Html\Resource objects needed by this
+     *                          details-view field.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see UIObject::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -233,13 +238,13 @@ class SwatDetailsViewField extends SwatCellRendererContainer
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this
-     * details-view field
+     * Gets the Html\Resource objects that may be needed by this details-view
+     * field
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              needed by this details-view field.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed by
+     *                          this details-view field.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see UIObject::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -261,7 +266,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      *
      * @return string the title to use for the header.
      *
-     * @see SwatDetailsViewField::displayHeader()
+     * @see DetailsViewField::displayHeader()
      */
     protected function getHeaderTitle()
     {
@@ -270,7 +275,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
         } else {
             $header_title = ($this->show_colon)
                 ? sprintf(
-                    Swat::_('%s:'),
+                    L::_('%s:'),
                     $this->title
                 )
                 : $this->title;
@@ -290,7 +295,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      */
     protected function displayRenderers($data)
     {
-        $td_tag = new SwatHtmlTag('td', $this->getTdAttributes());
+        $td_tag = new Html\Tag('td', $this->getTdAttributes());
         $td_tag->open();
 
         $first = true;
@@ -319,7 +324,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      * 2. 'odd' if this is an odd row in the parent view,
      * 3. user-specified CSS classes on this field,
      *
-     * If {@link SwatDetailsViewField::$show_renderer_classes} is true, the
+     * If {@link DetailsViewField::$show_renderer_classes} is true, the
      * following extra CSS classes are added:
      *
      * 4. the inheritance classes of the first cell renderer in this field,
@@ -331,9 +336,9 @@ class SwatDetailsViewField extends SwatCellRendererContainer
      * @return array the array of CSS classes that are applied to this
      *               details-view field.
      *
-     * @see SwatCellRenderer::getInheritanceCSSClassNames()
-     * @see SwatCellRenderer::getBaseCSSClassNames()
-     * @see SwatUIObject::getCSSClassNames()
+     * @see CellRenderer::getInheritanceCSSClassNames()
+     * @see CellRenderer::getBaseCSSClassNames()
+     * @see UIObject::getCSSClassNames()
      */
     protected function getCSSClassNames()
     {
@@ -350,7 +355,7 @@ class SwatDetailsViewField extends SwatCellRendererContainer
 
         $first_renderer = $this->renderers->getFirst();
         if ($this->show_renderer_classes &&
-            $first_renderer instanceof SwatCellRenderer) {
+            $first_renderer instanceof CellRenderer) {
 
             // renderer inheritance classes
             $classes = array_merge($classes,

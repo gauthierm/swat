@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A container to show and hide child widgets
@@ -13,7 +14,7 @@ require_once 'Swat/SwatYUI.php';
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDisclosure extends SwatDisplayableContainer
+class Disclosure extends DisplayableContainer
 {
     // {{{ public properties
 
@@ -39,7 +40,7 @@ class SwatDisclosure extends SwatDisplayableContainer
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -70,7 +71,7 @@ class SwatDisclosure extends SwatDisplayableContainer
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $control_div = $this->getControlDivTag();
         $span = $this->getSpanTag();
@@ -92,7 +93,7 @@ class SwatDisclosure extends SwatDisplayableContainer
         $animate_div->close();
         $container_div->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
 
         $control_div->close();
     }
@@ -102,10 +103,9 @@ class SwatDisclosure extends SwatDisplayableContainer
 
     protected function getControlDivTag()
     {
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->id = $this->id;
         $div->class = $this->getCSSClassString();
-
         return $div;
     }
 
@@ -114,9 +114,8 @@ class SwatDisclosure extends SwatDisplayableContainer
 
     protected function getContainerDivTag()
     {
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->class = 'swat-disclosure-container';
-
         return $div;
     }
 
@@ -125,8 +124,7 @@ class SwatDisclosure extends SwatDisplayableContainer
 
     protected function getAnimateDivTag()
     {
-        $div = new SwatHtmlTag('div');
-
+        $div = new Html\Tag('div');
         return $div;
     }
 
@@ -135,9 +133,8 @@ class SwatDisclosure extends SwatDisplayableContainer
 
     protected function getPaddingDivTag()
     {
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->class = 'swat-disclosure-padding-container';
-
         return $div;
     }
 
@@ -146,7 +143,7 @@ class SwatDisclosure extends SwatDisplayableContainer
 
     protected function getInputTag()
     {
-        $input = new SwatHtmlTag('input');
+        $input = new Html\Tag('input');
         $input->type = 'hidden';
         // initial value is blank, value is set by JavaScript
         $input->value = '';
@@ -162,7 +159,7 @@ class SwatDisclosure extends SwatDisplayableContainer
     {
         $title = strval($this->title);
 
-        $span = new SwatHtmlTag('span');
+        $span = new Html\Tag('span');
         $span->class = 'swat-disclosure-span';
         $span->setContent($title);
 

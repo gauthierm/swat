@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatContainer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * Base class for containers that display an XHTML element
@@ -12,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDisplayableContainer extends SwatContainer
+class DisplayableContainer extends Container
 {
     // {{{ public function display()
 
@@ -24,9 +25,9 @@ class SwatDisplayableContainer extends SwatContainer
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->id = $this->id;
         $div->class = $this->getCSSClassString();
 

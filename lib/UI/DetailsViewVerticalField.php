@@ -2,18 +2,19 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDetailsViewField.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
- * A visible field in a SwatDetailsView that has its label displayed above
- * its content
+ * A visible field in a DetailsView that has its label displayed above its
+ * content
  *
  * @package   Swat
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatDetailsViewVerticalField extends SwatDetailsViewField
+class DetailsViewVerticalField extends DetailsViewField
 {
     // {{{ public function display()
 
@@ -25,7 +26,7 @@ class SwatDetailsViewVerticalField extends SwatDetailsViewField
      * @param boolean $odd  whether this is an odd or even field so alternating
      *                      style can be applied.
      *
-     * @see SwatDetailsViewField::display()
+     * @see DetailsViewField::display()
      */
     public function display($data, $odd)
     {
@@ -34,11 +35,11 @@ class SwatDetailsViewVerticalField extends SwatDetailsViewField
 
         $this->odd = $odd;
 
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->id = $this->id;
         $tr_tag->class = $this->getCSSClassString();
 
-        $td_tag = new SwatHtmlTag('td');
+        $td_tag = new Html\Tag('td');
         $td_tag->colspan = 2;
 
         $tr_tag->open();
@@ -55,12 +56,12 @@ class SwatDetailsViewVerticalField extends SwatDetailsViewField
     /**
      * Displays the header for this details view field
      *
-     * @see SwatDetailsViewField::displayHeader()
+     * @see DetailsViewField::displayHeader()
      */
     public function displayHeader()
     {
         if ($this->title != '') {
-            $div_tag = new SwatHtmlTag('div');
+            $div_tag = new Html\Tag('div');
             $div_tag->class = 'swat-details-view-field-header';
             $div_tag->setContent(
                 $this->getHeaderTitle(),
@@ -80,11 +81,11 @@ class SwatDetailsViewVerticalField extends SwatDetailsViewField
      * @param mixed $data the data object being used to render the cell
      *                    renderers of this field.
      *
-     * @see SwatDetailsViewField::displayRenderers()
+     * @see DetailsViewField::displayRenderers()
      */
     protected function displayRenderers($data)
     {
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->open();
 
         foreach ($this->renderers as $renderer) {

@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatFormField.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A grouping form field
@@ -15,20 +16,20 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatGroupingFormField extends SwatFormField
+class GroupingFormField extends FormField
 {
     // {{{ protected function getTitleTag()
 
     /**
-     * Get a SwatHtmlTag to display the title.
+     * Get a Html\Tag to display the title.
      *
      * Subclasses can change this to change their appearance.
      *
-     * @return SwatHtmlTag a tag object containing the title.
+     * @return Html\Tag a tag object containing the title.
      */
     protected function getTitleTag()
     {
-        $legend_tag = new SwatHtmlTag('legend');
+        $legend_tag = new Html\Tag('legend');
         $legend_tag->setContent($this->title, $this->title_content_type);
 
         return $legend_tag;
@@ -50,13 +51,13 @@ class SwatGroupingFormField extends SwatFormField
         if ($this->getFirst() === null)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
-        $container_tag = new SwatHtmlTag('div');
+        $container_tag = new Html\Tag('div');
         $container_tag->id = $this->id;
         $container_tag->class = $this->getCSSClassString();
 
-        $fieldset_tag = new SwatHtmlTag('fieldset');
+        $fieldset_tag = new Html\Tag('fieldset');
         $fieldset_tag->class = 'swat-grouping-form-field-fieldset';
 
         $container_tag->open();

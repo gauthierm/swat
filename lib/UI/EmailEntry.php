@@ -2,8 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatEntry.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * An email entry widget
@@ -15,7 +18,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2005-2011 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatEmailEntry extends SwatEntry
+class EmailEntry extends Entry
 {
     // {{{ public function process()
 
@@ -53,7 +56,7 @@ class SwatEmailEntry extends SwatEntry
      */
     protected function validateEmailAddress()
     {
-        return SwatString::validateEmailAddress($this->value);
+        return Util\String::validateEmailAddress($this->value);
     }
 
     // }}}
@@ -64,18 +67,19 @@ class SwatEmailEntry extends SwatEntry
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      *
-     * @see SwatEntry::getValidationMessage()
+     * @see Entry::getValidationMessage()
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'email':
-            $text = Swat::_('The email address you have entered is not '.
-                'properly formatted.');
-
-            $message = new SwatMessage($text, 'error');
+            $text = L::_(
+                'The email address you have entered is not '.
+                'properly formatted.'
+            );
+            $message = new Model\Message($text, 'error');
             break;
 
         default:
@@ -92,7 +96,7 @@ class SwatEmailEntry extends SwatEntry
     /**
      * Get the input tag to display
      *
-     * @return SwatHtmlTag the input tag to display.
+     * @return Html\Tag the input tag to display.
      */
     protected function getInputTag()
     {

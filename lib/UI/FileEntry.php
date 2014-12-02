@@ -2,10 +2,13 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatFormField.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A file upload widget
@@ -21,7 +24,7 @@ require_once 'Swat/SwatFormField.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFileEntry extends SwatInputControl
+class FileEntry extends InputControl
 {
     // {{{ public properties
 
@@ -128,7 +131,7 @@ class SwatFileEntry extends SwatInputControl
 
         parent::display();
 
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'file';
         $input_tag->name = $this->id;
         $input_tag->id = $this->id;
@@ -148,7 +151,7 @@ class SwatFileEntry extends SwatInputControl
         $input_tag->display();
 
         if ($this->display_maximum_upload_size) {
-            $div_tag = new SwatHtmlTag('div');
+            $div_tag = new Html\Tag('div');
             $div_tag->class = 'swat-note';
             $div_tag->setContent($this->getMaximumUploadSizeText());
             $div_tag->display();
@@ -203,16 +206,16 @@ class SwatFileEntry extends SwatInputControl
      * Gets a note specifying the mime types this file entry accepts
      *
      * The file types are only returned if
-     * {@link SwatFileEntry::$display_mime_types} is set to true and
-     * {@link SwatFileEntry::$accept_mime_types} has entries. If
-     * {@link SwatFileEntry::$human_file_types} is set, the note displays the
+     * {@link FileEntry::$display_mime_types} is set to true and
+     * {@link FileEntry::$accept_mime_types} has entries. If
+     * {@link FileEntry::$human_file_types} is set, the note displays the
      * human-readable file types where possible.
      *
-     * @return SwatMessage a note listing the accepted mime-types for this
+     * @return Model\Message a note listing the accepted mime-types for this
      *                     file entry widget or null if any mime-type is
      *                     accepted.
      *
-     * @see SwatControl::getNote()
+     * @see Control::getNote()
      */
     public function getNote()
     {
@@ -220,9 +223,9 @@ class SwatFileEntry extends SwatInputControl
 
         if ($this->accept_mime_types !== null && $this->display_mime_types) {
             $displayable_types = $this->getDisplayableTypes();
-            $message = new SwatMessage(
+            $message = new Model\Message(
                 sprintf(
-                    Swat::ngettext(
+                    L::ngettext(
                         'Valid files are the following type: %s.',
                         'Valid files are the following type(s): %s.',
                         count($displayable_types)
@@ -257,7 +260,7 @@ class SwatFileEntry extends SwatInputControl
      * @return mixed the original filename of the uploaded file or null if no
      *               file was uploaded.
      *
-     * @see SwatFileEntry::getTempFileName()
+     * @see FileEntry::getTempFileName()
      */
     public function getFileName()
     {
@@ -277,15 +280,17 @@ class SwatFileEntry extends SwatInputControl
      *
      * @return string the unique file name
      *
-     * @see SwatFileEntry::getFileName()
+     * @see FileEntry::getFileName()
      */
     public function getUniqueFileName($path)
     {
-        if (is_dir($path))
+        if (is_dir($path)) {
             return $this->generateUniqueFileName($path);
-        else
-            throw new SwatException("Path '{$path}' is not a ".
-                'directory or does not exist.');
+        } else {
+            throw new Exception\Exception(
+                "Path '{$path}' is not a directory or does not exist."
+            );
+        }
     }
 
     // }}}
@@ -297,7 +302,7 @@ class SwatFileEntry extends SwatInputControl
      * @return mixed the temporary name of the uploaded file or null if no
      *               file was uploaded.
      *
-     * @see SwatFileEntry::getFileName()
+     * @see FileEntry::getFileName()
      */
     public function getTempFileName()
     {
@@ -375,7 +380,7 @@ class SwatFileEntry extends SwatInputControl
      * @return boolean true if the file was saved correctly and false if there
      *                 was an error or no file was uploaded.
      *
-     * @throws SwatException if the destination directory does not exist.
+     * @throws Exception\Exception if the destination directory does not exist.
      */
     public function saveFile($dst_dir, $dst_filename = null)
     {
@@ -385,12 +390,17 @@ class SwatFileEntry extends SwatInputControl
         if ($dst_filename === null)
             $dst_filename = $this->getUniqueFileName($dst_dir);
 
-        if (is_dir($dst_dir))
-            return move_uploaded_file($this->file['tmp_name'],
-                $dst_dir.'/'.$dst_filename);
-        else
-            throw new SwatException("Destination of '{$dst_dir}' is not a ".
-                'directory or does not exist.');
+        if (is_dir($dst_dir)) {
+            return move_uploaded_file(
+                $this->file['tmp_name'],
+                $dst_dir.'/'.$dst_filename
+            );
+        } else {
+            throw new Exception\Exception(
+                "Destination of '{$dst_dir}' is not a directory or does not ".
+                "exist."
+            );
+        }
     }
 
     // }}}
@@ -404,7 +414,7 @@ class SwatFileEntry extends SwatInputControl
      *                widget that should receive focus or null if there is
      *                no such element.
      *
-     * @see SwatWidget::getFocusableHtmlId()
+     * @see Widget::getFocusableHtmlId()
      */
     public function getFocusableHtmlId()
     {
@@ -441,7 +451,7 @@ class SwatFileEntry extends SwatInputControl
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      */
     protected function getValidationMessage($id)
     {
@@ -451,7 +461,7 @@ class SwatFileEntry extends SwatInputControl
 
             if ($this->show_field_title_in_messages) {
                 $text = sprintf(
-                    Swat::ngettext(
+                    L::ngettext(
                         'The %%s field must be of the following type: %s.',
                         'The %%s field must be of the following type(s): %s.',
                         count($displayable_types)
@@ -460,7 +470,7 @@ class SwatFileEntry extends SwatInputControl
                 );
             } else {
                 $text = sprintf(
-                    Swat::ngettext(
+                    L::ngettext(
                         'This field must be of the following type: %s.',
                         'This field must be of the following type(s): %s.',
                         count($displayable_types)
@@ -469,37 +479,37 @@ class SwatFileEntry extends SwatInputControl
                 );
             }
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         case 'too-large':
             if ($this->show_field_title_in_messages) {
-                $text = Swat::_(
+                $text = L::_(
                     'The %s field exceeds the maximum allowable file size.'
                 );
             } else {
-                $text = Swat::_(
+                $text = L::_(
                     'This field exceeds the maximum allowable file size.'
                 );
             }
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         case 'upload-error':
             if ($this->show_field_title_in_messages) {
-                $text = Swat::_(
+                $text = L::_(
                     'The %s field encounted an error when trying to upload '.
                     'the file. Please try again.'
                 );
             } else {
-                $text = Swat::_(
+                $text = L::_(
                     'This field encounted an error when trying to upload the '.
                     'file. Please try again.'
                 );
             }
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         default:
@@ -534,7 +544,7 @@ class SwatFileEntry extends SwatInputControl
      *
      * Gets whether or not the upload file's mime type matches the accepted
      * mime types of this widget. Valid mime types for this widget are stored in
-     * the {@link SwatFileEntry::$accept_mime_types} array. If the
+     * the {@link FileEntry::$accept_mime_types} array. If the
      * <kbd>$accept_mime_types</kbd> array is empty, the uploaded file's mime
      * type is always valid.
      *
@@ -571,8 +581,12 @@ class SwatFileEntry extends SwatInputControl
 
     protected function getMaximumUploadSizeText()
     {
-        return sprintf(Swat::_('Maximum file size %s.'),
-            SwatString::byteFormat(self::getMaximumFileUploadSize()));
+        return sprintf(
+            L::_('Maximum file size %s.'),
+            Util\String::byteFormat(
+                self::getMaximumFileUploadSize()
+            )
+        );
     }
 
     // }}}
@@ -590,7 +604,7 @@ class SwatFileEntry extends SwatInputControl
         // http://us3.php.net/manual/en/fileinfo.constants.php for
         // details.
         $mime_constant = (defined('FILEINFO_MIME_TYPE')) ?
-            FILEINFO_MIME_TYPE : FILEINFO_MIME;
+            \FILEINFO_MIME_TYPE : \FILEINFO_MIME;
 
         return new finfo($mime_constant);
     }
@@ -602,8 +616,8 @@ class SwatFileEntry extends SwatInputControl
      * Gets a unique array of acceptable human-readable file and mime types for
      * display.
      *
-     * If {@link SwatFileEntry::$human_file_types} is set, and the mime type
-     * exists within it, we display the corresponding human-readable file type.
+     * If {@link FileEntry::$human_file_types} is set, and the mime type exists
+     * within it, we display the corresponding human-readable file type.
      * Otherwise we fall back to the mime type.
      *
      * @return array unique mime and human-readable file types.

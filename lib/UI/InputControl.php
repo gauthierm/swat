@@ -2,8 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatFormField.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * Base class for controls that accept user input on forms.
@@ -12,7 +14,7 @@ require_once 'Swat/SwatFormField.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatInputControl extends SwatControl
+abstract class InputControl extends Control
 {
     // {{{ public properties
 
@@ -40,14 +42,15 @@ abstract class SwatInputControl extends SwatControl
      *
      * Sets required property on the form field that contains this widget.
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     public function init()
     {
         parent::init();
 
-        if ($this->required && $this->parent instanceof SwatFormField)
+        if ($this->required && $this->parent instanceof FormField) {
             $this->parent->required = true;
+        }
     }
 
     // }}}
@@ -57,16 +60,16 @@ abstract class SwatInputControl extends SwatControl
      * Gets the form that this control is contained in
      *
      * You can also get the parent form with the
-     * {@link SwatUIObject::getFirstAncestor()} method but this method is more
+     * {@link UIObject::getFirstAncestor()} method but this method is more
      * convenient and throws an exception .
      *
-     * @return SwatForm the form this control is in.
+     * @return Form the form this control is in.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function getForm()
     {
-        $form = $this->getFirstAncestor('SwatForm');
+        $form = $this->getFirstAncestor('\Silverorange\Swat\UI\Form');
         if ($form === null) {
             $path = get_class($this);
             $object = $this->parent;
@@ -74,8 +77,10 @@ abstract class SwatInputControl extends SwatControl
                 $path = get_class($object).'/'.$path;
                 $object = $object->parent;
             }
-            throw new SwatException("Input controls must reside inside a ".
-                "SwatForm widget. UI-Object path:\n".$path);
+            throw new Exception\Exception(
+                "Input controls must reside inside a Form widget. UI-Object ".
+                "path:\n".$path
+            );
         }
 
         return $form;
@@ -91,32 +96,32 @@ abstract class SwatInputControl extends SwatControl
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'required':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('%s is required.') :
-                Swat::_('This field is required.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('%s is required.')
+                : L::_('This field is required.');
 
             break;
         case 'too-long':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %%s field can be at most %s characters long.') :
-                Swat::_('This field can be at most %s characters long.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %%s field can be at most %s characters long.')
+                : L::_('This field can be at most %s characters long.');
 
             break;
         default:
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('There is a problem with the %s field.') :
-                Swat::_('There is a problem with this field.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('There is a problem with the %s field.')
+                : L::_('There is a problem with this field.');
 
             break;
         }
 
-        $message = new SwatMessage($text, 'error');
+        $message = new Model\Message($text, 'error');
         return $message;
     }
 

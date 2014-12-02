@@ -2,12 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatOptionControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatFlydownDivider.php';
-require_once 'Swat/SwatFlydownBlankOption.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A flydown (aka combo-box) selection widget
@@ -16,7 +16,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2004-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatFlydown extends SwatOptionControl implements SwatState
+class Flydown extends OptionControl implements Model\State
 {
     // {{{ public properties
 
@@ -70,7 +70,7 @@ class SwatFlydown extends SwatOptionControl implements SwatState
             ),
             array('swat-flydown-wrapper')
         );
-        $wrapper = new SwatHtmlTag('span');
+        $wrapper = new Html\Tag('span');
         $wrapper->class = implode(' ', $wrapper_classes);
         $wrapper->open();
 
@@ -88,7 +88,7 @@ class SwatFlydown extends SwatOptionControl implements SwatState
             if ($this->serialize_values)
                 $salt = $this->getForm()->getSalt();
 
-            $select_tag = new SwatHtmlTag('select');
+            $select_tag = new Html\Tag('select');
             $select_tag->name = $this->id;
             $select_tag->id = $this->id;
             $select_tag->class = $this->getCSSClassString();
@@ -96,22 +96,24 @@ class SwatFlydown extends SwatOptionControl implements SwatState
             if (!$this->isSensitive())
                 $select_tag->disabled = 'disabled';
 
-            $option_tag = new SwatHtmlTag('option');
+            $option_tag = new Html\Tag('option');
 
             $select_tag->open();
 
             foreach ($options as $flydown_option) {
                 if ($this->serialize_values) {
-                    $option_tag->value = SwatString::signedSerialize(
-                        $flydown_option->value, $salt);
+                    $option_tag->value = Util\String::signedSerialize(
+                        $flydown_option->value,
+                        $salt
+                    );
                 } else {
                     $option_tag->value = (string)$flydown_option->value;
                 }
 
-                if ($flydown_option instanceof SwatFlydownDivider) {
+                if ($flydown_option instanceof Model\FlydownDivider) {
                     $option_tag->disabled = 'disabled';
                     $option_tag->class = 'swat-flydown-option-divider';
-                } elseif ($flydown_option instanceof SwatFlydownBlankOption) {
+                } elseif ($flydown_option instanceof Model\FlydownBlankOption) {
                     $option_tag->removeAttribute('disabled');
                     $option_tag->class = 'swat-blank-option';
                 } else {
@@ -133,7 +135,7 @@ class SwatFlydown extends SwatOptionControl implements SwatState
                     $flydown_option->value : (string)$flydown_option->value;
 
                 if ($flydown_value === $value && !$selected &&
-                    !($flydown_option instanceof SwatFlydownDivider)) {
+                    !($flydown_option instanceof Model\FlydownDivider)) {
 
                     $option_tag->selected = 'selected';
                     $selected = true;
@@ -201,7 +203,11 @@ class SwatFlydown extends SwatOptionControl implements SwatState
      */
     public function addDivider($title = '——', $content_type = 'text/plain')
     {
-        $this->options[] = new SwatFlydownDivider(null, $title, $content_type);
+        $this->options[] = new Model\FlydownDivider(
+            null,
+            $title,
+            $content_type
+        );
     }
 
     // }}}
@@ -227,7 +233,7 @@ class SwatFlydown extends SwatOptionControl implements SwatState
      *
      * @return boolean the current state of this flydown.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -242,7 +248,7 @@ class SwatFlydown extends SwatOptionControl implements SwatState
      *
      * @param boolean $state the new state of this flydown.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -260,7 +266,7 @@ class SwatFlydown extends SwatOptionControl implements SwatState
      *                widget that should receive focus or null if there is
      *                no such element.
      *
-     * @see SwatWidget::getFocusableHtmlId()
+     * @see Widget::getFocusableHtmlId()
      */
     public function getFocusableHtmlId()
     {
@@ -296,8 +302,10 @@ class SwatFlydown extends SwatOptionControl implements SwatState
 
         if ($this->serialize_values) {
             $salt = $form->getSalt();
-            $this->value = SwatString::signedUnserialize(
-                $data[$this->id], $salt);
+            $this->value = Util\String::signedUnserialize(
+                $data[$this->id],
+                $salt
+            );
         } else {
             $this->value = (string)$data[$this->id];
         }
@@ -311,25 +319,25 @@ class SwatFlydown extends SwatOptionControl implements SwatState
     /**
      * Displays this flydown if there is only a single option
      */
-    protected function displaySingle(SwatOption $flydown_option)
+    protected function displaySingle(Model\Option $flydown_option)
     {
         $title = $flydown_option->title;
         $value = $flydown_option->value;
 
-        $hidden_tag = new SwatHtmlTag('input');
+        $hidden_tag = new Html\Tag('input');
         $hidden_tag->type = 'hidden';
         $hidden_tag->name = $this->id;
 
         if ($this->serialize_values) {
             $salt = $this->getForm()->getSalt();
-            $hidden_tag->value = SwatString::signedSerialize($value, $salt);
+            $hidden_tag->value = Util\String::signedSerialize($value, $salt);
         } else {
             $hidden_tag->value = (string)$value;
         }
 
         $hidden_tag->display();
 
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->class = 'swat-flydown-single';
         $span_tag->setContent($title, $flydown_option->content_type);
         $span_tag->display();
@@ -341,11 +349,11 @@ class SwatFlydown extends SwatOptionControl implements SwatState
     /**
      * Gets the the blank option for this flydown.
      *
-     * @return SwatFlydownBlankOption the blank value option.
+     * @return Model\FlydownBlankOption the blank value option.
      */
     protected function getBlankOption()
     {
-        return new SwatFlydownBlankOption(null, $this->blank_title);
+        return new Model\FlydownBlankOption(null, $this->blank_title);
     }
 
     // }}}
