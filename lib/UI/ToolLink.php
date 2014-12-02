@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatUndefinedStockTypeException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\L;
 
 /**
  * A a tool link in the widget tree
@@ -13,7 +15,7 @@ require_once 'Swat/exceptions/SwatUndefinedStockTypeException.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatToolLink extends SwatControl
+class ToolLink extends Control
 {
     // {{{ public properties
 
@@ -27,7 +29,7 @@ class SwatToolLink extends SwatControl
      *
      * @var string
      *
-     * @see SwatToolLink::$value
+     * @see ToolLink::$value
      */
     public $link = null;
 
@@ -52,12 +54,12 @@ class SwatToolLink extends SwatControl
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatToolLink::$link} property. If the value is a string
-     * a single sprintf() call is made.
+     * on the {@link ToolLink::$link} property. If the value is a string a
+     * single sprintf() call is made.
      *
      * @var mixed
      *
-     * @see SwatToolLink::$link
+     * @see ToolLink::$link
      */
     public $value = null;
 
@@ -69,7 +71,7 @@ class SwatToolLink extends SwatControl
      *
      * @var string
      *
-     * @see SwatToolLink::setFromStock()
+     * @see ToolLink::setFromStock()
      */
     public $stock_id = null;
 
@@ -117,7 +119,7 @@ class SwatToolLink extends SwatControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -134,7 +136,7 @@ class SwatToolLink extends SwatControl
      *
      * Loads properties from stock if $stock_id is set.
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     public function init()
     {
@@ -163,7 +165,7 @@ class SwatToolLink extends SwatControl
 
         $tag->open();
 
-        $icon_span = new SwatHtmlTag('span');
+        $icon_span = new Html\Tag('span');
 
         if ($this->isSensitive()) {
             $icon_span->class = 'swat-tool-link-icon';
@@ -176,7 +178,7 @@ class SwatToolLink extends SwatControl
 
         $icon_span->display();
 
-        $title_span = new SwatHtmlTag('span');
+        $title_span = new Html\Tag('span');
         $title_span->class = 'swat-tool-link-title';
         $title_span->setContent($this->title, $this->content_type);
         $title_span->display();
@@ -208,70 +210,72 @@ class SwatToolLink extends SwatControl
      * @param boolean $overwrite_properties whether to overwrite properties if
      *                                      they are already set.
      *
-     * @throws SwatUndefinedStockTypeException
+     * @throws Exception\UndefinedStockTypeException
      */
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
         switch ($stock_id) {
         case 'create':
-            $title = Swat::_('Create');
+            $title = L::_('Create');
             $class = 'swat-tool-link-create';
             break;
 
         case 'add':
-            $title = Swat::_('Add');
+            $title = L::_('Add');
             $class = 'swat-tool-link-add';
             break;
 
         case 'edit':
-            $title = Swat::_('Edit');
+            $title = L::_('Edit');
             $class = 'swat-tool-link-edit';
             break;
 
         case 'download':
-            $title = Swat::_('Download');
+            $title = L::_('Download');
             $class = 'swat-tool-link-download';
             break;
 
         case 'delete':
-            $title = Swat::_('Delete');
+            $title = L::_('Delete');
             $class = 'swat-tool-link-delete';
             break;
 
         case 'cancel':
-            $title = Swat::_('Cancel');
+            $title = L::_('Cancel');
             $class = 'swat-tool-link-cancel';
             break;
 
         case 'preview':
-            $title = Swat::_('Preview');
+            $title = L::_('Preview');
             $class = 'swat-tool-link-preview';
             break;
 
         case 'change-order':
-            $title = Swat::_('Change Order');
+            $title = L::_('Change Order');
             $class = 'swat-tool-link-change-order';
             break;
 
         case 'help':
-            $title = Swat::_('Help');
+            $title = L::_('Help');
             $class = 'swat-tool-link-help';
             break;
 
         case 'print':
-            $title = Swat::_('Print');
+            $title = L::_('Print');
             $class = 'swat-tool-link-print';
             break;
 
         case 'email':
-            $title = Swat::_('Email');
+            $title = L::_('Email');
             $class = 'swat-tool-link-email';
             break;
 
         default:
-            throw new SwatUndefinedStockTypeException(
+            throw new Exception\UndefinedStockTypeException(
                 "Stock type with id of '{$stock_id}' not found.",
-                0, $stock_id);
+                0,
+                $stock_id
+            );
         }
 
         if ($overwrite_properties || ($this->title === null))
@@ -310,12 +314,12 @@ class SwatToolLink extends SwatControl
     /**
      * Gets the tag used to display this tool link when it is sensitive
      *
-     * @return SwatHtmlTag the tag used to display this tool link when it is
+     * @return Html\Tag the tag used to display this tool link when it is
      *                     sensitive.
      */
     protected function getSensitiveTag()
     {
-        $tag = new SwatHtmlTag('a');
+        $tag = new Html\Tag('a');
 
         $tag->id = $this->id;
         $tag->class = $this->getCSSClassString();
@@ -345,12 +349,12 @@ class SwatToolLink extends SwatControl
     /**
      * Gets the tag used to display this tool link when it is not sensitive
      *
-     * @return SwatHtmlTag the tag used to display this tool link when it is
+     * @return Html\Tag the tag used to display this tool link when it is
      *                     not sensitive.
      */
     protected function getInsensitiveTag()
     {
-        $tag = new SwatHtmlTag('span');
+        $tag = new Html\Tag('span');
 
         $tag->id = $this->id;
         $tag->class = $this->getCSSClassString();

@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/SwatTreeFlydownNode.php';
-require_once 'Swat/SwatFlydown.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Model;
 
 /**
  * A flydown (aka combo-box) selection widget that displays a tree of flydown
@@ -14,7 +15,7 @@ require_once 'Swat/SwatFlydown.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTreeFlydown extends SwatFlydown
+class TreeFlydown extends Flydown
 {
     // {{{ public properties
 
@@ -32,14 +33,14 @@ class SwatTreeFlydown extends SwatFlydown
     // {{{ protected properties
 
     /**
-     * A tree collection of {@link SwatTreeFlydownNode} objects for this
+     * A tree collection of {@link Model\TreeFlydownNode} objects for this
      * tree flydown
      *
-     * This property is used in place of the {@link SwatFlydown::$options}
+     * This property is used in place of the {@link Flydown::$options}
      * property. The options property is ignored.
      *
-     * @var SwatTreeFlydownNode
-     * @see SwatTreeFlydown::getOptions()
+     * @var Model\TreeFlydownNode
+     * @see TreeFlydown::getOptions()
      */
     protected $tree = null;
 
@@ -51,12 +52,12 @@ class SwatTreeFlydown extends SwatFlydown
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->setTree(new SwatTreeFlydownNode(null, 'root'));
+        $this->setTree(new Model\TreeFlydownNode(null, 'root'));
     }
 
     // }}}
@@ -91,9 +92,9 @@ class SwatTreeFlydown extends SwatFlydown
 
     /**
      * Gets this flydown's tree as a flat array used in the
-     * {@link SwatFlydown::display()} method
+     * {@link Flydown::display()} method
      *
-     * @return array a reference to an array of {@link SwatOption}
+     * @return array a reference to an array of {@link Model\Option}
      *               options.
      */
     protected function &getOptions()
@@ -116,14 +117,14 @@ class SwatTreeFlydown extends SwatFlydown
      * different levels. The values of the options are set to an array
      * representing the tree nodes's paths in the tree.
      *
-     * @param array               $options a reference to an array to add the
-     *                            flattened tree nodes to.
-     * @param SwatTreeFlydownNode $node    the tree node to flatten.
-     * @param integer             $level   the current level of recursion.
-     * @param array               $path    the current path represented as an
-     *                                     array of tree node option values.
+     * @param array                 $options a reference to an array to add the
+     *                                       flattened tree nodes to.
+     * @param Model\TreeFlydownNode $node    the tree node to flatten.
+     * @param integer               $level   the current level of recursion.
+     * @param array                 $path    the current path represented as an
+     *                                       array of tree node option values.
      */
-    private function flattenTree(&$options, SwatTreeFlydownNode $node,
+    private function flattenTree(&$options, Model\TreeFlydownNode $node,
         $level = 0, $path = array())
     {
         $tree_option = clone $node->getOption();
@@ -146,16 +147,20 @@ class SwatTreeFlydown extends SwatFlydown
     /**
      * Sets the tree to use for display
      *
-     * @param SwatTreeFlydownNode|SwatDataTreeNode $tree the tree to use for
-     *                                                   display.
+     * @param Model\TreeFlydownNode|Model\DataTreeNode $tree the tree to use
+     *                                                       for display.
      */
     public function setTree($tree)
     {
-        if ($tree instanceof SwatDataTreeNode) {
-            $tree = SwatTreeFlydownNode::convertFromDataTree($tree);
-        } elseif (!($tree instanceof SwatTreeFlydownNode)) {
-            throw new SwatInvalidClassException('Tree must be an intance of '.
-                'either SwatDataTreeNode or SwatTreeFlydownNode.', 0, $tree);
+        if ($tree instanceof Model\DataTreeNode) {
+            $tree = Model\TreeFlydownNode::convertFromDataTree($tree);
+        } elseif (!$tree instanceof Model\TreeFlydownNode) {
+            throw new Exception\InvalidClassException(
+                'Tree must be an intance of either Model\DataTreeNode or '.
+                'Model\TreeFlydownNode.',
+                0,
+                $tree
+            );
         }
 
         $this->tree = $tree;
@@ -165,10 +170,10 @@ class SwatTreeFlydown extends SwatFlydown
     // {{{ public function getTree()
 
     /**
-     * Gets the tree collection of {@link SwatTreeFlydownNode} objects for this
-     * tree flydown
+     * Gets the tree collection of {@link Model\TreeFlydownNode} objects for
+     * this tree flydown
      *
-     * @return SwatFlydowTreeNode the tree of nodes
+     * @return Model\FlydowTreeNode the tree of nodes
      */
     public function getTree()
     {

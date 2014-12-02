@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatEntry.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * An phone number entry widget
@@ -11,14 +11,14 @@ require_once 'Swat/SwatEntry.php';
  * @copyright 2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatPhoneEntry extends SwatEntry
+class PhoneEntry extends Entry
 {
     // {{{ protected function getInputTag()
 
     /**
      * Get the input tag to display
      *
-     * @return SwatHtmlTag the input tag to display.
+     * @return Html\Tag the input tag to display.
      */
     protected function getInputTag()
     {

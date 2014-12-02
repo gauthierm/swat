@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\UI;
+
 /**
  * A selection on a view
  *
@@ -27,9 +29,9 @@
  * @package   Swat
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatView::getSelection()
+ * @see       View::getSelection()
  */
-class SwatViewSelection implements Countable, Iterator
+class ViewSelection implements \Countable, \Iterator
 {
     // {{{ private properties
 

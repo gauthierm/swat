@@ -2,11 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/SwatTableViewRow.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatWidget.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
 
 /**
  * A table view row with an optional contained widget
@@ -15,7 +14,7 @@ require_once 'Swat/SwatWidget.php';
  * @copyright 2006-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
+class TableViewWidgetRow extends TableViewRow implements UIParent
 {
     // {{{ class constants
 
@@ -64,9 +63,9 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     /**
      * The contained widget
      *
-     * @var SwatWidget
+     * @var Widget
      *
-     * @see SwatTableViewWidgetRow::setWidget()
+     * @see TableViewWidgetRow::setWidget()
      */
     protected $widget;
 
@@ -76,29 +75,37 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used by
+     * {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To set the widget for this row,
-     * {@link SwatTableViewWidgetRow::setWidget()}.
+     * {@link TableViewWidgetRow::setWidget()}.
      *
-     * @param SwatWidget $child a reference to the child object to add.
+     * @param Widget $child a reference to the child object to add.
      *
-     * @throws SwatException
-     * @throws SwatInvalidClassException
+     * @throws Exception\Exception
+     * @throws Exception\InvalidClassException
      *
-     * @see SwatTableViewWidgetRow::setWidget()
+     * @see TableViewWidgetRow::setWidget()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(Object $child)
     {
-        if (!($child instanceof SwatWidget))
-            throw new SwatInvalidClassException(sprintf(
-                'Only SwatWidget objects may be nested within '.
-                'SwatTableViewWidgetRow. Attempting to add "%s".',
-                get_class($child)), 0, $child);
+        if (!$child instanceof Widget) {
+            throw new Exception\InvalidClassException(
+                sprintf(
+                    'Only Widget objects may be nested within '.
+                    'TableViewWidgetRow. Attempting to add "%s".',
+                    get_class($child)
+                ),
+                0,
+                $child
+            );
+        }
 
-        if ($this->widget !== null)
-            throw new SwatException(
-                'Can only set one widget for a widget row.');
+        if ($this->widget !== null) {
+            throw new Exception\Exception(
+                'Can only set one widget for a widget row.'
+            );
+        }
 
         $this->setWidget($child);
     }
@@ -117,7 +124,7 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -135,9 +142,12 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
                     $out[$this->widget->id] = $this->widget;
             }
 
-            if ($this->widget instanceof SwatUIParent)
-                $out = array_merge($out,
-                    $this->widget->getDescendants($class_name));
+            if ($this->widget instanceof UIParent) {
+                $out = array_merge(
+                    $out,
+                    $this->widget->getDescendants($class_name)
+                );
+            }
         }
 
         return $out;
@@ -151,10 +161,10 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -166,8 +176,9 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
         if ($this->widget instanceof $class_name)
             $out = $this->widget;
 
-        if ($out === null && $this->widget instanceof SwatUIParent)
+        if ($out === null && $this->widget instanceof UIParent) {
             $out = $this->widget->getFirstDescendant($class_name);
+        }
 
         return $out;
     }
@@ -188,8 +199,10 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -208,9 +221,12 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -219,16 +235,18 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     /**
      * Sets the widget contained in this row
      *
-     * @param SwatWidget $widget the widget to contain in this row.
+     * @param Widget $widget the widget to contain in this row.
      *
-     * @throws SwatException if the added widget is already the child of
-     *                       another object.
+     * @throws Exception\Exception if the added widget is already the child of
+     *         another object.
      */
-    public function setWidget(SwatWidget $widget)
+    public function setWidget(Widget $widget)
     {
-        if ($widget->parent !== null)
-            throw new SwatException('Attempting to add a widget that already '.
-                'has a parent.');
+        if ($widget->parent !== null) {
+            throw new Exception\Exception(
+                'Attempting to add a widget that already has a parent.'
+            );
+        }
 
         $this->widget = $widget;
         $widget->parent = $this;
@@ -240,8 +258,8 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     /**
      * Gets the widget contained in this row
      *
-     * @return SwatWidget the widget contained in this row or null if this
-     *                    row does not contain a widget.
+     * @return Widget the widget contained in this row or null if this row does
+     *                not contain a widget.
      */
     public function getWidget()
     {
@@ -280,12 +298,12 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
 
         parent::display();
 
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->id = $this->id;
         $tr_tag->class = $this->getCSSClassString();
 
         $colspan = $this->view->getXhtmlColspan();
-        $td_tag = new SwatHtmlTag('td');
+        $td_tag = new Html\Tag('td');
 
         $tr_tag->open();
 
@@ -304,12 +322,12 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this row
+     * Gets the Html\Resource objects needed by this row
      *
      * If this row has not been displayed, an empty set is returned to reduce
      * the number of required HTTP requests.
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
+     * @return Html\ResourceSet the Html\Resource objects needed by
      *                              this row.
      */
     public function getHtmlHeadEntrySet()
@@ -327,9 +345,9 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this row
+     * Gets the Html\Resource objects that may be needed by this row
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
+     * @return Html\ResourceSet the Html\Resource objects that may be
      *                              needed by this row.
      */
     public function getAvailableHtmlHeadEntrySet()
@@ -352,10 +370,9 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -376,7 +393,7 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
     /**
      * Gathers all messages from this table-view-row
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      */
     public function getMessages()
     {
@@ -416,7 +433,7 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
 
     protected function displayOffsetCell($offset)
     {
-        $td_tag = new SwatHtmlTag('td');
+        $td_tag = new Html\Tag('td');
         $td_tag->class = null;
         $td_tag->colspan = $offset;
         $td_tag->open();
@@ -429,7 +446,7 @@ class SwatTableViewWidgetRow extends SwatTableViewRow implements SwatUIParent
 
     protected function displayWidgetCell()
     {
-            $td_tag = new SwatHtmlTag('td');
+            $td_tag = new Html\Tag('td');
             $colspan = $this->view->getXhtmlColspan();
             $td_tag->colspan = $colspan - $this->offset;
             $td_tag->class = 'widget-cell';

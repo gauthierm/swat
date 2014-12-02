@@ -10,7 +10,6 @@ use Silverorange\Swat\Model;
 use Silverorange\Swat\Util;
 use Silverorange\Swat\L;
 
-
 /**
  * A date entry widget
  *

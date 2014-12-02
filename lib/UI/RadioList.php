@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatFlydown.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A radio list selection widget
@@ -13,21 +13,21 @@ require_once 'Swat/SwatString.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatRadioList extends SwatFlydown
+class RadioList extends Flydown
 {
     // {{{ private properties
 
     /**
      * Used for displaying radio buttons
      *
-     * @var SwatHtmlTag
+     * @var Html\Tag
      */
     private $input_tag;
 
     /**
      * Used for displaying radio button labels
      *
-     * @var SwatHtmlTag
+     * @var Html\Tag
      */
     private $label_tag;
 
@@ -39,7 +39,7 @@ class SwatRadioList extends SwatFlydown
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -64,7 +64,7 @@ class SwatRadioList extends SwatFlydown
         if (!$this->visible || $options === null)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         // add a hidden field so we can check if this list was submitted on
         // the process step
@@ -76,12 +76,12 @@ class SwatRadioList extends SwatFlydown
             return;
         }
 
-        $ul_tag = new SwatHtmlTag('ul');
+        $ul_tag = new Html\Tag('ul');
         $ul_tag->id = $this->id;
         $ul_tag->class = $this->getCSSClassString();
         $ul_tag->open();
 
-        $li_tag = new SwatHtmlTag('li');
+        $li_tag = new Html\Tag('li');
         $index = 0;
 
         foreach ($options as $option) {
@@ -105,7 +105,7 @@ class SwatRadioList extends SwatFlydown
                 }
             }
 
-            if ($option instanceof SwatFlydownDivider) {
+            if ($option instanceof Model\FlydownDivider) {
                 if ($li_tag->class === null) {
                     $li_tag->class = 'swat-radio-list-divider-li';
                 } else {
@@ -116,7 +116,7 @@ class SwatRadioList extends SwatFlydown
             $li_tag->id = $this->id.'_li_'.(string)$index;
             $li_tag->open();
 
-            if ($option instanceof SwatFlydownDivider) {
+            if ($option instanceof Model\FlydownDivider) {
                 $this->displayDivider($option, $index);
             } else {
                 $this->displayOption($option, $index);
@@ -148,15 +148,18 @@ class SwatRadioList extends SwatFlydown
         $data = &$form->getFormData();
         $salt = $form->getSalt();
 
-        if (isset($data[$this->id]))
+        if (isset($data[$this->id])) {
             if ($this->serialize_values) {
-                $this->value =
-                    SwatString::signedUnserialize($data[$this->id], $salt);
+                $this->value = Util\String::signedUnserialize(
+                    $data[$this->id],
+                    $salt
+                );
             } else {
                 $this->value = $data[$this->id];
             }
-        else
+        } else {
             $this->value = null;
+        }
 
         return true;
     }
@@ -167,13 +170,13 @@ class SwatRadioList extends SwatFlydown
     /**
      * Displays a divider option in this radio list
      *
-     * @param SwatOption $option the divider option to display.
-     * @param integer    $index  the numeric index of the option in this list.
-     *                           Starts at 0.
+     * @param Model\Option $option the divider option to display.
+     * @param integer      $index  the numeric index of the option in this
+     *                             list. Starts at 0.
      */
-    protected function displayDivider(SwatOption $option, $index)
+    protected function displayDivider(Model\Option $option, $index)
     {
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->class = 'swat-radio-list-divider';
         if ($option->value !== null)
             $span_tag->id = $this->id.'_'.(string)$option->value;
@@ -188,14 +191,14 @@ class SwatRadioList extends SwatFlydown
     /**
      * Displays an option in the radio list
      *
-     * @param SwatOption $option the option to display.
-     * @param integer    $index  the numeric index of the option in this list.
-     *                           Starts at 0.
+     * @param Model\Option $option the option to display.
+     * @param integer      $index  the numeric index of the option in this
+     *                             list. Starts at 0.
      */
-    protected function displayOption(SwatOption $option, $index)
+    protected function displayOption(Model\Option $option, $index)
     {
         if ($this->input_tag === null) {
-            $this->input_tag = new SwatHtmlTag('input');
+            $this->input_tag = new Html\Tag('input');
             $this->input_tag->type = 'radio';
             $this->input_tag->name = $this->id;
         }
@@ -209,8 +212,10 @@ class SwatRadioList extends SwatFlydown
 
         if ($this->serialize_values) {
             $salt = $this->getForm()->getSalt();
-            $this->input_tag->value =
-                SwatString::signedSerialize($option->value, $salt);
+            $this->input_tag->value = Util\String::signedSerialize(
+                $option->value,
+                $salt
+            );
         } else {
             $this->input_tag->value = (string)$option->value;
         }
@@ -241,14 +246,14 @@ class SwatRadioList extends SwatFlydown
     /**
      * Displays an option in the radio list
      *
-     * @param SwatOption $option the option for which to display the label.
-     * @param integer    $index  the numeric index of the option in this list.
-     *                           Starts at 0.
+     * @param Model\Option $option the option for which to display the label.
+     * @param integer      $index  the numeric index of the option in this
+     *                             list. Starts at 0.
      */
-    protected function displayOptionLabel(SwatOption $option, $index)
+    protected function displayOptionLabel(Model\Option $option, $index)
     {
         if ($this->label_tag === null) {
-            $this->label_tag = new SwatHtmlTag('label');
+            $this->label_tag = new Html\Tag('label');
             $this->label_tag->class = 'swat-control';
         }
 

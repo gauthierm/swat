@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A link cell renderer
@@ -12,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2004-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatLinkCellRenderer extends SwatCellRenderer
+class LinkCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -26,7 +27,7 @@ class SwatLinkCellRenderer extends SwatCellRenderer
      *
      * @var string
      *
-     * @see SwatLinkCellRenderer::$link_value
+     * @see LinkCellRenderer::$link_value
      */
     public $link;
 
@@ -40,7 +41,7 @@ class SwatLinkCellRenderer extends SwatCellRenderer
      *
      * @var string
      *
-     * @see SwatLinkCellRenderer::$value
+     * @see LinkCellRenderer::$value
      */
     public $text = '';
 
@@ -58,12 +59,12 @@ class SwatLinkCellRenderer extends SwatCellRenderer
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatLinkCellRenderer::$text} property. If the value
-     * is a string a single sprintf() call is made.
+     * on the {@link LinkCellRenderer::$text} property. If the value is a
+     * string a single sprintf() call is made.
      *
      * @var mixed
      *
-     * @see SwatLinkCellRenderer::$text
+     * @see LinkCellRenderer::$text
      */
     public $value = null;
 
@@ -73,8 +74,8 @@ class SwatLinkCellRenderer extends SwatCellRenderer
      *
      * @var mixed
      *
-     * @see SwatLinkCellRenderer::$link
-     * @see SwatLinkCellRenderer::$value
+     * @see LinkCellRenderer::$link
+     * @see LinkCellRenderer::$value
      */
     public $link_value = null;
 
@@ -84,7 +85,7 @@ class SwatLinkCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -124,7 +125,7 @@ class SwatLinkCellRenderer extends SwatCellRenderer
      */
     protected function renderSensitive()
     {
-        $anchor_tag = new SwatHtmlTag('a');
+        $anchor_tag = new Html\Tag('a');
         $anchor_tag->setContent($this->getText(), $this->content_type);
         $anchor_tag->href = $this->getLink();
         $anchor_tag->title = $this->getTitle();
@@ -140,7 +141,7 @@ class SwatLinkCellRenderer extends SwatCellRenderer
      */
     protected function renderInsensitive()
     {
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->setContent($this->getText(), $this->content_type);
         $span_tag->title = $this->getTitle();
         $span_tag->class = $this->getCSSClassString();

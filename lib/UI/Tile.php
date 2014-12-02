@@ -2,18 +2,20 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRendererContainer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
 
 /**
- * A tile in a {@link SwatTileView}
+ * A tile in a {@link TileView}
  *
  * @package   Swat
  * @copyright 2007-2012 silverorange
  * @lisence   http://www.gnu.org/copyleft/lesser.html LGPL Lisence 2.1
- * @see       SwatTileView
+ * @see       TileView
  */
-class SwatTile extends SwatCellRendererContainer
+class Tile extends CellRendererContainer
 {
     // {{{ public properties
 
@@ -21,7 +23,7 @@ class SwatTile extends SwatCellRendererContainer
      * Whether or not to include CSS classes from the first cell renderer
      * of this tile in this tile's CSS classes
      *
-     * @see SwatTile::getCSSClassNames()
+     * @see Tile::getCSSClassNames()
      */
     public $show_renderer_classes = true;
 
@@ -87,7 +89,7 @@ class SwatTile extends SwatCellRendererContainer
     /**
      * Gathers all messages from this tile
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      */
     public function getMessages()
     {
@@ -105,11 +107,11 @@ class SwatTile extends SwatCellRendererContainer
     /**
      * Adds a message to this tile
      *
-     * @param SwatMessage the message to add.
+     * @param Model\Message the message to add.
      *
-     * @see SwatMessage
+     * @see Model\Message
      */
-    public function addMessage(SwatMessage $message)
+    public function addMessage(Model\Message $message)
     {
         $this->messages[] = $message;
     }
@@ -145,12 +147,16 @@ class SwatTile extends SwatCellRendererContainer
      *
      * @param mixed $data the data object being used to render the cell
      *                    renderers of this field.
+     *
+     * @throws Exception\Exception
      */
     protected function setupRenderers($data)
     {
-        if (count($this->renderers) == 0)
-            throw new SwatException('No renderer has been provided for this '.
-                'tile.');
+        if (count($this->renderers) === 0) {
+            throw new Exception\Exception(
+                'No renderer has been provided for this tile.'
+            );
+        }
 
         $sensitive = $this->parent->isSensitive();
 
@@ -172,7 +178,7 @@ class SwatTile extends SwatCellRendererContainer
      */
     protected function displayRenderers($data)
     {
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
         $this->displayRenderersInternal($data);
@@ -198,7 +204,7 @@ class SwatTile extends SwatCellRendererContainer
         if (count($this->renderers) == 1) {
             $this->renderers->getFirst()->render();
         } else {
-            $div_tag = new SwatHtmlTag('div');
+            $div_tag = new Html\Tag('div');
             foreach ($this->renderers as $renderer) {
                 // get renderer class names
                 $classes = array('swat-tile-view-tile-renderer');
@@ -232,7 +238,7 @@ class SwatTile extends SwatCellRendererContainer
      * 1. hard-coded CSS classes from tile subclasses,
      * 2. user-specified CSS classes on this tile,
      *
-     * If {@link SwatTile::$show_renderer_classes} is true, the following
+     * If {@link Tile::$show_renderer_classes} is true, the following
      * extra CSS classes are added:
      *
      * 3. the inheritance classes of the first cell renderer in this tile,
@@ -243,9 +249,9 @@ class SwatTile extends SwatCellRendererContainer
      *
      * @return array the array of CSS classes that are applied to this tile.
      *
-     * @see SwatCellRenderer::getInheritanceCSSClassNames()
-     * @see SwatCellRenderer::getBaseCSSClassNames()
-     * @see SwatUIObject::getCSSClassNames()
+     * @see CellRenderer::getInheritanceCSSClassNames()
+     * @see CellRenderer::getBaseCSSClassNames()
+     * @see Object::getCSSClassNames()
      */
     protected function getCSSClassNames()
     {
@@ -257,7 +263,7 @@ class SwatTile extends SwatCellRendererContainer
 
         $first_renderer = $this->renderers->getFirst();
         if ($this->show_renderer_classes &&
-            $first_renderer instanceof SwatCellRenderer) {
+            $first_renderer instanceof CellRenderer) {
 
             // renderer inheritance classes
             $classes = array_merge($classes,

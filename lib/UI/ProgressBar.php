@@ -2,11 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * Progress bar
@@ -15,12 +15,12 @@ require_once 'Swat/SwatHtmlTag.php';
  * widget to display values.
  *
  * This progress bar is easily scripted using JavaScript. The JavaScript
- * method SwatProgressBar::setValue() sets the value of the progress bar. The
- * JavaScript methods SwatProgressBar::pulse() changes the progress bar into
+ * method ProgressBar::setValue() sets the value of the progress bar. The
+ * JavaScript methods ProgressBar::pulse() changes the progress bar into
  * pulse mode. Use pulse mode if progress is happening but there is no way to
  * measure the progress.
  *
- * Both the SwatProgressBar PHP class and SwatProgressBar JavaScript class are
+ * Both the ProgressBar PHP class and ProgressBar JavaScript class are
  * accurate to four decimal places. This translates to one-hundredth of a
  * percent.
  *
@@ -28,7 +28,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatProgressBar extends SwatControl
+class ProgressBar extends Control
 {
     // {{{ class constants
 
@@ -58,9 +58,9 @@ class SwatProgressBar extends SwatControl
     /**
      * Orientation of this progress bar
      *
-     * This should be one of the SwatProgressBar::ORIENTATION_* constants. If
+     * This should be one of the ProgressBar::ORIENTATION_* constants. If
      * an invalid value is used,
-     * {@link SwatProgressBar::ORIENTATION_LEFT_TO_RIGHT} is used.
+     * {@link ProgressBar::ORIENTATION_LEFT_TO_RIGHT} is used.
      *
      * @var integer
      */
@@ -87,22 +87,22 @@ class SwatProgressBar extends SwatControl
      *
      * @var string
      *
-     * @see SwatProgressBar::$text_value
+     * @see ProgressBar::$text_value
      */
     public $text;
 
     /**
      * Value or array of values to substitute into the
-     * {@link SwatProgressBar::$text} property
+     * {@link ProgressBar::$text} property
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatProgressBar::$text} property. If the value is a string
+     * on the {@link ProgressBar::$text} property. If the value is a string
      * a single sprintf() call is made.
      *
      * @var string|array
      *
-     * @see SwatProgressBar::$text
+     * @see ProgressBar::$text
      */
     public $text_value = null;
 
@@ -134,7 +134,7 @@ class SwatProgressBar extends SwatControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -142,7 +142,7 @@ class SwatProgressBar extends SwatControl
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('event'));
+        $yui = new Html\YUI(array('event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addStyleSheet('packages/swat/styles/swat-progress-bar.css');
@@ -155,8 +155,8 @@ class SwatProgressBar extends SwatControl
     /**
      * Displays this progress bar
      *
-     * @throws SwatException if this progress bar's <i>$length</i> property is
-     *                       not a valid cascading style-sheet dimension.
+     * @throws Exception\Exception if this progress bar's <i>$length</i>
+     *         property is not a valid cascading style-sheet dimension.
      */
     public function display()
     {
@@ -165,7 +165,7 @@ class SwatProgressBar extends SwatControl
 
         parent::display();
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
 
@@ -176,7 +176,7 @@ class SwatProgressBar extends SwatControl
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -185,27 +185,33 @@ class SwatProgressBar extends SwatControl
     /**
      * Displays the bar part of this progress bar
      *
-     * @throws SwatException if this progress bar's <i>$length</i> property is
-     *                       not a valid cascading style-sheet dimension.
+     * @throws Exception\Exception if this progress bar's <i>$length</i>
+     *         property is not a valid cascading style-sheet dimension.
      */
     protected function displayBar()
     {
         // ensure length is in cascading style-sheet units
         $dimension_pattern = '/([0-9]+(%|p[xtc]|e[mx]|in|[cm]m|)|auto)/';
-        if (preg_match($dimension_pattern, $this->length) == 0)
-            throw new SwatException(sprintf('$length must be specified in '.
-                'cascading style-sheet units. Value was: %s', $this->length));
+        if (preg_match($dimension_pattern, $this->length) === 0) {
+            throw new Exception\Exception(
+                sprintf(
+                    '$length must be specified in cascading style-sheet '.
+                    'units. Value was: %s',
+                    $this->length
+                )
+            );
+        }
 
-        $bar_div_tag = new SwatHtmlTag('div');
+        $bar_div_tag = new Html\Tag('div');
         $bar_div_tag->id = "{$this->id}_bar";
         $bar_div_tag->class = 'swat-progress-bar-bar';
 
-        $full_div_tag = new SwatHtmlTag('div');
+        $full_div_tag = new Html\Tag('div');
         $full_div_tag->id = "{$this->id}_full";
         $full_div_tag->class = 'swat-progress-bar-full';
         $full_div_tag->setContent('');
 
-        $empty_div_tag = new SwatHtmlTag('div');
+        $empty_div_tag = new Html\Tag('div');
         $empty_div_tag->id = "{$this->id}_empty";
         $empty_div_tag->class = 'swat-progress-bar-empty';
         $empty_div_tag->setContent('');
@@ -278,7 +284,7 @@ class SwatProgressBar extends SwatControl
                 $text = sprintf($this->text, $this->text_value);
         }
 
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->id = $this->id.'_text';
         $span_tag->class = 'swat-progress-bar-text';
         $span_tag->setContent($text, $this->content_type);

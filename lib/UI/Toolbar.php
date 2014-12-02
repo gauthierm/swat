@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A toolbar container for a group of related {@link SwatToolLink} objects
@@ -12,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatToolbar extends SwatDisplayableContainer
+class Toolbar extends DisplayableContainer
 {
     // {{{ public function __construct()
 
@@ -21,7 +22,7 @@ class SwatToolbar extends SwatDisplayableContainer
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -42,9 +43,9 @@ class SwatToolbar extends SwatDisplayableContainer
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
-        $toolbar_ul = new SwatHtmlTag('ul');
+        $toolbar_ul = new Html\Tag('ul');
         $toolbar_ul->id = $this->id;
         $toolbar_ul->class = $this->getCSSClassString();
 
@@ -57,7 +58,7 @@ class SwatToolbar extends SwatDisplayableContainer
     // {{{ public function setToolLinkValues()
 
     /**
-     * Sets the value of all {@link SwatToolLink} objects within this toolbar
+     * Sets the value of all {@link ToolLink} objects within this toolbar
      *
      * This is usually more convenient than setting all the values by hand
      * if the values are dynamic.
@@ -76,17 +77,21 @@ class SwatToolbar extends SwatDisplayableContainer
     /**
      * Gets the tool links of this toolbar
      *
-     * Returns an the array of {@link SwatToolLink} objects contained
-     * by this toolbar.
+     * Returns an the array of {@link ToolLink} objects contained by this
+     * toolbar.
      *
      * @return array the tool links contained by this toolbar.
      */
     public function getToolLinks()
     {
         $tools = array();
-        foreach ($this->getDescendants('SwatToolLink') as $tool)
-            if ($tool->getFirstAncestor('SwatToolbar') === $this)
+        $tool_link = '\Silverorange\Swat\UI\ToolLink';
+        $toolbar = '\Silverorange\Swat\UI\Toolbar';
+        foreach ($this->getDescendants($tool_link) as $tool) {
+            if ($tool->getFirstAncestor($toolbar) === $this) {
                 $tools[] = $tool;
+            }
+        }
 
         return $tools;
     }
@@ -120,7 +125,7 @@ class SwatToolbar extends SwatDisplayableContainer
     {
         $classes = array('swat-toolbar');
 
-        if ($this->parent instanceof SwatContainer) {
+        if ($this->parent instanceof Container) {
             $children = $this->parent->getChildren();
             if (end($children) === $this) {
                 $classes[] = 'swat-toolbar-end';

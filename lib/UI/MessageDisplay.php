@@ -2,20 +2,21 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatMessage.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
- * A control to display {@link SwatMessage} objects
+ * A control to display {@link Model\Message} objects
  *
  * @package   Swat
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatMessageDisplay extends SwatControl
+class MessageDisplay extends Control
 {
     // {{{ class constants
 
@@ -33,7 +34,7 @@ class SwatMessageDisplay extends SwatControl
      * Dismiss link for message is automatically displayed for certain message
      * types.
      *
-     * @see SwatMessageDisplay::getDismissableMessageTypes()
+     * @see Model\MessageDisplay::getDismissableMessageTypes()
      */
     const DISMISS_AUTO = 3;
 
@@ -55,7 +56,7 @@ class SwatMessageDisplay extends SwatControl
     /**
      * The messages to display
      *
-     * This is an array of {@link SwatMessage} objects.
+     * This is an array of {@link Model\Message} objects.
      *
      * @var array
      */
@@ -65,7 +66,7 @@ class SwatMessageDisplay extends SwatControl
      * Messages in this display that are dismissable
      *
      * This is an array with values corresponding to a keys in the
-     * {@link SwatMessageDisplay::$display_messages} array.
+     * {@link Model\MessageDisplay::$display_messages} array.
      *
      * @var array
      */
@@ -79,7 +80,7 @@ class SwatMessageDisplay extends SwatControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -87,7 +88,7 @@ class SwatMessageDisplay extends SwatControl
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('animation'));
+        $yui = new Html\YUI(array('animation'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript(
@@ -106,30 +107,34 @@ class SwatMessageDisplay extends SwatControl
      *
      * Adds a new message. The message will be shown by the display() method
      *
-     * @param string|SwatMessage $message     the message to add. If the
-     *                                        message is a string, a new
-     *                                        {@link SwatMessage} object of the
-     *                                        default message type is created.
-     * @param integer            $dismissable optional. Whether or not to show
-     *                                        a dismiss link for the added
-     *                                        message on this message display.
-     *                                        This should be one of the
-     *                                        SwatMessageDisplay::DISMISS_*
-     *                                        constants. By default, the
-     *                                        <i>$dismissable</i> parameter is
-     *                                        set to
-     *                                        {@link SwatMessageDisplay::DISMISS_AUTO}.
+     * @param string|Model\Message $message     the message to add. If the
+     *                                          message is a string, a new
+     *                                          {@link Model\Message} object of
+     *                                          the default message type is
+     *                                          created.
+     * @param integer              $dismissable optional. Whether or not to
+     *                                          show a dismiss link for the
+     *                                          added message on this message
+     *                                          display. This should be one of
+     *                                         the MessageDisplay::DISMISS_*
+     *                                          constants. By default, the
+     *                                          <i>$dismissable</i> parameter
+     *                                          is set to
+     *                                          {@link MessageDisplay::DISMISS_AUTO}.
      *
-     * @throws SwatInvalidClassException
+     * @throws Exception\InvalidClassException
      */
     public function add($message, $dismissable = self::DISMISS_AUTO)
     {
         if (is_string($message)) {
-            $message = new SwatMessage($message);
-        } elseif (!($message instanceof SwatMessage)) {
-            throw new SwatInvalidClassException(
+            $message = new Model\Message($message);
+        } elseif (!$message instanceof Model\Message) {
+            throw new Exception\InvalidClassException(
                 'Cannot add message. $message must be either a string or a '.
-                'SwatMessage.', 0, $message);
+                'Model\Message.',
+                0,
+                $message
+            );
         }
 
         $this->display_messages[] = $message;
@@ -163,7 +168,7 @@ class SwatMessageDisplay extends SwatControl
 
         parent::display();
 
-        $wrapper_div = new SwatHtmlTag('div');
+        $wrapper_div = new Html\Tag('div');
         $wrapper_div->id = $this->id;
         $wrapper_div->class = $this->getCSSClassString();
         $wrapper_div->open();
@@ -188,8 +193,9 @@ class SwatMessageDisplay extends SwatControl
 
         $wrapper_div->close();
 
-        if ($has_dismiss_link)
-            Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        if ($has_dismiss_link) {
+            Util\JavaScript::displayInline($this->getInlineJavaScript());
+        }
     }
 
     // }}}
@@ -205,7 +211,7 @@ class SwatMessageDisplay extends SwatControl
      * @return boolean true if this message display is visible and false if it
      *                 is not.
      *
-     * @see SwatUIObject::isVisible()
+     * @see UIObject::isVisible()
      */
     public function isVisible()
     {
@@ -233,17 +239,17 @@ class SwatMessageDisplay extends SwatControl
      *
      * @param integer     $message_id a unique identifier for the message
      *                                within this message display.
-     * @param SwatMessage $message    the message to display.
+     * @param Model\Message $message    the message to display.
      * @param boolean     $first      optional. Whether or not the message is
      *                                the first message in this message display.
      * @param boolean     $last       optional. Whether or not the message is
      *                                the last message in this message display.
      */
-    protected function displayMessage($message_id, SwatMessage $message,
+    protected function displayMessage($message_id, Model\Message $message,
         $first = false, $last = false)
     {
-        $message_div = new SwatHtmlTag('div');
-        $container_div = new SwatHtmlTag('div');
+        $message_div = new Html\Tag('div');
+        $container_div = new Html\Tag('div');
 
         $message_div->id = $this->id.'_'.$message_id;
         $message_div->class = $message->getCSSClassString();
@@ -261,7 +267,7 @@ class SwatMessageDisplay extends SwatControl
         $container_div->class = 'swat-message-container';
         $container_div->open();
 
-        $primary_content = new SwatHtmlTag('h3');
+        $primary_content = new Html\Tag('h3');
         $primary_content->class = 'swat-message-primary-content';
         $primary_content->setContent(
             $message->primary_content, $message->content_type);
@@ -269,7 +275,7 @@ class SwatMessageDisplay extends SwatControl
         $primary_content->display();
 
         if ($message->secondary_content !== null) {
-            $secondary_div = new SwatHtmlTag('div');
+            $secondary_div = new Html\Tag('div');
             $secondary_div->class = 'swat-message-secondary-content';
             $secondary_div->setContent(
                 $message->secondary_content, $message->content_type);
@@ -352,7 +358,7 @@ class SwatMessageDisplay extends SwatControl
      * JavaScript form class.
      *
      * @return string the name of the JavaScript class to instantiate for this
-     *                form . Defaults to 'SwatMessageDisplay'.
+     *                form . Defaults to 'Model\MessageDisplay'.
      */
     protected function getJavaScriptClass()
     {
@@ -370,8 +376,9 @@ class SwatMessageDisplay extends SwatControl
      */
     protected function getInlineJavaScriptTranslations()
     {
-        $close_text = ($this->close_text === null) ?
-            Swat::_('Dismiss message.') : $this->close_text;
+        $close_text = ($this->close_text === null)
+            ? L::_('Dismiss message.')
+            : $this->close_text;
 
         return "SwatMessageDisplayMessage.close_text = '{$close_text}';\n";
     }

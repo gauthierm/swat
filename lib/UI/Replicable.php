@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\UI;
+
 /**
  * A Swat container that can replicate its contents
  *
@@ -9,7 +11,7 @@
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-interface SwatReplicable
+interface Replicable
 {
     // {{{ public function getWidget()
 
@@ -19,9 +21,9 @@ interface SwatReplicable
      * @param string $widget_id     the unique id of the original widget.
      * @param string $replicator_id the replicator id of the replicated widget.
      *
-     * @returns SwatWidget a reference to the replicated widget.
+     * @returns Widget a reference to the replicated widget.
      *
-     * @throws SwatWidgetNotFoundException
+     * @throws Exception\WidgetNotFoundException
      */
     public function getWidget($widget_id, $replicator_id);
 

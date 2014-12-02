@@ -2,7 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatUIObject.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * Base class for a extra row displayed at the bottom of a table view
@@ -11,14 +13,14 @@ require_once 'Swat/SwatUIObject.php';
  * @copyright 2005-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatTableViewRow extends SwatUIObject
+abstract class TableViewRow extends Object
 {
     // {{{ public properties
 
     /**
-     * The {@link SwatTableView} associated with this row
+     * The {@link TableView} associated with this row
      *
-     * @var SwatTableView
+     * @var TableView
      */
     public $view = null;
 
@@ -37,7 +39,7 @@ abstract class SwatTableViewRow extends SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatTableViewRow::process()
+     * @see TableViewRow::process()
      */
     protected $processed = false;
 
@@ -46,7 +48,7 @@ abstract class SwatTableViewRow extends SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatTableViewRow::display()
+     * @see TableViewRow::display()
      */
     protected $displayed = false;
 
@@ -162,20 +164,19 @@ abstract class SwatTableViewRow extends SwatUIObject
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this row
+     * Gets the Html\Resource objects needed by this row
      *
      * If this row has not been displayed, an empty set is returned to reduce
      * the number of required HTTP requests.
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this row.
+     * @return Html\ResourceSet the Html\Resource objects needed by this row.
      */
     public function getHtmlHeadEntrySet()
     {
         if ($this->isDisplayed()) {
-            $set = new SwatHtmlHeadEntrySet($this->html_head_entry_set);
+            $set = new Html\ResourceSet($this->html_head_entry_set);
         } else {
-            $set = new SwatHtmlHeadEntrySet();
+            $set = new Html\ResourceSet();
         }
 
         return $set;
@@ -185,14 +186,14 @@ abstract class SwatTableViewRow extends SwatUIObject
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this row
+     * Gets the Html\Resource objects that may be needed by this row
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              needed by this row.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed by
+     *                          this row.
      */
     public function getAvailableHtmlHeadEntrySet()
     {
-        return new SwatHtmlHeadEntrySet($this->html_head_entry_set);
+        return new Html\ResourceSet($this->html_head_entry_set);
     }
 
     // }}}
@@ -201,7 +202,7 @@ abstract class SwatTableViewRow extends SwatUIObject
     /**
      * Gathers all messages from this table-view row
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      */
     public function getMessages()
     {
@@ -231,10 +232,9 @@ abstract class SwatTableViewRow extends SwatUIObject
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {

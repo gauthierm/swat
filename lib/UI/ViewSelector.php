@@ -2,16 +2,18 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\UI;
+
 /**
  * Interface for view selectors
  *
  * @package   Swat
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatViewSelection
- * @see       SwatView
+ * @see       ViewSelection
+ * @see       View
  */
-interface SwatViewSelector
+interface ViewSelector
 {
     // {{{ public function getId()
 

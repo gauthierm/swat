@@ -2,22 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatContainer.php';
-require_once 'Swat/SwatCellRendererMapping.php';
-require_once 'Swat/SwatDate.php';
+namespace Silverorange\Swat\UI;
 
-require_once 'Swat/exceptions/SwatFileNotFoundException.php';
-require_once 'Swat/exceptions/SwatInvalidSwatMLException.php';
-require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
-require_once 'Swat/exceptions/SwatInvalidCallbackException.php';
-require_once 'Swat/exceptions/SwatDuplicateIdException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/exceptions/SwatDoesNotImplementException.php';
-require_once 'Swat/exceptions/SwatClassNotFoundException.php';
-require_once 'Swat/exceptions/SwatInvalidPropertyException.php';
-require_once 'Swat/exceptions/SwatInvalidPropertyTypeException.php';
-require_once 'Swat/exceptions/SwatUndefinedConstantException.php';
-require_once 'Swat/exceptions/SwatInvalidConstantExpressionException.php';
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Util;
 
 /**
  * Generates a Swat widget tree from an XML UI file
@@ -26,7 +14,7 @@ require_once 'Swat/exceptions/SwatInvalidConstantExpressionException.php';
  * @copyright 2004-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatUI
+class Loader
 {
     // {{{ private properties
 
@@ -50,7 +38,7 @@ class SwatUI
      *
      * @var array
      *
-     * @see SwatUI::mapClassPrefixToPath()
+     * @see Loader::mapClassPrefixToPath()
      */
     private static $class_map = array(
         'Swat' => 'Swat',
@@ -70,7 +58,7 @@ class SwatUI
     /**
      * The root container of the widget tree created by this UI
      *
-     * @var SwatContainer
+     * @var Container
      */
     private $root = null;
 
@@ -88,7 +76,7 @@ class SwatUI
      *
      * @var boolean
      *
-     * @see SwatUI::setValidateMode()
+     * @see Loader::setValidateMode()
      */
     private static $validate_mode = true;
 
@@ -98,21 +86,25 @@ class SwatUI
     /**
      * Creates a new UI
      *
-     * @param SwatContainer $container an optional reference to a container
-     *                                 object that will be the root element of
-     *                                 the widget tree.
+     * @param Container $container an optional reference to a container object
+     *                             that will be the root element of the widget
+     *                             tree.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function __construct($container = null)
     {
-        if (!extension_loaded('dom'))
-            throw new SwatException('SwatUI requires the DOM php extension.');
+        if (!extension_loaded('dom')) {
+            throw new Exception\Exception(
+                'Loader requires the DOM php extension.'
+            );
+        }
 
-        if ($container !== null && $container instanceof SwatContainer)
+        if ($container !== null && $container instanceof Container) {
             $this->root = $container;
-        else
-            $this->root = new SwatContainer();
+        } else {
+            $this->root = new Container();
+        }
     }
 
     // }}}
@@ -139,13 +131,13 @@ class SwatUI
     // {{{ public static function setValidateMode()
 
     /**
-     * Sets the default validation mode used by {@link SwatUI::loadFromXML()}
+     * Sets the default validation mode used by {@link Loader::loadFromXML()}
      *
      * SwatML documents may optionally be validated against the SwatML schema
      * when they are loaded. Validation ensures the SwatML will be parsed
      * correctly and is quite useful for development to catch errors in
-     * SwatML documents. By default, SwatUI validates all SwatML files loaded
-     * using {@link SwatUI::loadFromXML()}.
+     * SwatML documents. By default, Loader validates all SwatML files loaded
+     * using {@link Loader::loadFromXML()}.
      *
      * In some situations, validation may not be desireable for performance
      * reasons. For example, on a live server where all SwatML documents have
@@ -171,26 +163,31 @@ class SwatUI
     /**
      * Loads a UI tree from an XML file
      *
-     * @param string        $filename  the filename of the XML UI file to load.
-     * @param SwatContainer $container optional. The container into which to
-     *                                 load the UI tree. The specified
-     *                                 container must already be a member of
-     *                                 this UI. If not specified, the UI tree
-     *                                 will be loaded into the root container
-     *                                 of this UI.
-     * @param boolean       $validate  optional. Whether or not to validate the
-     *                                 parsed SwatML file. If not specified,
-     *                                 whether or not to validate is deferred
-     *                                 to the default validation mode set by
-     *                                 the static method
-     *                                 {@link SwatUI::setValidateMode()}.
+     * @param string    $filename  the filename of the XML UI file to load.
+     * @param Container $container optional. The container into which to
+     *                             load the UI tree. The specified
+     *                             container must already be a member of
+     *                             this UI. If not specified, the UI tree
+     *                             will be loaded into the root container
+     *                             of this UI.
+     * @param boolean   $validate  optional. Whether or not to validate the
+     *                             parsed SwatML file. If not specified,
+     *                             whether or not to validate is deferred
+     *                             to the default validation mode set by
+     *                             the static method
+     *                             {@link Loader::setValidateMode()}.
      *
-     * @throws SwatFileNotFoundException, SwatInvalidSwatMLException,
-     *         SwatDuplicateIdException, SwatInvalidClassException,
-     *         SwatInvalidPropertyException, SwatInvalidPropertyTypeException,
-     *         SwatDoesNotImplementException, SwatClassNotFoundException,
-     *         SwatInvalidConstantExpressionException,
-     *         SwatUndefinedConstantException
+     * @throws Exception\ClassNotFoundException
+     * @throws Exception\DoesNotImplementException
+     * @throws Exception\DuplicateIdException
+     * @throws Exception\Exception
+     * @throws Exception\FileNotFoundException
+     * @throws Exception\InvalidClassException
+     * @throws Exception\InvalidConstantExpressionException
+     * @throws Exception\InvalidPropertyException
+     * @throws Exception\InvalidPropertyTypeException
+     * @throws Exception\InvalidSwatMLException
+     * @throws Exception\UndefinedConstantException
      */
     public function loadFromXML($filename, $container = null, $validate = null)
     {
@@ -208,11 +205,12 @@ class SwatUI
                 $object = $object->parent;
             }
             if (!$found) {
-                throw new SwatException(
+                throw new Exception\Exception(
                     'Cannot load a UI tree into a container that is not part '.
-                    'of this SwatUI. If you need to load a UI tree into '.
-                    'another SwatUI you should specify the root container '.
-                    'when constructing this SwatUI.');
+                    'of this loader. If you need to load a UI tree into '.
+                    'another loader you should specify the root container '.
+                    'when constructing this loader.'
+                );
             }
         }
 
@@ -254,10 +252,13 @@ class SwatUI
         }
 
 
-        if ($xml_file === null)
-            throw new SwatFileNotFoundException(
+        if ($xml_file === null) {
+            throw new Exception\FileNotFoundException(
                 "SwatML file not found: '{$filename}'.",
-                0, $xml_file);
+                0,
+                $xml_file
+            );
+        }
 
         $errors = libxml_use_internal_errors(true);
 
@@ -266,9 +267,9 @@ class SwatUI
         if ($validate) {
             // check for pear installed version first and if not found, fall
             // back to version in svn
-            $schema_file = '@DATA-DIR@/Swat/system/swatml.rng';
+            $schema_file = '@DATA-DIR@/Swat/data/swatml.rng';
             if (!file_exists($schema_file)) {
-                $schema_file = __DIR__.'/../system/swatml.rng';
+                $schema_file = __DIR__.'/../data/swatml.rng';
             }
             $document->relaxNGValidate($schema_file);
         }
@@ -285,9 +286,11 @@ class SwatUI
                     $error->file,
                     $error->line);
 
-            throw new SwatInvalidSwatMLException(
+            throw new Exception\InvalidSwatMLException(
                 "Invalid SwatML:\n".$message,
-                0, $xml_file);
+                0,
+                $xml_file
+            );
         }
 
         $this->parseUI($document->documentElement, $container);
@@ -319,18 +322,21 @@ class SwatUI
      *
      * @param string $id the id of the widget to retrieve.
      *
-     * @return SwatWidget a reference to the widget.
+     * @return Widget a reference to the widget.
      *
-     * @throws SwatWidgetNotFoundException
+     * @throws Exception\WidgetNotFoundException
      */
     public function getWidget($id)
     {
-        if (array_key_exists($id, $this->widgets))
+        if (array_key_exists($id, $this->widgets)) {
             return $this->widgets[$id];
-        else
-            throw new SwatWidgetNotFoundException(
+        } else {
+            throw new Exception\WidgetNotFoundException(
                 "Widget with an id of '{$id}' not found.",
-                0, $id);
+                0,
+                $id
+            );
+        }
     }
 
     // }}}
@@ -342,7 +348,7 @@ class SwatUI
      * Looks up the widget at the root of the widget tree. The widget is
      * always a container.
      *
-     * @return SwatContainer a reference to the container widget.
+     * @return Container a reference to the container widget.
      */
     public function getRoot()
     {
@@ -404,16 +410,19 @@ class SwatUI
      *
      * @param callback $callback the callback function to use.
      *
-     * @throws SwatInvalidCallbackException
+     * @throws Exception\InvalidCallbackException
      */
     public function setTranslationCallback($callback)
     {
-        if (is_callable($callback))
+        if (is_callable($callback)) {
             $this->translation_callback = $callback;
-        else
-            throw new SwatInvalidCallbackException(
+        } else {
+            throw new Exception\InvalidCallbackException(
                 'Cannot set translation callback to an uncallable callback.',
-                0, $callback);
+                0,
+                $callback
+            );
+        }
     }
 
     // }}}
@@ -424,17 +433,20 @@ class SwatUI
      *
      * Calls self on all node children.
      *
-     * @param Object       $node   the XML node to begin with.
-     * @param SwatUIObject $parent the parent object (usually a SwatContainer)
-     *                             to add parsed objects to.
+     * @param DOMNode $node   the XML node to begin with.
+     * @param Object  $parent the parent object (usually a {@link Container})
+     *                        to add parsed objects to.
      *
-     * @throws SwatDuplicateIdException, SwatInvalidClassException,
-     *         SwatInvalidPropertyException, SwatInvalidPropertyTypeException,
-     *         SwatDoesNotImplementException, SwatClassNotFoundException,
-     *         SwatInvalidConstantExpressionException,
-     *         SwatUndefinedConstantException
+     * @throws Exception\ClassNotFoundException
+     * @throws Exception\DoesNotImplementException
+     * @throws Exception\DuplicateIdException
+     * @throws Exception\InvalidClassException
+     * @throws Exception\InvalidConstantExpressionException
+     * @throws Exception\InvalidPropertyException
+     * @throws Exception\InvalidPropertyTypeException
+     * @throws Exception\UndefinedConstantException
      */
-    private function parseUI($node, SwatUIObject $parent)
+    private function parseUI(DOMNode $node, Object $parent)
     {
         array_push($this->stack, $parent);
 
@@ -478,49 +490,48 @@ class SwatUI
      * Checks to make sure widget objects are created from widget elements
      * and other objects are created from object elements.
      *
-     * @param SwatUIObject $parsed_object an object that has been parsed from
-     *                                    SwatML.
-     * @param string       $element_name  the name of the XML element node the
-     *                                    object was parsed from.
+     * @param Object $parsed_object an object that has been parsed from SwatML.
+     * @param string $element_name  the name of the XML element node the object
+     *                              was parsed from.
      *
-     * @throws SwatDuplicateIdException, SwatInvalidClassException
+     * @throws Exception\DuplicateIdException
+     * @throws Exception\InvalidClassException
      */
-    private function checkParsedObject(SwatUIObject $parsed_object,
+    private function checkParsedObject(Object $parsed_object,
         $element_name)
     {
         if ($element_name == 'widget') {
-            if (class_exists('SwatWidget') &&
-                $parsed_object instanceof SwatWidget &&
+            if ($parsed_object instanceof Widget &&
                 $parsed_object->id !== null) {
 
                 // make sure id is unique
-                if (isset($this->widgets[$parsed_object->id]))
-                    throw new SwatDuplicateIdException(
+                if (isset($this->widgets[$parsed_object->id])) {
+                    throw new Exception\DuplicateIdException(
                         "A widget with an id of '{$parsed_object->id}' ".
                         'already exists.',
-                        0, $parsed_object->id);
-
-            } elseif (!class_exists('SwatWidget') ||
-                !$parsed_object instanceof SwatWidget) {
-
+                        0,
+                        $parsed_object->id
+                    );
+                }
+            } elseif (!$parsed_object instanceof Widget) {
                 $class_name = get_class($parsed_object);
-
-                throw new SwatInvalidClassException(
+                throw new Exception\InvalidClassException(
                     "'{$class_name}' is defined in a widget element but is ".
-                    'not an instance of SwatWidget.',
-                    0, $parsed_object);
+                    'not an instance of Widget.',
+                    0,
+                    $parsed_object
+                );
             }
         } elseif ($element_name == 'object') {
-            if (class_exists('SwatWidget') &&
-                $parsed_object instanceof SwatWidget) {
-
+            if ($parsed_object instanceof Widget) {
                 $class_name = get_class($parsed_object);
-
-                throw new SwatInvalidClassException(
+                throw new Exception\InvalidClassException(
                     "'{$class_name}' is defined in an object element but is ".
-                    'and instance of SwatWidget and should be defined in a '.
-                    'widget element.',
-                    0, $parsed_object);
+                    "and instance of Widget and should be defined in a ".
+                    "widget element.",
+                    0,
+                    $parsed_object
+                );
             }
         }
     }
@@ -531,20 +542,23 @@ class SwatUI
     /**
      * Attaches a widget to a parent widget in the widget tree
      *
-     * @param SwatUIObject $object the object to attach.
-     * @param SwatUIParent $parent the parent to attach the widget to.
+     * @param Object   $object the object to attach.
+     * @param UIParent $parent the parent to attach the widget to.
      *
-     * @throws SwatDoesNotImplementException
+     * @throws Exception\DoesNotImplementException
      */
-    private function attachToParent(SwatUIObject $object, SwatUIParent $parent)
+    private function attachToParent(Object $object, UIParent $parent)
     {
-        if ($parent instanceof SwatUIParent) {
+        if ($parent instanceof UIParent) {
             $parent->addChild($object);
         } else {
             $class_name = get_class($parent);
-            throw new SwatDoesNotImplementException(
+            throw new Exception\DoesNotImplementException(
                 "Can not add object to parent. '{$class_name}' does not ".
-                'implement SwatUIParent.', 0, $parent);
+                "implement UIParent.",
+                0,
+                $parent
+            );
         }
     }
 
@@ -556,9 +570,9 @@ class SwatUI
      *
      * @param array $node the XML element node to parse.
      *
-     * @return SwatUIObject a reference to the object created.
+     * @return Object a reference to the object created.
      *
-     * @throws SwatClassNotFoundException
+     * @throws Exception\ClassNotFoundException
      */
     private function parseObject($node)
     {
@@ -575,21 +589,26 @@ class SwatUI
                 }
             }
 
-            if ($class_file === null)
-                throw new SwatClassNotFoundException(
+            if ($class_file === null) {
+                throw new Exception\ClassNotFoundException(
                     "Class '{$class}' is not defined and no suitable filename ".
-                    'for the class could be found. You may have forgotten to '.
-                    'map the class prefix to a path.',
-                    0, $class);
+                    "for the class could be found. You may have forgotten to ".
+                    "map the class prefix to a path.",
+                    0,
+                    $class
+                );
+            }
 
             require_once $class_file;
         }
 
-        // NOTE: this works because SwatUIObject is abstract
-        if (!is_subclass_of($class, 'SwatUIObject'))
-            throw new SwatInvalidClassException(
-                "Class '{$class}' is not a a descendant of SwatUIObject and ".
-                'cannot be added to the widget tree.');
+        // NOTE: this works because Object is abstract
+        if (!is_subclass_of($class, '\Silverorange\Swat\UI\Object')) {
+            throw new Exception\InvalidClassException(
+                "Class '{$class}' is not a a descendant of Object and cannot ".
+                "be added to the widget tree."
+            );
+        }
 
         $object = new $class();
 
@@ -606,14 +625,15 @@ class SwatUI
     /**
      * Parses a single XML property node and applies it to an object
      *
-     * @param array        $property_node the XML property node to parse.
-     * @param SwatUIObject $object        the object to apply the property to.
+     * @param array  $property_node the XML property node to parse.
+     * @param Object $object        the object to apply the property to.
      *
-     * @throws SwatInvalidPropertyException, SwatInvalidPropertyTypeException,
-     *         SwatInvalidConstantExpressionException,
-     *         SwatUndefinedConstantException
+     * @throws Exception\InvalidConstantExpressionException
+     * @throws Exception\InvalidPropertyException
+     * @throws Exception\InvalidPropertyTypeException
+     * @throws Exception\UndefinedConstantException
      */
-    private function parseProperty($property_node, SwatUIObject $object)
+    private function parseProperty($property_node, Object $object)
     {
         $class_properties = get_class_vars(get_class($object));
 
@@ -631,10 +651,13 @@ class SwatUI
 
         if (!array_key_exists($name, $class_properties)) {
             $class_name = get_class($object);
-            throw new SwatInvalidPropertyException(
+            throw new Exception\InvalidPropertyException(
                 "Property '{$name}' does not exist in class '{$class_name}' ".
-                'but is used in SwatML.',
-                0, $object, $name);
+                "but is used in SwatML.",
+                0,
+                $object,
+                $name
+            );
         }
 
         // translatable is optional in the schema
@@ -656,7 +679,7 @@ class SwatUI
             $this->parseValue($name, $value, $type, $translatable, $object);
 
         if ($array_property) {
-            if ($parsed_value instanceof SwatCellRendererMapping) {
+            if ($parsed_value instanceof CellRendererMapping) {
                 // it was a type=data property,
                 // so the parsed value is a mapping object
                 $parsed_value->is_array = true;
@@ -686,20 +709,20 @@ class SwatUI
      * Also does error notification in the event of a missing or unknown type
      * attribute.
      *
-     * @param string       $name         the name of the property.
-     * @param string       $value        the value of the property.
-     * @param string       $type         the type of the value.
-     * @param boolean      $translatable whether the property is translatable.
-     * @param SwatUIObject $object       the object the property applies to.
+     * @param string  $name         the name of the property.
+     * @param string  $value        the value of the property.
+     * @param string  $type         the type of the value.
+     * @param boolean $translatable whether the property is translatable.
+     * @param Object  $object       the object the property applies to.
      *
      * @return mixed the value of the property as an appropriate PHP datatype.
      *
-     * @throws SwatInvalidPropertyTypeException,
-     *         SwatInvalidConstantExpressionException,
-     *         SwatUndefinedConstantException
+     * @throws Exception\InvalidPropertyTypeException
+     * @throws Exception\InvalidConstantExpressionException
+     * @throws Exception\UndefinedConstantException
      */
     private function parseValue($name, $value, $type, $translatable,
-        SwatUIObject $object)
+        Object $object)
     {
         switch ($type) {
         case 'string':
@@ -715,7 +738,7 @@ class SwatUI
         case 'data':
             return $this->parseMapping($name, $value, $object);
         case 'date':
-            return new SwatDate($value);
+            return new Util\Date($value);
         case 'implicit-string':
             if ($value == 'false' || $value == 'true' )
                 trigger_error(__CLASS__.': Possible missing type="boolean" '.
@@ -728,10 +751,13 @@ class SwatUI
 
             return $this->translateValue($value, $translatable, $object);
         default:
-            throw new SwatInvalidPropertyTypeException(
+            throw new Exception\InvalidPropertyTypeException(
                 "Property type '{$type}' is not a recognized type ".
-                'but is used in SwatML.',
-                0, $object, $type);
+                "but is used in SwatML.",
+                0,
+                $object,
+                $type
+            );
         }
     }
 
@@ -741,33 +767,37 @@ class SwatUI
     /**
      * Handle a 'data' type property value by parsing it into a mapping object
      *
-     * @param string       $name   the name of the property.
-     * @param string       $value  the value of the property.
-     * @param SwatUIObject $object the object the property applies to.
+     * @param string $name   the name of the property.
+     * @param string $value  the value of the property.
+     * @param Object $object the object the property applies to.
      *
-     * @return SwatCellRendererMapping the parsed mapping object.
+     * @return CellRendererMapping the parsed mapping object.
      *
-     * @throws SwatInvalidPropertyTypeException
+     * @throws Exception\InvalidPropertyTypeException
      */
-    private function parseMapping($name, $value, SwatUIObject $object)
+    private function parseMapping($name, $value, Object $object)
     {
         $renderer = null;
         $renderer_container = null;
 
         foreach (array_reverse($this->stack) as $ancestor) {
-            if ($renderer === null && $ancestor instanceof SwatCellRenderer) {
+            if ($renderer === null && $ancestor instanceof CellRenderer) {
                 $renderer = $ancestor;
-            } else if ($ancestor instanceof SwatCellRendererContainer) {
+            } else if ($ancestor instanceof CellRendererContainer) {
                 $renderer_container = $ancestor;
                 break;
             }
         }
 
-        if ($renderer === null || $renderer_container === null)
-            throw new SwatInvalidPropertyTypeException(
-                "Property type 'data' is only allowed on a SwatCellRenderer ".
-                'or on a widget within a SwatWidgetCellRenderer.',
-                0, $object, 'data');
+        if ($renderer === null || $renderer_container === null) {
+            throw new Exception\InvalidPropertyTypeException(
+                "Property type 'data' is only allowed on a CellRenderer or ".
+                "or on a widget within a WidgetCellRenderer.",
+                0,
+                $object,
+                'data'
+            );
+        }
 
         $mapping = $renderer_container->addMappingToRenderer($renderer,
             $value, $name, $object);
@@ -781,15 +811,14 @@ class SwatUI
     /**
      * Translates a property value if possible
      *
-     * @param string       $value        the value to be translated.
-     * @param boolean      $translatable whether or not it is possible to
-     *                                   translate the value.
-     * @param SwatUIObject $object       the object the property value applies
-     *                                   to.
+     * @param string  $value        the value to be translated.
+     * @param boolean $translatable whether or not it is possible to translate
+     *                              the value.
+     * @param Object  $object       the object the property value applies to.
      *
      * @return string the translated value if possible, otherwise $value.
      */
-    private function translateValue($value, $translatable, SwatUIObject $object)
+    private function translateValue($value, $translatable, Object $object)
     {
         if (!$translatable)
             return $value;
@@ -806,16 +835,15 @@ class SwatUI
     /**
      * Evaluate a constant property value
      *
-     * @param string       $expression constant expression to evaluate.
-     * @param SwatUIObject $object     the object that conatins the class
-     *                                 constant.
+     * @param string $expression constant expression to evaluate.
+     * @param Object $object     the object that conatins the class constant.
      *
      * @return string the value of the class constant.
      *
-     * @throws SwatInvalidConstantExpressionException,
-     *         SwatUndefinedConstantException
+     * @throws Exception\InvalidConstantExpressionException
+     * @throws Exception\UndefinedConstantException
      */
-    private function parseConstantExpression($expression, SwatUIObject $object)
+    private function parseConstantExpression($expression, Object $object)
     {
         /*
          * This method converts a constant expression into reverse polish
@@ -847,14 +875,18 @@ class SwatUI
         $eval_stack = array();
         $prev_token = null;
 
-        $parenthesis_exception = new SwatInvalidConstantExpressionException(
+        $parenthesis_exception = new Exception\InvalidConstantExpressionException(
             "Mismatched parentheses in constant expression '{$expression}' ".
-            'in SwatML.',
-            0, $expression);
+            "in SwatML.",
+            0,
+            $expression
+        );
 
-        $syntax_exception = new SwatInvalidConstantExpressionException(
+        $syntax_exception = new Exception\InvalidConstantExpressionException(
             "Invalid syntax in constant expression '{$expression}' in SwatML.",
-            0, $expression);
+            0,
+            $expression
+        );
 
         foreach ($tokens as $token) {
 
@@ -894,13 +926,16 @@ class SwatUI
                     $constant = get_class($object) . '::' . $constant;
 
                 // evaluate constant
-                if (defined($constant))
+                if (defined($constant)) {
                     $constant = constant($constant);
-                else
-                    throw new SwatUndefinedConstantException(
+                } else {
+                    throw new Exception\UndefinedConstantException(
                         "Undefined constant '{$constant}' in constant ".
                         "expression '{$expression}' in SwatML.",
-                        0, $constant);
+                        0,
+                        $constant
+                    );
+                }
 
                 array_push($queue, $constant);
             }

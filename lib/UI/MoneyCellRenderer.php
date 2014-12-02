@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\I18N;
 
 /**
  * A currency cell renderer
@@ -12,7 +13,7 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatMoneyCellRenderer extends SwatCellRenderer
+class MoneyCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -31,18 +32,18 @@ class SwatMoneyCellRenderer extends SwatCellRenderer
     public $value;
 
     /**
-     * If {@link SwatMoneyCellRenderer::$international} is false, whether to
+     * If {@link MoneyCellRenderer::$international} is false, whether to
      * render the international currency symbol
      *
      * If true, displays the international currency symbol. Use of this property
      * is discouraged in favour of using the
-     * {@link SwatMoneyCellRenderer::$international} property. Using this
+     * {@link MoneyCellRenderer::$international} property. Using this
      * property can render strings that are incorrect for the given locale.
      * Using the international property always renders strings correctly for the
      * specified locale.
      *
-     * If {@link SwatMoneyCellRenderer::$international} is true, this property
-     * has no effect.
+     * If {@link MoneyCellRenderer::$international} is true, this property has
+     * no effect.
      *
      * @var boolean
      */
@@ -101,7 +102,7 @@ class SwatMoneyCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -109,23 +110,29 @@ class SwatMoneyCellRenderer extends SwatCellRenderer
             return;
 
         if ($this->value === null && $this->null_display_value !== null) {
-            $span_tag = new SwatHtmlTag('span');
+            $span_tag = new Html\Tag('span');
             $span_tag->class = 'swat-none';
             $span_tag->setContent($this->null_display_value);
             $span_tag->display();
         } else {
             parent::render();
 
-            $locale = SwatI18NLocale::get($this->locale);
+            $locale = I18N\Locale::get($this->locale);
             $format = $this->getCurrencyFormat();
 
-            echo SwatString::minimizeEntities(
+            echo Util\String::minimizeEntities(
                 $locale->formatCurrency(
-                    $this->value, $this->international, $format));
+                    $this->value,
+                    $this->international,
+                    $format
+                )
+            );
 
             if (!$this->international && $this->display_currency) {
-                echo '&nbsp;', SwatString::minimizeEntities(
-                $locale->getInternationalCurrencySymbol());
+                echo '&nbsp;',
+                    Util\String::minimizeEntities(
+                        $locale->getInternationalCurrencySymbol()
+                    );
             }
         }
     }
@@ -136,7 +143,7 @@ class SwatMoneyCellRenderer extends SwatCellRenderer
     /**
      * Gets currency format to use when rendering
      *
-     * @see SwatMoneyCellRenderer::render()
+     * @see MoneyCellRenderer::render()
      */
     protected function getCurrencyFormat()
     {

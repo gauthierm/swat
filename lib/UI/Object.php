@@ -2,11 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlHeadEntry.php';
-require_once 'Swat/SwatHtmlHeadEntrySet.php';
-require_once 'Swat/SwatCommentHtmlHeadEntry.php';
-require_once 'Swat/SwatJavaScriptHtmlHeadEntry.php';
-require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
+
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
 
 /**
  * A base class for Swat user-interface elements
@@ -18,14 +18,14 @@ require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatUIObject
+abstract class Object
 {
     // {{{ public properties
 
     /**
      * The object which contains this object
      *
-     * @var SwatUIObject
+     * @var Object
      */
     public $parent = null;
 
@@ -36,7 +36,7 @@ abstract class SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatUIObject::isVisible()
+     * @see Object::isVisible()
      */
     public $visible = true;
 
@@ -44,8 +44,8 @@ abstract class SwatUIObject
      * A user-specified array of CSS classes that are applied to this
      * user-interface object
      *
-     * See the class-level documentation for SwatUIObject for details on how
-     * CSS classes and XHTML ids are displayed on user-interface objects.
+     * See the class-level documentation for Object for details on how CSS
+     * classes and XHTML ids are displayed on user-interface objects.
      *
      * @var array
      */
@@ -57,10 +57,10 @@ abstract class SwatUIObject
     /**
      * A set of HTML head entries needed by this user-interface element
      *
-     * Entries are stored in a data object called {@link SwatHtmlHeadEntry}.
+     * Entries are stored in a data object called {@link Html\Resource}.
      * This property contains a set of such objects.
      *
-     * @var SwatHtmlHeadEntrySet
+     * @var Html\ResourceSet
      */
     protected $html_head_entry_set;
 
@@ -69,7 +69,7 @@ abstract class SwatUIObject
 
     public function __construct()
     {
-        $this->html_head_entry_set = new SwatHtmlHeadEntrySet();
+        $this->html_head_entry_set = new Html\ResourceSet();
     }
 
     // }}}
@@ -77,22 +77,30 @@ abstract class SwatUIObject
 
     /**
      * Adds a stylesheet to the list of stylesheets needed by this
-     * user-iterface element
+     * user-interface element
      *
      * @param string  $stylesheet    the uri of the style sheet.
      * @param integer $display_order the relative order in which to display
      *                               this stylesheet head entry.
+     *
+     * @throws Exception\Exception
      */
     public function addStyleSheet($stylesheet)
     {
-        if ($this->html_head_entry_set === null)
-            throw new SwatException(sprintf("Child class '%s' did not ".
-                'instantiate a HTML head entry set. This should be done in  '.
-                'the constructor either by calling parent::__construct() or '.
-                'by creating a new HTML head entry set.', get_class($this)));
+        if ($this->html_head_entry_set === null) {
+            throw new Exception\Exception(
+                sprintf(
+                    "Child class '%s' did not instantiate a HTML resource ".
+                    "set. This should be done in the constructor either by ".
+                    "calling parent::__construct() or by creating a new ".
+                    "HTML resource set.",
+                    get_class($this)
+                )
+            );
+        }
 
         $this->html_head_entry_set->addEntry(
-            new SwatStyleSheetHtmlHeadEntry($stylesheet)
+            new Html\StyleSheetResource($stylesheet)
         );
     }
 
@@ -109,14 +117,20 @@ abstract class SwatUIObject
      */
     public function addJavaScript($java_script)
     {
-        if ($this->html_head_entry_set === null)
-            throw new SwatException(sprintf("Child class '%s' did not ".
-                'instantiate a HTML head entry set. This should be done in  '.
-                'the constructor either by calling parent::__construct() or '.
-                'by creating a new HTML head entry set.', get_class($this)));
+        if ($this->html_head_entry_set === null) {
+            throw new Exception\Exception(
+                sprintf(
+                    "Child class '%s' did not instantiate a HTML resource ".
+                    "set. This should be done in the constructor either by ".
+                    "calling parent::__construct() or by creating a new ".
+                    "HTML resource set.",
+                    get_class($this)
+                )
+            );
+        }
 
         $this->html_head_entry_set->addEntry(
-            new SwatJavaScriptHtmlHeadEntry($java_script)
+            new Html\JavaScriptResource($java_script)
         );
     }
 
@@ -127,18 +141,24 @@ abstract class SwatUIObject
      * Adds a comment to the list of HTML head entries needed by this user-
      * interface element
      *
-     * @param string  $comment the contents of the comment to include.
+     * @param string $comment the contents of the comment to include.
      */
     public function addComment($comment)
     {
-        if ($this->html_head_entry_set === null)
-            throw new SwatException(sprintf("Child class '%s' did not ".
-                'instantiate a HTML head entry set. This should be done in  '.
-                'the constructor either by calling parent::__construct() or '.
-                'by creating a new HTML head entry set.', get_class($this)));
+        if ($this->html_head_entry_set === null) {
+            throw new Exception\Exception(
+                sprintf(
+                    "Child class '%s' did not instantiate a HTML resource ".
+                    "set. This should be done in the constructor either by ".
+                    "calling parent::__construct() or by creating a new ".
+                    "HTML resource set.",
+                    get_class($this)
+                )
+            );
+        }
 
         $this->html_head_entry_set->addEntry(
-            new SwatCommentHtmlHeadEntry($comment)
+            new Html\CommentResource($comment)
         );
     }
 
@@ -164,7 +184,7 @@ abstract class SwatUIObject
      * @return mixed the first ancestor object or null if no matching ancestor
      *               is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see Parent::getFirstDescendant()
      */
     public function getFirstAncestor($class_name)
     {
@@ -186,20 +206,20 @@ abstract class SwatUIObject
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this UI object
+     * Gets the Html\Resource objects needed by this UI object
      *
      * If this UI object is not visible, an empty set is returned to reduce
      * the number of required HTTP requests.
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this UI object.
+     * @return Html\ResourceSet the Html\Resource objects needed by this UI
+     *                          object.
      */
     public function getHtmlHeadEntrySet()
     {
         if ($this->isVisible()) {
-            $set = new SwatHtmlHeadEntrySet($this->html_head_entry_set);
+            $set = new Html\ResourceSet($this->html_head_entry_set);
         } else {
-            $set = new SwatHtmlHeadEntrySet();
+            $set = new Html\ResourceSet();
         }
 
         return $set;
@@ -209,17 +229,17 @@ abstract class SwatUIObject
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that MAY needed by this UI object
+     * Gets the Html\Resource objects that MAY needed by this UI object
      *
      * Even if this object is not displayed, all the resources that may be
      * required to display it are returned.
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that MAY be
-     *                              needed this UI object.
+     * @return Html\ResourceSet the Html\Resource objects that MAY be needed by
+     *                          this UI object.
      */
     public function getAvailableHtmlHeadEntrySet()
     {
-        return new SwatHtmlHeadEntrySet($this->html_head_entry_set);
+        return new Html\ResourceSet($this->html_head_entry_set);
     }
 
     // }}}
@@ -233,14 +253,15 @@ abstract class SwatUIObject
      *
      * @return boolean true if this UI object is visible and false if it is not.
      *
-     * @see SwatUIObject::$visible
+     * @see Object::$visible
      */
     public function isVisible()
     {
-        if ($this->parent instanceof SwatUIObject)
+        if ($this->parent instanceof Object) {
             return ($this->parent->isVisible() && $this->visible);
-        else
+        } else {
             return $this->visible;
+        }
     }
 
     // }}}
@@ -260,9 +281,9 @@ abstract class SwatUIObject
      *                          the original and copy are displayed during the
      *                          same request.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object. The returned UI object does not have a
-     *                      parent and can be inserted into another UI tree.
+     * @return Object a deep copy of the UI tree starting with this UI object.
+     *                The returned UI object does not have a parent and can be
+     *                inserted into another UI tree.
      */
     public function copy($id_suffix = '')
     {
@@ -284,7 +305,7 @@ abstract class SwatUIObject
      * @return array the array of CSS classes that are applied to this
      *               user-interface object.
      *
-     * @see SwatUIObject::getCSSClassString()
+     * @see UIObject::getCSSClassString()
      */
     protected function getCSSClassNames()
     {
@@ -316,7 +337,7 @@ abstract class SwatUIObject
      *                has no CSS classes, null is returned rather than a blank
      *                string.
      *
-     * @see SwatUIObject::getCSSClassNames()
+     * @see UIObject::getCSSClassNames()
      */
     protected final function getCSSClassString()
     {

@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNoteBookChild.php';
-require_once 'Swat/SwatContainer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A page in a {@link SwatNoteBook}
@@ -12,9 +12,9 @@ require_once 'Swat/SwatHtmlTag.php';
  * @package   Swat
  * @copyright 2007-2008 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatNoteBook
+ * @see       NoteBook
  */
-class SwatNoteBookPage extends SwatContainer implements SwatNoteBookChild
+class NoteBookPage extends Container implements NoteBookChild
 {
     // {{{ public properties
 
@@ -63,7 +63,7 @@ class SwatNoteBookPage extends SwatContainer implements SwatNoteBookChild
         if (!$this->visible)
             return;
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
@@ -77,7 +77,7 @@ class SwatNoteBookPage extends SwatContainer implements SwatNoteBookChild
     /**
      * Gets the notebook pages of this notebook page
      *
-     * Implements the {@link SwatNoteBookChild::getPages()} interface.
+     * Implements the {@link NoteBookChild::getPages()} interface.
      *
      * @return array an array containing this page.
      */

@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDate.php';
-require_once 'Swat/SwatTableViewColumn.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A visible grouping of rows in a table view
@@ -19,7 +21,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableViewGroup extends SwatTableViewColumn
+class TableViewGroup extends TableViewColumn
 {
     // {{{ public properties
 
@@ -73,11 +75,14 @@ class SwatTableViewGroup extends SwatTableViewColumn
      * @param mixed $next_row a data-object containing the data for the next
      *                        row being displayed in the table-view or null if
      *                        the current row is the last row.
+     *
+     * @throws Exception\Exception
      */
     public function displayFooter($row, $next_row)
     {
-        if ($this->group_by === null)
-            throw new SwatException("Attribute 'group_by' must be set.");
+        if ($this->group_by === null) {
+            throw new Exception\Exception("Attribute 'group_by' must be set.");
+        }
 
         $group_by = $this->group_by;
 
@@ -100,11 +105,11 @@ class SwatTableViewGroup extends SwatTableViewColumn
      */
     protected function displayGroupHeader($row)
     {
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->class = 'swat-table-view-group';
         $tr_tag->open();
 
-        $td_tag = new SwatHtmlTag('td', $this->getTdAttributes());
+        $td_tag = new Html\Tag('td', $this->getTdAttributes());
         $td_tag->colspan = $this->view->getXhtmlColspan();
         $td_tag->open();
         $this->displayRenderersInternal($row);
@@ -143,12 +148,13 @@ class SwatTableViewGroup extends SwatTableViewColumn
      * @param mixed $row a data object containing the data for a single row
      *                   in the table store for this group.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     protected function displayRenderers($row)
     {
-        if ($this->group_by === null)
-            throw new SwatException("Attribute 'group_by' must be set.");
+        if ($this->group_by === null) {
+            throw new Exception\Exception("Attribute 'group_by' must be set.");
+        }
 
         $group_by = $this->group_by;
 
@@ -176,9 +182,9 @@ class SwatTableViewGroup extends SwatTableViewColumn
      */
     protected function isEqual($group_value, $row_value)
     {
-        if ($group_value instanceof SwatDate &&
-            $row_value instanceof SwatDate) {
-            return (SwatDate::compare($group_value, $row_value) === 0);
+        if ($group_value instanceof Util\Date &&
+            $row_value instanceof Util\Date) {
+            return (Util\Date::compare($group_value, $row_value) === 0);
         }
 
         return ($group_value === $row_value);
@@ -216,7 +222,7 @@ class SwatTableViewGroup extends SwatTableViewColumn
      * case, the inside headers are reset so they display again in the new
      * outside header.
      *
-     * @see SwatTableViewGroup::resetSubGroups()
+     * @see TableViewGroup::resetSubGroups()
      */
     protected function reset()
     {

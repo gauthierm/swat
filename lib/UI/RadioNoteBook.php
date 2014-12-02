@@ -2,34 +2,32 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatNoteBookPage.php';
-require_once 'Swat/SwatNoteBookChild.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
- * Notebook widget for containing {@link SwatNoteBookPage} pages
+ * Notebook widget for containing {@link NoteBookPage} pages
  *
- * This notebook is controlled using radio buttons and is a
- * {@link SwatInputControl}.
+ * This notebook is controlled using radio buttons and is an
+ * {@link InputControl}.
  *
  * @package   Swat
  * @copyright 2012-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatNoteBookPage
+ * @see       NoteBookPage
  */
-class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
+class RadioNoteBook extends InputControl implements UIParent
 {
     // {{{ public properties
 
     /**
      * Selected page
      *
-     * The id of the {@link SwatNoteBookPage} to show as selected. By
-     * default, the first page is selected.
+     * The id of the {@link NoteBookPage} to show as selected. By default, the
+     * first page is selected.
      *
      * @var string
      */
@@ -66,7 +64,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'event', 'animation', 'selector'));
+        $yui = new Html\YUI(array('dom', 'event', 'animation', 'selector'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addStyleSheet(
@@ -82,32 +80,35 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
     // {{{ public function addChild()
 
     /**
-     * Adds a {@link SwatNoteBookChild} to this notebook
+     * Adds a {@link NoteBookChild} to this notebook
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used by
+     * {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To add a notebook page to a notebook, use
-     * {@link SwatRadioNoteBook::addPage()}.
+     * {@link RadioNoteBook::addPage()}.
      *
-     * Note: This is the only way to add a SwatNoteBookChild that is not a
-     *       SwatNoteBookPage.
+     * Note: This is the only way to add a NoteBookChild that is not a
+     *       NoteBookPage.
      *
-     * @param SwatNoteBookChild $child the notebook child to add.
+     * @param NoteBookChild $child the notebook child to add.
      *
-     * @throws SwatInvalidClassException if the given object is not an instance
-     *                                   of SwatNoteBookChild.
+     * @throws Exception\InvalidClassException if the given object is not an
+     *         instance of NoteBookChild.
      *
-     * @see SwatUIParent
+     * @see UIParent
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(Object $child)
     {
-        if ($child instanceof SwatNoteBookChild) {
+        if ($child instanceof NoteBookChild) {
             $this->children[] = $child;
             $child->parent = $this;
         } else {
-            throw new SwatInvalidClassException(
-                'Only SwatNoteBookChild objects may be nested within a '.
-                'SwatRadioNoteBook object.', 0, $child);
+            throw new Exception\InvalidClassException(
+                'Only NoteBookChild objects may be nested within a '.
+                'RadioNoteBook object.',
+                0,
+                $child
+            );
         }
     }
 
@@ -115,11 +116,11 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
     // {{{ public function addPage()
 
     /**
-     * Adds a {@link SwatNoteBookPage} to this notebook
+     * Adds a {@link NoteBookPage} to this notebook
      *
-     * @param SwatNoteBookPage $page the notebook page to add.
+     * @param NoteBookPage $page the notebook page to add.
      */
-    public function addPage(SwatNoteBookPage $page)
+    public function addPage(NoteBookPage $page)
     {
         $this->pages[] = $page;
         $page->parent = $this;
@@ -136,7 +137,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      *
      * @param string $id the unique id of the page to look for.
      *
-     * @return SwatNoteBookPage the found page or null if not found.
+     * @return NoteBookPage the found page or null if not found.
      */
     public function getPage($id)
     {
@@ -222,7 +223,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
             $this->displaySinglePage(reset($this->pages));
         } else {
 
-            $table = new SwatHtmlTag('table');
+            $table = new Html\Tag('table');
             $table->id = $this->id;
             $table->class = 'swat-radio-note-book';
             $table->open();
@@ -244,7 +245,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
 
             $table->close();
 
-            Swat::displayInlineJavaScript($this->getInlineJavaScript());
+            Util\JavaScript::displayInline($this->getInlineJavaScript());
 
         }
     }
@@ -277,9 +278,9 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      * Gathers all messages from pages of this notebook and from this notebook
      * itself.
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      *
-     * @see SwatMessage
+     * @see Model\Message
      */
     public function getMessages()
     {
@@ -318,13 +319,13 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the {@link SwatHtmlHeadEntry} objects needed by this notebook
+     * Gets the {@link Html\Resource} objects needed by this notebook
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this notebook and any UI objects in this
-     *                              notebook's widget subtree.
+     * @return Html\ResourceSet the Html\Resource objects needed by this
+     *                          notebook and any UI objects in this notebook's
+     *                          widget subtree.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -341,14 +342,14 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the {@link SwatHtmlHeadEntry} objects that may be needed by this
+     * Gets the {@link Html\Resource} objects that may be needed by this
      * notebook
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              needed by this notebook and any UI
-     *                              objects in this notebook's widget subtree.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed by
+     *                          by this notebook and any UI objects in this
+     *                          notebook's widget subtree.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -375,7 +376,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      *               objects have identifiers, the identifier is used as the
      *               array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -393,9 +394,12 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
                     $out[$page->id] = $page;
             }
 
-            if ($page instanceof SwatUIParent)
-                $out = array_merge($out,
-                    $page->getDescendants($class_name));
+            if ($page instanceof UIParent) {
+                $out = array_merge(
+                    $out,
+                    $page->getDescendants($class_name)
+                );
+            }
         }
 
         return $out;
@@ -409,10 +413,10 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -427,7 +431,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
                 break;
             }
 
-            if ($page instanceof SwatUIParent) {
+            if ($page instanceof UIParent) {
                 $out = $page->getFirstDescendant($class_name);
                 if ($out !== null)
                     break;
@@ -453,8 +457,10 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -473,9 +479,12 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -487,10 +496,9 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -545,16 +553,16 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
     /**
      * Displays an individual page in this radio notebook
      *
-     * @param SwatNoteBookPage $page  the page to display.
-     * @param integer          $count the ordinal index of the page being
-     *                                displayed starting at 1.
+     * @param NoteBookPage $page  the page to display.
+     * @param integer      $count the ordinal index of the page being
+     *                            displayed starting at 1.
      */
-    protected function displayPage(SwatNoteBookPage $page, $count = 0)
+    protected function displayPage(NoteBookPage $page, $count = 0)
     {
         echo '<tr class="swat-radio-note-book-option-row">';
         echo '<td>';
 
-        $radio = new SwatHtmlTag('input');
+        $radio = new Html\Tag('input');
         $radio->type = 'radio';
         $radio->name = $this->id;
         $radio->id = $this->id.'_'.$page->id;
@@ -572,7 +580,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
         echo '</td>';
         echo '<td>';
 
-        $label = new SwatHtmlTag('label');
+        $label = new Html\Tag('label');
         $label->for = $this->id.'_'.$page->id;
         $label->setContent($page->title, $page->title_content_type);
         $label->display();
@@ -583,7 +591,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
         echo '<tr class="swat-radio-note-book-page-row">';
         echo '<td></td>';
 
-        $td = new SwatHtmlTag('td');
+        $td = new Html\Tag('td');
         $td->class = 'swat-radio-note-book-page';
 
         if ($page->id == $this->selected_page) {
@@ -606,22 +614,22 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
      * Displays the only page of this notebook if this notebook contains only
      * one page
      *
-     * @param SwatNoteBookPage $page the page to display.
+     * @param NoteBookPage $page the page to display.
      */
-    protected function displaySinglePage(SwatNoteBookPage $page)
+    protected function displaySinglePage(NoteBookPage $page)
     {
-        $container = new SwatHtmlTag('div');
+        $container = new Html\Tag('div');
         $container->id = $this->id;
         $container->class = 'swat-radio-note-book';
         $container->open();
 
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->class = 'swat-radio-note-book-page';
         $div->open();
         $page->display();
         $div->close();
 
-        $input = new SwatHtmlTag('input');
+        $input = new Html\Tag('input');
         $input->type = 'hidden';
         $input->name = $this->id;
         $input->id = $this->id.'_'.$page->id;
@@ -644,7 +652,7 @@ class SwatRadioNoteBook extends SwatInputControl implements SwatUIParent
         return sprintf(
             'var %s_obj = new SwatRadioNoteBook(%s);',
             $this->id,
-            SwatString::quoteJavaScriptString($this->id)
+            Util\JavaScript::quoteString($this->id)
         );
     }
 

@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatFlydown.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A control for recording a rating out of a variable number of values
@@ -13,7 +15,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatRating extends SwatInputControl
+class Rating extends InputControl
 {
     // {{{ public properties
 
@@ -46,7 +48,7 @@ class SwatRating extends SwatInputControl
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'animation'));
+        $yui = new Html\YUI(array('dom', 'animation'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript('packages/swat/javascript/swat-rating.js');
@@ -101,7 +103,7 @@ class SwatRating extends SwatInputControl
         $flydown = $this->getCompositeWidget('flydown');
         $flydown->value = (string)$this->value;
 
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->id = $this->id;
         $div->class = $this->getCSSClassString();
         if (!$this->isSensitive()) {
@@ -111,7 +113,7 @@ class SwatRating extends SwatInputControl
         $flydown->display();
         $div->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -154,7 +156,7 @@ class SwatRating extends SwatInputControl
      */
     protected function getInlineJavaScript()
     {
-        $quoted_string = SwatString::quoteJavaScriptString($this->id);
+        $quoted_string = Util\JavaScript::quoteString($this->id);
         return sprintf('var %s_obj = new SwatRating(%s, %s);',
             $this->id, $quoted_string, intval($this->maximum_value));
     }
@@ -165,11 +167,11 @@ class SwatRating extends SwatInputControl
     /**
      * Creates the composite flydown used by this rating control
      *
-     * @see SwatWidget::createCompositeWidgets()
+     * @see Widget::createCompositeWidgets()
      */
     protected function createCompositeWidgets()
     {
-        $flydown = new SwatFlydown();
+        $flydown = new Flydown();
         $flydown->id = $this->id.'_flydown';
         $flydown->serialize_values = false;
         $this->addCompositeWidget($flydown, 'flydown');

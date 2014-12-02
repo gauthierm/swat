@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'ReCaptcha/ReCaptcha.php';
-require_once 'Swat/SwatMessage.php';
-require_once 'Swat/SwatInputControl.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\I18N;
+use Silverorange\Swat\L;
 
 /**
  * A widget used to display and validate reCAPTCHA's
@@ -13,7 +15,7 @@ require_once 'Swat/SwatInputControl.php';
  * @copyright 2007-2013 silverorange
  * @lisence   http://www.gnu.org/copyleft/lesser.html LGPL Lisence 2.1
  */
-class SwatReCaptcha extends SwatInputControl
+class ReCaptcha extends InputControl
 {
     // {{{ public properties
 
@@ -60,7 +62,7 @@ class SwatReCaptcha extends SwatInputControl
 
         /*
          * Second parameter is null because errors are displayed as
-         * SwatMessage objects affixed to this widget.
+         * Model\Message objects affixed to this widget.
          */
         ReCaptcha::display($this->public_key, null, $this->secure);
     }
@@ -88,16 +90,21 @@ class SwatReCaptcha extends SwatInputControl
             $remote_ip = $_SERVER['REMOTE_ADDR'];
         }
 
-        $response = ReCaptcha::validate($this->private_key,
+        $response = \ReCaptcha::validate(
+            $this->private_key,
             $remote_ip,
             $data['recaptcha_challenge_field'],
-            $data['recaptcha_response_field']);
+            $data['recaptcha_response_field']
+        );
 
         if (!$response->is_valid) {
-            $message = new SwatMessage(Swat::_(
-                'The words you entered did not match the words displayed. '.
-                'Please try again.'), 'error');
-
+            $message = new Model\Message(
+                L::_(
+                    'The words you entered did not match the words '.
+                    'displayed. Please try again.'
+                ),
+                'error'
+            );
             $this->addMessage($message);
         }
     }

@@ -2,8 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNumericCellRenderer.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\HtmHtmll;
+use Silverorange\Swat\I18N;
 
 /**
  * A rating cell renderer
@@ -12,7 +14,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2010-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatRatingCellRenderer extends SwatNumericCellRenderer
+class RatingCellRenderer extends NumericCellRenderer
 {
     // {{{ constants
 
@@ -49,19 +51,19 @@ class SwatRatingCellRenderer extends SwatNumericCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
         if (!$this->visible)
             return;
 
-        SwatCellRenderer::render();
+        CellRenderer::render();
 
         if ($this->value === null && $this->null_display_value !== null) {
             $this->renderNullValue();
         } elseif ($this->value !== null) {
-            $locale = SwatI18NLocale::get();
+            $locale = I18N\Locale::get();
 
             $value      = $this->getDisplayValue();
             $difference = $this->maximum_value - $value;
@@ -69,7 +71,7 @@ class SwatRatingCellRenderer extends SwatNumericCellRenderer
             $rating_class = floor(10 * min($value, $this->maximum_value));
             $rating_class = 'rating-'.$rating_class;
 
-            $outer_span = new SwatHtmlTag('span');
+            $outer_span = new Html\Tag('span');
             $outer_span->class = 'rating '.$rating_class;
             $outer_span->open();
 
@@ -78,13 +80,13 @@ class SwatRatingCellRenderer extends SwatNumericCellRenderer
                 $content.= str_repeat('☆', floor($difference));
             }
 
-            $value_tag = new SwatHtmlTag('span');
+            $value_tag = new Html\Tag('span');
             $value_tag->setContent($content);
             $value_tag->class = 'value';
             $value_tag->title = $locale->formatNumber($value, 1);
             $value_tag->display();
 
-            $best_tag = new SwatHtmlTag('span');
+            $best_tag = new Html\Tag('span');
             $best_tag->class = 'best';
             $best_tag->title = $locale->formatNumber($this->maximum_value, 1);
             $best_tag->setContent('');

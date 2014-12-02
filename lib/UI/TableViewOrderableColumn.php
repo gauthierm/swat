@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTableViewColumn.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * An orderable table view column.
@@ -19,7 +21,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2005-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableViewOrderableColumn extends SwatTableViewColumn
+class TableViewOrderableColumn extends TableViewColumn
 {
     // {{{ constants
 
@@ -59,21 +61,21 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
      *
      * @var string
      *
-     * @see SwatTableViewOrderableColumn::getLink()
+     * @see TableViewOrderableColumn::getLink()
      */
     public $link = '';
 
     /**
      * Optional setting of the ordering of null values.
      *
-     * Either {@link SwatTableViewOrderableColumn::NULLS_FIRST} or
-     * {@link SwatTableViewOrderableColumn::NULLS_LAST}. If not set, defaults to
+     * Either {@link TableViewOrderableColumn::NULLS_FIRST} or
+     * {@link TableViewOrderableColumn::NULLS_LAST}. If not set, defaults to
      * the databases default behaviour.
      *
      * For example, to order by nulls last when ordering use the following:
      *
      * <code>
-     * $column->nulls_ordering = SwatTableViewOrderableColumn::NULLS_LAST;
+     * $column->nulls_ordering = TableViewOrderableColumn::NULLS_LAST;
      * </code>
      *
      * @var integer
@@ -97,30 +99,30 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
      *
      * The current direction of ordering for this column. Valid values are:
      *
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_NONE},
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_DESCENDING}, and
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_ASCENDING}.
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_NONE},
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_DESCENDING}, and
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_ASCENDING}.
      *
      * @var integer
      */
-    protected $direction = SwatTableViewOrderableColumn::ORDER_BY_DIR_NONE;
+    protected $direction = TableViewOrderableColumn::ORDER_BY_DIR_NONE;
 
     /**
      * The default direction of ordering
      *
      * The default direction of ordering before the GET variables are processed.
      * When the GET variables are processed, they change
-     * {@link SwatTableViewOrderableColumn::$direction} and
+     * {@link TableViewOrderableColumn::$direction} and
      * <kbd>$default_direction</kbd> remains unchanged. Valid values are:
      *
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_NONE},
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_DESCENDING}, and
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_ASCENDING}.
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_NONE},
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_DESCENDING}, and
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_ASCENDING}.
      *
      * @var integer
      */
     protected $default_direction =
-        SwatTableViewOrderableColumn::ORDER_BY_DIR_NONE;
+        TableViewOrderableColumn::ORDER_BY_DIR_NONE;
 
     // }}}
     // {{{ private properties
@@ -133,7 +135,7 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
      *
      * @var integer
      */
-    //private $mode = SwatTableViewOrderableColumn::ORDER_MODE_TRISTATE;
+    //private $mode = TableViewOrderableColumn::ORDER_MODE_TRISTATE;
 
     // }}}
     // {{{ public function init()
@@ -158,9 +160,9 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
      * This method sets the direction of ordering of the column, either asc,
      * desc, or none. Valid directions are:
      *
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_NONE},
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_DESCENDING}, and
-     * - {@link SwatTableViewOrderableColumn::ORDER_BY_DIR_ASCENDING}.
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_NONE},
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_DESCENDING}, and
+     * - {@link TableViewOrderableColumn::ORDER_BY_DIR_ASCENDING}.
      *
      * @param $direction integer One of the ORDER_BY_DIR_* class contants
      */
@@ -191,7 +193,7 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
      */
     public function displayHeader()
     {
-        $anchor = new SwatHtmlTag('a');
+        $anchor = new Html\Tag('a');
         $anchor->href = $this->getLink();
         $anchor->class = 'swat-table-view-orderable-column';
 
@@ -210,7 +212,7 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
                 $this->title_content_type
             );
         } else {
-            $abbr_tag = new SwatHtmlTag('abbr');
+            $abbr_tag = new Html\Tag('abbr');
             $abbr_tag->title = $this->title;
             $abbr_tag->open();
 
@@ -266,9 +268,12 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
             break;
 
         default:
-            throw new SwatException(sprintf(
-                "Ordering direction '%s' not found.",
-                $direction_id));
+            throw new Exception\Exception(
+                sprintf(
+                    "Ordering direction '%s' not found.",
+                    $direction_id
+                )
+            );
         }
 
         if ($include_nulls_ordering && $this->nulls_ordering !== null) {
@@ -282,9 +287,12 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
                 break;
 
             default:
-                throw new SwatException(
-                    sprintf("Nulls ordering '%s' not found.",
-                        $this->nulls_ordering));
+                throw new Exception\Exception(
+                    sprintf(
+                        "Nulls ordering '%s' not found.",
+                        $this->nulls_ordering
+                    )
+                );
             }
         }
 
@@ -308,12 +316,12 @@ class SwatTableViewOrderableColumn extends SwatTableViewColumn
         }
 
         if ($content_type === 'text/plain') {
-            echo SwatString::minimizeEntities($title);
+            echo Util\String::minimizeEntities($title);
         } else {
             echo $title;
         }
 
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->class = 'swat-table-view-orderable-column-title-last';
         $span_tag->setContent($last_word, $content_type);
         $span_tag->display();

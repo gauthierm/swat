@@ -2,10 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTableViewRow.php';
-require_once 'Swat/SwatCheckAll.php';
-require_once 'Swat/SwatTableViewColumn.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
 
 /**
  * A an extra row containing a check-all widget
@@ -14,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableViewCheckAllRow extends SwatTableViewRow
+class TableViewCheckAllRow extends TableViewRow
 {
     // {{{ public properties
 
@@ -81,7 +80,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
     /**
      * The check-all widget for this row
      *
-     * @var SwatCheckAll
+     * @var CheckAll
      */
     protected $check_all;
 
@@ -91,7 +90,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
     /**
      * The table-view checkbox column to which this check-all row is bound
      *
-     * @var SwatTableViewCheckboxColumn
+     * @var TableViewCheckboxColumn
      */
     private $column;
 
@@ -101,7 +100,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
      *
      * @var string
      *
-     * @see SwatTableViewCheckAllRow::__construct()
+     * @see TableViewCheckAllRow::__construct()
      */
     private $list_id;
 
@@ -111,7 +110,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
      *
      * @var boolean
      *
-     * @see SwatTableViewCheckAllRow::createEmbeddedWidgets()
+     * @see TableViewCheckAllRow::createEmbeddedWidgets()
      */
     private $widgets_created = false;
 
@@ -121,15 +120,15 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
     /**
      * Creates a new table-view check-all row
      *
-     * @param SwatTableViewCheckboxColumn $column  the table-view checkbox
-     *                                             column to which this
-     *                                             check-all row is bound.
-     * @param string                      $list_id the identifier of the
-     *                                             checkbox list that controls
-     *                                             the check-all widget of this
-     *                                             row.
+     * @param TableViewCheckboxColumn $column  the table-view checkbox
+     *                                         column to which this
+     *                                         check-all row is bound.
+     * @param string                  $list_id the identifier of the
+     *                                         checkbox list that controls
+     *                                         the check-all widget of this
+     *                                         row.
      */
-    public function __construct(SwatTableViewCheckboxColumn $column, $list_id)
+    public function __construct(TableViewCheckboxColumn $column, $list_id)
     {
         parent::__construct();
         $this->column = $column;
@@ -140,12 +139,12 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this check-all row
+     * Gets the Html\Resource objects needed by this check-all row
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
+     * @return Html\ResourceSet the Html\Resource objects needed by
      *                              this check-all row.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -161,13 +160,13 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this
+     * Gets the Html\Resource objects that may be needed by this
      * check-all row
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
+     * @return Html\ResourceSet the Html\Resource objects that may be
      *                              needed by this check-all row.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -234,7 +233,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
 
         $columns = $this->view->getVisibleColumns();
 
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->id = $this->id;
         $tr_tag->class = $this->getCSSClassString();
         $tr_tag->open();
@@ -249,7 +248,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
         }
 
         if ($position > 0) {
-            $td_before_tag = new SwatHtmlTag('td');
+            $td_before_tag = new Html\Tag('td');
             $td_before_tag->setContent('&nbsp;', 'text/xml');
             if ($position > 1)
                 $td_before_tag->colspan = $position;
@@ -257,7 +256,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
             $td_before_tag->display();
         }
 
-        $td_tag = new SwatHtmlTag('td');
+        $td_tag = new Html\Tag('td');
         if (count($columns) - $position > 1)
             $td_tag->colspan = count($columns) - $position;
 
@@ -286,7 +285,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
      *
      * @return string the inline JavaScript required for this check-all row.
      *
-     * @see SwatTableViewRow::getInlineJavaScript()
+     * @see TableViewRow::getInlineJavaScript()
      */
     public function getInlineJavaScript()
     {
@@ -307,7 +306,7 @@ class SwatTableViewCheckAllRow extends SwatTableViewRow
     private function createEmbeddedWidgets()
     {
         if (!$this->widgets_created) {
-            $this->check_all = new SwatCheckAll();
+            $this->check_all = new CheckAll();
             $this->check_all->parent = $this;
 
             $this->widgets_created = true;

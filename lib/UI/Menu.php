@@ -2,11 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatAbstractMenu.php';
-require_once 'Swat/SwatMenuItem.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A basic menu control
@@ -15,14 +15,14 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatMenuItem
+ * @see MenuItem
  */
-class SwatMenu extends SwatAbstractMenu implements SwatUIParent
+class Menu extends AbstractMenu implements UIParent
 {
     // {{{ protected properties
 
     /**
-     * The set of SwatMenuItem objects contained in this menu
+     * The set of MenuItem objects contained in this menu
      *
      * @var array
      */
@@ -34,9 +34,9 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
     /**
      * Adds a menu item to this menu
      *
-     * @param SwatMenuItem $item the item to add.
+     * @param MenuItem $item the item to add.
      */
-    public function addItem(SwatMenuItem $item)
+    public function addItem(MenuItem $item)
     {
         $this->items[] = $item;
         $item->parent = $this;
@@ -48,25 +48,30 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used by
+     * {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To add a menu item to a menu, use
-     * {@link SwatMenu::addItem()}.
+     * {@link Menu::addItem()}.
      *
-     * @param SwatMenuItem $child the child object to add.
+     * @param MenuItem $child the child object to add.
      *
-     * @throws SwatInvalidClassException
+     * @throws Exception\InvalidClassException
      *
-     * @see SwatUIParent, SwatUI, SwatMenu::addItem()
+     * @see UIParent
+     * @see Loader
+     * @see Menu::addItem()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(UIObject $child)
     {
-        if ($child instanceof SwatMenuItem)
+        if ($child instanceof MenuItem) {
             $this->addItem($child);
-        else
-            throw new SwatInvalidClassException(
-                'Only SwatMenuItem objects may be nested within a '.
-                'SwatMenu object.', 0, $child);
+        } else {
+            throw new Exception\InvalidClassException(
+                'Only MenuItem objects may be nested within a Menu object.',
+                0,
+                $child
+            );
+        }
     }
 
     // }}}
@@ -97,18 +102,18 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
 
         $displayed_classes = array();
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
 
         echo '<div class="bd">';
 
-        $ul_tag = new SwatHtmlTag('ul');
+        $ul_tag = new Html\Tag('ul');
         $ul_tag->class = 'first-of-type';
         $ul_tag->open();
 
-        $li_tag = new SwatHtmlTag('li');
+        $li_tag = new Html\Tag('li');
         $li_tag->class = $this->getMenuItemCSSClassName().' first-of-type';
         $first = true;
         foreach ($this->items as $item) {
@@ -132,8 +137,9 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
 
         $div_tag->close();
 
-        if ($this->parent === null || !($this->parent instanceof SwatMenuItem))
-            Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        if ($this->parent === null || !$this->parent instanceof MenuItem) {
+            Util\JavaScript::displayInline($this->getInlineJavaScript());
+        }
     }
 
     // }}}
@@ -150,7 +156,7 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
      *               objects have identifiers, the identifier is used as the
      *               array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -168,8 +174,9 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
                     $out[$item->id] = $item;
             }
 
-            if ($item instanceof SwatUIParent)
+            if ($item instanceof UIParent) {
                 $out = array_merge($out, $item->getDescendants($class_name));
+            }
         }
 
         return $out;
@@ -183,10 +190,10 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return UIObject the first descendant UI-object or null if no matching
+     *                  descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -201,7 +208,7 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
                 break;
             }
 
-            if ($item instanceof SwatUIParent) {
+            if ($item instanceof UIParent) {
                 $out = $item->getFirstDescendant($class_name);
                 if ($out !== null)
                     break;
@@ -227,8 +234,10 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -247,9 +256,12 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -261,10 +273,9 @@ class SwatMenu extends SwatAbstractMenu implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return UIObject a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {

@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatFormField.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A container to use around control widgets in a form
@@ -13,7 +13,7 @@ require_once 'Swat/SwatFormField.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatHeaderFormField extends SwatFormField
+class HeaderFormField extends FormField
 {
     // {{{ protected function getCSSClassNames()
 

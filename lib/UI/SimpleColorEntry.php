@@ -2,7 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatAbstractOverlay.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * Simple color selector widget.
@@ -14,7 +18,7 @@ require_once 'Swat/SwatAbstractOverlay.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatSimpleColorEntry extends SwatAbstractOverlay
+class SimpleColorEntry extends AbstractOverlay
 {
     // {{{ public properties
 
@@ -51,7 +55,7 @@ class SwatSimpleColorEntry extends SwatAbstractOverlay
         'fcaf3e', 'f57900', 'ce5c00', 'e9b96e', 'c17d11', '8f5902',
         '8ae234', '73d216', '4e9a06', '729fcf', '3465a4', '204a87',
         'ad7fa8', '75507b', '5c3566', 'ef2929', 'cc0000', 'a40000',
-        );
+    );
 
     // }}}
     // {{{ public function __construct()
@@ -61,14 +65,14 @@ class SwatSimpleColorEntry extends SwatAbstractOverlay
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
 
         if ($this->none_option_title === null) {
-            $this->none_option_title = Swat::_('None');
+            $this->none_option_title = L::_('None');
         }
 
         $this->addJavaScript(
@@ -112,10 +116,11 @@ class SwatSimpleColorEntry extends SwatAbstractOverlay
 
         } elseif ($this->value !== null &&
             !$this->validateColor($this->value)) {
-            $message = sprintf(Swat::_('“%s” is not a valid color.'),
-                $this->value);
-
-            $this->addMessage(new SwatMessage($message, 'error'));
+            $message = sprintf(
+                L::_('“%s” is not a valid color.'),
+                $this->value
+            );
+            $this->addMessage(new Model\Message($message, 'error'));
         }
     }
 
@@ -153,8 +158,9 @@ class SwatSimpleColorEntry extends SwatAbstractOverlay
         $colors = "'".implode("', '", $this->colors)."'";
 
         if ($this->none_option) {
-            $none_option = ($this->none_option_title === null) ? 'null' :
-                SwatString::quoteJavaScriptString($this->none_option_title);
+            $none_option = ($this->none_option_title === null)
+                ? 'null'
+                : Util\JavaScript::quoteString($this->none_option_title);
         } else {
             $none_option = 'null';
         }

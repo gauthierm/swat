@@ -2,8 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTableViewColumn.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\L;
 
 /**
  * This is a table view column that gets its own row.
@@ -12,7 +14,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableViewSpanningColumn extends SwatTableViewColumn
+class TableViewSpanningColumn extends TableViewColumn
 {
     // {{{ public properties
 
@@ -63,7 +65,7 @@ class SwatTableViewSpanningColumn extends SwatTableViewColumn
      * @param mixed $data the data object being used to render the cell
      *                    renderers of this field.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     protected function displayRenderers($row)
     {
@@ -73,24 +75,24 @@ class SwatTableViewSpanningColumn extends SwatTableViewColumn
             if ($offset == 0)
                 $offset = 1;
 
-            $th_tag = new SwatHtmlTag('th', $this->getThAttributes());
+            $th_tag = new Html\Tag('th', $this->getThAttributes());
             $th_tag->colspan = $offset;
             $th_tag->setContent(
                 sprintf(
-                    Swat::_('%s:'),
+                    L::_('%s:'),
                     $this->title
                 ),
                 $this->title_content_type
             );
             $th_tag->display();
         } elseif ($offset > 0) {
-            $td_tag = new SwatHtmlTag('td');
+            $td_tag = new Html\Tag('td');
             $td_tag->colspan = $offset;
             $td_tag->setContent('&nbsp;', 'text/xml');
             $td_tag->display();
         }
 
-        $td_tag = new SwatHtmlTag('td', $this->getTdAttributes());
+        $td_tag = new Html\Tag('td', $this->getTdAttributes());
         $td_tag->colspan =
             $this->view->getXhtmlColspan() - $offset;
 

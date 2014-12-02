@@ -2,26 +2,25 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatMenuItem.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
 
 /**
  * A group of menu items
  *
- * SwatMenuGroup objects are added to {@link SwatGroupedMenu} objects and are
- * used to group together a set of {@link SwatMenuItem} objects.
+ * MenuGroup objects are added to {@link GroupedMenu} objects and are used to
+ * group together a set of {@link MenuItem} objects.
  *
  * @package   Swat
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatGroupedMenu
- * @see SwatMenuItem
+ * @see GroupedMenu
+ * @see MenuItem
  */
-class SwatMenuGroup extends SwatControl implements SwatUIParent
+class MenuGroup extends Control implements UIParent
 {
     // {{{ public properties
 
@@ -36,7 +35,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
     // {{{ protected properties
 
     /**
-     * The set of SwatMenuItem objects contained in this group
+     * The set of MenuItem objects contained in this group
      *
      * @var array
      */
@@ -48,9 +47,9 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
     /**
      * Adds a menu item to this group
      *
-     * @param SwatMenuItem $item the item to add.
+     * @param MenuItem $item the item to add.
      */
-    public function addItem(SwatMenuItem $item)
+    public function addItem(MenuItem $item)
     {
         $this->items[] = $item;
         $item->parent = $this;
@@ -62,26 +61,30 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used
+     * by {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To add a menu item to a menu group, use
-     * {@link SwatMenuGroup::addItem()}.
+     * {@link MenuGroup::addItem()}.
      *
-     * @param SwatMenuItem $child the child object to add.
+     * @param MenuItem $child the child object to add.
      *
-     * @throws SwatInvalidClassException
+     * @throws Exception\InvalidClassException
      *
-     * @see SwatUIParent
-     * @see SwatMenuGroup::addItem()
+     * @see UIParent
+     * @see MenuGroup::addItem()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(UIObject $child)
     {
-        if ($child instanceof SwatMenuItem)
+        if ($child instanceof MenuItem) {
             $this->addItem($child);
-        else
-            throw new SwatInvalidClassException(
-                'Only SwatMenuItem objects may be nested within a '.
-                'SwatMenuGroup object.', 0, $child);
+        } else {
+            throw new Exception\InvalidClassException(
+                'Only MenuItem objects may be nested within a MenuGroup '.
+                'object.',
+                0,
+                $child
+            );
+        }
     }
 
     // }}}
@@ -91,7 +94,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      * Displays this menu group
      *
      * @param boolean $first optional. Whether or not this group is the first
-     *                       group in a {@link SwatGroupedMenu}. Defaults to
+     *                       group in a {@link GroupedMenu}. Defaults to
      *                       false.
      */
     public function display($first = false)
@@ -102,7 +105,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
         parent::display();
 
         if ($this->title !== null) {
-            $header_tag = new SwatHtmlTag('h6');
+            $header_tag = new Html\Tag('h6');
             if ($first)
                 $header_tag->class = 'first-of-type';
 
@@ -110,14 +113,14 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
             $header_tag->display();
         }
 
-        $ul_tag = new SwatHtmlTag('ul');
+        $ul_tag = new Html\Tag('ul');
         $ul_tag->class = ($this->title === null) ? '' : 'hastitle ';
         if ($first)
             $ul_tag->class.= 'first-of-type';
 
         $ul_tag->open();
 
-        $li_tag = new SwatHtmlTag('li');
+        $li_tag = new Html\Tag('li');
         $li_tag->class = 'first-of-type';
         $first = true;
         foreach ($this->items as $item) {
@@ -142,7 +145,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
     // {{{ public function setMenuItemValues()
 
     /**
-     * Sets the value of all {@link SwatMenuItem} objects within this menu
+     * Sets the value of all {@link MenuItem} objects within this menu
      * group
      *
      * This is usually easier than setting all the values manually if the
@@ -152,7 +155,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      */
     public function setMenuItemValues($value)
     {
-        $items = $this->getDescendants('SwatMenuItem');
+        $items = $this->getDescendants('\Silverorange\Swat\UI\MenuItem');
         foreach ($items as $item)
             $item->value = $value;
     }
@@ -171,7 +174,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -189,8 +192,9 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
                     $out[$item->id] = $item;
             }
 
-            if ($item instanceof SwatUIParent)
+            if ($item instanceof UIParent) {
                 $out = array_merge($out, $item->getDescendants($class_name));
+            }
         }
 
         return $out;
@@ -204,10 +208,10 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return UIObject the first descendant UI-object or null if no matching
+     *                  descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -222,7 +226,7 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
                 break;
             }
 
-            if ($item instanceof SwatUIParent) {
+            if ($item instanceof UIParent) {
                 $out = $item->getFirstDescendant($class_name);
                 if ($out !== null)
                     break;
@@ -248,8 +252,10 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -268,9 +274,12 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -282,10 +291,9 @@ class SwatMenuGroup extends SwatControl implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return UIObject a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {

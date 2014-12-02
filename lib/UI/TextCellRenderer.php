@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Util;
 
 /**
  * A text cell renderer
@@ -12,7 +13,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2004-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTextCellRenderer extends SwatCellRenderer
+class TextCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -26,7 +27,7 @@ class SwatTextCellRenderer extends SwatCellRenderer
      *
      * @var string
      *
-     * @see SwatTextCellRenderer::$value
+     * @see TextCellRenderer::$value
      */
     public $text = '';
 
@@ -44,12 +45,12 @@ class SwatTextCellRenderer extends SwatCellRenderer
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatTextCellRenderer::$text} property. If the value
-     * is a string a single sprintf() call is made.
+     * on the {@link TextCellRenderer::$text} property. If the value is a
+     * string a single sprintf() call is made.
      *
      * @var mixed
      *
-     * @see SwatTextCellRenderer::$text
+     * @see TextCellRenderer::$text
      */
     public $value = null;
 
@@ -59,7 +60,7 @@ class SwatTextCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -76,7 +77,7 @@ class SwatTextCellRenderer extends SwatCellRenderer
             $text = sprintf($this->text, $this->value);
 
         if ($this->content_type === 'text/plain')
-            echo SwatString::minimizeEntities($text);
+            echo Util\String::minimizeEntities($text);
         else
             echo $text;
     }

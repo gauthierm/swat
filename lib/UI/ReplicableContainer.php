@@ -2,8 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDisplayableContainer.php';
-require_once 'Swat/SwatReplicable.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A container that replicates itself and its children
@@ -12,8 +11,7 @@ require_once 'Swat/SwatReplicable.php';
  * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatReplicableContainer extends SwatDisplayableContainer
-    implements SwatReplicable
+class ReplicableContainer extends DisplayableContainer implements Replicable
 {
     // {{{ public properties
 
@@ -41,7 +39,7 @@ class SwatReplicableContainer extends SwatDisplayableContainer
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -89,7 +87,7 @@ class SwatReplicableContainer extends SwatDisplayableContainer
             if ($widget->id !== null)
                 $this->widgets[$id][$prototype_widget->id] = $widget;
 
-            if ($widget instanceof SwatUIParent) {
+            if ($widget instanceof UIParent) {
                 foreach ($widget->getDescendants() as $descendant) {
                     if ($descendant->id !== null) {
                         $old_id = substr($descendant->id, 0, -strlen($suffix));
@@ -111,8 +109,8 @@ class SwatReplicableContainer extends SwatDisplayableContainer
      * @param string $widget_id     the unique id of the original widget.
      * @param string $replicator_id the replicator id of the replicated widget.
      *
-     * @return SwatWidget a reference to the replicated widget, or null if the
-     *                    widget is not found.
+     * @return Widget a reference to the replicated widget, or null if the
+     *                widget is not found.
      */
     public function getWidget($widget_id, $replicator_id)
     {

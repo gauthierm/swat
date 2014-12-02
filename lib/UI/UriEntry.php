@@ -2,7 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatEntry.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * A URI entry widget
@@ -16,7 +19,7 @@ require_once 'Swat/SwatEntry.php';
  * @copyright 2005-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatUriEntry extends SwatEntry
+class UriEntry extends Entry
 {
     // {{{ public properties
 
@@ -131,28 +134,29 @@ class SwatUriEntry extends SwatEntry
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'scheme-required':
-            $text = sprintf(Swat::_('“%s” must include a prefix (i.e. %s).'),
+            $text = sprintf(
+                L::_('“%s” must include a prefix (i.e. %s).'),
                 $this->value,
-                $this->default_scheme);
-
+                $this->default_scheme
+            );
             break;
         case 'invalid-uri':
             $text = sprintf(
-                Swat::_('“%s” is not a properly formatted address.'),
-                $this->value);
-
+                L::_('“%s” is not a properly formatted address.'),
+                $this->value
+            );
             break;
         default:
             return parent::getValidationMessage($id);
         }
 
-        $message = new SwatMessage($text, 'error');
+        $message = new Model\Message($text, 'error');
         return $message;
     }
 

@@ -2,20 +2,21 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\L;
 
 /**
  * A widget to allow navigation between paged data
  *
- * SwatPagination pages start at page 1, not page 0.
+ * Pagination pages start at page 1, not page 0.
  *
  * @package   Swat
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatPagination extends SwatControl
+class Pagination extends Control
 {
     // {{{ class constants
 
@@ -97,20 +98,20 @@ class SwatPagination extends SwatControl
      * Displayed pagination parts
      *
      * The display parts property is a bitwise combination of the
-     * {@link SwatPagination::PREV}, {@link SwatPagination::NEXT},
-     * {@link SwatPagination::PAGES} and {@link SwatPagination::POSITION}
+     * {@link Pagination::PREV}, {@link Pagination::NEXT},
+     * {@link Pagination::PAGES} and {@link Pagination::POSITION}
      * constants.
      *
      * For example, to show a pagination widget with just next and previous
      * links use the following:
      *
      * <code>
-     * $pagination->display_parts = SwatPagination::PREV |
-     *     SwatPagination::NEXT;
+     * $pagination->display_parts = Pagination::PREV |
+     *     Pagination::NEXT;
      * </code>
      *
-     * Defaults to <code>SwatPagination::POSITION | SwatPagination::NEXT |
-     * SwatPagination::PREV | SwatPagination::PAGES</code>.
+     * Defaults to <code>Pagination::POSITION | Pagination::NEXT |
+     * Pagination::PREV | Pagination::PAGES</code>.
      *
      * @var integer
      */
@@ -157,7 +158,7 @@ class SwatPagination extends SwatControl
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -168,9 +169,9 @@ class SwatPagination extends SwatControl
         $this->display_parts  = self::POSITION | self::NEXT |
                                 self::PREV | self::PAGES;
 
-        /* These strings include a non-breaking space */
-        $this->previous_label = Swat::_('‹ Previous');
-        $this->next_label = Swat::_('Next ›');
+        // These strings include a non-breaking space
+        $this->previous_label = L::_('‹ Previous');
+        $this->next_label = L::_('Next ›');
 
         $this->addStyleSheet('packages/swat/styles/swat-pagination.css');
     }
@@ -194,27 +195,33 @@ class SwatPagination extends SwatControl
     public function getResultsMessage($unit = null, $unit_plural = null)
     {
         if ($unit === null)
-            $unit = Swat::_('record');
+            $unit = L::_('record');
 
         if ($unit_plural === null)
-            $unit_plural = Swat::_('records');
+            $unit_plural = L::_('records');
 
         $message = '';
 
         if ($this->total_records == 0) {
-            $message = sprintf(Swat::_('No %s.'), $unit_plural);
+            $message = sprintf(L::_('No %s.'), $unit_plural);
 
         } elseif ($this->total_records == 1) {
-            $message = sprintf(Swat::_('One %s.'), $unit);
+            $message = sprintf(L::_('One %s.'), $unit);
 
         } else {
-            $locale = SwatI18NLocale::get();
-            $message = sprintf(Swat::_('%s %s, displaying %s to %s'),
+            $locale = I18N\Locale::get();
+            $message = sprintf(
+                L::_('%s %s, displaying %s to %s'),
                 $locale->formatNumber($this->total_records),
                 $unit_plural,
                 $locale->formatNumber($this->current_record + 1),
-                $locale->formatNumber(min($this->current_record +
-                    $this->page_size, $this->total_records)));
+                $locale->formatNumber(
+                    min(
+                        $this->current_record + $this->page_size,
+                        $this->total_records
+                    )
+                )
+            );
         }
 
         return $message;
@@ -236,7 +243,7 @@ class SwatPagination extends SwatControl
         $this->calculatePages();
 
         if ($this->total_pages > 1) {
-            $div_tag = new SwatHtmlTag('div');
+            $div_tag = new Html\Tag('div');
             $div_tag->id = $this->id;
             $div_tag->class = $this->getCSSClassString();
             $div_tag->open();
@@ -298,14 +305,14 @@ class SwatPagination extends SwatControl
         if ($this->prev_page > 0) {
             $link = $this->getLink();
 
-            $anchor = new SwatHtmlTag('a');
+            $anchor = new Html\Tag('a');
             $anchor->href = sprintf($link, (string)$this->prev_page);
             // this is a non-breaking space
             $anchor->setContent($this->previous_label);
             $anchor->class = 'swat-pagination-nextprev';
             $anchor->display();
         } else {
-            $span = new SwatHtmlTag('span');
+            $span = new Html\Tag('span');
             $span->class = 'swat-pagination-nextprev';
             $span->setContent($this->previous_label);
             $span->display();
@@ -322,11 +329,16 @@ class SwatPagination extends SwatControl
      */
     protected function displayPosition()
     {
-        $div = new SwatHtmlTag('div');
+        $div = new Html\Tag('div');
         $div->class = 'swat-pagination-position';
 
-        $div->setContent(sprintf(Swat::_('Page %d of %d'),
-            $this->current_page, $this->total_pages));
+        $div->setContent(
+            sprintf(
+                L::_('Page %d of %d'),
+                $this->current_page,
+                $this->total_pages
+            )
+        );
 
         $div->display();
     }
@@ -342,14 +354,14 @@ class SwatPagination extends SwatControl
         if ($this->next_page > 0) {
             $link = $this->getLink();
 
-            $anchor = new SwatHtmlTag('a');
+            $anchor = new Html\Tag('a');
             $anchor->href = sprintf($link, (string)$this->next_page);
             // this is a non-breaking space
             $anchor->setContent($this->next_label);
             $anchor->class = 'swat-pagination-nextprev';
             $anchor->display();
         } else {
-            $span = new SwatHtmlTag('span');
+            $span = new Html\Tag('span');
             $span->class = 'swat-pagination-nextprev';
             // this is a non-breaking space
             $span->setContent($this->next_label);
@@ -369,9 +381,9 @@ class SwatPagination extends SwatControl
 
         $link = $this->getLink();
 
-        $anchor = new SwatHtmlTag('a');
-        $span = new SwatHtmlTag('span');
-        $current = new SwatHtmlTag('span');
+        $anchor = new Html\Tag('a');
+        $span = new Html\Tag('span');
+        $current = new Html\Tag('span');
         $current->class = 'swat-pagination-current';
 
         for ($i = 1; $i <= $this->total_pages; $i++) {
@@ -406,8 +418,7 @@ class SwatPagination extends SwatControl
                     $current->display();
                 } else {
                     $anchor->href = sprintf($link, (string)$i);
-                    $anchor->title =
-                        sprintf(Swat::_('Go to page %d'), ($i));
+                    $anchor->title = sprintf(L::_('Go to page %d'), $i);
 
                     $anchor->setContent((string)($i));
                     $anchor->display();

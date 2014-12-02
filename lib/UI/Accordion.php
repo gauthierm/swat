@@ -2,10 +2,13 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNoteBook.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
- * Accordion widget containing {@link SwatNoteBookPage} pages.
+ * Accordion widget containing {@link NoteBookPage} pages.
  *
  * This widget is like a notebook but instead of tabs, pages are displayed
  * stacked and open and close like disclosures. It sounds like a ye-olde
@@ -14,9 +17,9 @@ require_once 'Swat/SwatNoteBook.php';
  * @package   Swat
  * @copyright 2011-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatNoteBookPage
+ * @see       NoteBookPage
  */
-class SwatAccordion extends SwatNoteBook
+class Accordion extends NoteBook
 {
     // {{{ public properties
 
@@ -68,7 +71,7 @@ class SwatAccordion extends SwatNoteBook
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $li_counter = 0;
 

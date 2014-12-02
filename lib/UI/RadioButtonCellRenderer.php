@@ -1,24 +1,24 @@
 <?php
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'Swat/SwatViewSelector.php';
-require_once 'Swat/SwatViewSelection.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatException.php';
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Exception;
 
 /**
  * A view selector cell renderer displayed as a radio button
  *
  * Only one row may be selected by this selector. If you need to select
- * multiple rows, use {@link SwatCheckboxCellRenderer}.
+ * multiple rows, use {@link CheckboxCellRenderer}.
  *
  * @package   Swat
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatViewSelector
+ * @see       ViewSelector
  */
-class SwatRadioButtonCellRenderer extends SwatCellRenderer
-    implements SwatViewSelector
+class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
 {
     // {{{ public properties
 
@@ -88,7 +88,7 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
 
         $this->makePropertyStatic('id');
 
-        $yui = new SwatYUI(array('dom'));
+        $yui = new Html\YUI(array('dom'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript(
             'packages/swat/javascript/swat-radio-button-cell-renderer.js'
@@ -112,11 +112,11 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
             if (isset($data[$this->id])) {
                 $this->selected_value = $data[$this->id];
 
-                $view = $this->getFirstAncestor('SwatView');
+                $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
                 if ($view !== null) {
-                    $selection = new SwatViewSelection(
-                        array($this->selected_value));
-
+                    $selection = new ViewSelection(
+                        array($this->selected_value)
+                    );
                     $view->setSelection($selection, $this);
                 }
             }
@@ -137,13 +137,13 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
         parent::render();
 
         if ($this->title !== null) {
-            $label_tag = new SwatHtmlTag('label');
+            $label_tag = new Html\Tag('label');
             $label_tag->for = $this->id.'_radio_button_'.$this->value;
             $label_tag->setContent($this->title, $this->content_type);
             $label_tag->open();
         }
 
-        $radio_button_tag = new SwatHtmlTag('input');
+        $radio_button_tag = new Html\Tag('input');
         $radio_button_tag->type = 'radio';
         $radio_button_tag->name = $this->id;
         $radio_button_tag->id = $this->id.'_radio_button_'.$this->value;
@@ -151,7 +151,7 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
         if (!$this->sensitive)
             $radio_button_tag->disabled = 'disabled';
 
-        $view = $this->getFirstAncestor('SwatView');
+        $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
         if ($view !== null) {
             $selection = $view->getSelection($this);
             if ($selection->contains($this->value))
@@ -175,7 +175,7 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
     /**
      * Gets the identifier of this checkbox cell renderer
      *
-     * Satisfies the {@link SwatViewSelector} interface.
+     * Satisfies the {@link ViewSelector} interface.
      *
      * @return string the identifier of this checkbox cell renderer.
      */
@@ -195,7 +195,7 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
      */
     public function getInlineJavaScript()
     {
-        $view = $this->getFirstAncestor('SwatView');
+        $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
         if ($view !== null) {
             $javascript = sprintf(
                 "var %s = new SwatRadioButtonCellRenderer('%s', %s);",
@@ -216,10 +216,9 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -237,19 +236,22 @@ class SwatRadioButtonCellRenderer extends SwatCellRenderer
     /**
      * Gets the form this radio button cell renderer is contained in
      *
-     * @return SwatForm the form this radio button cell renderer is contained
+     * @return Form the form this radio button cell renderer is contained
      *                  in.
      *
-     * @throws SwatException if this radio button cell renderer does not have a
-     *                       SwatForm ancestor.
+     * @throws Exception\Exception if this radio button cell renderer does not
+     *         have a Form ancestor.
      */
     private function getForm()
     {
-        $form = $this->getFirstAncestor('SwatForm');
+        $form = $this->getFirstAncestor('\Silverorange\Swat\UI\Form');
 
-        if ($form === null)
-            throw new SwatException('SwatRadioButtonCellRenderer must have '.
-                'a SwatForm ancestor in the UI tree.');
+        if ($form === null) {
+            throw new Exception\Exception(
+                'RadioButtonCellRenderer must have a Form ancestor in the '.
+                'UI tree.'
+            );
+        }
 
         return $form;
     }

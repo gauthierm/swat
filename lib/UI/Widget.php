@@ -2,10 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatUIObject.php';
-require_once 'Swat/SwatMessage.php';
-require_once 'Swat/exceptions/SwatDuplicateIdException.php';
-require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
 
 /**
  * Base class for all widgets
@@ -13,18 +14,18 @@ require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
  * <strong>Widget composition:</strong>
  *
  * Complicated widgets composed of multiple individual widgets can be easily
- * built using <code>SwatWidget</code>'s composite features. The main methods
+ * built using <code>Widget</code>'s composite features. The main methods
  * used for widget composition are:
- * {@link SwatWidget::createCompositeWidgets()},
- * {@link SwatWidget::addCompositeWidget()} and
- * {@link SwatWidget::getCompositeWidget()}.
+ * {@link Widget::createCompositeWidgets()},
+ * {@link Widget::addCompositeWidget()} and
+ * {@link Widget::getCompositeWidget()}.
  *
  * Developers should implement the <code>createCompositeWidgets()</code> method
  * by creating composite widgets and adding them to this widget by calling
  * <code>addCompositeWidget()</code>. As long as the parent implemtations of
- * {@link SwatWidget::init()} and {@link SwatWidget::process()} are called,
+ * {@link Widget::init()} and {@link Widget::process()} are called,
  * nothing further needs to be done for <code>init()</code> and
- * <code>process()</code>. For the {@link SwatWidget::display()} method,
+ * <code>process()</code>. For the {@link Widget::display()} method,
  * developers can use the <code>getCompositeWidget()</code> method to retrieve
  * a specific composite widget for display. Composite widgets are <i>not</i>
  * displayed by the default implementation of <code>display()</code>.
@@ -32,13 +33,13 @@ require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
  * In keeping with object-oriented composition theory, none of the composite
  * widgets are publicly accessible. Methods could be added to make composite
  * widgets available publicly, but in that case it would be better to just
- * extend {@link SwatContainer}.
+ * extend {@link Container}.
  *
  * @package   Swat
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatWidget extends SwatUIObject
+abstract class Widget extends Object
 {
     // {{{ public properties
 
@@ -65,10 +66,10 @@ abstract class SwatWidget extends SwatUIObject
      * Stylesheet
      *
      * The URI of a stylesheet for use with this widget. If this property is
-     * set before {@link SwatWidget::init()} then the
-     * {@link SwatUIObject::addStyleSheet()} method will be called to add this
+     * set before {@link Widget::init()} then the
+     * {@link Object::addStyleSheet()} method will be called to add this
      * stylesheet to the header entries. Primarily this should be used by
-     * SwatUI to set a stylesheet in SwatML. To set a stylesheet in PHP code,
+     * Loader to set a stylesheet in SwatML. To set a stylesheet in PHP code,
      * it is recommended to call <code>addStyleSheet()</code> directly.
      *
      * @var string
@@ -90,7 +91,7 @@ abstract class SwatWidget extends SwatUIObject
     /**
      * Whether or not composite widgets have been created
      *
-     * This flag is used by {@link SwatWidget::confirmCompositeWidgets()} to
+     * This flag is used by {@link Widget::confirmCompositeWidgets()} to
      * ensure composite widgets are only created once.
      *
      * @var boolean
@@ -115,7 +116,7 @@ abstract class SwatWidget extends SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     protected $requires_id = false;
 
@@ -124,7 +125,7 @@ abstract class SwatWidget extends SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     protected $initialized = false;
 
@@ -133,7 +134,7 @@ abstract class SwatWidget extends SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatWidget::process()
+     * @see Widget::process()
      */
     protected $processed = false;
 
@@ -142,7 +143,7 @@ abstract class SwatWidget extends SwatUIObject
      *
      * @var boolean
      *
-     * @see SwatWidget::display()
+     * @see Widget::display()
      */
     protected $displayed = false;
 
@@ -170,7 +171,7 @@ abstract class SwatWidget extends SwatUIObject
      *
      * Initialization is done post-construction. Initilization may be done
      * manually by calling <code>init()</code> on the UI tree at any time. If a
-     * call to {@link SwatWidget::process()} or {@link SwatWidget::display()}
+     * call to {@link Widget::process()} or {@link Widget::display()}
      * is made  before the tree is initialized, this method is called
      * automatically. As a result, you often do not need to worry about calling
      * <code>init()</code>.
@@ -259,20 +260,20 @@ abstract class SwatWidget extends SwatUIObject
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this widget
+     * Gets the Html\Resource objects needed by this widget
      *
      * If this widget has not been displayed, an empty set is returned to
      * reduce the number of required HTTP requests.
      *
-     * @return SwatHtmlHeadEntrySet the {@link SwatHtmlHeadEntry} objects
+     * @return Html\ResourceSet the {@link Html\Resource} objects
      *                              needed by this widget.
      */
     public function getHtmlHeadEntrySet()
     {
         if ($this->isDisplayed()) {
-            $set = new SwatHtmlHeadEntrySet($this->html_head_entry_set);
+            $set = new Html\ResourceSet($this->html_head_entry_set);
         } else {
-            $set = new SwatHtmlHeadEntrySet();
+            $set = new Html\ResourceSet();
         }
 
         foreach ($this->getCompositeWidgets() as $widget) {
@@ -286,14 +287,14 @@ abstract class SwatWidget extends SwatUIObject
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this widget
+     * Gets the Html\Resource objects that may be needed by this widget
      *
-     * @return SwatHtmlHeadEntrySet the {@link SwatHtmlHeadEntry} objects that
+     * @return Html\ResourceSet the {@link Html\Resource} objects that
      *                              may be needed by this widget.
      */
     public function getAvailableHtmlHeadEntrySet()
     {
-        $set = new SwatHtmlHeadEntrySet($this->html_head_entry_set);
+        $set = new Html\ResourceSet($this->html_head_entry_set);
 
         foreach ($this->getCompositeWidgets() as $widget) {
             $set->addEntrySet($widget->getAvailableHtmlHeadEntrySet());
@@ -308,12 +309,12 @@ abstract class SwatWidget extends SwatUIObject
     /**
      * Adds a message to this widget
      *
-     * The message may be shown by the {@link SwatWidget::display()} method and
-     * will as cause {@link SwatWidget::hasMessage()} to return as true.
+     * The message may be shown by the {@link Widget::display()} method and
+     * will as cause {@link Widget::hasMessage()} to return as true.
      *
-     * @param SwatMessage $message the message to add.
+     * @param Model\Message $message the message to add.
      */
-    public function addMessage(SwatMessage $message)
+    public function addMessage(Model\Message $message)
     {
         $this->messages[] = $message;
     }
@@ -329,7 +330,7 @@ abstract class SwatWidget extends SwatUIObject
      *
      * Messages from composite widgets of this widget are included by default.
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      */
     public function getMessages()
     {
@@ -376,14 +377,15 @@ abstract class SwatWidget extends SwatUIObject
      *
      * @return boolean whether this widget is sensitive.
      *
-     * @see SwatWidget::$sensitive
+     * @see Widget::$sensitive
      */
     public function isSensitive()
     {
-        if ($this->parent !== null && $this->parent instanceof SwatWidget)
+        if ($this->parent !== null && $this->parent instanceof Widget) {
             return ($this->parent->isSensitive() && $this->sensitive);
-        else
+        } else {
             return $this->sensitive;
+        }
     }
 
     // }}}
@@ -456,23 +458,27 @@ abstract class SwatWidget extends SwatUIObject
     /**
      * Replace this widget with a new container
      *
-     * Replaces this widget in the widget tree with a new {@link SwatContainer},
+     * Replaces this widget in the widget tree with a new {@link Container},
      * then adds this widget to the new container.
      *
-     * @param SwatContainer $container optional container to use
+     * @param Container $container optional container to use
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      *
-     * @return SwatContainer a reference to the new container.
+     * @return Container a reference to the new container.
      */
-    public function replaceWithContainer(SwatContainer $container = null)
+    public function replaceWithContainer(Container $container = null)
     {
-        if ($this->parent === null)
-            throw new SwatException('Widget does not have a parent, unable '.
-                'to replace this widget with a container.');
+        if ($this->parent === null) {
+            throw new Exception\Exception(
+                'Widget does not have a parent, unable to replace this '.
+                'widget with a container.'
+            );
+        }
 
-        if ($container === null)
-            $container = new SwatContainer();
+        if ($container === null) {
+            $container = new Container();
+        }
 
         $parent = $this->parent;
         $parent->replace($this, $container);
@@ -490,10 +496,9 @@ abstract class SwatWidget extends SwatUIObject
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -546,7 +551,7 @@ abstract class SwatWidget extends SwatUIObject
      * Creates and adds composite widgets of this widget
      *
      * Created composite widgets should be added in this method using
-     * {@link SwatWidget::addCompositeWidget()}.
+     * {@link Widget::addCompositeWidget()}.
      */
     protected function createCompositeWidgets()
     {
@@ -558,30 +563,37 @@ abstract class SwatWidget extends SwatUIObject
     /**
      * Adds a composite a widget to this widget
      *
-     * @param SwatWidget $widget the composite widget to add.
-     * @param string     $key    a key identifying the widget so it may be
-     *                           retrieved later. The key does not have to be
-     *                           the widget's id but the key does have to be
-     *                           unique within this widget relative to the keys
-     *                           of other composite widgets.
+     * @param Widget $widget the composite widget to add.
+     * @param string $key    a key identifying the widget so it may be
+     *                       retrieved later. The key does not have to be
+     *                       the widget's id but the key does have to be
+     *                       unique within this widget relative to the keys
+     *                       of other composite widgets.
      *
-     * @throws SwatDuplicateIdException if a composite widget with the
-     *                                  specified key is already added to this
-     *                                  widget.
-     *
-     * @throws SwatException if the specified widget is already the child of
-     *                       another object.
+     * @throws Exception\DuplicateIdException if a composite widget with the
+     *         specified key is already added to this widget.
+     * @throws Exception\Exception if the specified widget is already the
+     *         child of another object.
      */
-    protected final function addCompositeWidget(SwatWidget $widget, $key)
+    protected final function addCompositeWidget(Widget $widget, $key)
     {
-        if (array_key_exists($key, $this->composite_widgets))
-            throw new SwatDuplicateIdException(sprintf(
-                "A composite widget with the key '%s' already exists in this ".
-                "widget.", $key), 0, $key);
+        if (array_key_exists($key, $this->composite_widgets)) {
+            throw new Exception\DuplicateIdException(
+                sprintf(
+                    "A composite widget with the key '%s' already exists in ".
+                    "this widget.",
+                    $key
+                ),
+                0,
+                $key
+            );
+        }
 
-        if ($widget->parent !== null)
-            throw new SwatException('Cannot add a composite widget that '.
-                'already has a parent.');
+        if ($widget->parent !== null) {
+            throw new Exception\Exception(
+                'Cannot add a composite widget that already has a parent.'
+            );
+        }
 
         $this->composite_widgets[$key] = $widget;
         $widget->parent = $this;
@@ -599,20 +611,28 @@ abstract class SwatWidget extends SwatUIObject
      *
      * @param string $key the key of the composite widget to get.
      *
-     * @return SwatWidget the specified composite widget.
+     * @return Widget the specified composite widget.
      *
-     * @throws SwatWidgetNotFoundException if no composite widget with the
-     *                                     specified key exists in this widget.
+     * @throws Exception\WidgetNotFoundException if no composite widget with
+     *         the specified key exists in this widget.
      */
     protected final function getCompositeWidget($key)
     {
         $this->confirmCompositeWidgets();
 
-        if (!array_key_exists($key, $this->composite_widgets))
-            throw new SwatWidgetNotFoundException(sprintf(
-                "Composite widget with key of '%s' not found in %s. Make sure ".
-                "the composite widget was created and added to this widget.",
-                $key, get_class($this)), 0, $key);
+        if (!array_key_exists($key, $this->composite_widgets)) {
+            throw new Exception\WidgetNotFoundException(
+                sprintf(
+                    "Composite widget with key of '%s' not found in %s. ".
+                    "Make sure the composite widget was created and added ".
+                    "to this widget.",
+                    $key,
+                    get_class($this)
+                ),
+                0,
+                $key
+            );
+        }
 
         return $this->composite_widgets[$key];
     }
@@ -633,7 +653,7 @@ abstract class SwatWidget extends SwatUIObject
      * @return array all composite wigets added to this widget. The array is
      *               indexed by the composite widget keys.
      *
-     * @see SwatWidget::addCompositeWidget()
+     * @see Widget::addCompositeWidget()
      */
     protected final function getCompositeWidgets($class_name = null)
     {
@@ -664,7 +684,7 @@ abstract class SwatWidget extends SwatUIObject
      * widgets.
      *
      * This method is called by the default implementations of init(),
-     * process() and is called any time {@link SwatWidget::getCompositeWidget()}
+     * process() and is called any time {@link Widget::getCompositeWidget()}
      * is called so it rarely needs to be called manually.
      */
     protected final function confirmCompositeWidgets()

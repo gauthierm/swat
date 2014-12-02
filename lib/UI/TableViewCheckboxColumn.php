@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCheckboxCellRenderer.php';
-require_once 'Swat/SwatTableViewColumn.php';
-require_once 'Swat/SwatTableViewCheckAllRow.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
 
 /**
  * A special table-view column designed to contain a checkbox cell renderer
@@ -14,7 +14,7 @@ require_once 'Swat/SwatTableViewCheckAllRow.php';
  * does not need check-all functionality a regular table-view column will
  * suffice.
  *
- * Checkbox columns must contain at least one {@link SwatCheckboxCellRenderer}.
+ * Checkbox columns must contain at least one {@link CheckboxCellRenderer}.
  * If this column contains more than one checkbox cell renderer, the check-all
  * widget only applies to the first checkbox renderer.
  *
@@ -22,18 +22,18 @@ require_once 'Swat/SwatTableViewCheckAllRow.php';
  * @copyright 2005-2013 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableViewCheckboxColumn extends SwatTableViewColumn
+class TableViewCheckboxColumn extends TableViewColumn
 {
     // {{{ public properties
 
     /**
      * Whether to show a check-all row for this checkbox column
      *
-     * This property only has an effect if a {@link SwatCheckboxCellRenderer}
+     * This property only has an effect if a {@link CheckboxCellRenderer}
      * is present inside this column.
      *
      * If a check-all row is never needed, use a regular
-     * {@link SwatTableViewColumn} instead of a checkbox column.
+     * {@link TableViewColumn} instead of a checkbox column.
      *
      * @var boolean
      */
@@ -89,9 +89,9 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
     /**
      * Check-all row added by this column to the parent table-view
      *
-     * @var SwatTableViewCheckAllRow
+     * @var TableViewCheckAllRow
      *
-     * @see SwatTableViewCheckboxColumn::$show_check_all
+     * @see TableViewCheckboxColumn::$show_check_all
      */
     private $check_all;
 
@@ -119,7 +119,7 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
     /**
      * Processes this checkbox column
      *
-     * @see SwatView::getSelection()
+     * @see View::getSelection()
      */
     public function process()
     {
@@ -181,12 +181,16 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
 
     private function getCheckboxRenderer()
     {
-        foreach ($this->getRenderers() as $renderer)
-            if ($renderer instanceof SwatCheckboxCellRenderer)
+        foreach ($this->getRenderers() as $renderer) {
+            if ($renderer instanceof CheckboxCellRenderer) {
                 return $renderer;
+            }
+        }
 
-        throw new SwatException("The checkbox column ‘{$this->id}’ must ".
-            'contain a checkbox cell renderer.');
+        throw new Exception\Exception(
+            "The checkbox column ‘{$this->id}’ must contain a checkbox ".
+            "cell renderer."
+        );
     }
 
     // }}}
@@ -208,7 +212,7 @@ class SwatTableViewCheckboxColumn extends SwatTableViewColumn
     private function createEmbeddedWidgets()
     {
         $renderer_id = $this->getCheckboxRendererId();
-        $this->check_all = new SwatTableViewCheckAllRow($this, $renderer_id);
+        $this->check_all = new TableViewCheckAllRow($this, $renderer_id);
     }
 
     // }}}

@@ -2,8 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTextarea.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A what-you-see-is-what-you-get (WYSIWYG) XHTML textarea editor widget
@@ -16,7 +18,7 @@ require_once 'Swat/SwatYUI.php';
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTextareaEditor extends SwatTextarea
+class TextareaEditor extends Textarea
 {
     // {{{ class constants
 
@@ -30,7 +32,7 @@ class SwatTextareaEditor extends SwatTextarea
      * Width of the editor
      *
      * Specified in CSS units (percent, pixels, ems, etc). If not specified,
-     * the {@link SwatTextarea::$cols} property will determine the width of
+     * the {@link Textarea::$cols} property will determine the width of
      * the editor.
      *
      * @var string
@@ -41,7 +43,7 @@ class SwatTextareaEditor extends SwatTextarea
      * Height of the editor
      *
      * Specified in CSS units (percent, pixels, ems, etc). If not specified,
-     * the {@link SwatTextarea::$rows} property will determine the height of
+     * the {@link Textarea::$rows} property will determine the height of
      * the editor.
      *
      * @var string
@@ -61,10 +63,10 @@ class SwatTextareaEditor extends SwatTextarea
     /**
      * Editing mode to use
      *
-     * Must be one of either {@link SwatTextareaEditor::MODE_VISUAL} or
-     * {@link SwatTextareaEditor::MODE_SOURCE}.
+     * Must be one of either {@link TextareaEditor::MODE_VISUAL} or
+     * {@link TextareaEditor::MODE_SOURCE}.
      *
-     * Defaults to <kbd>SwatTextareaEditor::MODE_VISUAL</kbd>.
+     * Defaults to <kbd>TextareaEditor::MODE_VISUAL</kbd>.
      *
      * @var integer
      */
@@ -73,8 +75,8 @@ class SwatTextareaEditor extends SwatTextarea
     /**
      * Whether or not the mode switching behavior is enabled
      *
-     * If set to false, only {@link SwatTextAreaEditor::$mode} will be ignored
-     * and only {@link SwatTextAreaEditor::MODE_VISUAL} will be available for
+     * If set to false, only {@link TextAreaEditor::$mode} will be ignored
+     * and only {@link TextAreaEditor::MODE_VISUAL} will be available for
      * the editor.
      *
      * @var boolean
@@ -125,7 +127,7 @@ class SwatTextareaEditor extends SwatTextarea
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -148,7 +150,7 @@ class SwatTextareaEditor extends SwatTextarea
         if (!$this->visible)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         // textarea tags cannot be self-closing when using HTML parser on XHTML
         $value = ($this->value === null) ? '' : $this->value;
@@ -157,11 +159,11 @@ class SwatTextareaEditor extends SwatTextarea
         // for editing
         $value = htmlspecialchars($value);
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->class = 'swat-textarea-editor-container';
         $div_tag->open();
 
-        $textarea_tag = new SwatHtmlTag('textarea');
+        $textarea_tag = new Html\Tag('textarea');
         $textarea_tag->name = $this->id;
         $textarea_tag->id = $this->id;
         $textarea_tag->class = $this->getCSSClassString();
@@ -192,7 +194,7 @@ class SwatTextareaEditor extends SwatTextarea
         $textarea_tag->display();
 
         // hidden field to preserve editing mode in form data
-        $input_tag = new SwatHtmlTag('input');
+        $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
         $input_tag->id = $this->id.'_mode';
         $input_tag->value = $this->mode;
@@ -200,7 +202,7 @@ class SwatTextareaEditor extends SwatTextarea
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -214,7 +216,7 @@ class SwatTextareaEditor extends SwatTextarea
      *                widget that should receive focus or null if there is
      *                no such element.
      *
-     * @see SwatWidget::getFocusableHtmlId()
+     * @see Widget::getFocusableHtmlId()
      */
     public function getFocusableHtmlId()
     {
@@ -317,7 +319,7 @@ class SwatTextareaEditor extends SwatTextarea
             echo "}\n";
         } else {
             echo "var {$base_href} = ".
-                SwatString::quoteJavaScriptString($this->base_href).";\n";
+                Util\JavaScript::quoteString($this->base_href).";\n";
         }
 
         echo "tinyMCE.init({\n";
@@ -325,7 +327,7 @@ class SwatTextareaEditor extends SwatTextarea
         $lines = array();
         foreach ($this->getConfig() as $name => $value) {
             if (is_string($value)) {
-                $value = SwatString::quoteJavaScriptString($value);
+                $value = Util\JavaScript::quoteString($value);
             } elseif (is_bool($value)) {
                 $value = ($value) ? 'true' : 'false';
             }

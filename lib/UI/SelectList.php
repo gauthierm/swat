@@ -1,7 +1,12 @@
 <?php
 
-require_once 'Swat/SwatCheckboxList.php';
-require_once 'Swat/SwatHtmlTag.php';
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * List of selectable options
@@ -10,7 +15,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatSelectList extends SwatCheckboxList
+class SelectList extends CheckboxList
 {
     // {{{ public properties
 
@@ -34,11 +39,11 @@ class SwatSelectList extends SwatCheckboxList
         if (!$this->visible || count($options) == 0)
             return;
 
-        SwatWidget::display();
+        Widget::display();
 
         $this->getForm()->addHiddenField($this->id.'_submitted', 1);
 
-        $select_tag = new SwatHtmlTag('select');
+        $select_tag = new Html\Tag('select');
         $select_tag->id = $this->id;
         $select_tag->name = $this->id.'[]';
         $select_tag->class = 'swat-select-list';
@@ -48,7 +53,7 @@ class SwatSelectList extends SwatCheckboxList
 
         foreach ($options as $key => $option) {
 
-            $option_tag = new SwatHtmlTag('option');
+            $option_tag = new Html\Tag('option');
             $option_tag->value = (string)$option->value;
             $option_tag->id = $this->id.'_'.$key.'_'.$option_tag->value;
             $option_tag->selected = null;
@@ -69,17 +74,17 @@ class SwatSelectList extends SwatCheckboxList
      * Gets a note letting the user know the select list can select multiple
      * options
      *
-     * @return SwatMessage a note letting the user know the select list can
+     * @return Model\Message a note letting the user know the select list can
      *                     select multiple options.
      *
-     * @see SwatControl::getNote()
+     * @see Control::getNote()
      */
     public function getNote()
     {
-        $message = Swat::_(
-            'Multiple items can be selected by holding down the Ctrl key.');
-
-        return new SwatMessage($message);
+        $message = L::_(
+            'Multiple items can be selected by holding down the Ctrl key.'
+        );
+        return new Model\Message($message);
     }
 
     // }}}

@@ -2,33 +2,25 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatView.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatTableViewColumn.php';
-require_once 'Swat/SwatTableViewOrderableColumn.php';
-require_once 'Swat/SwatTableViewSpanningColumn.php';
-require_once 'Swat/SwatTableViewGroup.php';
-require_once 'Swat/SwatTableViewRow.php';
-require_once 'Swat/SwatTableViewInputRow.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/exceptions/SwatDuplicateIdException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/exceptions/SwatWidgetNotFoundException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
 
 /**
  * A widget to display data in a tabular form
  *
  * Records in this table-view's model may be selected by the user by adding a
- * view-selector to this table-view. See {@link SwatView} for details on how to
- * use {@link SwatViewSelector} objects.
+ * view-selector to this table-view. See {@link View} for details on how to
+ * use {@link ViewSelector} objects.
  *
  * @package   Swat
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTableView extends SwatView implements SwatUIParent
+class TableView extends View implements UIParent
 {
     // {{{ public properties
 
@@ -37,10 +29,10 @@ class SwatTableView extends SwatView implements SwatUIParent
      * sorted by
      *
      * If no sorting is currently happening, this can be null. Alternatively,
-     * this can be set to a SwatTableViewOrderableColumn and the column itself
+     * this can be set to a TableViewOrderableColumn and the column itself
      * may be set to no sorting.
      *
-     * @var SwatTableViewOrderableColumn
+     * @var TableViewOrderableColumn
      *
      * @todo Clean up this API. Making this a public property is prone to
      *       misuse.
@@ -52,7 +44,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      * by default if no sorting is happening
      *
      * Setting this directly usually won't do what you want. Use the
-     * {@link SwatTableView::setDefaultOrderbyColumn()} method instead.
+     * {@link TableView::setDefaultOrderbyColumn()} method instead.
      *
      * If this is null then the default order of data in the model is some
      * implicit order that the user cannot see. This results in tri-state
@@ -61,10 +53,10 @@ class SwatTableView extends SwatView implements SwatUIParent
      * If this is set then the data ordering is always explicit and visible to
      * the user. This results in bi-state column headers.
      *
-     * @var SwatTableViewOrderableColumn
+     * @var TableViewOrderableColumn
      *
-     * @see SwatTableViewOrderableColumn
-     * @see SwatTableView::setDefaultOrderbyColumn()
+     * @see TableViewOrderableColumn
+     * @see TableView::setDefaultOrderbyColumn()
      */
     public $default_orderby_column = null;
 
@@ -169,7 +161,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @var array
      *
-     * @see SwatTableView::addSpanningColumn()
+     * @see TableView::addSpanningColumn()
      */
     protected $spanning_columns = array();
 
@@ -178,7 +170,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @var array
      *
-     * @see SwatTableView::addGroup()
+     * @see TableView::addGroup()
      */
     protected $groups = array();
 
@@ -199,7 +191,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @var boolean
      *
-     * @see SwatTableViewInputRow
+     * @see TableViewInputRow
      */
     protected $has_input_row = false;
 
@@ -213,13 +205,13 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
 
-        $yui = new SwatYUI(array('dom'));
+        $yui = new Html\YUI(array('dom'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript('packages/swat/javascript/swat-table-view.js');
@@ -234,7 +226,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * This initializes all columns, extra rows and groupsin this table-view.
      *
-     * @see SwatWidget::init()
+     * @see Widget::init()
      */
     public function init()
     {
@@ -298,7 +290,7 @@ class SwatTableView extends SwatView implements SwatUIParent
 
         if ($row_count === 0 && $show_no_records) {
             if ($this->no_records_message != '') {
-                $div = new SwatHtmlTag('div');
+                $div = new Html\Tag('div');
                 $div->class = 'swat-none';
                 $div->setContent($this->no_records_message,
                     $this->no_records_message_type);
@@ -309,7 +301,7 @@ class SwatTableView extends SwatView implements SwatUIParent
             return;
         }
 
-        $table_tag = new SwatHtmlTag('table');
+        $table_tag = new Html\Tag('table');
         $table_tag->id = $this->id;
         $table_tag->class = $this->getCSSClassString();
         $table_tag->cellspacing = '0';
@@ -329,7 +321,7 @@ class SwatTableView extends SwatView implements SwatUIParent
 
         $table_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -358,39 +350,41 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used by
+     * {@link Loader} when building a widget tree and should not need to be
      * called elsewhere.
      *
      * To add columns, rows, or a grouping to a table-view, use
-     * {@link SwatTableView::appendColumn()},
-     * {@link SwatTableView::appendRow()},
-     * or {@link SwatTableView::appendGroup()}.
+     * {@link TableView::appendColumn()}, {@link TableView::appendRow()},
+     * or {@link TableView::appendGroup()}.
      *
      * @param mixed $child a reference to a child object to add.
      *
-     * @throws SwatInvalidClassException
+     * @throws Exception\InvalidClassException
      *
-     * @see SwatUIParent
-     * @see SwatTableView::appendColumn()
-     * @see SwatTableView::appendGroup()
-     * @see SwatTableView::appendRow()
+     * @see UIParent
+     * @see TableView::appendColumn()
+     * @see TableView::appendGroup()
+     * @see TableView::appendRow()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(Object $child)
     {
-        if ($child instanceof SwatTableViewGroup)
+        if ($child instanceof TableViewGroup) {
             $this->appendGroup($child);
-        elseif ($child instanceof SwatTableViewSpanningColumn)
+        } elseif ($child instanceof TableViewSpanningColumn) {
             $this->appendSpanningColumn($child);
-        elseif ($child instanceof SwatTableViewRow)
+        } elseif ($child instanceof TableViewRow) {
             $this->appendRow($child);
-        elseif ($child instanceof SwatTableViewColumn)
+        } elseif ($child instanceof TableViewColumn) {
             $this->appendColumn($child);
-        else
-            throw new SwatInvalidClassException(
-                'Only SwatTableViewColumn, SwatTableViewGroup, or '.
-                'SwatTableViewRow objects may be nested within SwatTableView '.
-                'objects.', 0, $child);
+        } else {
+            throw new Exception\InvalidClassException(
+                'Only TableViewColumn, TableViewGroup, or TableViewRow '.
+                'objects may be nested within TableView objects.',
+                0,
+                $child
+            );
+        }
     }
 
     // }}}
@@ -399,7 +393,7 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Gathers all messages from this table-view
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      */
     public function getMessages()
     {
@@ -411,9 +405,11 @@ class SwatTableView extends SwatView implements SwatUIParent
                     $messages =
                         array_merge($messages, $column->getMessages($row));
 
-            foreach ($this->extra_rows as $row)
-                if ($row instanceof SwatTableViewWidgetRow)
+            foreach ($this->extra_rows as $row) {
+                if ($row instanceof TableViewWidgetRow) {
                     $messages = array_merge($messages, $row->getMessages());
+                }
+            }
         }
 
         return $messages;
@@ -478,12 +474,12 @@ class SwatTableView extends SwatView implements SwatUIParent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this table
+     * Gets the Html\Resource objects needed by this table
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this table-view.
+     * @return Html\ResourceSet the Html\Resource objects needed by this
+     *                          table-view.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -512,12 +508,12 @@ class SwatTableView extends SwatView implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this table
+     * Gets the Html\Resource objects that may be needed by this table
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              needed by this table-view.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed by
+     *                          this table-view.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -556,7 +552,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -574,8 +570,9 @@ class SwatTableView extends SwatView implements SwatUIParent
                     $out[$column->id] = $column;
             }
 
-            if ($column instanceof SwatUIParent)
+            if ($column instanceof UIParent) {
                 $out = array_merge($out, $column->getDescendants($class_name));
+            }
         }
 
         foreach ($this->spanning_columns as $column) {
@@ -586,8 +583,9 @@ class SwatTableView extends SwatView implements SwatUIParent
                     $out[$column->id] = $column;
             }
 
-            if ($column instanceof SwatUIParent)
+            if ($column instanceof UIParent) {
                 $out = array_merge($out, $column->getDescendants($class_name));
+            }
         }
 
         foreach ($this->groups as $group) {
@@ -598,8 +596,9 @@ class SwatTableView extends SwatView implements SwatUIParent
                     $out[$group->id] = $group;
             }
 
-            if ($group instanceof SwatUIParent)
+            if ($group instanceof UIParent) {
                 $out = array_merge($out, $group->getDescendants($class_name));
+            }
         }
 
         foreach ($this->extra_rows as $row) {
@@ -610,8 +609,9 @@ class SwatTableView extends SwatView implements SwatUIParent
                     $out[$row->id] = $row;
             }
 
-            if ($row instanceof SwatUIParent)
+            if ($row instanceof UIParent) {
                 $out = array_merge($out, $row->getDescendants($class_name));
+            }
         }
 
         return $out;
@@ -625,10 +625,10 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -643,7 +643,7 @@ class SwatTableView extends SwatView implements SwatUIParent
                 break;
             }
 
-            if ($column instanceof SwatUIParent) {
+            if ($column instanceof UIParent) {
                 $out = $column->getFirstDescendant($class_name);
                 if ($out !== null)
                     break;
@@ -657,7 +657,7 @@ class SwatTableView extends SwatView implements SwatUIParent
                     break;
                 }
 
-                if ($column instanceof SwatUIParent) {
+                if ($column instanceof UIParent) {
                     $out = $column->getFirstDescendant($class_name);
                     if ($out !== null)
                         break;
@@ -672,7 +672,7 @@ class SwatTableView extends SwatView implements SwatUIParent
                     break;
                 }
 
-                if ($group instanceof SwatUIParent) {
+                if ($group instanceof UIParent) {
                     $out = $group->getFirstDescendant($class_name);
                     if ($out !== null)
                         break;
@@ -687,7 +687,7 @@ class SwatTableView extends SwatView implements SwatUIParent
                     break;
                 }
 
-                if ($row instanceof SwatUIParent) {
+                if ($row instanceof UIParent) {
                     $out = $row->getFirstDescendant($class_name);
                     if ($out !== null)
                         break;
@@ -714,8 +714,10 @@ class SwatTableView extends SwatView implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -734,9 +736,12 @@ class SwatTableView extends SwatView implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -748,10 +753,9 @@ class SwatTableView extends SwatView implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -966,7 +970,7 @@ class SwatTableView extends SwatView implements SwatUIParent
     protected function displayRowColumns($row, $next_row, $count)
     {
         // display a row of data
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->class = $this->getRowClassString($row, $count);
         foreach ($this->columns as $column)
             $tr_tag->addAttributes($column->getTrAttributes($row));
@@ -996,7 +1000,7 @@ class SwatTableView extends SwatView implements SwatUIParent
      */
     protected function displayRowSpanningColumns($row, $next_row, $count)
     {
-        $tr_tag = new SwatHtmlTag('tr');
+        $tr_tag = new Html\Tag('tr');
         $tr_tag->class = $this->getRowClassString($row, $count);
 
         if ($this->rowHasMessage($row))
@@ -1017,7 +1021,7 @@ class SwatTableView extends SwatView implements SwatUIParent
     // {{{ protected function displayRowMessages()
 
     /**
-     * Displays a list of {@link SwatMessage} object for the given row
+     * Displays a list of {@link Model\Message} object for the given row
      *
      * @param mixed $row the row for which to display messages.
      */
@@ -1028,19 +1032,19 @@ class SwatTableView extends SwatView implements SwatUIParent
             $messages = array_merge($messages, $column->getMessages($row));
 
         if (count($messages) > 0) {
-            $tr_tag = new SwatHtmlTag('tr');
+            $tr_tag = new Html\Tag('tr');
             $tr_tag->class = 'swat-table-view-input-row-messages';
             $tr_tag->open();
 
-            $td_tag = new SwatHtmlTag('td');
+            $td_tag = new Html\Tag('td');
             $td_tag->colspan = $this->getVisibleColumnCount();
             $td_tag->open();
 
-            $ul_tag = new SwatHtmlTag('ul');
+            $ul_tag = new Html\Tag('ul');
             $ul_tag->class = 'swat-table-view-input-row-messages';
             $ul_tag->open();
 
-            $li_tag = new SwatHtmlTag('li');
+            $li_tag = new Html\Tag('li');
             foreach ($messages as &$message) {
                 $li_tag->setContent($message->primary_content,
                     $message->content_type);
@@ -1074,7 +1078,7 @@ class SwatTableView extends SwatView implements SwatUIParent
         $footer_content = ob_get_clean();
 
         if ($footer_content != '') {
-            $tfoot_tag = new SwatHtmlTag('tfoot');
+            $tfoot_tag = new Html\Tag('tfoot');
             if ($this->use_invalid_tfoot_ordering)
                 $tfoot_tag->class = 'swat-table-view-invalid-tfoot-ordering';
 
@@ -1197,8 +1201,10 @@ class SwatTableView extends SwatView implements SwatUIParent
         $javascript = sprintf("var %s = new SwatTableView('%s');",
             $this->id, $this->id);
 
-        $has_rows = ($this->model instanceof SwatTableModel &&
-            count($this->model) > 0);
+        $has_rows = (
+            $this->model instanceof Model\TableModel &&
+            count($this->model) > 0
+        );
 
         if ($has_rows) {
             foreach ($this->columns as $column) {
@@ -1253,12 +1259,12 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Appends a column to this table-view
      *
-     * @param SwatTableViewColumn $column the column to append.
+     * @param TableViewColumn $column the column to append.
      *
-     * @throws SwatDuplicateIdException if the column has the same id as a
-     *                                  column already in this table-view.
+     * @throws Exception\DuplicateIdException if the column has the same id as
+     *         a column already in this table-view.
      */
-    public function appendColumn(SwatTableViewColumn $column)
+    public function appendColumn(TableViewColumn $column)
     {
         $this->insertColumn($column);
     }
@@ -1269,18 +1275,17 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Inserts a column before an existing column in this table-view
      *
-     * @param SwatTableViewColumn $column           the column to insert.
-     * @param SwatTableViewColumn $reference_column the column before which the
-     *                                              column will be inserted.
+     * @param TableViewColumn $column           the column to insert.
+     * @param TableViewColumn $reference_column the column before which the
+     *                                          column will be inserted.
      *
-     * @throws SwatWidgetNotFoundException if the reference column does not
-     *                                     exist in this table-view.
-     *
-     * @throws SwatDuplicateIdException if the column has the same id as a
-     *                                  column already in this table-view.
+     * @throws Exception\WidgetNotFoundException if the reference column does
+     *         not exist in this table-view.
+     * @throws Exception\DuplicateIdException if the column has the same id as
+     *         a column already in this table-view.
      */
-    public function insertColumnBefore(SwatTableViewColumn $column,
-        SwatTableViewColumn $reference_column)
+    public function insertColumnBefore(TableViewColumn $column,
+        TableViewColumn $reference_column)
     {
         $this->insertColumn($column, $reference_column, false);
     }
@@ -1291,18 +1296,17 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Inserts a column after an existing column in this table-view
      *
-     * @param SwatTableViewColumn $column           the column to insert.
-     * @param SwatTableViewColumn $reference_column the column after which the
-     *                                              column will be inserted.
+     * @param TableViewColumn $column           the column to insert.
+     * @param TableViewColumn $reference_column the column after which the
+     *                                          column will be inserted.
      *
-     * @throws SwatWidgetNotFoundException if the reference column does not
-     *                                     exist in this table-view.
-     *
-     * @throws SwatDuplicateIdException if the column has the same id as a
-     *                                  column already in this table-view.
+     * @throws Exception\WidgetNotFoundException if the reference column does
+     *         not exist in this table-view.
+     * @throws Exception\DuplicateIdException if the column has the same id as
+     *         a column already in this table-view.
      */
-    public function insertColumnAfter(SwatTableViewColumn $column,
-        SwatTableViewColumn $reference_column)
+    public function insertColumnAfter(TableViewColumn $column,
+        TableViewColumn $reference_column)
     {
         $this->insertColumn($column, $reference_column, true);
     }
@@ -1333,16 +1337,18 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @param string $id the id of the column to get.
      *
-     * @return SwatTableViewColumn the requested column.
+     * @return TableViewColumn the requested column.
      *
-     * @throws SwatWidgetNotFoundException if no column with the specified id
-     *                                     exists in this table-view.
+     * @throws Exception\WidgetNotFoundException if no column with the
+     *         specified id exists in this table-view.
      */
     public function getColumn($id)
     {
-        if (!array_key_exists($id, $this->columns_by_id))
-            throw new SwatWidgetNotFoundException(
-                "Column with an id of '{$id}' not found.");
+        if (!array_key_exists($id, $this->columns_by_id)) {
+            throw new Exception\WidgetNotFoundException(
+                "Column with an id of '{$id}' not found."
+            );
+        }
 
         return $this->columns_by_id[$id];
     }
@@ -1410,23 +1416,25 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Sets a default column to use for ordering the data of this table-view
      *
-     * @param SwatTableViewOrderableColumn $column    the column in this view
-     *                                                to use for default
-     *                                                ordering
-     * @param integer                      $direction the default direction of
-     *                                                the ordered column.
+     * @param TableViewOrderableColumn $column    the column in this view
+     *                                            to use for default ordering.
+     * @param integer                  $direction the default direction of the
+     *                                            ordered column.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      *
-     * @see SwatTableView::$default_orderby_column
+     * @see TableView::$default_orderby_column
      */
     public function setDefaultOrderbyColumn(
-        SwatTableViewOrderableColumn $column,
-        $direction = SwatTableViewOrderableColumn::ORDER_BY_DIR_DESCENDING)
+        TableViewOrderableColumn $column,
+        $direction = TableViewOrderableColumn::ORDER_BY_DIR_DESCENDING)
     {
-        if ($column->view !== $this)
-            throw new SwatException('Can only set the default orderby on '.
-                'orderable columns in this view.');
+        if ($column->view !== $this) {
+            throw new Exception\Exception(
+                'Can only set the default orderby on orderable columns in '.
+                'this view.'
+            );
+        }
 
         // this method sets properties on the table-view
         $column->setDirection($direction);
@@ -1438,21 +1446,23 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Ensures a column added to this table-view is valid for this table-view
      *
-     * @param SwatTableViewColumn $column the column to check.
+     * @param TableViewColumn $column the column to check.
      *
-     * @throws SwatDuplicateIdException if the column has the same id as a
-     *                                  column already in this table-view.
+     * @throws Exception\DuplicateIdException if the column has the same id as
+     *         a column already in this table-view.
      */
-    protected function validateColumn(SwatTableViewColumn $column)
+    protected function validateColumn(TableViewColumn $column)
     {
         // note: This works because the id property is set before children are
-        // added to parents in SwatUI.
+        // added to parents in Loader.
         if ($column->id !== null) {
             if (array_key_exists($column->id, $this->columns_by_id)) {
-                throw new SwatDuplicateIdException(
+                throw new Exception\DuplicateIdException(
                     "A column with the id '{$column->id}' already exists ".
-                    'in this table view.',
-                    0, $column->id);
+                    "in this table view.",
+                    0,
+                    $column->id
+                );
             }
         }
     }
@@ -1463,49 +1473,47 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Helper method to insert columns into this table-view
      *
-     * @param SwatTableViewColumn $column           the column to insert.
-     * @param SwatTableViewColumn $reference_column optional. An existing column
-     *                                              within this table-view to
-     *                                              which the inserted column
-     *                                              is relatively positioned.
-     *                                              If not specified, the
-     *                                              column is inserted at the
-     *                                              beginning or the end of
-     *                                              this table-view's list of
-     *                                              columns.
-     * @param boolean             $after            optional. If true and a
-     *                                              reference column is
-     *                                              specified, the column is
-     *                                              inserted immediately before
-     *                                              the reference column. If
-     *                                              true and no reference column
-     *                                              is specified, the column is
-     *                                              inserted at the beginning
-     *                                              of the column list. If
-     *                                              false and a reference
-     *                                              column is specified, the
-     *                                              column is inserted
-     *                                              immediately after the
-     *                                              reference column. If false
-     *                                              and no reference column is
-     *                                              specified, the column is
-     *                                              inserted at the end of the
-     *                                              column list. Defaults to
-     *                                              false.
+     * @param TableViewColumn $column           the column to insert.
+     * @param TableViewColumn $reference_column optional. An existing column
+     *                                          within this table-view to
+     *                                          which the inserted column
+     *                                          is relatively positioned.
+     *                                          If not specified, the
+     *                                          column is inserted at the
+     *                                          beginning or the end of
+     *                                          this table-view's list of
+     *                                          columns.
+     * @param boolean         $after            optional. If true and a
+     *                                          reference column is
+     *                                          specified, the column is
+     *                                          inserted immediately before
+     *                                          the reference column. If
+     *                                          true and no reference column
+     *                                          is specified, the column is
+     *                                          inserted at the beginning
+     *                                          of the column list. If
+     *                                          false and a reference
+     *                                          column is specified, the
+     *                                          column is inserted
+     *                                          immediately after the
+     *                                          reference column. If false
+     *                                          and no reference column is
+     *                                          specified, the column is
+     *                                          inserted at the end of the
+     *                                          column list. Defaults to
+     *                                          false.
      *
-     * @throws SwatWidgetNotFoundException if the reference column does not
-     *                                     exist in this table-view.
+     * @throws Exception\WidgetNotFoundException if the reference column does
+     *         not exist in this table-view.
+     * @throws Exception\DuplicateIdException if the column to be inserted has
+     *         the same id as a column already in this table-view.
      *
-     * @throws SwatDuplicateIdException if the column to be inserted has the
-     *                                  same id as a column already in this
-     *                                  table-view.
-     *
-     * @see SwatTableView::appendColumn()
-     * @see SwatTableView::insertColumnBefore()
-     * @see SwatTableView::insertColumnAfter()
+     * @see TableView::appendColumn()
+     * @see TableView::insertColumnBefore()
+     * @see TableView::insertColumnAfter()
      */
-    protected function insertColumn(SwatTableViewColumn $column,
-        SwatTableViewColumn $reference_column = null, $after = true)
+    protected function insertColumn(TableViewColumn $column,
+        TableViewColumn $reference_column = null, $after = true)
     {
         $this->validateColumn($column);
 
@@ -1513,8 +1521,10 @@ class SwatTableView extends SwatView implements SwatUIParent
             $key = array_search($reference_column, $this->columns, true);
 
             if ($key === false) {
-                throw new SwatWidgetNotFoundException('The reference column '.
-                    'could not be found in this table-view.');
+                throw new Exception\WidgetNotFoundException(
+                    'The reference column could not be found in this '.
+                    'table-view.'
+                );
             }
 
             if ($after) {
@@ -1550,13 +1560,13 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Appends a spanning column object to this table-view
      *
-     * @param SwatTableViewSpanningColumn $column the table-view spanning
-     *                                            column to use for this
-     *                                            table-view.
+     * @param TableViewSpanningColumn $column the table-view spanning
+     *                                        column to use for this
+     *                                        table-view.
      *
-     * @see SwatTableViewSpanningColumn
+     * @see TableViewSpanningColumn
      */
-    public function appendSpanningColumn(SwatTableViewSpanningColumn $column)
+    public function appendSpanningColumn(TableViewSpanningColumn $column)
     {
         $this->spanning_columns[] = $column;
         $column->view = $this;
@@ -1588,17 +1598,18 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @param string $id the id of the spanning column to get.
      *
-     * @return SwatTableViewSpanningColumn the requested spanning column.
+     * @return TableViewSpanningColumn the requested spanning column.
      *
-     * @throws SwatWidgetNotFoundException if no spanning column with the
-     *                                     specified id exists in this
-     *                                     table-view.
+     * @throws Exception\WidgetNotFoundException if no spanning column with the
+     *         specified id exists in this table-view.
      */
     public function getSpanningColumn($id)
     {
-        if (!array_key_exists($id, $this->spanning_columns_by_id))
-            throw new SwatWidgetNotFoundException(
-                "Spanning column with an id of '{$id}' not found.");
+        if (!array_key_exists($id, $this->spanning_columns_by_id)) {
+            throw new Exception\WidgetNotFoundException(
+                "Spanning column with an id of '{$id}' not found."
+            );
+        }
 
         return $this->spanning_columns_by_id[$id];
     }
@@ -1630,15 +1641,15 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * Multiple groupings may be added to table-views.
      *
-     * @param SwatTableViewGroup $group the table-view grouping to append to
+     * @param TableViewGroup $group the table-view grouping to append to
      *                                  this table-view.
      *
-     * @see SwatTableViewGroup
+     * @see TableViewGroup
      *
-     * @throws SwatDuplicateIdException if the group has the same id as a
-     *                                  group already in this table-view.
+     * @throws Exception\DuplicateIdException if the group has the same id as a
+     *         group already in this table-view.
      */
-    public function appendGroup(SwatTableViewGroup $group)
+    public function appendGroup(TableViewGroup $group)
     {
         $this->validateGroup($group);
 
@@ -1676,16 +1687,18 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @param string $id the id of the group to get.
      *
-     * @return SwatTableViewGroup the requested group.
+     * @return TableViewGroup the requested group.
      *
-     * @throws SwatWidgetNotFoundException if no group with the specified id
-     *                                     exists in this table-view.
+     * @throws Exception\WidgetNotFoundException if no group with the specified
+     *         id exists in this table-view.
      */
     public function getGroup($id)
     {
-        if (!array_key_exists($id, $this->groups_by_id))
-            throw new SwatWidgetNotFoundException(
-                "Group with an id of '{$id}' not found.");
+        if (!array_key_exists($id, $this->groups_by_id)) {
+            throw new Exception\WidgetNotFoundException(
+                "Group with an id of '{$id}' not found."
+            );
+        }
 
         return $this->groups_by_id[$id];
     }
@@ -1709,21 +1722,24 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Ensures a group added to this table-view is valid for this table-view
      *
-     * @param SwatTableViewGroup $group the group to check.
+     * @param TableViewGroup $group the group to check.
      *
-     * @throws SwatDuplicateIdException if the group has the same id as a
-     *                                  group already in this table-view.
+     * @throws Exception\DuplicateIdException if the group has the same id as a
+     *         group already in this table-view.
      */
-    protected function validateGroup(SwatTableViewGroup $group)
+    protected function validateGroup(TableViewGroup $group)
     {
         // note: This works because the id property is set before children are
-        // added to parents in SwatUI.
+        // added to parents in Loader.
         if ($group->id !== null) {
-            if (array_key_exists($group->id, $this->groups_by_id))
-                throw new SwatDuplicateIdException(
-                    "A group with the id '{$group->id}' already exists ".
-                    'in this table view.',
-                    0, $group->id);
+            if (array_key_exists($group->id, $this->groups_by_id)) {
+                throw new Exception\DuplicateIdException(
+                    "A group with the id '{$group->id}' already exists in ".
+                    "this table view.",
+                    0,
+                    $group->id
+                );
+            }
         }
     }
 
@@ -1754,21 +1770,19 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Inserts a row before an existing row in this table-view
      *
-     * @param SwatTableViewRow $row           the row to insert.
-     * @param SwatTableViewRow $reference_row the row before which the row will
-     *                                        be inserted.
+     * @param TableViewRow $row           the row to insert.
+     * @param TableViewRow $reference_row the row before which the row will be
+     *                                    inserted.
      *
-     * @throws SwatWidgetNotFoundException if the reference row does not exist
-     *                                     in this table-view.
-     *
-     * @throws SwatDuplicateIdException if the row has the same id as a row
-     *                                  already in this table-view.
-     *
-     * @throws SwatException if the row is an input row and this table-view
-     *                       already contains an input-row.
+     * @throws Exception\WidgetNotFoundException if the reference row does not
+     *         exist in this table-view.
+     * @throws Exception\DuplicateIdException if the row has the same id as a
+     *         row already in this table-view.
+     * @throws Exception\Exception if the row is an input row and this
+     *         table-view already contains an input-row.
      */
-    public function insertRowBefore(SwatTableViewRow $row,
-        SwatTableViewRow $reference_row)
+    public function insertRowBefore(TableViewRow $row,
+        TableViewRow $reference_row)
     {
         $this->insertRow($row, $reference_row, false);
     }
@@ -1779,21 +1793,19 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Inserts a row after an existing row in this table-view
      *
-     * @param SwatTableViewRow $row           the row to insert.
-     * @param SwatTableViewRow $reference_row the row after which the row will
-     *                                        be inserted.
+     * @param TableViewRow $row           the row to insert.
+     * @param TableViewRow $reference_row the row after which the row will be
+     *                                    inserted.
      *
-     * @throws SwatWidgetNotFoundException if the reference row does not exist
-     *                                     in this table-view.
-     *
-     * @throws SwatDuplicateIdException if the row has the same id as a row
-     *                                  already in this table-view.
-     *
-     * @throws SwatException if the row is an input row and this table-view
-     *                       already contains an input-row.
+     * @throws Exception\WidgetNotFoundException if the reference row does not
+     *         exist in this table-view.
+     * @throws Exception\DuplicateIdException if the row has the same id as a
+     *         row already in this table-view.
+     * @throws Exception\Exception if the row is an input row and this
+     *         table-view already contains an input-row.
      */
-    public function insertRowAfter(SwatTableViewRow $row,
-        SwatTableViewRow $reference_row)
+    public function insertRowAfter(TableViewRow $row,
+        TableViewRow $reference_row)
     {
         $this->insertRow($row, $reference_row, true);
     }
@@ -1823,16 +1835,18 @@ class SwatTableView extends SwatView implements SwatUIParent
      *
      * @param string $id the id of the row to get.
      *
-     * @return SwatTableViewRow the requested row.
+     * @return TableViewRow the requested row.
      *
-     * @throws SwatWidgetNotFoundException if no row with the specified id
-     *                                     exists in this table-view.
+     * @throws Exception\WidgetNotFoundException if no row with the specified
+     *         id exists in this table-view.
      */
     public function getRow($id)
     {
-        if (!array_key_exists($id, $this->rows_by_id))
-            throw new SwatWidgetNotFoundException(
-                "Row with an id of '{$id}' not found.");
+        if (!array_key_exists($id, $this->rows_by_id)) {
+            throw new Exception\WidgetNotFoundException(
+                "Row with an id of '{$id}' not found."
+            );
+        }
 
         return $this->rows_by_id[$id];
     }
@@ -1863,17 +1877,16 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Gets the first extra row of the specified class from this table-view
      *
-     * Unlike the {@link SwatUIParent::getFirstDescendant()} method, this
+     * Unlike the {@link UIParent::getFirstDescendant()} method, this
      * method only checks this table-view and does not check the child objects
      * of this table-view.
      *
      * @param string $class_name the class name to filter by.
      *
-     * @return SwatTableViewRow the first extra row of the specified class or
-     *                          null if no such row object exists in this
-     *                          table-view.
+     * @return TableViewRow the first extra row of the specified class or null
+     *                      if no such row object exists in this table-view.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstRowByClass($class_name)
     {
@@ -1893,31 +1906,34 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Ensures a row added to this table-view is valid for this table-view
      *
-     * @param SwatTableViewRow $row the row to check.
+     * @param TableViewRow $row the row to check.
      *
-     * @throws SwatDuplicateIdException if the row has the same id as a row
-     *                                  already in this table-view.
-     *
-     * @throws SwatException if the row is an input row and this table-view
-     *                       already contains an input-row.
+     * @throws Exception\DuplicateIdException if the row has the same id as a
+     *         row already in this table-view.
+     * @throws Exception\Exception if the row is an input row and this
+     *         table-view already contains an input-row.
      */
-    protected function validateRow(SwatTableViewRow $row)
+    protected function validateRow(TableViewRow $row)
     {
-        if ($row instanceof SwatTableViewInputRow) {
+        if ($row instanceof TableViewInputRow) {
             if ($this->has_input_row) {
-                throw new SwatException('Only one input row may be added to '.
-                    'a table-view.');
+                throw new Exception\Exception(
+                    'Only one input row may be added to a table-view.'
+                );
             } else {
                 $this->has_input_row = true;
             }
         }
 
         if ($row->id !== null) {
-            if (array_key_exists($row->id, $this->rows_by_id))
-                throw new SwatDuplicateIdException(
-                    "A row with the id '{$row->id}' already exists ".
-                    'in this table-view.',
-                    0, $row->id);
+            if (array_key_exists($row->id, $this->rows_by_id)) {
+                throw new Exception\DuplicateIdException(
+                    "A row with the id '{$row->id}' already exists in this ".
+                    "table-view.",
+                    0,
+                    $row->id
+                );
+            }
         }
     }
 
@@ -1927,41 +1943,40 @@ class SwatTableView extends SwatView implements SwatUIParent
     /**
      * Helper method to insert rows into this table-view
      *
-     * @param SwatTableViewRow $row           the row to insert.
-     * @param SwatTableViewRow $reference_row optional. An existing row within
-     *                                        this table-view to which the
-     *                                        inserted row is relatively
-     *                                        positioned. If not specified,
-     *                                        the row is inserted at the
-     *                                        beginning or the end of this
-     *                                        table-view's list of extra rows.
-     * @param boolean          $after         optional. If true and a reference
-     *                                        row is specified, the row is
-     *                                        inserted immediately before the
-     *                                        reference row. If true and no
-     *                                        reference row is specified, the
-     *                                        row is inserted at the beginning
-     *                                        of the extra row list. If false
-     *                                        and a reference row is specified,
-     *                                        the row is inserted immediately
-     *                                        after the reference row. If false
-     *                                        and no reference row is specified,
-     *                                        the row is inserted at the end of
-     *                                        the extra row list. Defaults to
-     *                                        false.
+     * @param TableViewRow $row           the row to insert.
+     * @param TableViewRow $reference_row optional. An existing row within
+     *                                    this table-view to which the
+     *                                    inserted row is relatively
+     *                                    positioned. If not specified,
+     *                                    the row is inserted at the
+     *                                    beginning or the end of this
+     *                                    table-view's list of extra rows.
+     * @param boolean      $after         optional. If true and a reference
+     *                                    row is specified, the row is
+     *                                    inserted immediately before the
+     *                                    reference row. If true and no
+     *                                    reference row is specified, the
+     *                                    row is inserted at the beginning
+     *                                    of the extra row list. If false
+     *                                    and a reference row is specified,
+     *                                    the row is inserted immediately
+     *                                    after the reference row. If false
+     *                                    and no reference row is specified,
+     *                                    the row is inserted at the end of
+     *                                    the extra row list. Defaults to
+     *                                    false.
      *
-     * @throws SwatWidgetNotFoundException if the reference row does not exist
-     *                                     in this table-view.
+     * @throws Exception\WidgetNotFoundException if the reference row does not
+     *         exist in this table-view.
+     * @throws Exception\DuplicateIdException if the row to be inserted has the
+     *         same id as a row already in this table-view.
      *
-     * @throws SwatDuplicateIdException if the row to be inserted has the same
-     *                                  id as a row already in this table-view.
-     *
-     * @see SwatTableView::appendRow()
-     * @see SwatTableView::insertRowBefore()
-     * @see SwatTableView::insertRowAfter()
+     * @see TableView::appendRow()
+     * @see TableView::insertRowBefore()
+     * @see TableView::insertRowAfter()
      */
-    protected function insertRow(SwatTableViewRow $row,
-        SwatTableViewRow $reference_row = null, $after = true)
+    protected function insertRow(TableViewRow $row,
+        TableViewRow $reference_row = null, $after = true)
     {
         $this->validateRow($row);
 
@@ -1969,8 +1984,9 @@ class SwatTableView extends SwatView implements SwatUIParent
             $key = array_search($reference_row, $this->extra_rows, true);
 
             if ($key === false) {
-                throw new SwatWidgetNotFoundException('The reference row '.
-                    'could not be found in this table-view.');
+                throw new Exception\WidgetNotFoundException(
+                    'The reference row could not be found in this table-view.'
+                );
             }
 
             if ($after) {

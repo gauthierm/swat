@@ -2,8 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatCellRenderer.php';
-require_once 'SwatI18N/SwatI18NLocale.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\I18N;
 
 /**
  * A numeric cell renderer
@@ -12,7 +13,7 @@ require_once 'SwatI18N/SwatI18NLocale.php';
  * @copyright 2006-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatNumericCellRenderer extends SwatCellRenderer
+class NumericCellRenderer extends CellRenderer
 {
     // {{{ public properties
 
@@ -50,7 +51,7 @@ class SwatNumericCellRenderer extends SwatCellRenderer
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
@@ -72,7 +73,7 @@ class SwatNumericCellRenderer extends SwatCellRenderer
 
     protected function renderNullValue()
     {
-        $span_tag = new SwatHtmlTag('span');
+        $span_tag = new Html\Tag('span');
         $span_tag->class = 'swat-none';
         $span_tag->setContent($this->null_display_value);
         $span_tag->display();
@@ -86,7 +87,7 @@ class SwatNumericCellRenderer extends SwatCellRenderer
         $value = $this->value;
 
         if (is_numeric($this->value)) {
-            $locale = SwatI18NLocale::get();
+            $locale = I18N\Locale::get();
             $value = $locale->formatNumber($this->value, $this->precision);
         }
 

@@ -2,8 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatEntry.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * Base class for numeric entry widgets
@@ -12,7 +16,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2004-2009 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class SwatNumericEntry extends SwatEntry
+abstract class NumericEntry extends Entry
 {
     // {{{ public properties
 
@@ -54,7 +58,7 @@ abstract class SwatNumericEntry extends SwatEntry
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
@@ -75,7 +79,7 @@ abstract class SwatNumericEntry extends SwatEntry
 
         try {
             $value = $this->getNumericValue($this->value);
-        } catch (SwatIntegerOverflowException $e) {
+        } catch (Exception\IntegerOverflowException $e) {
             $value = null;
         }
 
@@ -113,27 +117,27 @@ abstract class SwatNumericEntry extends SwatEntry
      *
      * @param string $id the string identifier of the validation message.
      *
-     * @return SwatMessage the validation message.
+     * @return Model\Message the validation message.
      *
-     * @see SwatEntry::getValidationMessage()
+     * @see Entry::getValidationMessage()
      */
     protected function getValidationMessage($id)
     {
         switch ($id) {
         case 'below-minimum':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %%s field must not be less than %s.') :
-                Swat::_('This field must not be less than %s.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %%s field must not be less than %s.')
+                : L::_('This field must not be less than %s.');
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         case 'above-maximum':
-            $text = $this->show_field_title_in_messages ?
-                Swat::_('The %%s field must not be more than %s.') :
-                Swat::_('This field must not be more than %s.');
+            $text = $this->show_field_title_in_messages
+                ? L::_('The %%s field must not be more than %s.')
+                : L::_('This field must not be more than %s.');
 
-            $message = new SwatMessage($text, 'error');
+            $message = new Model\Message($text, 'error');
             break;
 
         default:

@@ -2,22 +2,22 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatMenu.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A menu bar control
  *
- * A menu bar is like a {@link SwatMenu} but it displays menu items
+ * A menu bar is like a {@link Menu} but it displays menu items
  * horizontally in a bar.
  *
  * @package   Swat
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatMenu
- * @see SwatMenuItem
+ * @see Menu
+ * @see MenuItem
  */
-class SwatMenuBar extends SwatMenu
+class MenuBar extends Menu
 {
     // {{{ protected function getJavaScriptClass()
 
@@ -25,7 +25,7 @@ class SwatMenuBar extends SwatMenu
      * Gets the name of the JavaScript class to instantiate for this menu
      *
      * @return string the name of the JavaScript class to instantiate for this
-     *                menu. For the SwatMenuBar widget, this is
+     *                menu. For the MenuBar widget, this is
      *                'YAHOO.widget.MenuBar'.
      */
     protected function getJavaScriptClass()

@@ -2,6 +2,8 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\UI;
+
 /**
  * Interface for widgets that are parents for other widgets.
  *
@@ -9,20 +11,20 @@
  * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-interface SwatUIParent
+interface UIParent
 {
     // {{{ public function addChild()
 
     /**
      * Adds a child object to this parent object
      *
-     * This method is used by {@link SwatUI} when building a widget tree and
+     * This method is used by {@link Loader} when building a widget tree and
      * does not need to be called elsewhere. To add a field to a field view,
-     * use {@link SwatFieldView::appendField()}.
+     * use {@link FieldView::appendField()}.
      *
-     * @param SwatUIObject $child the child object to add to this parent object.
+     * @param Object $child the child object to add to this parent object.
      */
-    public function addChild(SwatUIObject $child);
+    public function addChild(Object $child);
 
     // }}}
     // {{{ public function getDescendants()
@@ -56,10 +58,10 @@ interface SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                       matching descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
-     * @see SwatWidget::getFirstAncestor()
+     * @see Widget::getFirstAncestor()
      */
     public function getFirstDescendant($class_name);
 
@@ -73,7 +75,7 @@ interface SwatUIParent
      * subtree below this UI-object.
      *
      * @return array an array of UI-object states with UI-object identifiers as
-     *                array keys.
+     *               array keys.
      */
     public function getDescendantStates();
 
@@ -87,7 +89,7 @@ interface SwatUIParent
      * UI-object.
      *
      * @param array $states an array of UI-object states with UI-object
-     *                       identifiers as array keys.
+     *                      identifiers as array keys.
      */
     public function setDescendantStates(array $states);
 

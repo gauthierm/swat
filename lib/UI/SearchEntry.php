@@ -2,7 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatEntry.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A single line search entry widget
@@ -11,7 +14,7 @@ require_once 'Swat/SwatEntry.php';
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatSearchEntry extends SwatEntry
+class SearchEntry extends Entry
 {
     // {{{ public properties
 
@@ -35,7 +38,7 @@ class SwatSearchEntry extends SwatEntry
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'event'));
+        $yui = new Html\YUI(array('dom', 'event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript('packages/swat/javascript/swat-search-entry.js');
         $this->addStyleSheet('packages/swat/styles/swat-search-entry.css');
@@ -56,7 +59,7 @@ class SwatSearchEntry extends SwatEntry
 
         parent::display();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -66,7 +69,7 @@ class SwatSearchEntry extends SwatEntry
      * Gets the inline JavaScript for this entry to function
      *
      * The inline JavaScript creates an instance of the
-     * SwatSearchEntry widget with the name $this->id_'obj'.
+     * SearchEntry widget with the name $this->id_'obj'.
      *
      * @return srting the inline JavaScript required for this control to
      *                 function

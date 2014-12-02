@@ -2,10 +2,12 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatFlydown.php';
-require_once 'Swat/SwatCascadeFlydown.php';
-require_once 'Swat/SwatState.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
+use Silverorange\Swat\L;
 
 /**
  * A time zone selection widget
@@ -14,7 +16,7 @@ require_once 'Swat/SwatState.php';
  * @copyright 2005-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTimeZoneEntry extends SwatInputControl implements SwatState
+class TimeZoneEntry extends InputControl implements Model\State
 {
     // {{{ public properties
 
@@ -56,24 +58,24 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
 
         static $area_whitelist = array(
-            DateTimeZone::AFRICA,
-            DateTimeZone::AMERICA,
-            DateTimeZone::ANTARCTICA,
-            DateTimeZone::ARCTIC,
-            DateTimeZone::ASIA,
-            DateTimeZone::ATLANTIC,
-            DateTimeZone::AUSTRALIA,
-            DateTimeZone::EUROPE,
-            DateTimeZone::INDIAN,
-            DateTimeZone::PACIFIC,
-            DateTimeZone::UTC,
+            \DateTimeZone::AFRICA,
+            \DateTimeZone::AMERICA,
+            \DateTimeZone::ANTARCTICA,
+            \DateTimeZone::ARCTIC,
+            \DateTimeZone::ASIA,
+            \DateTimeZone::ATLANTIC,
+            \DateTimeZone::AUSTRALIA,
+            \DateTimeZone::EUROPE,
+            \DateTimeZone::INDIAN,
+            \DateTimeZone::PACIFIC,
+            \DateTimeZone::UTC,
         );
 
         $time_zone_list = $this->parseAreaWhitelist($area_whitelist);
@@ -98,7 +100,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
         $areas_flydown = $this->getCompositeWidget('areas_flydown');
         $regions_flydown = $this->getCompositeWidget('regions_flydown');
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = $this->getCSSClassString();
         $div_tag->open();
@@ -141,14 +143,14 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
         if (!$this->required && $this->value === null && $this->isSensitive()) {
             return;
         } elseif ($this->value === null) {
-            $message = Swat::_('The %s field is required.');
-            $this->addMessage(new SwatMessage($message, 'error'));
+            $message = L::_('The %s field is required.');
+            $this->addMessage(new Model\Message($message, 'error'));
         } else {
             try {
-                $time_zone = new DateTimeZone($this->value);
-            } catch (Exception $e) {
-                $message = Swat::_('The %s field is an invalid time zone.');
-                $this->addMessage(new SwatMessage($message, 'error'));
+                $time_zone = new \DateTimeZone($this->value);
+            } catch (\Exception $e) {
+                $message = L::_('The %s field is an invalid time zone.');
+                $this->addMessage(new Model\Message($message, 'error'));
             }
         }
     }
@@ -161,7 +163,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
      *
      * @return string the current state of this time zone entry widget.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -176,7 +178,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
      *
      * @param string $state the new state of this time zone entry widget.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -208,13 +210,13 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
      */
     protected function createCompositeWidgets()
     {
-        $areas_flydown = new SwatFlydown($this->id.'_areas');
+        $areas_flydown = new Flydown($this->id.'_areas');
         $areas_flydown->addOptionsByArray($this->areas);
         $areas_flydown->show_blank = true;
-        $areas_flydown->blank_title = Swat::_('choose region …');
+        $areas_flydown->blank_title = L::_('choose region …');
         $this->addCompositeWidget($areas_flydown, 'areas_flydown');
 
-        $regions_flydown = new SwatCascadeFlydown($this->id.'_regions');
+        $regions_flydown = new CascadeFlydown($this->id.'_regions');
         $regions_flydown->show_blank = true;
         $regions_flydown->blank_value = null;
         $regions_flydown->cascade_from = $areas_flydown;
@@ -245,7 +247,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
             $whitelist = $whitelist | $area;
         }
 
-        $tz_data = DateTimeZone::listIdentifiers($whitelist);
+        $tz_data = \DateTimeZone::listIdentifiers($whitelist);
 
         foreach ($tz_data as $id) {
             $area = $this->getArea($id);
@@ -292,7 +294,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
     // {{{ private function setRegions()
 
     /**
-     * Builds the internal array of {@link SwatOption} objects for the
+     * Builds the internal array of {@link Model\Option} objects for the
      * specified regions
      *
      * @param array  $regions an array of regions.
@@ -302,7 +304,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
     {
         sort($regions);
 
-        $abbreviations = SwatDate::getTimeZoneAbbreviations();
+        $abbreviations = Util\Date::getTimeZoneAbbreviations();
 
         foreach ($regions as $region) {
             $title = $this->getRegionTitle($region);
@@ -317,7 +319,7 @@ class SwatTimeZoneEntry extends SwatInputControl implements SwatState
                 }
             }
 
-            $this->regions[$area][] = new SwatOption($region, $title);
+            $this->regions[$area][] = new Model\Option($region, $title);
         }
     }
 

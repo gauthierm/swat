@@ -2,9 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatDate.php';
-require_once 'Swat/SwatTile.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * A visible grouping of tiles in a tile view
@@ -19,7 +21,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2005-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTileViewGroup extends SwatTile
+class TileViewGroup extends Tile
 {
     // {{{ public properties
 
@@ -68,11 +70,14 @@ class SwatTileViewGroup extends SwatTile
      * @param mixed $next_row a data-object containing the data for the next
      *                        row being displayed in the tile-view or null if
      *                        the current row is the last row.
+     *
+     * @throws Exception\Exception
      */
     public function displayFooter($row, $next_row)
     {
-        if ($this->group_by === null)
-            throw new SwatException("Attribute 'group_by' must be set.");
+        if ($this->group_by === null) {
+            throw new Exception\Exception("Attribute 'group_by' must be set.");
+        }
 
         $group_by = $this->group_by;
 
@@ -95,7 +100,7 @@ class SwatTileViewGroup extends SwatTile
      */
     protected function displayGroupHeader($row)
     {
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->class = 'swat-tile-view-group';
 
         if ($this->header_current === null)
@@ -103,7 +108,7 @@ class SwatTileViewGroup extends SwatTile
 
         $div_tag->open();
 
-        $heading_tag = new SwatHtmlTag('h4');
+        $heading_tag = new Html\Tag('h4');
         $heading_tag->open();
         $this->displayRenderersInternal($row);
         $heading_tag->close();
@@ -142,12 +147,13 @@ class SwatTileViewGroup extends SwatTile
      * @param mixed $row a data object containing the data for a single row
      *                   in the table model for this group.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     protected function displayRenderers($row)
     {
-        if ($this->group_by === null)
-            throw new SwatException("Attribute 'group_by' must be set.");
+        if ($this->group_by === null) {
+            throw new Exception\Exception("Attribute 'group_by' must be set.");
+        }
 
         $group_by = $this->group_by;
 
@@ -175,9 +181,9 @@ class SwatTileViewGroup extends SwatTile
      */
     protected function isEqual($group_value, $row_value)
     {
-        if ($group_value instanceof SwatDate &&
-            $row_value instanceof SwatDate) {
-            return (SwatDate::compare($group_value, $row_value) === 0);
+        if ($group_value instanceof Util\Date &&
+            $row_value instanceof Util\Date) {
+            return (Util\Date::compare($group_value, $row_value) === 0);
         }
 
         return ($group_value === $row_value);
@@ -215,7 +221,7 @@ class SwatTileViewGroup extends SwatTile
      * case, the inside headers are reset so they display again in the new
      * outside header.
      *
-     * @see SwatTileViewGroup::resetSubGroups()
+     * @see TileViewGroup::resetSubGroups()
      */
     protected function reset()
     {

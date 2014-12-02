@@ -2,8 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatNumericCellRenderer.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A percentage cell renderer
@@ -12,21 +11,21 @@ require_once 'Swat/SwatString.php';
  * @copyright 2006-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatPercentageCellRenderer extends SwatNumericCellRenderer
+class PercentageCellRenderer extends NumericCellRenderer
 {
     // {{{ public function render()
 
     /**
      * Renders the contents of this cell
      *
-     * @see SwatCellRenderer::render()
+     * @see CellRenderer::render()
      */
     public function render()
     {
         if (!$this->visible)
             return;
 
-        SwatCellRenderer::render();
+        CellRenderer::render();
 
         if ($this->value === null && $this->null_display_value !== null) {
             $this->renderNullValue();

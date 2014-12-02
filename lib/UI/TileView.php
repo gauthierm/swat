@@ -2,25 +2,25 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatView.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatCheckAll.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
- * A tile view widget for containing a {@link SwatTile} tile
+ * A tile view widget for containing a {@link Tile} tile
  *
  * Records in this tile-view's model may be selected by the user by adding a
- * view-selector to this tile-view. See {@link SwatView} for details on how to
- * use {@link SwatViewSelector} objects.
+ * view-selector to this tile-view. See {@link View} for details on how to
+ * use {@link ViewSelector} objects.
  *
  * @package   Swat
  * @copyright 2007-2014 silverorange
  * @lisence   http://www.gnu.org/copyleft/lesser.html LGPL Lisence 2.1
- * @see       SwatTile
+ * @see       Tile
  */
-class SwatTileView extends SwatView implements SwatUIParent
+class TileView extends View implements UIParent
 {
     // {{{ public properties
 
@@ -28,8 +28,8 @@ class SwatTileView extends SwatView implements SwatUIParent
      * Whether to show a "check all" widget
      *
      * For this option to have an effect, this tile view's tile must contain a
-     * {@link SwatCheckboxCellRenderer}. This is a tri-state value:
-     * null (default) = display checkbox if their is more than one record,
+     * {@link CheckboxCellRenderer}. This is a tri-state value:
+     * null (default) = display checkbox if there is more than one record,
      * true = always display checkbox, false = never display checkbox.
      *
      * @var boolean
@@ -134,7 +134,7 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * @var array
      *
-     * @see SwatTileView::addGroup()
+     * @see TileView::addGroup()
      */
     protected $groups = array();
 
@@ -144,7 +144,7 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * The tile of this tile view
      *
-     * @var SwatTile
+     * @var Tile
      */
     private $tile = null;
 
@@ -156,7 +156,7 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * @param string $id a non-visable unique id for this widget.
      *
-     * @see SwatWidget:__construct()
+     * @see Widget:__construct()
      */
     public function __construct($id = null)
     {
@@ -174,7 +174,7 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * This initializes the tile view and the tile contained in the view.
      *
-     * @see SwatView::init()
+     * @see View::init()
      */
     public function init()
     {
@@ -199,16 +199,17 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * Process the tile contained by this tile view.
      *
-     * Unlike SwatWidget, composite widgets of this tile are not automatically
-     * processed. This allows tile-views to be created outside a SwatForm.
+     * Unlike Widget, composite widgets of this tile are not automatically
+     * processed. This allows tile-views to be created outside a Form.
      */
     public function process()
     {
         if (!$this->isInitialized())
             $this->init();
 
-        if ($this->getFirstAncestor('SwatForm') !== null)
+        if ($this->getFirstAncestor('\Silverorange\Swat\UIForm') !== null) {
             $this->getCompositeWidget('check_all')->process();
+        }
 
         $this->processed = true;
 
@@ -249,7 +250,7 @@ class SwatTileView extends SwatView implements SwatUIParent
         if (count($this->model) == 0 && $this->no_records_message !== null &&
             $this->show_check_all !== true) {
 
-            $div = new SwatHtmlTag('div');
+            $div = new Html\Tag('div');
             $div->class = 'swat-none';
             $div->setContent($this->no_records_message,
                 $this->no_records_message_type);
@@ -258,7 +259,7 @@ class SwatTileView extends SwatView implements SwatUIParent
             return;
         }
 
-        $tile_view_tag = new SwatHtmlTag('div');
+        $tile_view_tag = new Html\Tag('div');
         $tile_view_tag->id = $this->id;
         $tile_view_tag->class = $this->getCSSClassString();
         $tile_view_tag->open();
@@ -279,14 +280,14 @@ class SwatTileView extends SwatView implements SwatUIParent
             $check_all->display();
         }
 
-        $clear_div_tag = new SwatHtmlTag('div');
+        $clear_div_tag = new Html\Tag('div');
         $clear_div_tag->class = 'swat-clear';
         $clear_div_tag->setContent('');
         $clear_div_tag->display();
 
         $tile_view_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -404,37 +405,41 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used
+     * by {@link Loader} when building a widget tree and should not need to be
      * called elsewhere.
      *
-     * To set the SwatTile to use, use {@link SwatTileView::setTile()}.
-     * To add a SwatTileViewGroup use {@link SwatTileView::appendGroup()}.
+     * To set the Tile to use, use {@link TileView::setTile()}.
+     * To add a TileViewGroup use {@link TileView::appendGroup()}.
      *
-     * @param SwatTile|SwatTileViewGroup $child a reference to a child object
-     *                                          to add.
+     * @param Tile|TileViewGroup $child a reference to a child object to add.
      *
-     * @throws SwatInvalidClassException if the added object is not a tile.
-     * @throws SwatException if more than one tile is added to this tile view.
+     * @throws Exception\InvalidClassException if the added object is not a
+     *         tile.
+     * @throws Exception\Exception if more than one tile is added to this tile
+     *         view.
      *
-     * @see SwatUIParent
-     * @see SwatTileView::setTile()
-     * @see SwatTileView::appendGroup()
+     * @see UIParent
+     * @see TileView::setTile()
+     * @see TileView::appendGroup()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(Object $child)
     {
-        if ($child instanceof SwatTileViewGroup)
+        if ($child instanceof TileViewGroup) {
             $this->appendGroup($child);
-        elseif ($child instanceof SwatTile) {
-            if ($this->tile !== null)
-                throw new SwatException(
-                    'Only one tile may be added to a tile view.');
-
+        } elseif ($child instanceof Tile) {
+            if ($this->tile !== null) {
+                throw new Exception\Exception(
+                    'Only one tile may be added to a tile view.'
+                );
+            }
             $this->setTile($child);
         } else {
-            throw new SwatInvalidClassException(
-                'Only SwatTile objects can be added to a SwatTileView.',
-                0, $child);
+            throw new Exception\InvalidClassException(
+                'Only Tile objects can be added to a TileView.',
+                0,
+                $child
+            );
         }
     }
 
@@ -452,7 +457,7 @@ class SwatTileView extends SwatView implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -470,9 +475,12 @@ class SwatTileView extends SwatView implements SwatUIParent
                     $out[$this->tile->id] = $this->tile;
             }
 
-            if ($this->tile instanceof SwatUIParent)
-                $out = array_merge($out,
-                    $this->tile->getDescendants($class_name));
+            if ($this->tile instanceof UIParent) {
+                $out = array_merge(
+                    $out,
+                    $this->tile->getDescendants($class_name)
+                );
+            }
         }
 
         foreach ($this->groups as $group) {
@@ -483,8 +491,9 @@ class SwatTileView extends SwatView implements SwatUIParent
                     $out[$group->id] = $group;
             }
 
-            if ($group instanceof SwatUIParent)
+            if ($group instanceof UIParent) {
                 $out = array_merge($out, $group->getDescendants($class_name));
+            }
         }
 
         return $out;
@@ -498,10 +507,10 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -513,8 +522,9 @@ class SwatTileView extends SwatView implements SwatUIParent
         if ($this->tile instanceof $class_name)
             $out = $this->tile;
 
-        if ($out === null && $this->tile instanceof SwatUIParent)
+        if ($out === null && $this->tile instanceof UIParent) {
             $out = $this->tile->getFirstDescendant($class_name);
+        }
 
         return $out;
     }
@@ -535,8 +545,10 @@ class SwatTileView extends SwatView implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -555,9 +567,12 @@ class SwatTileView extends SwatView implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -566,7 +581,7 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * Gathers all messages from this tile view
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      */
     public function getMessages()
     {
@@ -599,12 +614,12 @@ class SwatTileView extends SwatView implements SwatUIParent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects needed by this tile view
+     * Gets the Html\Resource objects needed by this tile view
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
+     * @return Html\ResourceSet the Html\Resource objects needed by
      *                              this tile view.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -625,12 +640,12 @@ class SwatTileView extends SwatView implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the SwatHtmlHeadEntry objects that may be needed by this tile view
+     * Gets the Html\Resource objects that may be needed by this tile view
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
+     * @return Html\ResourceSet the Html\Resource objects that may be
      *                              needed by this tile view.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -656,10 +671,9 @@ class SwatTileView extends SwatView implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
@@ -695,7 +709,7 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * @return string the inline JavaScript required for this tile view.
      *
-     * @see SwatTile::getInlineJavaScript()
+     * @see Tile::getInlineJavaScript()
      */
     protected function getInlineJavaScript()
     {
@@ -749,9 +763,9 @@ class SwatTileView extends SwatView implements SwatUIParent
      * Whether or not a check-all widget is to be displayed for the tiles
      * of this tile view
      *
-     * This depends on the {@link SwatTileView::$show_check_all} property as
+     * This depends on the {@link TileView::$show_check_all} property as
      * well as whether or not this tile view contains a
-     * {@link SwatCheckboxCellRenderer} and whether or not this tile view
+     * {@link CheckboxCellRenderer} and whether or not this tile view
      * contains enough tiles to warrent having a check-all widget
      *
      * @return boolean true if a check-all widget is to be displayed for this
@@ -760,7 +774,7 @@ class SwatTileView extends SwatView implements SwatUIParent
     protected function showCheckAll()
     {
         if ($this->getCheckboxCellRenderer() === null ||
-            $this->getFirstAncestor('SwatForm') === null) {
+            $this->getFirstAncestor('\Silverorange\Swat\UI\Form') === null) {
             $show = false;
         } elseif ($this->show_check_all === null && count($this->model) > 1) {
             $show = true;
@@ -779,16 +793,16 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * Gets the first checkbox cell renderer in this tile view's tile
      *
-     * @return SwatCheckboxCellRenderer the first checkbox cell renderer in
-     *                                  this tile view's tile or null if no
-     *                                  such cell renderer exists.
+     * @return CheckboxCellRenderer the first checkbox cell renderer in
+     *                              this tile view's tile or null if no
+     *                              such cell renderer exists.
      */
     protected function getCheckboxCellRenderer()
     {
         $checkbox_cell_renderer = null;
 
         foreach ($this->tile->getRenderers() as $renderer) {
-            if ($renderer instanceof SwatCheckboxCellRenderer) {
+            if ($renderer instanceof CheckboxCellRenderer) {
                 $checkbox_cell_renderer = $renderer;
                 break;
             }
@@ -805,8 +819,8 @@ class SwatTileView extends SwatView implements SwatUIParent
      */
     protected function createCompositeWidgets()
     {
-        if ($this->getFirstAncestor('SwatForm') !== null) {
-            $check_all = new SwatCheckAll();
+        if ($this->getFirstAncestor('\Silverorange\Swat\UI\Form') !== null) {
+            $check_all = new CheckAll();
             $this->addCompositeWidget($check_all, 'check_all');
         }
     }
@@ -819,7 +833,7 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * Gets a reference to a tile contained in the view.
      *
-     * @return SwatTile the requested tile
+     * @return Tile the requested tile.
      */
     public function getTile()
     {
@@ -832,9 +846,9 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * Sets a tile of this tile view
      *
-     * @param SwatTile $tile the tile to set
+     * @param Tile $tile the tile to set
      */
-    public function setTile(SwatTile $tile)
+    public function setTile(Tile $tile)
     {
         // if we're overwriting an existing tile, remove it's parent link
         if ($this->tile !== null)
@@ -858,15 +872,15 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * Multiple groupings may be added to tile-views.
      *
-     * @param SwatTileViewGroup $group the tile-view grouping to append to
-     *                                  this tile-view.
+     * @param TileViewGroup $group the tile-view grouping to append to this
+     *                             tile-view.
      *
-     * @see SwatTileViewGroup
+     * @see TileViewGroup
      *
-     * @throws SwatDuplicateIdException if the group has the same id as a
-     *                                  group already in this tile-view.
+     * @throws Exception\DuplicateIdException if the group has the same id as a
+     *         group already in this tile-view.
      */
-    public function appendGroup(SwatTileViewGroup $group)
+    public function appendGroup(TileViewGroup $group)
     {
         $this->validateGroup($group);
 
@@ -904,16 +918,18 @@ class SwatTileView extends SwatView implements SwatUIParent
      *
      * @param string $id the id of the group to get.
      *
-     * @return SwatTileViewGroup the requested group.
+     * @return TileViewGroup the requested group.
      *
-     * @throws SwatWidgetNotFoundException if no group with the specified id
-     *                                     exists in this tile-view.
+     * @throws Exception\WidgetNotFoundException if no group with the specified
+     *         id exists in this tile-view.
      */
     public function getGroup($id)
     {
-        if (!array_key_exists($id, $this->groups_by_id))
-            throw new SwatWidgetNotFoundException(
-                "Group with an id of '{$id}' not found.");
+        if (!array_key_exists($id, $this->groups_by_id)) {
+            throw new Exception\WidgetNotFoundException(
+                "Group with an id of '{$id}' not found."
+            );
+        }
 
         return $this->groups_by_id[$id];
     }
@@ -937,21 +953,24 @@ class SwatTileView extends SwatView implements SwatUIParent
     /**
      * Ensures a group added to this tile-view is valid for this tile-view
      *
-     * @param SwatTileViewGroup $group the group to check.
+     * @param TileViewGroup $group the group to check.
      *
-     * @throws SwatDuplicateIdException if the group has the same id as a
-     *                                  group already in this tile-view.
+     * @throws Exception\DuplicateIdException if the group has the same id as a
+     *         group already in this tile-view.
      */
-    protected function validateGroup(SwatTileViewGroup $group)
+    protected function validateGroup(TileViewGroup $group)
     {
         // note: This works because the id property is set before children are
-        // added to parents in SwatUI.
+        // added to parents in Loader.
         if ($group->id !== null) {
-            if (array_key_exists($group->id, $this->groups_by_id))
-                throw new SwatDuplicateIdException(
+            if (array_key_exists($group->id, $this->groups_by_id)) {
+                throw new Exception\DuplicateIdException(
                     "A group with the id '{$group->id}' already exists ".
-                    'in this tile view.',
-                    0, $group->id);
+                    "in this tile view.",
+                    0,
+                    $group->id
+                );
+            }
         }
     }
 

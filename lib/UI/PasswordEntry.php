@@ -2,8 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatEntry.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A password entry widget
@@ -12,7 +11,7 @@ require_once 'Swat/SwatEntry.php';
  * @copyright 2005-2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatPasswordEntry extends SwatEntry
+class PasswordEntry extends Entry
 {
     // {{{ public function __construct()
 
@@ -21,7 +20,7 @@ class SwatPasswordEntry extends SwatEntry
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {

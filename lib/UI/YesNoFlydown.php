@@ -2,7 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatFlydown.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\L;
 
 /**
  * A flydown (aka combo-box) selection widget for a Yes/No option.
@@ -11,7 +13,7 @@ require_once 'Swat/SwatFlydown.php';
  * @copyright 2005-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatYesNoFlydown extends SwatFlydown
+class YesNoFlydown extends Flydown
 {
     // {{{ constants
 
@@ -28,13 +30,13 @@ class SwatYesNoFlydown extends SwatFlydown
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->addOption(self::NO,  Swat::_('No'));
-        $this->addOption(self::YES, Swat::_('Yes'));
+        $this->addOption(self::NO,  L::_('No'));
+        $this->addOption(self::YES, L::_('Yes'));
     }
 
     // }}}

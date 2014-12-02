@@ -2,10 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatState.php';
-require_once 'Swat/SwatString.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
+use Silverorange\Swat\Util;
 
 /**
  * A multi-line text entry widget
@@ -14,7 +15,7 @@ require_once 'Swat/SwatString.php';
  * @copyright 2004-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatTextarea extends SwatInputControl implements SwatState
+class Textarea extends InputControl implements Model\State
 {
     // {{{ public properties
 
@@ -116,12 +117,12 @@ class SwatTextarea extends SwatInputControl implements SwatState
      *
      * @param string $id a non-visible unique id for this widget.
      *
-     * @see SwatWidget::__construct()
+     * @see Widget::__construct()
      */
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $yui = new SwatYUI(array('dom', 'event'));
+        $yui = new Html\YUI(array('dom', 'event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript('packages/swat/javascript/swat-textarea.js');
         $this->addStyleSheet('packages/swat/styles/swat-textarea.css');
@@ -142,7 +143,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
 
         parent::display();
 
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->class = 'swat-textarea-container';
         $div_tag->open();
 
@@ -151,7 +152,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
 
         $div_tag->close();
 
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -199,7 +200,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
      *
      * @return boolean the current state of this textarea.
      *
-     * @see SwatState::getState()
+     * @see Model\State::getState()
      */
     public function getState()
     {
@@ -214,7 +215,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
      *
      * @param boolean $state the new state of this textarea.
      *
-     * @see SwatState::setState()
+     * @see Model\State::setState()
      */
     public function setState($state)
     {
@@ -232,7 +233,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
      *                widget that should receive focus or null if there is
      *                no such element.
      *
-     * @see SwatWidget::getFocusableHtmlId()
+     * @see Widget::getFocusableHtmlId()
      */
     public function getFocusableHtmlId()
     {
@@ -245,7 +246,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
     /**
      * Gets the textarea tag used to display this textarea control
      *
-     * @return SwatHtmlTag the textarea tag used to display this textarea
+     * @return Html\Tag the textarea tag used to display this textarea
      *                     control.
      */
     protected function getTextareaTag()
@@ -257,7 +258,7 @@ class SwatTextarea extends SwatInputControl implements SwatState
         // for editing
         $value = htmlspecialchars($value);
 
-        $textarea_tag = new SwatHtmlTag('textarea');
+        $textarea_tag = new Html\Tag('textarea');
         $textarea_tag->name = $this->id;
         $textarea_tag->id = $this->id;
         $textarea_tag->class = $this->getCSSClassString();

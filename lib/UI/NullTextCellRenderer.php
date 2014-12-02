@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTextCellRenderer.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A cell renderer that displays a message if it is asked to display
@@ -12,13 +12,13 @@ require_once 'Swat/SwatTextCellRenderer.php';
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatNullTextCellRenderer extends SwatTextCellRenderer
+class NullTextCellRenderer extends TextCellRenderer
 {
     // {{{ public properties
 
     /**
      * The text to display in this cell if the
-     * {@link SwatTextCellRenderer::$text} proeprty is null when the render()
+     * {@link TextCellRenderer::$text} property is null when the render()
      * method is called
      *
      * @var string
@@ -26,7 +26,7 @@ class SwatNullTextCellRenderer extends SwatTextCellRenderer
     public $null_text = '&lt;none&gt;';
 
     /**
-     * Whether to test the {@link SwatTextCellRenderer::$text} property for
+     * Whether to test the {@link TextCellRenderer::$text} property for
      * null using strict equality.
      *
      * @var boolean

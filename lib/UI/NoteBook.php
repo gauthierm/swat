@@ -2,13 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatWidget.php';
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatYUI.php';
-require_once 'Swat/SwatNoteBookPage.php';
-require_once 'Swat/SwatNoteBookChild.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Util;
 
 /**
  * Notebook widget for containing {@link SwatNoteBookPage} pages
@@ -16,9 +14,9 @@ require_once 'Swat/exceptions/SwatInvalidClassException.php';
  * @package   Swat
  * @copyright 2007-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatNoteBookPage
+ * @see       NoteBookPage
  */
-class SwatNoteBook extends SwatWidget implements SwatUIParent
+class NoteBook extends Widget implements UIParent
 {
     // {{{ constants
 
@@ -55,8 +53,8 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
     /**
      * Selected page
      *
-     * The id of the {@link SwatNoteBookPage} to show as selected. By default,
-     * the first page is selected.
+     * The id of the {@link NoteBookPage} to show as selected. By default, the
+     * first page is selected.
      *
      * @var string
      */
@@ -93,7 +91,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('tabview'));
+        $yui = new Html\YUI(array('tabview'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addStyleSheet('packages/swat/styles/swat-note-book.css');
@@ -103,32 +101,32 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
     // {{{ public function addChild()
 
     /**
-     * Adds a {@link SwatNoteBookChild} to this notebook
+     * Adds a {@link NoteBookChild} to this notebook
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used by
+     * {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To add a notebook page to a notebook, use
-     * {@link SwatNoteBook::addPage()}.
+     * {@link NoteBook::addPage()}.
      *
-     * Note: This is the only way to add a SwatNoteBookChild that is not a
-     *       SwatNoteBookPage.
+     * Note: This is the only way to add a NoteBookChild that is not a
+     *       NoteBookPage.
      *
-     * @param SwatNoteBookChild $child the notebook child to add.
+     * @param NoteBookChild $child the notebook child to add.
      *
-     * @throws SwatInvalidClassException if the given object is not an instance
-     *                                   of SwatNoteBookChild.
+     * @throws Exception\InvalidClassException if the given object is not an
+     *         instance of NoteBookChild.
      *
-     * @see SwatUIParent
+     * @see UIParent
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(UIObject $child)
     {
-        if ($child instanceof SwatNoteBookChild) {
+        if ($child instanceof NoteBookChild) {
             $this->children[] = $child;
             $child->parent = $this;
         } else {
-            throw new SwatInvalidClassException(
-                'Only SwatNoteBookChild objects may be nested within a '.
-                'SwatNoteBook object.', 0, $child);
+            throw new Exception\InvalidClassException(
+                'Only NoteBookChild objects may be nested within a '.
+                'NoteBook object.', 0, $child);
         }
     }
 
@@ -136,11 +134,11 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
     // {{{ public function addPage()
 
     /**
-     * Adds a {@link SwatNoteBookPage} to this notebook
+     * Adds a {@link NoteBookPage} to this notebook
      *
-     * @param SwatNoteBookPage $page the notebook page to add.
+     * @param NoteBookPage $page the notebook page to add.
      */
-    public function addPage(SwatNoteBookPage $page)
+    public function addPage(NoteBookPage $page)
     {
         $this->pages[] = $page;
         $page->parent = $this;
@@ -157,7 +155,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      *
      * @param string $id the unique id of the page to look for.
      *
-     * @return SwatNoteBookPage the found page or null if not found.
+     * @return NoteBookPage the found page or null if not found.
      */
     public function getPage($id)
     {
@@ -223,7 +221,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
         parent::display();
 
         $li_counter = 0;
-        $div_tag = new SwatHtmlTag('div');
+        $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
         $div_tag->class = 'yui-navset';
         $div_tag->open();
@@ -234,7 +232,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
                 continue;
 
             $li_counter++;
-            $li_tag = new SwatHtmlTag('li');
+            $li_tag = new Html\Tag('li');
 
             $li_tag->class = 'tab'.$li_counter;
 
@@ -242,10 +240,10 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
                 ($page->id == $this->selected_page))
                 $li_tag->class.= ' selected';
 
-            $anchor_tag = new SwatHtmlTag('a');
+            $anchor_tag = new Html\Tag('a');
             $anchor_tag->href = '#'.$page->id;
 
-            $em_tag = new SwatHtmlTag('em');
+            $em_tag = new Html\Tag('em');
             $em_tag->setContent($page->title, $page->title_content_type);
 
             $li_tag->open();
@@ -262,7 +260,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
 
         echo '</div>';
         $div_tag->close();
-        Swat::displayInlineJavaScript($this->getInlineJavaScript());
+        Util\JavaScript::displayInline($this->getInlineJavaScript());
     }
 
     // }}}
@@ -292,9 +290,9 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      * Gathers all messages from pages of this notebook and from this notebook
      * itself.
      *
-     * @return array an array of {@link SwatMessage} objects.
+     * @return array an array of {@link Model\Message} objects.
      *
-     * @see SwatMessage
+     * @see Model\Message
      */
     public function getMessages()
     {
@@ -333,13 +331,13 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the {@link SwatHtmlHeadEntry} objects needed by this notebook
+     * Gets the {@link Html\Resource} objects needed by this notebook
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects needed by
-     *                              this notebook and any UI objects in this
-     *                              notebook's widget subtree.
+     * @return Html\ResourceSet the Html\Resource objects needed by this
+     *                          notebook and any UI objects in this notebook's
+     *                          widget subtree.
      *
-     * @see SwatUIObject::getHtmlHeadEntrySet()
+     * @see UIObject::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -356,14 +354,14 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
     // {{{ public function getAvailableHtmlHeadEntrySet()
 
     /**
-     * Gets the {@link SwatHtmlHeadEntry} objects that may be needed by this
+     * Gets the {@link Html\Resource} objects that may be needed by this
      * notebook
      *
-     * @return SwatHtmlHeadEntrySet the SwatHtmlHeadEntry objects that may be
-     *                              needed by this notebook and any UI
-     *                              objects in this notebook's widget subtree.
+     * @return Html\ResourceSet the Html\Resource objects that may be needed by
+     *                          by this notebook and any UI objects in this
+     *                          notebook's widget subtree.
      *
-     * @see SwatUIObject::getAvailableHtmlHeadEntrySet()
+     * @see UIObject::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -390,7 +388,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      *               objects have identifiers, the identifier is used as the
      *               array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -408,9 +406,12 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
                     $out[$page->id] = $page;
             }
 
-            if ($page instanceof SwatUIParent)
-                $out = array_merge($out,
-                    $page->getDescendants($class_name));
+            if ($page instanceof UIParent) {
+                $out = array_merge(
+                    $out,
+                    $page->getDescendants($class_name)
+                );
+            }
         }
 
         return $out;
@@ -424,10 +425,10 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant UI-object or null if no
-     *                      matching descendant is found.
+     * @return UIObject the first descendant UI-object or null if no matching
+     *                  descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -442,7 +443,7 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
                 break;
             }
 
-            if ($page instanceof SwatUIParent) {
+            if ($page instanceof UIParent) {
                 $out = $page->getFirstDescendant($class_name);
                 if ($out !== null)
                     break;
@@ -468,8 +469,10 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -488,9 +491,12 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -502,10 +508,9 @@ class SwatNoteBook extends SwatWidget implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return UIObject a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {

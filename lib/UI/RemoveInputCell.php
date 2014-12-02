@@ -2,12 +2,11 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatInputCell.php';
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatContentBlock.php';
-require_once 'Swat/SwatWidget.php';
-require_once 'Swat/exceptions/SwatException.php';
-require_once 'Swat/SwatHtmlTag.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\L;
 
 /**
  * An input cell containing a "remove row" link
@@ -15,7 +14,7 @@ require_once 'Swat/SwatHtmlTag.php';
  * One or more of these input cell are required if you want the user to be
  * able to remove rows from the table-view's input-row. For example if the
  * user accidentally adds 10 input rows but only wants to submit 3 you need to
- * add a SwatRemoveInputCell object to one or more columns so the user can
+ * add a RemoveInputCell object to one or more columns so the user can
  * remove the extra rows before submitting the form.
  *
  * This input cell is automatically assigned a widget when it is initialized.
@@ -26,43 +25,46 @@ require_once 'Swat/SwatHtmlTag.php';
  * @copyright 2006 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatRemoveInputCell extends SwatInputCell
+class RemoveInputCell extends InputCell
 {
     // {{{ public function init()
 
     /**
      * Sets the remove widget for this input cell
      *
-     * In SwatRemoveInputCell objects the remove widget is automatically set to
-     * a SwatContentBlock with predefined content for the remove link.
+     * In RemoveInputCell objects the remove widget is automatically set to
+     * a ContentBlock with predefined content for the remove link.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
     public function init()
     {
         $row = $this->getInputRow();
-        if ($row === null)
-            throw new SwatException('Remove input-cells can only be used '.
-                'inside table-views with an input-row.');
+        if ($row === null) {
+            throw new Exception\Exception(
+                'Remove input-cells can only be used inside table-views '.
+                'with an input-row.'
+            );
+        }
 
-        $content = new SwatContentBlock();
+        $content = new ContentBlock();
 
         ob_start();
 
-        $view = $this->getFirstAncestor('SwatTableView');
+        $view = $this->getFirstAncestor('\Silverorange\Swat\UI\TableView');
         $view_id = ($view === null) ? null : $view->id;
         $id = ($view_id === null) ? $row->id : $view_id.'_'.$row->id;
 
-        $anchor_tag = new SwatHtmlTag('a');
-        $anchor_tag->title = Swat::_('remove this row');
+        $anchor_tag = new Html\Tag('a');
+        $anchor_tag->title = L::_('remove this row');
         $anchor_tag->href =
             sprintf("javascript:%s_obj.removeRow('%%s');", $id);
 
         $anchor_tag->open();
 
-        $image_tag = new SwatHtmlTag('img');
+        $image_tag = new Html\Tag('img');
         $image_tag->src = 'packages/swat/images/list-remove.png';
-        $image_tag->alt = Swat::_('remove graphic');
+        $image_tag->alt = L::_('remove graphic');
 
         $image_tag->display();
 
@@ -86,7 +88,7 @@ class SwatRemoveInputCell extends SwatInputCell
      * @param integer $replicator_id the numeric identifier of the input row
      *                               that is being displayed.
      *
-     * @see SwatInputCell::display()
+     * @see InputCell::display()
      */
     public function display($replicator_id)
     {
@@ -102,16 +104,16 @@ class SwatRemoveInputCell extends SwatInputCell
     /**
      * Sets the widget of this input cell
      *
-     * SwatRemoveInputCell objects cannot have their widget set manually so
-     * this method is over-ridden to always throw an exception.
+     * RemoveInputCell objects cannot have their widget set manually so this
+     * method is over-ridden to always throw an exception.
      *
-     * @param SwatWidget $widget the new widget of this input cell.
+     * @param Widget $widget the new widget of this input cell.
      *
-     * @throws SwatException
+     * @throws Exception\Exception
      */
-    public function setWidget(SwatWidget $child)
+    public function setWidget(Widget $child)
     {
-        throw new SwatException('Remove input cells must be empty');
+        throw new Exception\Exception('Remove input cells must be empty');
     }
 
     // }}}

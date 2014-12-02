@@ -2,9 +2,10 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatTextarea.php';
-require_once 'Swat/SwatFormField.php';
-require_once 'Swat/SwatCheckbox.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Model;
+use Silverorange\Swat\L;
 
 /**
  * A text area that validates its content as an XHTML fragment against the
@@ -14,7 +15,7 @@ require_once 'Swat/SwatCheckbox.php';
  * @copyright 2006-2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatXHTMLTextarea extends SwatTextarea
+class XHTMLTextarea extends Textarea
 {
     // {{{ public properties
 
@@ -42,7 +43,7 @@ class SwatXHTMLTextarea extends SwatTextarea
     /**
      * Composite checkbox control used to ignore XHTML validation errors
      *
-     * @var SwatCheckbox
+     * @var Checkbox
      */
     protected $ignore_errors_checkbox;
 
@@ -61,7 +62,7 @@ class SwatXHTMLTextarea extends SwatTextarea
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-        <title>SwatXHTMLTextarea Content</title>
+        <title>XHTMLTextarea Content</title>
     </head>
     <body>
         <div>
@@ -125,7 +126,7 @@ XHTML;
      *
      * @param array $xml_errors an array of LibXMLError objects.
      *
-     * @return SwatMessage a human readable error message for XHTML validation
+     * @return Model\Message a human readable error message for XHTML validation
      *                     errors on this textarea's value.
      */
     protected function getValidationErrorMessage(array $xml_errors)
@@ -142,36 +143,48 @@ XHTML;
             $error = $error_object->message;
 
             // further humanize
-            $error = str_replace('tag mismatch:',
-                Swat::_('tag mismatch between'),
-                $error);
+            $error = str_replace(
+                'tag mismatch:',
+                L::_('tag mismatch between'),
+                $error
+            );
 
             // remove some stuff that only makes sense in document context
             $error = preg_replace('/\s?line:? [0-9]+\s?/ui', ' ', $error);
             $error = preg_replace('/in entity[:,.]?/ui', '', $error);
             $error = strtolower($error);
 
-            $error = str_replace('xmlparseentityref: no name',
-                Swat::_('unescaped ampersand. Use &amp;amp; instead of &amp;'),
-                $error);
+            $error = str_replace(
+                'xmlparseentityref: no name',
+                L::_('unescaped ampersand. Use &amp;amp; instead of &amp;'),
+                $error
+            );
 
-            $error = str_replace('starttag: invalid element name',
-                Swat::_('unescaped less-than. Use &amp;lt; instead of &lt;'),
-                $error);
+            $error = str_replace(
+                'starttag: invalid element name',
+                L::_('unescaped less-than. Use &amp;lt; instead of &lt;'),
+                $error
+            );
 
-            $error = str_replace('specification mandate value for attribute',
-                Swat::_('a value is required for the attribute'),
-                $error);
+            $error = str_replace(
+                'specification mandate value for attribute',
+                L::_('a value is required for the attribute'),
+                $error
+            );
 
             $error = preg_replace(
                 '/^no declaration for attribute (.*?) of element (.*?)$/',
-                Swat::_('the attribute \1 is not valid for the element \2'),
-                $error);
+                L::_('the attribute \1 is not valid for the element \2'),
+                $error
+            );
 
             $error = str_replace('attvalue: " or \' expected',
-                Swat::_('attribute values must be contained within quotation '.
-                    'marks'),
-                $error);
+                L::_(
+                    'attribute values must be contained within quotation '.
+                    'marks'
+                ),
+                $error
+            );
 
             $error = trim($error);
 
@@ -179,9 +192,9 @@ XHTML;
                 $errors[] = $error;
         }
 
-        $content = Swat::_('%s must be valid XHTML markup: ');
+        $content = L::_('%s must be valid XHTML markup: ');
         $content.= '<ul><li>'.implode(',</li><li>', $errors).'.</li></ul>';
-        $message = new SwatMessage($content, 'error');
+        $message = new Model\Message($content, 'error');
         $message->content_type = 'text/xml';
 
         return $message;
@@ -193,15 +206,16 @@ XHTML;
     /**
      * Creates the composite checkbox used by this XHTML textarea
      *
-     * @see SwatWidget::createCompositeWidgets()
+     * @see Widget::createCompositeWidgets()
      */
     protected function createCompositeWidgets()
     {
-        $this->ignore_errors_checkbox =
-            new SwatCheckbox($this->id.'_ignore_checkbox');
+        $this->ignore_errors_checkbox = new Checkbox(
+            $this->id.'_ignore_checkbox'
+        );
 
-        $ignore_field = new SwatFormField($this->id.'_ignore_field');
-        $ignore_field->title = Swat::_('Ignore XHTML validation errors');
+        $ignore_field = new FormField($this->id.'_ignore_field');
+        $ignore_field->title = L::_('Ignore XHTML validation errors');
         $ignore_field->add($this->ignore_errors_checkbox);
 
         $this->addCompositeWidget($ignore_field, 'ignore_field');

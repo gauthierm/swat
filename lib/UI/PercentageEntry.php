@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatFloatEntry.php';
+namespace Silverorange\Swat\UI;
 
 /**
  * A percentage entry widget
@@ -11,7 +11,7 @@ require_once 'Swat/SwatFloatEntry.php';
  * @copyright  2007 silverorange
  * @lisence    http://www.gnu.org/copyleft/lesser.html LGPL Lisence 2.1
  */
-class SwatPercentageEntry extends SwatFloatEntry
+class PercentageEntry extends FloatEntry
 {
     // {{{ protected function getDisplayValue()
 

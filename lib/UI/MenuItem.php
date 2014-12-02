@@ -2,29 +2,25 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatUIParent.php';
-require_once 'Swat/SwatControl.php';
-require_once 'Swat/SwatHtmlTag.php';
-require_once 'Swat/SwatString.php';
-require_once 'Swat/SwatAbstractMenu.php';
-require_once 'Swat/exceptions/SwatUndefinedStockTypeException.php';
-require_once 'Swat/exceptions/SwatInvalidClassException.php';
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\UI;
+
+use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\L;
 
 /**
  * An item in a menu
  *
- * SwatMenuItem objects may be added to {@link SwatMenu} or
- * {@link SwatMenuGroup} widgets.
+ * MenuItem objects may be added to {@link Menu} or {@link MenuGroup} widgets.
  *
  * @package   Swat
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  *
- * @see SwatMenu
- * @see SwatMenuGroup
+ * @see Menu
+ * @see MenuGroup
  */
-class SwatMenuItem extends SwatControl implements SwatUIParent
+class MenuItem extends Control implements UIParent
 {
     // {{{ public properties
 
@@ -40,7 +36,7 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      *
      * @var string
      *
-     * @see SwatMenuItem::$value
+     * @see MenuItem::$value
      */
     public $link;
 
@@ -50,12 +46,12 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      *
      * The value property may be specified either as an array of values or as
      * a single value. If an array is passed, a call to vsprintf() is done
-     * on the {@link SwatMenuItem::$link} property. If the value is a string
-     * a single sprintf() call is made.
+     * on the {@link MenuItem::$link} property. If the value is a string a
+     * single sprintf() call is made.
      *
      * @var array|string
      *
-     * @see SwatMenuItem::$link
+     * @see MenuItem::$link
      */
     public $value;
 
@@ -74,7 +70,7 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      *
      * @var string
      *
-     * @see SwatToolLink::setFromStock()
+     * @see ToolLink::setFromStock()
      */
     public $stock_id = null;
 
@@ -84,9 +80,9 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
     /**
      * The sub menu of this menu item
      *
-     * @var SwatAbstractMenu
+     * @var AbstractMenu
      *
-     * @see SwatMenuItem::setSubMenu()
+     * @see MenuItem::setSubMenu()
      */
     protected $sub_menu;
 
@@ -103,9 +99,9 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
     /**
      * Sets the sub-menu of this menu item
      *
-     * @param SwatAbstractMenu $menu the sub-menu for this menu item.
+     * @param AbstractMenu $menu the sub-menu for this menu item.
      */
-    public function setSubMenu(SwatAbstractMenu $menu)
+    public function setSubMenu(AbstractMenu $menu)
     {
         $this->sub_menu = $menu;
         $menu->parent = $this;
@@ -117,31 +113,36 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
     /**
      * Adds a child object
      *
-     * This method fulfills the {@link SwatUIParent} interface. It is used
-     * by {@link SwatUI} when building a widget tree and should not need to be
+     * This method fulfills the {@link UIParent} interface. It is used
+     * by {@link Loader} when building a widget tree and should not need to be
      * called elsewhere. To set the sub-menu for a menu item, use
-     * {@link SwatMenuItem::setSubMenu()}.
+     * {@link MenuItem::setSubMenu()}.
      *
-     * @param SwatAbstractMenu $child the child object to add.
+     * @param AbstractMenu $child the child object to add.
      *
-     * @throws SwatInvalidClassException
-     * @throws SwatException if this menu item already has a sub-menu.
+     * @throws Exception\InvalidClassException
+     * @throws Exception\Exception if this menu item already has a sub-menu.
      *
-     * @see SwatUIParent
-     * @see SwatMenuItem::setSubMenu()
+     * @see UIParent
+     * @see MenuItem::setSubMenu()
      */
-    public function addChild(SwatUIObject $child)
+    public function addChild(UIObject $child)
     {
         if ($this->sub_menu === null) {
-            if ($child instanceof SwatAbstractMenu)
+            if ($child instanceof AbstractMenu) {
                 $this->setSubMenu($child);
-            else
-                throw new SwatInvalidClassException(
-                    'Only a SwatAbstractMenu object may be nested within a '.
-                    'SwatMenuItem object.', 0, $child);
+            } else {
+                throw new Exception\InvalidClassException(
+                    'Only a AbstractMenu object may be nested within a '.
+                    'MenuItem object.',
+                    0,
+                    $child
+                );
+            }
         } else {
-            throw new SwatException(
-                'Can only add one sub-menu to a menu item.');
+            throw new Exception\Exception(
+                'Can only add one sub-menu to a menu item.'
+            );
         }
     }
 
@@ -178,13 +179,13 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
         parent::display();
 
         if ($this->link === null) {
-            $span_tag = new SwatHtmlTag('span');
+            $span_tag = new Html\Tag('span');
             $span_tag->id = $this->id;
             $span_tag->class = $this->getCSSClassString();
             $span_tag->setContent($this->title);
             $span_tag->display();
         } else {
-            $anchor_tag = new SwatHtmlTag('a');
+            $anchor_tag = new Html\Tag('a');
             $anchor_tag->id = $this->id;
             $anchor_tag->class = $this->getCSSClassString();
 
@@ -225,60 +226,62 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      * @param boolean $overwrite_properties whether to overwrite properties if
      *                                      they are already set.
      *
-     * @throws SwatUndefinedStockTypeException
+     * @throws Exception\UndefinedStockTypeException
      */
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
         switch ($stock_id) {
         case 'create':
-            $title = Swat::_('Create');
+            $title = L::_('Create');
             $class = 'swat-menu-item-create';
             break;
 
         case 'add':
-            $title = Swat::_('Add');
+            $title = L::_('Add');
             $class = 'swat-menu-item-add';
             break;
 
         case 'edit':
-            $title = Swat::_('Edit');
+            $title = L::_('Edit');
             $class = 'swat-menu-item-edit';
             break;
 
         case 'delete':
-            $title = Swat::_('Delete');
+            $title = L::_('Delete');
             $class = 'swat-menu-item-delete';
             break;
 
         case 'preview':
-            $title = Swat::_('Preview');
+            $title = L::_('Preview');
             $class = 'swat-menu-item-preview';
             break;
 
         case 'change-order':
-            $title = Swat::_('Change Order');
+            $title = L::_('Change Order');
             $class = 'swat-menu-item-change-order';
             break;
 
         case 'help':
-            $title = Swat::_('Help');
+            $title = L::_('Help');
             $class = 'swat-menu-item-help';
             break;
 
         case 'print':
-            $title = Swat::_('Print');
+            $title = L::_('Print');
             $class = 'swat-menu-item-print';
             break;
 
         case 'email':
-            $title = Swat::_('Email');
+            $title = L::_('Email');
             $class = 'swat-menu-item-email';
             break;
 
         default:
-            throw new SwatUndefinedStockTypeException(
+            throw new Exception\UndefinedStockTypeException(
                 "Stock type with id of '{$stock_id}' not found.",
-                0, $stock_id);
+                0,
+                $stock_id
+            );
         }
 
         if ($overwrite_properties || ($this->title === null))
@@ -301,7 +304,7 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      *               descendant objects have identifiers, the identifier is
      *               used as the array key.
      *
-     * @see SwatUIParent::getDescendants()
+     * @see UIParent::getDescendants()
      */
     public function getDescendants($class_name = null)
     {
@@ -320,9 +323,12 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
                     $out[$this->sub_menu->id] = $this->sub_menu;
             }
 
-            if ($this->sub_menu instanceof SwatUIParent)
-                $out = array_merge($out,
-                    $this->sub_menu->getDescendants($class_name));
+            if ($this->sub_menu instanceof UIParent) {
+                $out = array_merge(
+                    $out,
+                    $this->sub_menu->getDescendants($class_name)
+                );
+            }
         }
 
         return $out;
@@ -336,10 +342,10 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return SwatUIObject the first descendant widget or null if no matching
-     *                      descendant is found.
+     * @return UIObject the first descendant widget or null if no matching
+     *                  descendant is found.
      *
-     * @see SwatUIParent::getFirstDescendant()
+     * @see UIParent::getFirstDescendant()
      */
     public function getFirstDescendant($class_name)
     {
@@ -351,8 +357,9 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
         if ($this->sub_menu instanceof $class_name)
             $out = $this->sub_menu;
 
-        if ($out === null && $this->sub_menu instanceof SwatUIParent)
+        if ($out === null && $this->sub_menu instanceof UIParent) {
             $out = $this->sub_menu->getFirstDescendant($class_name);
+        }
 
         return $out;
     }
@@ -373,8 +380,10 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
     {
         $states = array();
 
-        foreach ($this->getDescendants('SwatState') as $id => $object)
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
             $states[$id] = $object->getState();
+        }
 
         return $states;
     }
@@ -393,9 +402,12 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      */
     public function setDescendantStates(array $states)
     {
-        foreach ($this->getDescendants('SwatState') as $id => $object)
-            if (isset($states[$id]))
+        $state = '\Silverorange\Swat\Model\State';
+        foreach ($this->getDescendants($state) as $id => $object) {
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
+        }
     }
 
     // }}}
@@ -407,10 +419,9 @@ class SwatMenuItem extends SwatControl implements SwatUIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return SwatUIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return UIObject a deep copy of the UI tree starting with this UI object.
      *
-     * @see SwatUIObject::copy()
+     * @see UIObject::copy()
      */
     public function copy($id_suffix = '')
     {
