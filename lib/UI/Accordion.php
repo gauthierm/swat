@@ -50,7 +50,7 @@ class SwatAccordion extends SwatNoteBook
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('yahoo', 'dom', 'event', 'animation'));
+        $yui = new Html\YUI(array('yahoo', 'dom', 'event', 'animation'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addStyleSheet('packages/swat/styles/swat-accordion.css');

@@ -76,7 +76,7 @@ class CheckboxEntryList extends CheckboxList
     {
         parent::__construct($id);
 
-        $yui = new SwatYUI(array('dom', 'event'));
+        $yui = new Html\YUI(array('dom', 'event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript(

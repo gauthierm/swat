@@ -47,7 +47,7 @@ class Disclosure extends DisplayableContainer
         parent::__construct($id);
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'animation'));
+        $yui = new Html\YUI(array('dom', 'animation'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript('packages/swat/javascript/swat-disclosure.js');

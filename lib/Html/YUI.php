@@ -2,9 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlHeadEntrySet.php';
-require_once 'Swat/SwatYUIComponent.php';
-require_once 'Swat/exceptions/SwatException.php';
+namespace Silverorange\Swat\Html;
 
 /**
  * Object for building Swat HTML head entry dependencies for Yahoo UI Library
@@ -14,8 +12,8 @@ require_once 'Swat/exceptions/SwatException.php';
  * Interface Library (YUI) to abstract cross-browser event-handling, DOM
  * manipulation and CSS positioning. YUI's JavaScript is separated into
  * separate components. This class takes a list of YUI components and generates
- * a set of {@link SwatHtmlHeadEntry} objects required for the YUI component.
- * This greatly simplifies using YUI in Swat UI objects.
+ * a set of {@link Resource } objects required for the YUI component. This
+ * greatly simplifies using YUI in Swat UI objects.
  *
  * YUI components are distributed in three modes:
  * - min
@@ -28,12 +26,12 @@ require_once 'Swat/exceptions/SwatException.php';
  * been stripped. The 'debug' mode is the same as normal except special
  * debugging code has been added to the JavaScript.
  *
- * When using SwatYUI to generate a set of HTML head entries, you can specify
- * one of the three modes to suit your needs.
+ * When using YUI to generate a set of HTML head entries, you can specify one
+ * of the three modes to suit your needs.
  *
  * Example usage:
  * <code>
- * $yui = new SwatYUI('dom');
+ * $yui = new YUI('dom');
  * $html_head_entries = $yui->getHtmlHeadEntrySet();
  * </code>
  *
@@ -41,18 +39,18 @@ require_once 'Swat/exceptions/SwatException.php';
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatYUI
+class YUI
 {
     // {{{ private static properties
 
     /**
      * Static component definitions
      *
-     * This array is used for each instance of SwatYUI and contains component
+     * This array is used for each instance of YUI and contains component
      * definitions and dependency information.
      *
      * @var array
-     * @see SwatYUI::buildComponents()
+     * @see YUI::buildComponents()
      */
     private static $components = array();
 
@@ -60,9 +58,9 @@ class SwatYUI
     // {{{ private properties
 
     /**
-     * The {@link SwatHtmlHeadEntrySet} required for this SwaYUI object
+     * The {@link ResourceSet} required for this YUI object
      *
-     * @var SwatHtmlHeadEntrySet
+     * @var ResourceSet
      */
     private $html_head_entry_set;
 
@@ -70,7 +68,7 @@ class SwatYUI
     // {{{ public function __construct()
 
     /**
-     * Creates a new SwatYUI HTML head entry set building object
+     * Creates a new YUI HTML head entry set building object
      *
      * @param array  $component_ids an array of YUI component ids to build a
      *                              HTML head entry set for.
@@ -96,7 +94,7 @@ class SwatYUI
      * Gets the HTML head entry set required for the YUI components of this
      * object
      *
-     * @return SwatHtmlHeadEntrySet
+     * @return ResourceSet
      */
     public function getHtmlHeadEntrySet()
     {
@@ -114,12 +112,11 @@ class SwatYUI
      *                              HTML head entries for.
      * @param string $mode          the YUI component mode to use.
      *
-     * @return SwatHtmlHeadEntrySet the full constructed set of HTML head
-     *                              entries.
+     * @return ResourceSet the full constructed set of HTML head entries.
      */
     private function buildHtmlHeadEntrySet(array $component_ids, $mode)
     {
-        $set = new SwatHtmlHeadEntrySet();
+        $set = new ResourceSet();
 
         foreach ($component_ids as $component_id) {
             $set->addEntrySet(
@@ -139,7 +136,7 @@ class SwatYUI
         $comment = "Yahoo! UI Library (YUI) is Copyright (c) 2007-2009, ".
             "Yahoo! Inc.\n\t     http://developer.yahoo.com/yui/license.html";
 
-        return new SwatCommentHtmlHeadEntry($comment);
+        return new CommentHtmlHeadEntry($comment);
     }
 
     // }}}
@@ -159,137 +156,137 @@ class SwatYUI
         if ($components_built)
             return;
 
-        $components['animation'] = new SwatYUIComponent('animation');
+        $components['animation'] = new YUIComponent('animation');
         $components['animation']->addJavaScript();
 
-        $components['autocomplete'] = new SwatYUIComponent('autocomplete');
+        $components['autocomplete'] = new YUIComponent('autocomplete');
         $components['autocomplete']->addJavaScript();
 
-        $components['base'] = new SwatYUIComponent('base');
+        $components['base'] = new YUIComponent('base');
         $components['base']->addStyleSheet();
 
-        $components['button'] = new SwatYUIComponent('button');
+        $components['button'] = new YUIComponent('button');
         $components['button']->addJavaScript();
         $components['button']->addStyleSheet('button/assets/skins/sam', '',
             false);
 
-        $components['calendar'] = new SwatYUIComponent('calendar');
+        $components['calendar'] = new YUIComponent('calendar');
         $components['calendar']->addJavaScript();
 
-        $components['charts'] = new SwatYUIComponent('charts');
+        $components['charts'] = new YUIComponent('charts');
         $components['charts']->addJavaScript();
 
-        $components['cookie'] = new SwatYUIComponent('cookie');
+        $components['cookie'] = new YUIComponent('cookie');
         $components['cookie']->addJavaScript();
 
-        $components['connection'] = new SwatYUIComponent('connection');
+        $components['connection'] = new YUIComponent('connection');
         $components['connection']->addJavaScript();
 
-        $components['container'] = new SwatYUIComponent('container');
+        $components['container'] = new YUIComponent('container');
         $components['container']->addJavaScript();
         $components['container']->addStyleSheet('container/assets', '', false);
 
-        $components['container_core'] = new SwatYUIComponent('container_core');
+        $components['container_core'] = new YUIComponent('container_core');
         $components['container_core']->addJavaScript('container');
         $components['container_core']->addStyleSheet('container/assets',
             'container-core', false);
 
-        $components['datasource'] = new SwatYUIComponent('datasource');
+        $components['datasource'] = new YUIComponent('datasource');
         $components['datasource']->addJavaScript();
 
-        $components['datatable'] = new SwatYUIComponent('datatable');
+        $components['datatable'] = new YUIComponent('datatable');
         $components['datatable']->addJavaScript();
         $components['datatable']->addStyleSheet('datatable/assets/skins/sam', '',
             false);
 
-        $components['dom'] = new SwatYUIComponent('dom');
+        $components['dom'] = new YUIComponent('dom');
         $components['dom']->addJavaScript();
 
-        $components['dragdrop'] = new SwatYUIComponent('dragdrop');
+        $components['dragdrop'] = new YUIComponent('dragdrop');
         $components['dragdrop']->addJavaScript();
 
-        $components['editor'] = new SwatYUIComponent('editor');
+        $components['editor'] = new YUIComponent('editor');
         $components['editor']->addJavaScript();
         $components['editor']->addStyleSheet('editor/assets/skins/sam', '',
             false);
 
-        $components['simpleeditor'] = new SwatYUIComponent('simpleeditor');
+        $components['simpleeditor'] = new YUIComponent('simpleeditor');
         $components['simpleeditor']->addJavaScript('editor');
         $components['simpleeditor']->addStyleSheet('editor/assets/skins/sam',
             '', false);
 
-        $components['element'] = new SwatYUIComponent('element');
+        $components['element'] = new YUIComponent('element');
         $components['element']->addJavaScript();
 
-        $components['event'] = new SwatYUIComponent('event');
+        $components['event'] = new YUIComponent('event');
         $components['event']->addJavaScript();
 
-        $components['event-delegate'] = new SwatYUIComponent('event-delegate');
+        $components['event-delegate'] = new YUIComponent('event-delegate');
         $components['event-delegate']->addJavaScript();
 
-        $components['event-mouseenter'] = new SwatYUIComponent(
+        $components['event-mouseenter'] = new YUIComponent(
             'event-mouseenter');
 
         $components['event-mouseenter']->addJavaScript();
 
-        $components['fonts'] = new SwatYUIComponent('fonts');
+        $components['fonts'] = new YUIComponent('fonts');
         $components['fonts']->addStyleSheet();
 
-        $components['grids'] = new SwatYUIComponent('grids');
+        $components['grids'] = new YUIComponent('grids');
         $components['grids']->addStyleSheet();
 
-        $components['imagecropper'] = new SwatYUIComponent('imagecropper');
+        $components['imagecropper'] = new YUIComponent('imagecropper');
         $components['imagecropper']->addJavaScript();
         $components['imagecropper']->addStyleSheet(
             'imagecropper/assets/skins/sam', '', false);
 
-        $components['json'] = new SwatYUIComponent('json');
+        $components['json'] = new YUIComponent('json');
         $components['json']->addJavaScript();
 
-        $components['logger'] = new SwatYUIComponent('logger');
+        $components['logger'] = new YUIComponent('logger');
         $components['logger']->addJavaScript();
 
-        $components['menu'] = new SwatYUIComponent('menu');
+        $components['menu'] = new YUIComponent('menu');
         $components['menu']->addJavaScript();
         $components['menu']->addStyleSheet('menu/assets/skins/sam', '', false);
 
-        $components['paginator'] = new SwatYUIComponent('paginator');
+        $components['paginator'] = new YUIComponent('paginator');
         $components['paginator']->addJavaScript();
         $components['paginator']->addStyleSheet(
             'paginator/assets/skins/sam', '', false);
 
-        $components['reset-fonts-grids'] = new SwatYUIComponent('reset-fonts-grids');
+        $components['reset-fonts-grids'] = new YUIComponent('reset-fonts-grids');
         $components['reset-fonts-grids']->addStyleSheet('', '', false);
 
-        $components['reset'] = new SwatYUIComponent('reset');
+        $components['reset'] = new YUIComponent('reset');
         $components['reset']->addStyleSheet();
 
-        $components['resize'] = new SwatYUIComponent('resize');
+        $components['resize'] = new YUIComponent('resize');
         $components['resize']->addJavaScript();
         $components['resize']->addStyleSheet(
             'resize/assets/skins/sam', '', false);
 
-        $components['selector'] = new SwatYUIComponent('selector');
+        $components['selector'] = new YUIComponent('selector');
         $components['selector']->addJavaScript();
 
-        $components['slider'] = new SwatYUIComponent('slider');
+        $components['slider'] = new YUIComponent('slider');
         $components['slider']->addJavaScript();
 
-        $components['stylesheet'] = new SwatYUIComponent('stylesheet');
+        $components['stylesheet'] = new YUIComponent('stylesheet');
         $components['stylesheet']->addJavaScript();
 
-        $components['swf'] = new SwatYUIComponent('swf');
+        $components['swf'] = new YUIComponent('swf');
         $components['swf']->addJavaScript();
 
-        $components['tabview'] = new SwatYUIComponent('tabview');
+        $components['tabview'] = new YUIComponent('tabview');
         $components['tabview']->addJavaScript();
         $components['tabview']->addStyleSheet(
             'tabview/assets/skins/sam', '', false);
 
-        $components['treeview'] = new SwatYUIComponent('treeview');
+        $components['treeview'] = new YUIComponent('treeview');
         $components['treeview']->addJavaScript();
 
-        $components['yahoo'] = new SwatYUIComponent('yahoo');
+        $components['yahoo'] = new YUIComponent('yahoo');
         $components['yahoo']->addJavaScript();
 
         // dependencies

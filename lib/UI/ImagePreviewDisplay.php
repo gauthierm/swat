@@ -162,7 +162,7 @@ class ImagePreviewDisplay extends ImageDisplay
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'event'));
+        $yui = new Html\YUI(array('dom', 'event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript(

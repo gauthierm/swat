@@ -97,7 +97,7 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
 
         $this->makePropertyStatic('id');
 
-        $yui = new SwatYUI(array('dom'));
+        $yui = new Html\YUI(array('dom'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript(
             'packages/swat/javascript/swat-checkbox-cell-renderer.js'

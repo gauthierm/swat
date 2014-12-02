@@ -82,7 +82,7 @@ class CheckAll extends Checkbox
     {
         parent::__construct($id);
         $this->title = L::_('Select All');
-        $yui = new SwatYUI(array('event'));
+        $yui = new Html\YUI(array('event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript('packages/swat/javascript/swat-check-all.js');
     }

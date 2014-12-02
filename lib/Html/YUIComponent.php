@@ -2,24 +2,20 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatJavaScriptHtmlHeadEntry.php';
-require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
-require_once 'Swat/SwatHtmlHeadEntrySet.php';
-require_once 'Swat/SwatHtmlHeadEntry.php';
-require_once 'Swat/SwatYUI.php';
+namespace Silverorange\Swat\Html;
 
 /**
  * A component in the Yahoo UI Library
  *
- * This class is used internally by the {@link SwatYUI} class and is not meant
+ * This class is used internally by the {@link YUI} class and is not meant
  * to be used by itself.
  *
  * @package   Swat
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatYUI
+ * @see       YUI
  */
-class SwatYUIComponent
+class YUIComponent
 {
     // {{{ private properties
 
@@ -46,14 +42,9 @@ class SwatYUIComponent
         $this->id = $id;
         $this->beta = $beta;
 
-        $this->html_head_entry_set['normal'] =
-            new SwatHtmlHeadEntrySet();
-
-        $this->html_head_entry_set['debug'] =
-            new SwatHtmlHeadEntrySet();
-
-        $this->html_head_entry_set['min'] =
-            new SwatHtmlHeadEntrySet();
+        $this->html_head_entry_set['normal'] = new ResourceSet();
+        $this->html_head_entry_set['debug'] = ResourceSet();
+        $this->html_head_entry_set['min'] = ResourceSet();
     }
 
     // }}}
@@ -62,9 +53,9 @@ class SwatYUIComponent
     /**
      * Adds a YUI component dependency to this YUI component
      *
-     * @param SwatYUIComponent the YUI component this component depends on.
+     * @param YUIComponent the YUI component this component depends on.
      */
-    public function addDependency(SwatYUIComponent $component)
+    public function addDependency(YUIComponent $component)
     {
         $this->dependencies[] = $component;
     }
@@ -73,7 +64,7 @@ class SwatYUIComponent
     // {{{ public function addJavaScript()
 
     /**
-     * Adds a {@link SwatJavaScriptHtmlHeadEntry} to this YUI component
+     * Adds a {@link JavaScriptResource} to this YUI component
      *
      * YUI component JavaScript is distributed in three modes:
      * - debug
@@ -126,7 +117,7 @@ class SwatYUIComponent
     // {{{ public function addStyleSheet()
 
     /**
-     * Adds a {@link SwatStyleSheetHtmlHeadEntry} to this YUI component
+     * Adds a {@link StyleSheetResource} to this YUI component
      *
      * YUI component style sheets are distributed in three modes:
      * - min
@@ -181,15 +172,15 @@ class SwatYUIComponent
     // {{{ public function getHtmlHeadEntrySet()
 
     /**
-     * Gets the set of {@link SwatHtmlHeadEntry} objects required for this
-     * YUI component
+     * Gets the set of {@link Resource} objects required for this YUI
+     * component
      *
-     * @return SwatHtmlHeadEntrySet the set of {@link SwatHtmlHeadEntry}
-     *                              objects required for this YUI component.
+     * @return ResourceSet the set of {@link Resource} objects required for
+     *                     this YUI component.
      */
     public function getHtmlHeadEntrySet($mode = 'min')
     {
-        $set = new SwatHtmlHeadEntrySet();
+        $set = new ResourceSet();
         if (isset($this->html_head_entry_set[$mode])) {
             foreach ($this->dependencies as $component) {
                 $set->addEntrySet($component->getHtmlHeadEntrySet($mode));

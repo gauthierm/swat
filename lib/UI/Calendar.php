@@ -52,7 +52,7 @@ class Calendar extends Control
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'container'));
+        $yui = new Html\YUI(array('dom', 'container'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addStyleSheet('packages/swat/styles/swat-calendar.css');

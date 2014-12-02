@@ -4,6 +4,7 @@
 
 namespace Silverorange\Swat\UI;
 
+use Silverorange\Swat\Html;
 use Silverorange\Swat\Util;
 
 /**
@@ -61,7 +62,7 @@ abstract class AbstractMenu extends Control
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('menu'));
+        $yui = new Html\YUI(array('menu'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addStyleSheet('packages/swat/styles/swat-menu.css');
     }

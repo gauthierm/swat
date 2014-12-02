@@ -64,7 +64,7 @@ class Fieldset extends DisplayableContainer implements Titleable
         $this->requires_id = true;
 
         // JavaScript for IE peekaboo hack
-        $yui = new SwatYUI(array('event'));
+        $yui = new Html\YUI(array('event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
         $this->addJavaScript('packages/swat/javascript/swat-fieldset.js');
     }

@@ -60,7 +60,7 @@ abstract class AbstractOverlay extends InputControl implements Model\State
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('dom', 'event', 'container'));
+        $yui = new Html\YUI(array('dom', 'event', 'container'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript(

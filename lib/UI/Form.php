@@ -334,7 +334,7 @@ class Form extends DisplayableContainer
         $form_tag->close();
 
         if ($this->connection_close_uri != '') {
-            $yui = new SwatYUI(array('event'));
+            $yui = new Html\YUI(array('event'));
             $this->html_head_entry_set->addEntrySet(
                 $yui->getHtmlHeadEntrySet());
         }

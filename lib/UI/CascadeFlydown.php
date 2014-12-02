@@ -67,7 +67,7 @@ class CascadeFlydown extends Flydown
 
         $this->requires_id = true;
 
-        $yui = new SwatYUI(array('event'));
+        $yui = new Html\YUI(array('event'));
         $this->html_head_entry_set->addEntrySet($yui->getHtmlHeadEntrySet());
 
         $this->addJavaScript('packages/swat/javascript/swat-cascade.js');
