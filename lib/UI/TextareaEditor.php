@@ -403,5 +403,3 @@ class TextareaEditor extends Textarea
 
     // }}}
 }
-
-?>

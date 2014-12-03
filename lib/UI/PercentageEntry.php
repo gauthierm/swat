@@ -77,5 +77,3 @@ class PercentageEntry extends FloatEntry
 
     // }}}
 }
-
-?>

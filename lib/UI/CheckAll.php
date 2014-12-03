@@ -223,5 +223,3 @@ class CheckAll extends Checkbox
 
     // }}}
 }
-
-?>

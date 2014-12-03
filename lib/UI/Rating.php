@@ -179,5 +179,3 @@ class Rating extends InputControl
 
     // }}}
 }
-
-?>

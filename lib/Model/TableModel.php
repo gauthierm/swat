@@ -14,5 +14,3 @@ namespace Silverorange\Swat\Model;
 interface TableModel extends \Countable, \Iterator
 {
 }
-
-?>

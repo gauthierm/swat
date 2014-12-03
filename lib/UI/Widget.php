@@ -697,5 +697,3 @@ abstract class Widget extends Object
 
     // }}}
 }
-
-?>

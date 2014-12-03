@@ -160,5 +160,3 @@ class CurrencyFormat extends NumberFormat
 
     // }}}
 }
-
-?>

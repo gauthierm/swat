@@ -17,5 +17,3 @@ namespace Silverorange\Swat\UI;
 class ActionItemDivider extends ActionItem
 {
 }
-
-?>

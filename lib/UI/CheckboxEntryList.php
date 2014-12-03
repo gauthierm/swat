@@ -434,5 +434,3 @@ class CheckboxEntryList extends CheckboxList
 
     // }}}
 }
-
-?>

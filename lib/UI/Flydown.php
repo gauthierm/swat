@@ -373,5 +373,3 @@ class Flydown extends OptionControl implements Model\State
 
     // }}}
 }
-
-?>

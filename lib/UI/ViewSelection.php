@@ -173,5 +173,3 @@ class ViewSelection implements \Countable, \Iterator
 
     // }}}
 }
-
-?>

@@ -303,5 +303,3 @@ class Tile extends CellRendererContainer
 
     // }}}
 }
-
-?>

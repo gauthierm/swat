@@ -407,5 +407,3 @@ class CellRendererSet implements \Iterator, \Countable
 
     // }}}
 }
-
-?>

@@ -69,5 +69,3 @@ interface Recordable
 
     // }}}
 }
-
-?>

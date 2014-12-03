@@ -569,5 +569,3 @@ class FormField extends DisplayableContainer implements Titleable
 
     // }}}
 }
-
-?>

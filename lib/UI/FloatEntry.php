@@ -136,5 +136,3 @@ class FloatEntry extends NumericEntry
 
     // }}}
 }
-
-?>

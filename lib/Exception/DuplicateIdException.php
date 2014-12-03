@@ -53,5 +53,3 @@ class DuplicateIdException extends Exception
 
     // }}}
 }
-
-?>

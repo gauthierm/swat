@@ -93,5 +93,3 @@ abstract class Resource
 
     // }}}
 }
-
-?>

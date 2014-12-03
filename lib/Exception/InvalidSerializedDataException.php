@@ -53,5 +53,3 @@ class InvalidSerializedDataException extends Exception
 
     // }}}
 }
-
-?>

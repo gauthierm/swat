@@ -41,5 +41,3 @@ class YesNoFlydown extends Flydown
 
     // }}}
 }
-
-?>

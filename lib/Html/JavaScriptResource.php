@@ -43,5 +43,3 @@ class JavaScriptResource extends Resource
 
     // }}}
 }
-
-?>

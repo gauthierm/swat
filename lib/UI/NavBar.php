@@ -433,5 +433,3 @@ class NavBar extends Control implements \Countable
 
     // }}}
 }
-
-?>

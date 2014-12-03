@@ -319,5 +319,3 @@ class ImageCropper extends InputControl
 
     // }}}
 }
-
-?>

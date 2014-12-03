@@ -186,5 +186,3 @@ class Checkbox extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

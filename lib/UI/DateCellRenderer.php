@@ -109,5 +109,3 @@ class DateCellRenderer extends CellRenderer
 
     // }}}
 }
-
-?>

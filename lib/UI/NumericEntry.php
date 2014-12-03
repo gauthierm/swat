@@ -182,5 +182,3 @@ abstract class NumericEntry extends Entry
 
     // }}}
 }
-
-?>

@@ -68,5 +68,3 @@ class ReplicableNoteBookChild extends ReplicableContainer
 
     // }}}
 }
-
-?>

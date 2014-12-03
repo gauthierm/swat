@@ -323,5 +323,3 @@ class ActionItem extends Control implements UIParent
 
     // }}}
 }
-
-?>

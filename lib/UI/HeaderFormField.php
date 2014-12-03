@@ -32,5 +32,3 @@ class HeaderFormField extends FormField
 
     // }}}
 }
-
-?>

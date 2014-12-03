@@ -485,5 +485,3 @@ class Pagination extends Control
 
     // }}}
 }
-
-?>

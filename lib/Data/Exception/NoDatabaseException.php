@@ -14,5 +14,3 @@ namespace Silverorange\Swat\Data\Exception;
 class NoDatabaseException extends Exception
 {
 }
-
-?>

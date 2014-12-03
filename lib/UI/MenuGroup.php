@@ -310,5 +310,3 @@ class MenuGroup extends Control implements UIParent
 
     // }}}
 }
-
-?>

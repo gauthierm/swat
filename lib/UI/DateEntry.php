@@ -1000,5 +1000,3 @@ class DateEntry extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

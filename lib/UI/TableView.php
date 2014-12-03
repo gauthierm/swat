@@ -2016,5 +2016,3 @@ class TableView extends View implements UIParent
 
     // }}}
 }
-
-?>

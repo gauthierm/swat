@@ -178,5 +178,3 @@ class UriEntry extends Entry
 
     // }}}
 }
-
-?>

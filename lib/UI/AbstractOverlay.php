@@ -152,5 +152,3 @@ abstract class AbstractOverlay extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

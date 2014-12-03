@@ -320,5 +320,3 @@ class Menu extends AbstractMenu implements UIParent
 
     // }}}
 }
-
-?>

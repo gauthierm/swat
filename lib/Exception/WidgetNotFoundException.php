@@ -53,5 +53,3 @@ class WidgetNotFoundException extends Exception
 
     // }}}
 }
-
-?>

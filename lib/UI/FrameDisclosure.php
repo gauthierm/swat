@@ -156,5 +156,3 @@ class FrameDisclosure extends Disclosure
 
     // }}}
 }
-
-?>

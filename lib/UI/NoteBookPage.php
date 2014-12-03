@@ -104,5 +104,3 @@ class NoteBookPage extends Container implements NoteBookChild
 
     // }}}
 }
-
-?>

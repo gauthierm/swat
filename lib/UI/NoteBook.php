@@ -558,5 +558,3 @@ class NoteBook extends Widget implements UIParent
 
     // }}}
 }
-
-?>

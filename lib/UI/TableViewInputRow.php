@@ -791,5 +791,3 @@ class TableViewInputRow extends TableViewRow
 
     // }}}
 }
-
-?>

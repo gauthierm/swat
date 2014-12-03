@@ -41,5 +41,3 @@ class YesNoRadioList extends RadioList
 
     // }}}
 }
-
-?>

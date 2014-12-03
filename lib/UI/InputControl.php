@@ -127,5 +127,3 @@ abstract class InputControl extends Control
 
     // }}}
 }
-
-?>

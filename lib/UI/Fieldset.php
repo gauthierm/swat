@@ -162,5 +162,3 @@ class Fieldset extends DisplayableContainer implements Titleable
 
     // }}}
 }
-
-?>

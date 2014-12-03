@@ -63,5 +63,3 @@ class MenuBar extends Menu
 
     // }}}
 }
-
-?>

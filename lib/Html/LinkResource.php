@@ -91,5 +91,3 @@ class LinkResource extends Resource
 
     // }}}
 }
-
-?>

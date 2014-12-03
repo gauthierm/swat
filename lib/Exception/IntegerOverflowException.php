@@ -57,5 +57,3 @@ class IntegerOverflowException extends \OverflowException
 
     // }}}
 }
-
-?>

@@ -403,5 +403,3 @@ class Button extends InputControl
 
     // }}}
 }
-
-?>

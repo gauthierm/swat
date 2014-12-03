@@ -2,7 +2,6 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-
 namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Exception;
@@ -376,5 +375,3 @@ abstract class Object
 
     // }}}
 }
-
-?>

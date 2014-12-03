@@ -171,5 +171,3 @@ abstract class Number
 
     // }}}
 }
-
-?>

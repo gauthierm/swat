@@ -53,5 +53,3 @@ class ClassNotFoundException extends Exception
 
     // }}}
 }
-
-?>

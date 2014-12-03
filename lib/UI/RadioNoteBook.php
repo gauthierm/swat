@@ -658,5 +658,3 @@ class RadioNoteBook extends InputControl implements UIParent
 
     // }}}
 }
-
-?>

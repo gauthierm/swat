@@ -823,5 +823,3 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
     // }}}
 }
-
-?>

@@ -53,5 +53,3 @@ class InvalidClassException extends Exception
 
     // }}}
 }
-
-?>

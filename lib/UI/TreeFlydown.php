@@ -204,5 +204,3 @@ class TreeFlydown extends Flydown
 
     // }}}
 }
-
-?>

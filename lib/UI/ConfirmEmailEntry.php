@@ -83,5 +83,3 @@ class ConfirmEmailEntry extends EmailEntry
 
     // }}}
 }
-
-?>

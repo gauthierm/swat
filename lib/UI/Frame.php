@@ -207,5 +207,3 @@ class Frame extends DisplayableContainer implements Titleable
 
     // }}}
 }
-
-?>

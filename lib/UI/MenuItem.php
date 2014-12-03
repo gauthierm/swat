@@ -471,5 +471,3 @@ class MenuItem extends Control implements UIParent
 
     // }}}
 }
-
-?>

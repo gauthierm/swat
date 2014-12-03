@@ -165,5 +165,3 @@ class SearchEntry extends Entry
 
     // }}}
 }
-
-?>

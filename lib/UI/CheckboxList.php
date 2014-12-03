@@ -436,5 +436,3 @@ class CheckboxList extends OptionControl implements Model\State
 
     // }}}
 }
-
-?>

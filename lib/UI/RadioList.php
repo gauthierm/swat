@@ -280,5 +280,3 @@ class RadioList extends Flydown
 
     // }}}
 }
-
-?>

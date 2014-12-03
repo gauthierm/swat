@@ -167,5 +167,3 @@ class IntegerEntry extends NumericEntry
 
     // }}}
 }
-
-?>

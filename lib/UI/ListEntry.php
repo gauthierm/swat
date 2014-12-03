@@ -399,5 +399,3 @@ class ListEntry extends Entry
 
     // }}}
 }
-
-?>

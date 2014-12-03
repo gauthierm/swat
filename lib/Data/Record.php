@@ -1633,5 +1633,3 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
     // }}}
 }
-
-?>

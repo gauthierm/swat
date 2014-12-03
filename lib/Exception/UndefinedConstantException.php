@@ -54,5 +54,3 @@ class UndefinedConstantException extends Exception
 
     // }}}
 }
-
-?>

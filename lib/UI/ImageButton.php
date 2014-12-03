@@ -146,5 +146,3 @@ class ImageButton extends Button
 
     // }}}
 }
-
-?>

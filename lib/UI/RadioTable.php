@@ -147,5 +147,3 @@ class RadioTable extends RadioList
 
     // }}}
 }
-
-?>

@@ -84,5 +84,3 @@ class TextCellRenderer extends CellRenderer
 
     // }}}
 }
-
-?>

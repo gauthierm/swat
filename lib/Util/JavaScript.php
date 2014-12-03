@@ -107,5 +107,3 @@ abstract class JavaScript
 
     // }}}
 }
-
-?>

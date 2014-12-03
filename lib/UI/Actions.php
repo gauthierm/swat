@@ -693,5 +693,3 @@ class Actions extends Control implements UIParent
 
     // }}}
 }
-
-?>

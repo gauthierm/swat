@@ -1134,5 +1134,3 @@ class Form extends DisplayableContainer
 
     // }}}
 }
-
-?>

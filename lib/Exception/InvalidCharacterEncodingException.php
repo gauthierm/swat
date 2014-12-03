@@ -17,5 +17,3 @@ namespace Silverorange\Swat\Exception;
 class InvalidCharacterEncodingException extends Exception
 {
 }
-
-?>

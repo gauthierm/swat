@@ -258,5 +258,3 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
 
     // }}}
 }
-
-?>

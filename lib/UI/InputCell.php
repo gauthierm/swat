@@ -584,5 +584,3 @@ class InputCell extends Object implements UIParent, Titleable
 
     // }}}
 }
-
-?>

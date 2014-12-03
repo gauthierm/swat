@@ -1967,5 +1967,3 @@ class Date extends \DateTime implements \Serializable
 
     // }}}
 }
-
-?>

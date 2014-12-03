@@ -734,5 +734,3 @@ class TimeEntry extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

@@ -54,5 +54,3 @@ class InvalidCallbackException extends Exception
 
     // }}}
 }
-
-?>

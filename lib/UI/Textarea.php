@@ -336,5 +336,3 @@ class Textarea extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

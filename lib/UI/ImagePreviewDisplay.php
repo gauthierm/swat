@@ -350,5 +350,3 @@ class ImagePreviewDisplay extends ImageDisplay
 
     // }}}
 }
-
-?>

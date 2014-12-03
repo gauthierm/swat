@@ -118,5 +118,3 @@ class RemoveInputCell extends InputCell
 
     // }}}
 }
-
-?>

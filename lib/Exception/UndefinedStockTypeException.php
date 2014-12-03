@@ -54,5 +54,3 @@ class UndefinedStockTypeException extends Exception
 
     // }}}
 }
-
-?>

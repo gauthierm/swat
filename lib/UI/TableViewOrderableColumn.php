@@ -498,5 +498,3 @@ class TableViewOrderableColumn extends TableViewColumn
 
     // }}}
 }
-
-?>

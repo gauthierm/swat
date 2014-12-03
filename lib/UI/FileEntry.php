@@ -691,5 +691,3 @@ class FileEntry extends InputControl
 
     // }}}
 }
-
-?>

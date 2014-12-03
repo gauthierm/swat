@@ -39,5 +39,3 @@ class PercentageCellRenderer extends NumericCellRenderer
 
     // }}}
 }
-
-?>

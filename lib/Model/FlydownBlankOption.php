@@ -17,5 +17,3 @@ namespace Silverorange\Swat\Model;
 class FlydownBlankOption extends Option
 {
 }
-
-?>

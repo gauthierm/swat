@@ -1425,5 +1425,3 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
 
     // }}}
 }
-
-?>

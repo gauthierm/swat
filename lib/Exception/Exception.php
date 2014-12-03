@@ -649,7 +649,6 @@ class Exception extends \Exception
      * /**
      *  * @sensitive $parameter_name
      *  {@*}
-     * ?>
      * </code>
      *
      * @param \ReflectionFunctionAbstract $method the method the parameter to
@@ -684,5 +683,3 @@ class Exception extends \Exception
 
     // }}}
 }
-
-?>

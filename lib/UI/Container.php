@@ -720,5 +720,3 @@ class Container extends Widget implements UIParent
 
     // }}}
 }
-
-?>

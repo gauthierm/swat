@@ -472,5 +472,3 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
 
     // }}}
 }
-
-?>

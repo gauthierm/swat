@@ -110,11 +110,8 @@ class String
         $table_elements = implode('|', self::$table_elements);
 
         // regular expression to match all tags
-        $all_tags = '/(<\/?(?:'.$xhtml_elements.')[^<>]*?>)/siu';
 
         // regular expressions to match blocklevel tags
-        $starting_blocklevel = '/^<('.$blocklevel_elements.')[^<>]*?>/siu';
-        $ending_blocklevel = '/<\/('.$blocklevel_elements.')[^<>]*?>$/siu';
 
         // convert input from windows and mac
         $text = str_replace("\r\n", "\n", $text);
@@ -124,11 +121,9 @@ class String
         $text = trim($text);
 
         // remove whitespace before table elements
-        $text = preg_replace('/\s+(<\/?(?:'.$table_elements.')[^<>]*?>)/usi',
             '\1', $text);
 
         // remove whitespace after table elements
-        $text = preg_replace('/(<\/?(?:'.$table_elements.')[^<>]*?>)\s+/usi',
             '\1', $text);
 
         // replace continuous strings of whitespace containing a
@@ -138,32 +133,27 @@ class String
         // replace single line break followed by a starting block-level tag
         // with two line breaks
         $break_then_blocklevel =
-            '/([^\n])\n(<('.$blocklevel_elements.')[^<>]*?>)/siu';
 
         $text = preg_replace($break_then_blocklevel, "\\1\n\n\\2", $text);
 
         // remove line break from starting block-level tag followed by a
         // line break
         $blocklevel_then_break =
-            '/(<('.$blocklevel_elements.')[^<>]*?>)\n/siu';
 
         $text = preg_replace($blocklevel_then_break, "\\1", $text);
 
         // remove line break from line break followed by an ending block-level
         // tag
         $break_then_ending_blocklevel =
-            '/\n(<\/('.$blocklevel_elements.')[^<>]*?>)/siu';
 
         $text = preg_replace($break_then_ending_blocklevel, "\\1", $text);
 
         // remove line break from ending breaking tag followed by a line break
         $ending_breaking_then_break =
-            '/(<\/('.$breaking_elements.')[^<>]*?>)\n/siu';
 
         $text = preg_replace($ending_breaking_then_break, "\\1", $text);
 
         // temporarily remove preformatted content so it is not auto-formatted
-        $preformatted_search = '/<('.$preformatted_elements.')[^<>]*?>'.
             '(.*?)'.
             '<\/('.$preformatted_elements.')>/usi';
 
@@ -176,7 +166,6 @@ class String
         if (count($preformatted_content) > 0) {
             // replace preformatted content with sprintf place-holders
             $text = str_replace('%', '%%', $text);
-            $preformat_replace = '/(<('.$preformatted_elements.')[^<>]*?>)'.
                 '.*?'.
                 '(<\/('.$preformatted_elements.')>)/usi';
 
@@ -184,7 +173,6 @@ class String
         }
 
         // match paragraphs that are entirely preformatted elements
-        $preformat = '/^<('.$preformatted_elements.')[^<>]*?>'.
             '%s'.
             '<\/('.$preformatted_elements.')>$/ui';
 
@@ -1319,7 +1307,6 @@ class String
      *    'days'    => 2,
      *    'seconds' => 5,
      * );
-     * ?>
      * </code>
      *
      * As this method applies on seconds, no time zone considerations are
@@ -1442,7 +1429,6 @@ class String
      *    'days'    => '2 days',
      *    'seconds' => '5 seconds',
      * );
-     * ?>
      * </code>
      *
      * As this method applies on seconds, no time zone considerations are
@@ -1748,7 +1734,6 @@ class String
     public static function stripXHTMLTags($string)
     {
         $elements = implode('|', self::$xhtml_elements);
-        return preg_replace('/<\/?('.$elements.')[^<>]*?>/siu', '', $string);
     }
 
     // }}}
@@ -2098,5 +2083,3 @@ class String
 
     // }}}
 }
-
-?>

@@ -78,5 +78,3 @@ class NullTextCellRenderer extends TextCellRenderer
 
     // }}}
 }
-
-?>

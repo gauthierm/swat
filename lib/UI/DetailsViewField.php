@@ -396,5 +396,3 @@ class DetailsViewField extends CellRendererContainer
 
     // }}}
 }
-
-?>

@@ -34,7 +34,6 @@ interface Marshallable
      *         )
      *     )
      * );
-     * ?>
      * </code>
      *
      * @param array $tree optional. An array representing the data-structure
@@ -56,7 +55,6 @@ interface Marshallable
      * <code>
      * <?php
      * $object->unmarshall($data);
-     * ?>
      * </code>
      *
      * @param array $data optional. The marshalled object data.
@@ -65,5 +63,3 @@ interface Marshallable
 
     // }}}
 }
-
-?>

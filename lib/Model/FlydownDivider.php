@@ -38,5 +38,3 @@ class FlydownDivider extends Option
 
     // }}}
 }
-
-?>

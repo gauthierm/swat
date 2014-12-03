@@ -45,5 +45,3 @@ interface State
 
     // }}}
 }
-
-?>

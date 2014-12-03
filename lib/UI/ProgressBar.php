@@ -323,5 +323,3 @@ class ProgressBar extends Control
 
     // }}}
 }
-
-?>

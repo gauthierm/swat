@@ -667,5 +667,3 @@ class DetailsView extends Control implements UIParent
 
     // }}}
 }
-
-?>

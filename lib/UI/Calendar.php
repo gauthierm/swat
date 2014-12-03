@@ -219,5 +219,3 @@ class Calendar extends Control
 
     // }}}
 }
-
-?>

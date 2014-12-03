@@ -76,5 +76,3 @@ class InvalidPropertyException extends Exception
 
     // }}}
 }
-
-?>

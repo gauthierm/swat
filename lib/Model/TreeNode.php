@@ -269,5 +269,3 @@ abstract class TreeNode implements \RecursiveIterator, \Countable
 
     // }}}
 }
-
-?>

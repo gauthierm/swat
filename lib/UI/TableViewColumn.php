@@ -829,5 +829,3 @@ class TableViewColumn extends CellRendererContainer
 
     // }}}
 }
-
-?>

@@ -26,5 +26,3 @@ interface ViewSelector
 
     // }}}
 }
-
-?>

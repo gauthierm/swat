@@ -327,5 +327,3 @@ class ChangeOrder extends OptionControl implements Model\State
 
     // }}}
 }
-
-?>

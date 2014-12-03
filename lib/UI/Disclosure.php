@@ -221,5 +221,3 @@ class Disclosure extends DisplayableContainer
 
     // }}}
 }
-
-?>

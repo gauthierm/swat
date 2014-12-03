@@ -220,5 +220,3 @@ class CheckboxTree extends CheckboxList implements Model\State
 
     // }}}
 }
-
-?>

@@ -385,5 +385,3 @@ class MessageDisplay extends Control
 
     // }}}
 }
-
-?>

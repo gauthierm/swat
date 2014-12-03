@@ -56,7 +56,6 @@ class NumberFormat
      * <code>
      * <?php
      * $format->override(array('n_sign' => 'neg', 'p_sign' => 'pos'));
-     * ?>
      * </code>
      *
      * @param array $format the format information with which to override thss
@@ -117,5 +116,3 @@ class NumberFormat
 
     // }}}
 }
-
-?>

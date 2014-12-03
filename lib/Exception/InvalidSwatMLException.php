@@ -58,5 +58,3 @@ class InvalidSwatMLException extends Exception
 
     // }}}
 }
-
-?>

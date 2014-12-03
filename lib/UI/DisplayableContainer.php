@@ -55,5 +55,3 @@ class DisplayableContainer extends Container
 
     // }}}
 }
-
-?>

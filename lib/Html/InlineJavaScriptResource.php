@@ -52,5 +52,3 @@ class InlineJavaScriptResource extends Resource
 
     // }}}
 }
-
-?>

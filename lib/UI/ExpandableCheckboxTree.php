@@ -366,5 +366,3 @@ class ExpandableCheckboxTree extends CheckboxTree
 
     // }}}
 }
-
-?>

@@ -213,5 +213,3 @@ class LinkCellRenderer extends CellRenderer
 
     // }}}
 }
-
-?>

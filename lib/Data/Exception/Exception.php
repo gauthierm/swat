@@ -31,5 +31,3 @@ class Exception extends SwatException\Exception
 
     // }}}
 }
-
-?>

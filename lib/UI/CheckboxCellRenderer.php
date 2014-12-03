@@ -265,5 +265,3 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
 
     // }}}
 }
-
-?>

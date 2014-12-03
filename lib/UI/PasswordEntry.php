@@ -56,5 +56,3 @@ class PasswordEntry extends Entry
 
     // }}}
 }
-
-?>

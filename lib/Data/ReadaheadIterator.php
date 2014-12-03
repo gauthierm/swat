@@ -19,7 +19,6 @@ namespace Silverorange\Swat\Data;
  *     $current = $iterator->getCurrent();
  *     $next = $iterator->getNext();
  * }
- * ?>
  * </code>
  *
  * @package   SwatDB
@@ -194,5 +193,3 @@ class ReadaheadIterator
 
     // }}}
 }
-
-?>

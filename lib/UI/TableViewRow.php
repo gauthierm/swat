@@ -248,5 +248,3 @@ abstract class TableViewRow extends Object
 
     // }}}
 }
-
-?>

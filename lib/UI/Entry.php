@@ -452,5 +452,3 @@ class Entry extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

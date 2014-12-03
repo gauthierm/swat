@@ -51,5 +51,3 @@ class DataTreeNode extends TreeNode
 
     // }}}
 }
-
-?>

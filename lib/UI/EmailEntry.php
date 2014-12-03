@@ -123,5 +123,3 @@ class EmailEntry extends Entry
 
     // }}}
 }
-
-?>

@@ -51,5 +51,3 @@ class CommentResource extends Resource
 
     // }}}
 }
-
-?>

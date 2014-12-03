@@ -124,5 +124,3 @@ class ReplicableContainer extends DisplayableContainer implements Replicable
 
     // }}}
 }
-
-?>

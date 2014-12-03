@@ -32,5 +32,3 @@ abstract class Displayer
 
     // }}}
 }
-
-?>

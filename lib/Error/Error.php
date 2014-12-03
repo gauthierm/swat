@@ -627,7 +627,6 @@ class Error
      * /**
      *  * @sensitive $parameter_name
      *  *\/
-     * ?>
      * </code>
      *
      * @param \ReflectionFunctionAbstract $method the method the parameter to
@@ -683,5 +682,3 @@ class Error
 
     // }}}
 }
-
-?>

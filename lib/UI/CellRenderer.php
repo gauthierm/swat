@@ -533,5 +533,3 @@ abstract class CellRenderer extends Object
 
     // }}}
 }
-
-?>

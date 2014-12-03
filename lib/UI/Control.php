@@ -87,5 +87,3 @@ abstract class Control extends Widget
 
     // }}}
 }
-
-?>

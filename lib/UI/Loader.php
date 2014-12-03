@@ -28,7 +28,6 @@ class Loader
      *    $package_prefix => $path,
      *    // ...
      * );
-     * ?>
      * </code>
      *
      * Where <kbd>$package_prefix</kbd> is the class name prefix used for the
@@ -991,5 +990,3 @@ class Loader
 
     // }}}
 }
-
-?>

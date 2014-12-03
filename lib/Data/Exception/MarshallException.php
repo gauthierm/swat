@@ -40,5 +40,3 @@ class MarshallException extends Exception
 
     // }}}
 }
-
-?>

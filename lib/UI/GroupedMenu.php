@@ -278,5 +278,3 @@ class GroupedMenu extends AbstractMenu implements UIParent
 
     // }}}
 }
-
-?>

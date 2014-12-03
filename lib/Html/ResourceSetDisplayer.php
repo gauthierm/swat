@@ -367,5 +367,3 @@ class SwatHtmlHeadEntrySetDisplayer
 
     // }}}
 }
-
-?>

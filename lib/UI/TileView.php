@@ -976,5 +976,3 @@ class TileView extends View implements UIParent
 
     // }}}
 }
-
-?>

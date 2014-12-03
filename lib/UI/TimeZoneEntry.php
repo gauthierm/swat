@@ -398,5 +398,3 @@ class TimeZoneEntry extends InputControl implements Model\State
 
     // }}}
 }
-
-?>

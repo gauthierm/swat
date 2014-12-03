@@ -420,5 +420,3 @@ abstract class CellRendererContainer extends Object implements UIParent
 
     // }}}
 }
-
-?>

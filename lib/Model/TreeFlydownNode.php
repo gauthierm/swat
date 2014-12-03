@@ -115,5 +115,3 @@ class TreeFlydownNode extends TreeNode
 
     // }}}
 }
-
-?>

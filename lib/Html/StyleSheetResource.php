@@ -43,5 +43,3 @@ class StyleSheetResource extends Resource
 
     // }}}
 }
-
-?>

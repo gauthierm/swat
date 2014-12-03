@@ -54,5 +54,3 @@ class DoesNotImplementException extends Exception
 
     // }}}
 }
-
-?>

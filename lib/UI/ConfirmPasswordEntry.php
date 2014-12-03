@@ -79,5 +79,3 @@ class ConfirmPasswordEntry extends PasswordEntry
 
     // }}}
 }
-
-?>

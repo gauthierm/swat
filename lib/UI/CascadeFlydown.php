@@ -336,5 +336,3 @@ class CascadeFlydown extends Flydown
 
     // }}}
 }
-
-?>

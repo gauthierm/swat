@@ -283,5 +283,3 @@ class MoneyEntry extends FloatEntry
 
     // }}}
 }
-
-?>

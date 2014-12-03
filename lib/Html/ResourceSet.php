@@ -217,5 +217,3 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
 
     // }}}
 }
-
-?>

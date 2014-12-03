@@ -103,5 +103,3 @@ class TableViewSpanningColumn extends TableViewColumn
 
     // }}}
 }
-
-?>

@@ -43,7 +43,6 @@ abstract class OptionControl extends InputControl
      *         'classes' => array('large'),
      *     ),
      * );
-     * ?>
      * </code>
      *
      * Any metadata may be added to options. It is up to the control to make
@@ -96,7 +95,6 @@ abstract class OptionControl extends InputControl
      * // 3. add an option with metadata
      * $option = new Model\Option(123, 'Option Title');
      * $control->addOption($option, array('classes' => array('large')));
-     * ?>
      * </code>
      *
      * @param mixed|Model\Option $value        either a value for the option,
@@ -390,5 +388,3 @@ abstract class OptionControl extends InputControl
 
     // }}}
 }
-
-?>

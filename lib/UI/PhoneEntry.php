@@ -45,5 +45,3 @@ class PhoneEntry extends Entry
 
     // }}}
 }
-
-?>

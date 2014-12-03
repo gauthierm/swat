@@ -49,5 +49,3 @@ class ByteCellRenderer extends CellRenderer
 
     // }}}
 }
-
-?>

@@ -88,5 +88,3 @@ class GroupingFormField extends FormField
 
     // }}}
 }
-
-?>
