@@ -69,15 +69,15 @@ class RatingCellRenderer extends NumericCellRenderer
             $difference = $this->maximum_value - $value;
 
             $rating_class = floor(10 * min($value, $this->maximum_value));
-            $rating_class = 'rating-'.$rating_class;
+            $rating_class = 'rating-' . $rating_class;
 
             $outer_span = new Html\Tag('span');
-            $outer_span->class = 'rating '.$rating_class;
+            $outer_span->class = 'rating ' . $rating_class;
             $outer_span->open();
 
             $content = str_repeat('★', ceil($value));
             if ($difference > 0) {
-                $content.= str_repeat('☆', floor($difference));
+                $content .= str_repeat('☆', floor($difference));
             }
 
             $value_tag = new Html\Tag('span');

@@ -76,7 +76,7 @@ class EmailEntry extends Entry
         switch ($id) {
         case 'email':
             $text = L::_(
-                'The email address you have entered is not '.
+                'The email address you have entered is not ' .
                 'properly formatted.'
             );
             $message = new Model\Message($text, 'error');

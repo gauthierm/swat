@@ -290,12 +290,14 @@ class Error
     {
         ob_start();
 
-        printf("%s:\n\nMessage:\n\t%s\n\n".
+        printf(
+            "%s:\n\nMessage:\n\t%s\n\n" .
             "In file '%s' on line %s.\n\n",
             $this->getSeverityString(),
             $this->message,
             $this->file,
-            $this->line);
+            $this->line
+        );
 
         echo "Stack Trace:\n";
         $count = count($this->backtrace);
@@ -348,15 +350,17 @@ class Error
 
         echo '<div class="swat-exception">';
 
-        printf('<h3>%s</h3>'.
-                '<div class="swat-exception-body">'.
-                'Message:<div class="swat-exception-message">%s</div>'.
-                'Occurred in file <strong>%s</strong> '.
-                'on line <strong>%s</strong>.<br /><br />',
-                $this->getSeverityString(),
-                nl2br(htmlspecialchars($this->message)),
-                $this->file,
-                $this->line);
+        printf(
+            '<h3>%s</h3>' .
+            '<div class="swat-exception-body">' .
+            'Message:<div class="swat-exception-message">%s</div>' .
+            'Occurred in file <strong>%s</strong> ' .
+            'on line <strong>%s</strong>.<br /><br />',
+            $this->getSeverityString(),
+            nl2br(htmlspecialchars($this->message)),
+            $this->file,
+            $this->line
+        );
 
         echo 'Stack Trace:<br /><dl>';
         $count = count($this->backtrace);
@@ -376,8 +380,9 @@ class Error
             else
                 $arguments = '';
 
-            printf('<dt>%s.</dt><dd>In file <strong>%s</strong> '.
-                'line&nbsp;<strong>%s</strong>.<br />Method: '.
+            printf(
+                '<dt>%s.</dt><dd>In file <strong>%s</strong> ' .
+                'line&nbsp;<strong>%s</strong>.<br />Method: ' .
                 '<strong>%s%s%s(</strong>%s<strong>)</strong></dd>',
                 --$count,
                 array_key_exists('file', $entry) ? $entry['file'] : 'unknown',
@@ -385,7 +390,8 @@ class Error
                 ($class === null) ? '' : $class,
                 array_key_exists('type', $entry) ? $entry['type'] : '',
                 ($function === null) ? '' : $function,
-                $arguments);
+                $arguments
+            );
         }
 
         echo '</dl></div></div>';
@@ -491,7 +497,7 @@ class Error
      */
     protected function formatSensitiveParam($name, $value)
     {
-        return '[$'.$name.' FILTERED]';
+        return '[$' . $name . ' FILTERED]';
     }
 
     // }}}
@@ -509,11 +515,11 @@ class Error
         $formatted_value = '<unknown parameter type>';
 
         if (is_object($value)) {
-            $formatted_value = '<'.get_class($value).' object>';
+            $formatted_value = '<' . get_class($value) . ' object>';
         } elseif ($value === null) {
             $formatted_value = '<null>';
         } elseif (is_string($value)) {
-            $formatted_value = "'".$value."'";
+            $formatted_value = "'" . $value . "'";
         } elseif (is_int($value) || is_float($value)) {
             $formatted_value = strval($value);
         } elseif (is_bool($value)) {
@@ -538,17 +544,17 @@ class Error
             $count = 0;
             foreach ($value as $key => $the_value) {
                 if ($count > 0) {
-                    $formatted_value.= ', ';
+                    $formatted_value .= ', ';
                 }
 
                 if ($associative) {
-                    $formatted_value.= $this->formatValue($key);
-                    $formatted_value.= ' => ';
+                    $formatted_value .= $this->formatValue($key);
+                    $formatted_value .= ' => ';
                 }
-                $formatted_value.= $this->formatValue($the_value);
+                $formatted_value .= $this->formatValue($the_value);
                 $count++;
             }
-            $formatted_value.= ')';
+            $formatted_value .= ')';
         }
 
         return $formatted_value;
@@ -568,17 +574,17 @@ class Error
         static $style_sheet_displayed = false;
 
         if (!$style_sheet_displayed) {
-            echo "<style>".
-                ".swat-exception { border: 1px solid #d43; margin: 1em; ".
-                "font-family: sans-serif; background: #fff !important; ".
-                "z-index: 9999 !important; color: #000; text-align: left; ".
+            echo "<style>" .
+                ".swat-exception { border: 1px solid #d43; margin: 1em; " .
+                "font-family: sans-serif; background: #fff !important; " .
+                "z-index: 9999 !important; color: #000; text-align: left; " .
                 "min-width: 400px; }\n";
 
-            echo ".swat-exception h3 { background: #e65; margin: 0; padding: ".
+            echo ".swat-exception h3 { background: #e65; margin: 0; padding: " .
                 "border-bottom: 1px solid #d43; color: #fff; }\n";
 
             echo ".swat-exception-body { padding: 0.8em; }\n";
-            echo ".swat-exception-message { margin-left: 2em; padding: 1em; ".
+            echo ".swat-exception-message { margin-left: 2em; padding: 1em; " .
                 "}\n";
 
             echo ".swat-exception dt { float: left; margin-left: 1em; }\n";

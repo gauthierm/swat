@@ -191,7 +191,7 @@ class Actions extends Control implements UIParent
                 $div->class = ($item == $this->selected) ?
                     'swat-visible' : 'swat-hidden';
 
-                $div->id = $this->id.'_'.$item->id;
+                $div->id = $this->id . '_' . $item->id;
 
                 $div->open();
                 $item->display();
@@ -279,7 +279,7 @@ class Actions extends Control implements UIParent
             $this->addActionItem($child);
         } else {
             throw new Exception\InvalidClassException(
-                'Only ActionItem objects may be nested within an Action '.
+                'Only ActionItem objects may be nested within an Action ' .
                 'object.',
                 0,
                 $child
@@ -502,7 +502,7 @@ class Actions extends Control implements UIParent
 
             if ($selector === null) {
                 throw new Exception\Exception(
-                    'No selector was specified and view does not have a '.
+                    'No selector was specified and view does not have a ' .
                     'selector'
                 );
             }
@@ -590,12 +590,12 @@ class Actions extends Control implements UIParent
      */
     protected function createCompositeWidgets()
     {
-        $flydown = new Flydown($this->id.'_action_flydown');
+        $flydown = new Flydown($this->id . '_action_flydown');
         $flydown->show_blank = $this->show_blank;
 
         $this->addCompositeWidget($flydown, 'action_flydown');
 
-        $button = new Button($this->id.'_apply_button');
+        $button = new Button($this->id . '_apply_button');
         $this->addCompositeWidget($button, 'apply_button');
     }
 
@@ -632,16 +632,21 @@ class Actions extends Control implements UIParent
         $selected_value = ($this->selected === null) ?
             'null' : Util\JavaScript::quoteString($this->selected->id);
 
-        $javascript.= sprintf("var %s_obj = new SwatActions(%s, [%s], %s);",
+        $javascript .= sprintf(
+            "var %s_obj = new SwatActions(%s, [%s], %s);",
             $this->id,
             Util\JavaScript::quoteString($this->id),
             implode(', ', $values),
-            $selected_value);
-
+            $selected_value
+        );
 
         if ($this->view !== null && $this->selector !== null) {
-            $javascript.= sprintf("\n%s_obj.setViewSelector(%s, '%s');",
-                $this->id, $this->view->id, $this->selector->getId());
+            $javascript .= sprintf(
+                "\n%s_obj.setViewSelector(%s, '%s');",
+                $this->id,
+                $this->view->id,
+                $this->selector->getId()
+            );
         }
 
         return $javascript;
@@ -665,14 +670,15 @@ class Actions extends Control implements UIParent
             L::_('Please select an action, and one or more items.');
 
         return sprintf(
-            "SwatActions.dismiss_text = '%s';\n".
-            "SwatActions.select_an_action_text = '%s';\n".
-            "SwatActions.select_an_item_text = '%s';\n".
+            "SwatActions.dismiss_text = '%s';\n" .
+            "SwatActions.select_an_action_text = '%s';\n" .
+            "SwatActions.select_an_item_text = '%s';\n" .
             "SwatActions.select_an_item_and_an_action_text = '%s';\n",
             $dismiss_text,
             $select_an_action_text,
             $select_an_item_text,
-            $select_an_item_and_an_action_text);
+            $select_an_item_and_an_action_text
+        );
     }
 
     // }}}

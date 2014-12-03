@@ -393,11 +393,11 @@ class FileEntry extends InputControl
         if (is_dir($dst_dir)) {
             return move_uploaded_file(
                 $this->file['tmp_name'],
-                $dst_dir.'/'.$dst_filename
+                $dst_dir . '/' . $dst_filename
             );
         } else {
             throw new Exception\Exception(
-                "Destination of '{$dst_dir}' is not a directory or does not ".
+                "Destination of '{$dst_dir}' is not a directory or does not " .
                 "exist."
             );
         }
@@ -499,13 +499,13 @@ class FileEntry extends InputControl
         case 'upload-error':
             if ($this->show_field_title_in_messages) {
                 $text = L::_(
-                    'The %s field encounted an error when trying to upload '.
+                    'The %s field encounted an error when trying to upload ' .
                     'the file. Please try again.'
                 );
             } else {
                 $text = L::_(
-                    'This field encounted an error when trying to upload the '.
-                    'file. Please try again.'
+                    'This field encounted an error when trying to upload ' .
+                    'the file. Please try again.'
                 );
             }
 
@@ -646,19 +646,21 @@ class FileEntry extends InputControl
             $extension = '';
             $base_name = $this->getFileName();
         } else {
-            $extension = '.'.array_pop(explode('.', $this->getFileName()));
+            $extension = '.' . array_pop(explode('.', $this->getFileName()));
             $base_name = basename($this->getFileName(), $extension);
         }
 
-        if ($count > 0)
-            $file_name = $base_name.$count.$extension;
-        else
-            $file_name = $base_name.$extension;
+        if ($count > 0) {
+            $file_name = $base_name . $count . $extension;
+        } else {
+            $file_name = $base_name . $extension;
+        }
 
-        if (file_exists($path.'/'.$file_name))
+        if (file_exists($path . '/' . $file_name)) {
             return $this->generateUniqueFileName($path, $count + 1);
-        else
+        } else {
             return $file_name;
+        }
     }
 
     // }}}

@@ -115,12 +115,12 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
         $suffix = 0;
 
         if (property_exists($this, $name)) {
-            $mangled_name = $name.$suffix;
+            $mangled_name = $name . $suffix;
             $suffix++;
         }
 
         while (array_key_exists($mangled_name, $this->mappings)) {
-            $mangled_name = $name.$suffix;
+            $mangled_name = $name . $suffix;
             $suffix++;
         }
 
@@ -202,9 +202,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
         if ($this->replicator_id === null) {
             if ($this->using_clone_replication) {
                 throw new Exception\Exception(
-                    'Cannot mix null replicator_id values with non-null '.
-                    'replicator_id values. Make sure this widget cell '.
-                    'renderer\'s replicator_id is set before rendering '.
+                    'Cannot mix null replicator_id values with non-null ' .
+                    'replicator_id values. Make sure this widget cell ' .
+                    'renderer\'s replicator_id is set before rendering ' .
                     'this renderer.'
                 );
             }
@@ -218,9 +218,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
         } else {
             if ($this->using_null_replication) {
                 throw new Exception\Exception(
-                    'Cannot mix non-null replicator_id values with null '.
-                    'replicator_id values. All prior renderings of this '.
-                    'widget cell renderer have had a null value for the '.
+                    'Cannot mix non-null replicator_id values with null ' .
+                    'replicator_id values. All prior renderings of this ' .
+                    'widget cell renderer have had a null value for the ' .
                     'replicator_id.'
                 );
             }
@@ -238,7 +238,7 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
             $form = $this->getForm();
             if ($form === null) {
                 throw new Exception\Exception(
-                    'Cell renderer container must be inside a Form for '.
+                    'Cell renderer container must be inside a Form for ' .
                     'WidgetCellRenderer to work.'
                 );
             }
@@ -342,8 +342,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
                             !isset($this->widgets[$replicator_id][$widget_id])) {
                             throw new Exception\WidgetNotFoundException(
                                 sprintf(
-                                    'No widget with the id "%s" exists in the '.
-                                    'cloned widget sub-tree of this '.
+                                    'No widget with the id "%s" exists in ' .
+                                    'the cloned widget sub-tree of this ' .
                                     'WidgetCellRenderer.',
                                     $widget_id
                                 ),
@@ -699,11 +699,11 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
     protected function getReplicatorFieldName()
     {
-        $name = $this->id.'_replicators';
+        $name = $this->id . '_replicators';
 
         $widget = $this->getFirstAncestor('\Silverorange\Swat\UI\Widget');
         if ($widget->id) {
-            $name = $widget->id.'_'.$name;
+            $name = $widget->id . '_' . $name;
         }
 
         return $name;
@@ -795,7 +795,7 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
         if ($this->prototype_widget === null)
             return;
 
-        $suffix = '_'.$this->id.'_'.$replicator;
+        $suffix = '_' . $this->id . '_' . $replicator;
         $new_widget = $this->prototype_widget->copy($suffix);
         $new_widget->parent = $this;
         $this->widgets[$replicator] = array();

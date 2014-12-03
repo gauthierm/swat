@@ -110,7 +110,7 @@ abstract class L
         if (!self::$set_up) {
             $path = '@DATA-DIR@/Swat/locale';
             if ($path[0] === '@') {
-                $path = __DIR__.'/../locale';
+                $path = __DIR__ . '/../locale';
             }
 
             bindtextdomain(self::GETTEXT_DOMAIN, $path);

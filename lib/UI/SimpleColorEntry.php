@@ -155,7 +155,7 @@ class SimpleColorEntry extends AbstractOverlay
     {
         $javascript = parent::getInlineJavaScript();
 
-        $colors = "'".implode("', '", $this->colors)."'";
+        $colors = "'" . implode("', '", $this->colors) . "'";
 
         if ($this->none_option) {
             $none_option = ($this->none_option_title === null)
@@ -167,7 +167,7 @@ class SimpleColorEntry extends AbstractOverlay
 
         $js_class_name = $this->getJavaScriptClassName();
 
-        $javascript.= "\nvar {$this->id}_obj = new {$js_class_name}(".
+        $javascript .= "\nvar {$this->id}_obj = new {$js_class_name}(" .
             "'{$this->id}', [{$colors}], {$none_option});\n";
 
         return $javascript;

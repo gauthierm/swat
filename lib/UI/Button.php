@@ -379,7 +379,7 @@ class Button extends InputControl
             $show_processing_throbber);
 
         if ($this->show_processing_throbber) {
-            $javascript.= sprintf(
+            $javascript .= sprintf(
                 "\n%s_obj.setProcessingMessage(%s);",
                 $this->id,
                 Util\JavaScript::quoteString(
@@ -389,7 +389,7 @@ class Button extends InputControl
         }
 
         if ($this->confirmation_message !== null) {
-            $javascript.= sprintf(
+            $javascript .= sprintf(
                 "\n%s_obj.setConfirmationMessage(%s);",
                 $this->id,
                 Util\JavaScript::quoteString(

@@ -122,10 +122,10 @@ class ImageCropper extends InputControl
 
         $data = $this->getForm()->getFormData();
 
-        $this->crop_width  = $data[$this->id.'_width'];
-        $this->crop_height = $data[$this->id.'_height'];
-        $this->crop_left   = $data[$this->id.'_x'];
-        $this->crop_top    = $data[$this->id.'_y'];
+        $this->crop_width  = $data[$this->id . '_width'];
+        $this->crop_height = $data[$this->id . '_height'];
+        $this->crop_left   = $data[$this->id . '_x'];
+        $this->crop_top    = $data[$this->id . '_y'];
     }
 
     // }}}
@@ -149,7 +149,7 @@ class ImageCropper extends InputControl
         $div_tag->open();
 
         $image_tag = new Html\Tag('img');
-        $image_tag->id = $this->id.'_image';
+        $image_tag->id = $this->id . '_image';
         $image_tag->src = $this->image_uri;
         $image_tag->width = $this->image_width;
         $image_tag->height = $this->image_height;
@@ -159,23 +159,23 @@ class ImageCropper extends InputControl
         $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
 
-        $input_tag->id = $this->id.'_width';
-        $input_tag->name = $this->id.'_width';
+        $input_tag->id = $this->id . '_width';
+        $input_tag->name = $this->id . '_width';
         $input_tag->value = $this->crop_width;
         $input_tag->display();
 
-        $input_tag->id = $this->id.'_height';
-        $input_tag->name = $this->id.'_height';
+        $input_tag->id = $this->id . '_height';
+        $input_tag->name = $this->id . '_height';
         $input_tag->value = $this->crop_height;
         $input_tag->display();
 
-        $input_tag->id = $this->id.'_x';
-        $input_tag->name = $this->id.'_x';
+        $input_tag->id = $this->id . '_x';
+        $input_tag->name = $this->id . '_x';
         $input_tag->value = $this->crop_left;
         $input_tag->display();
 
-        $input_tag->id = $this->id.'_y';
-        $input_tag->name = $this->id.'_y';
+        $input_tag->id = $this->id . '_y';
+        $input_tag->name = $this->id . '_y';
         $input_tag->value = $this->crop_top;
         $input_tag->display();
 
@@ -213,7 +213,7 @@ class ImageCropper extends InputControl
 
         if ($this->crop_left !== null && $this->crop_top !== null) {
             $options['initialXY'] =
-                '['.$this->crop_left.', '.$this->crop_top.']';
+                '[' . $this->crop_left . ', ' . $this->crop_top . ']';
         }
 
         if ($this->crop_ratio !== null) {
@@ -226,16 +226,19 @@ class ImageCropper extends InputControl
         $first = true;
 
         foreach ($options as $key => $value) {
-            if ($first)
+            if ($first) {
                 $first = false;
-            else
-                $options_string.= ', ';
-
-            $options_string.= sprintf("%s: %s", $key, $value);
+            } else {
+                $options_string .= ', ';
+            }
+            $options_string .= sprintf("%s: %s", $key, $value);
         }
 
-        return sprintf("%1\$s_obj = new SwatImageCropper(".
-            "'%1\$s', {%2\$s});", $this->id, $options_string);
+        return sprintf(
+            "%1\$s_obj = new SwatImageCropper('%1\$s', {%2\$s});",
+            $this->id,
+            $options_string
+        );
     }
 
     // }}}

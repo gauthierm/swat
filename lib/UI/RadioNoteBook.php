@@ -104,7 +104,7 @@ class RadioNoteBook extends InputControl implements UIParent
             $child->parent = $this;
         } else {
             throw new Exception\InvalidClassException(
-                'Only NoteBookChild objects may be nested within a '.
+                'Only NoteBookChild objects may be nested within a ' .
                 'RadioNoteBook object.',
                 0,
                 $child
@@ -217,7 +217,7 @@ class RadioNoteBook extends InputControl implements UIParent
 
         // add a hidden field so we can check if this list was submitted on
         // the process step
-        $this->getForm()->addHiddenField($this->id.'_submitted', 1);
+        $this->getForm()->addHiddenField($this->id . '_submitted', 1);
 
         if (count($this->pages) === 1) {
             $this->displaySinglePage(reset($this->pages));
@@ -528,7 +528,7 @@ class RadioNoteBook extends InputControl implements UIParent
     {
         $form = $this->getForm();
 
-        if ($form->getHiddenField($this->id.'_submitted') === null) {
+        if ($form->getHiddenField($this->id . '_submitted') === null) {
             return false;
         }
 
@@ -565,8 +565,8 @@ class RadioNoteBook extends InputControl implements UIParent
         $radio = new Html\Tag('input');
         $radio->type = 'radio';
         $radio->name = $this->id;
-        $radio->id = $this->id.'_'.$page->id;
-        $radio->value = $this->id.'_'.$page->id;
+        $radio->id = $this->id . '_' . $page->id;
+        $radio->value = $this->id . '_' . $page->id;
 
         if ($page->id == $this->selected_page) {
             $radio->checked = 'checked';
@@ -581,7 +581,7 @@ class RadioNoteBook extends InputControl implements UIParent
         echo '<td>';
 
         $label = new Html\Tag('label');
-        $label->for = $this->id.'_'.$page->id;
+        $label->for = $this->id . '_' . $page->id;
         $label->setContent($page->title, $page->title_content_type);
         $label->display();
 
@@ -595,7 +595,7 @@ class RadioNoteBook extends InputControl implements UIParent
         $td->class = 'swat-radio-note-book-page';
 
         if ($page->id == $this->selected_page) {
-            $td->class.= ' selected';
+            $td->class .= ' selected';
         }
 
         $td->open();
@@ -632,8 +632,8 @@ class RadioNoteBook extends InputControl implements UIParent
         $input = new Html\Tag('input');
         $input->type = 'hidden';
         $input->name = $this->id;
-        $input->id = $this->id.'_'.$page->id;
-        $input->value = $this->id.'_'.$page->id;
+        $input->id = $this->id . '_' . $page->id;
+        $input->value = $this->id . '_' . $page->id;
         $input->display();
 
         $container->close();

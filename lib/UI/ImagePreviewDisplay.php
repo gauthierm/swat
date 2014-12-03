@@ -207,7 +207,7 @@ class ImagePreviewDisplay extends ImageDisplay
                 $tag = new Html\Tag('span');
             }
 
-            $tag->id = $this->id.'_wrapper';
+            $tag->id = $this->id . '_wrapper';
             $tag->title = $this->title;
 
             if ($this->show_icon) {
@@ -287,9 +287,8 @@ class ImagePreviewDisplay extends ImageDisplay
             $javascript = '';
         }
 
-        $javascript.= sprintf(
-            "var %s = new %s(\n".
-                "%s, %s, %s, %s, %s, %s);\n",
+        $javascript .= sprintf(
+            "var %s = new %s(\n%s, %s, %s, %s, %s, %s);\n",
             $this->id,
             $this->getJavaScriptClass(),
             Util\JavaScript::quoteString($this->id),
@@ -297,16 +296,23 @@ class ImagePreviewDisplay extends ImageDisplay
             intval($this->preview_width),
             intval($this->preview_height),
             (($this->show_title) ? 'true' : 'false'),
-            Util\JavaScript::quoteString($this->preview_title));
+            Util\JavaScript::quoteString($this->preview_title)
+        );
 
         if ($this->container_width !== null) {
-            $javascript.= sprintf("%s.width = %s;",
-                $this->id, (integer)$this->container_width);
+            $javascript .= sprintf(
+                "%s.width = %s;",
+                $this->id,
+                (integer)$this->container_width
+            );
         }
 
         if ($this->container_height !== null) {
-            $javascript.= sprintf("%s.height = %s;",
-                $this->id, (integer)$this->container_height);
+            $javascript .= sprintf(
+                "%s.height = %s;",
+                $this->id,
+                (integer)$this->container_height
+            );
         }
 
         return $javascript;

@@ -49,7 +49,7 @@ class ConfirmEmailEntry extends EmailEntry
 
         if ($this->email_widget === null) {
             throw new Exception\Exception(
-                "Property 'email_widget' is null. Expected a reference to ".
+                "Property 'email_widget' is null. Expected a reference to " .
                 "an EmailEntry."
             );
         }

@@ -46,8 +46,8 @@ class ConfirmPasswordEntry extends PasswordEntry
 
         if ($this->password_widget === null) {
             throw new Exception\Exception(
-                "Property 'password_widget' is null. Expected a reference to ".
-                "a PasswordEntry."
+                "Property 'password_widget' is null. Expected a reference " .
+                "to a PasswordEntry."
             );
         }
 

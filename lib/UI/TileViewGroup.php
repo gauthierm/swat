@@ -103,8 +103,9 @@ class TileViewGroup extends Tile
         $div_tag = new Html\Tag('div');
         $div_tag->class = 'swat-tile-view-group';
 
-        if ($this->header_current === null)
-            $div_tag->class.= ' swat-tile-view-first-group';
+        if ($this->header_current === null) {
+            $div_tag->class .= ' swat-tile-view-first-group';
+        }
 
         $div_tag->open();
 

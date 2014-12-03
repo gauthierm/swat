@@ -199,9 +199,9 @@ class TableViewOrderableColumn extends TableViewColumn
 
         // Set direction-specific CSS class on the anchor.
         if ($this->direction == self::ORDER_BY_DIR_DESCENDING) {
-            $anchor->class.= ' swat-table-view-orderable-column-descending';
+            $anchor->class .= ' swat-table-view-orderable-column-descending';
         } elseif ($this->direction == self::ORDER_BY_DIR_ASCENDING) {
-            $anchor->class.= ' swat-table-view-orderable-column-ascending';
+            $anchor->class .= ' swat-table-view-orderable-column-ascending';
         }
 
         $anchor->open();
@@ -279,11 +279,11 @@ class TableViewOrderableColumn extends TableViewColumn
         if ($include_nulls_ordering && $this->nulls_ordering !== null) {
             switch ($this->nulls_ordering) {
             case self::NULLS_FIRST:
-                $direction.= ' nulls first';
+                $direction .= ' nulls first';
                 break;
 
             case self::NULLS_LAST:
-                $direction.= ' nulls last';
+                $direction .= ' nulls last';
                 break;
 
             default:
@@ -310,7 +310,7 @@ class TableViewOrderableColumn extends TableViewColumn
         $last_word = array_pop($title_exp);
 
         if (count($title_exp)) {
-            $title = implode(' ', $title_exp).' ';
+            $title = implode(' ', $title_exp) . ' ';
         } else {
             $title = '';
         }
@@ -357,7 +357,7 @@ class TableViewOrderableColumn extends TableViewColumn
     protected function getLinkPrefix()
     {
         // TODO: is id a required field of table views?
-        return $this->view->id.'_';
+        return $this->view->id . '_';
     }
 
     // }}}
@@ -446,8 +446,8 @@ class TableViewOrderableColumn extends TableViewColumn
             }
         }
 
-        $key_orderby = $this->getLinkPrefix().'orderby';
-        $key_orderbydir = $this->getLinkPrefix().'orderbydir';
+        $key_orderby = $this->getLinkPrefix() . 'orderby';
+        $key_orderbydir = $this->getLinkPrefix() . 'orderbydir';
 
         unset($vars[$key_orderby]);
         unset($vars[$key_orderbydir]);
@@ -461,7 +461,7 @@ class TableViewOrderableColumn extends TableViewColumn
         }
 
         // build the new link
-        $link = $this->link.'?';
+        $link = $this->link . '?';
         $first = true;
 
         foreach($vars as $name => $value) {
@@ -470,7 +470,7 @@ class TableViewOrderableColumn extends TableViewColumn
             else
                 $link .= '&amp;';
 
-            $link .= $name.'='.$value;
+            $link .= $name . '=' . $value;
         }
 
         return $link;
@@ -484,8 +484,8 @@ class TableViewOrderableColumn extends TableViewColumn
      */
     private function initFromGetVariables()
     {
-        $key_orderby = $this->getLinkPrefix().'orderby';
-        $key_orderbydir = $this->getLinkPrefix().'orderbydir';
+        $key_orderby = $this->getLinkPrefix() . 'orderby';
+        $key_orderbydir = $this->getLinkPrefix() . 'orderbydir';
 
         if (isset($_GET[$key_orderby]) && $_GET[$key_orderby] == $this->id) {
             $this->view->orderby_column = $this;

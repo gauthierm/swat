@@ -100,7 +100,7 @@ class ReCaptcha extends InputControl
         if (!$response->is_valid) {
             $message = new Model\Message(
                 L::_(
-                    'The words you entered did not match the words '.
+                    'The words you entered did not match the words ' .
                     'displayed. Please try again.'
                 ),
                 'error'

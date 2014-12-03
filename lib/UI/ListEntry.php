@@ -181,35 +181,35 @@ class ListEntry extends Entry
             if ($this->maxlength !== null && $len > $this->maxlength) {
                 $max_length_msg = sprintf(
                     L::ngettext(
-                        'Entries in the %%s field must be less than %s '.
+                        'Entries in the %%s field must be less than %s ' .
                         'character long.',
-                        'Entries in the %%s field must be less than %s '.
+                        'Entries in the %%s field must be less than %s ' .
                         'characters long.',
                         $this->maxlength
                     ),
                     $locale->formatNumber($this->maxlength)
-                ).' ';
+                ) . ' ';
 
                 $max_length_error_values[] = $value;
 
             } elseif ($this->minlength !== null && $len < $this->minlength) {
                 $min_length_msg = sprintf(
                     L::ngettext(
-                        'Entries in the %%s field must be at least %s '.
+                        'Entries in the %%s field must be at least %s ' .
                         'character long.',
-                        'Entries in the %%s field must be at least %s '.
+                        'Entries in the %%s field must be at least %s ' .
                         'characters long.',
                         $this->minlength
                     ),
                     $locale->formatNumber($this->minlength)
-                ).' ';
+                ) . ' ';
 
                 $min_length_error_values[] = $value;
             }
         }
 
         if ($min_length_msg !== null) {
-            $min_length_msg.= sprintf(
+            $min_length_msg .= sprintf(
                 L::ngettext(
                     'The following entry is too short: %s.',
                     'The following entries are too short: %s.',
@@ -222,7 +222,7 @@ class ListEntry extends Entry
         }
 
         if ($max_length_msg !== null) {
-            $max_length_msg.= sprintf(
+            $max_length_msg .= sprintf(
                 L::ngettext(
                     'The following entry is too long: %s.',
                     'The following entries are too long: %s.',
@@ -285,7 +285,7 @@ class ListEntry extends Entry
     protected function getDisplayValue($value)
     {
         if ($this->trim_whitespace && $this->delimiter != ' ') {
-            return implode($this->delimiter.' ', $this->values);
+            return implode($this->delimiter . ' ', $this->values);
         } else {
             return implode($this->delimiter, $this->values);
         }
@@ -373,9 +373,9 @@ class ListEntry extends Entry
         $delimiter = preg_quote($this->delimiter, '/');
 
         if ($this->trim_whitespace) {
-            $expression = '/\s*'.$delimiter.'\s*/u';
+            $expression = '/\s*' . $delimiter . '\s*/u';
         } else {
-            $expression = '/'.$delimiter.'/u';
+            $expression = '/' . $delimiter . '/u';
         }
 
         return preg_split($expression, $value, -1, PREG_SPLIT_NO_EMPTY);

@@ -138,7 +138,7 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
 
         if ($this->title !== null) {
             $label_tag = new Html\Tag('label');
-            $label_tag->for = $this->id.'_radio_button_'.$this->value;
+            $label_tag->for = $this->id . '_radio_button_' . $this->value;
             $label_tag->setContent($this->title, $this->content_type);
             $label_tag->open();
         }
@@ -146,7 +146,7 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
         $radio_button_tag = new Html\Tag('input');
         $radio_button_tag->type = 'radio';
         $radio_button_tag->name = $this->id;
-        $radio_button_tag->id = $this->id.'_radio_button_'.$this->value;
+        $radio_button_tag->id = $this->id . '_radio_button_' . $this->value;
         $radio_button_tag->value = $this->value;
         if (!$this->sensitive)
             $radio_button_tag->disabled = 'disabled';
@@ -248,7 +248,7 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
 
         if ($form === null) {
             throw new Exception\Exception(
-                'RadioButtonCellRenderer must have a Form ancestor in the '.
+                'RadioButtonCellRenderer must have a Form ancestor in the ' .
                 'UI tree.'
             );
         }

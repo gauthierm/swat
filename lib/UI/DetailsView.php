@@ -276,8 +276,8 @@ class DetailsView extends Control implements UIParent
         } else {
             $class_name = get_class($child);
             throw new Exception\InvalidClassException(
-                "Unable to add '{$class_name}' object to DetailsView. Only ".
-                "DetailsViewField objects may be nested within DetailsView ".
+                "Unable to add '{$class_name}' object to DetailsView. Only " .
+                "DetailsViewField objects may be nested within DetailsView " .
                 "objects.",
                 0,
                 $child
@@ -501,7 +501,7 @@ class DetailsView extends Control implements UIParent
         if ($field->id !== null) {
             if (array_key_exists($field->id, $this->fields_by_id)) {
                 throw new Exception\DuplicateIdException(
-                    "A field with the id '{$field->id}' already exists ".
+                    "A field with the id '{$field->id}' already exists " .
                     "in this details-view.",
                     0,
                     $field->id
@@ -565,7 +565,7 @@ class DetailsView extends Control implements UIParent
 
             if ($key === false) {
                 throw new Exception\WidgetNotFoundException(
-                    'The reference field could not be found in this '.
+                    'The reference field could not be found in this ' .
                     'details-view.'
                 );
             }
@@ -626,14 +626,16 @@ class DetailsView extends Control implements UIParent
 
         foreach ($this->fields as $field) {
             $field_javascript = $field->getRendererInlineJavaScript();
-            if ($field_javascript != '')
-                $javascript.= "\n".$field_javascript;
+            if ($field_javascript != '') {
+                $javascript .= "\n" . $field_javascript;
+            }
         }
 
         foreach ($this->fields as $field) {
             $field_javascript = $field->getInlineJavaScript();
-            if ($field_javascript != '')
-                $javascript.= "\n".$field_javascript;
+            if ($field_javascript != '') {
+                $javascript .= "\n" . $field_javascript;
+            }
         }
 
         return $javascript;

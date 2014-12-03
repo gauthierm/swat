@@ -101,7 +101,7 @@ class GroupedFlydown extends TreeFlydown
     {
         if ($level > 2) {
             throw new Exception\Exception(
-                'GroupedFlydown tree must not be more than 3 levels '.
+                'GroupedFlydown tree must not be more than 3 levels ' .
                 'including the root node.'
             );
         }

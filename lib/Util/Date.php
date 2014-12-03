@@ -361,7 +361,7 @@ class Date extends \DateTime implements \Serializable
         $out = parent::format($format);
 
         if ($tz_format !== null) {
-            $out.= ' '.$this->formatTZ($tz_format);
+            $out .= ' ' . $this->formatTZ($tz_format);
         }
 
         return $out;
@@ -399,7 +399,7 @@ class Date extends \DateTime implements \Serializable
         $out = strftime($format, $timestamp);
 
         if ($tz_format !== null) {
-            $out.= ' '.$this->formatTZ($tz_format);
+            $out .= ' ' . $this->formatTZ($tz_format);
         }
 
         if ($locale != '') {
@@ -454,7 +454,7 @@ class Date extends \DateTime implements \Serializable
         $out = $formatter->format($timestamp);
 
         if ($tz_format !== null) {
-            $out.= ' '.$this->formatTZ($tz_format);
+            $out .= ' ' . $this->formatTZ($tz_format);
         }
 
         return $out;
@@ -935,37 +935,37 @@ class Date extends \DateTime implements \Serializable
         if ($seconds > $year) {
             $years = floor($seconds / $year);
             $seconds -= $year * $years;
-            $interval_spec.= $years.'Y';
+            $interval_spec .= $years . 'Y';
         }
 
         if ($seconds > $month) {
             $months = floor($seconds / $month);
             $seconds -= $month * $months;
-            $interval_spec.= $months.'M';
+            $interval_spec .= $months . 'M';
         }
 
         if ($seconds > $day) {
             $days = floor($seconds / $day);
             $seconds -= $day * $days;
-            $interval_spec.= $days.'D';
+            $interval_spec .= $days . 'D';
         }
 
         if ($seconds > 0 || $interval_spec === 'P') {
-            $interval_spec.= 'T';
+            $interval_spec .= 'T';
 
             if ($seconds > $hour) {
                 $hours = floor($seconds / $hour);
                 $seconds -= $hour * $hours;
-                $interval_spec.= $hours.'H';
+                $interval_spec .= $hours . 'H';
             }
 
             if ($seconds > $minute) {
                 $minutes = floor($seconds / $minute);
                 $seconds -= $minute * $minutes;
-                $interval_spec.= $minutes.'M';
+                $interval_spec .= $minutes . 'M';
             }
 
-            $interval_spec.= $seconds.'S';
+            $interval_spec .= $seconds . 'S';
         }
 
         return new \DateInterval($interval_spec);
@@ -1090,13 +1090,13 @@ class Date extends \DateTime implements \Serializable
         }
 
         if (($options & self::ISO_MICROTIME) === self::ISO_MICROTIME) {
-            $format.= '.SSSS';
+            $format .= '.SSSS';
         }
 
         $date = $this->format($format);
 
         if (($options & self::ISO_TIME_ZONE) === self::ISO_TIME_ZONE) {
-            $date.= $this->getFormattedOffsetById($format);
+            $date .= $this->getFormattedOffsetById($format);
         }
 
         return $date;
@@ -1397,7 +1397,7 @@ class Date extends \DateTime implements \Serializable
     public function addYears($years)
     {
         $years = (integer)$years;
-        $interval = new \DateInterval('P'.abs($years).'Y');
+        $interval = new \DateInterval('P' . abs($years) . 'Y');
 
         if ($years < 0) {
             $interval->invert = 1;
@@ -1436,7 +1436,7 @@ class Date extends \DateTime implements \Serializable
     public function addMonths($months)
     {
         $months = (integer)$months;
-        $interval = new \DateInterval('P'.abs($months).'M');
+        $interval = new \DateInterval('P' . abs($months) . 'M');
 
         if ($months < 0) {
             $interval->invert = 1;
@@ -1475,7 +1475,7 @@ class Date extends \DateTime implements \Serializable
     public function addDays($days)
     {
         $days = (integer)$days;
-        $interval = new \DateInterval('P'.abs($days).'D');
+        $interval = new \DateInterval('P' . abs($days) . 'D');
 
         if ($days < 0) {
             $interval->invert = 1;
@@ -1514,7 +1514,7 @@ class Date extends \DateTime implements \Serializable
     public function addHours($hours)
     {
         $hours = (integer)$hours;
-        $interval = new \DateInterval('PT'.abs($hours).'H');
+        $interval = new \DateInterval('PT' . abs($hours) . 'H');
 
         if ($hours < 0) {
             $interval->invert = 1;
@@ -1553,7 +1553,7 @@ class Date extends \DateTime implements \Serializable
     public function addMinutes($minutes)
     {
         $minutes = (integer)$minutes;
-        $interval = new \DateInterval('PT'.abs($minutes).'M');
+        $interval = new \DateInterval('PT' . abs($minutes) . 'M');
 
         if ($minutes < 0) {
             $interval->invert = 1;
@@ -1592,7 +1592,7 @@ class Date extends \DateTime implements \Serializable
     public function addSeconds($seconds)
     {
         $seconds = (float)$seconds;
-        $interval = new \DateInterval('PT'.abs($seconds).'S');
+        $interval = new \DateInterval('PT' . abs($seconds) . 'S');
 
         if ($seconds < 0) {
             $interval->invert = 1;
@@ -1871,10 +1871,10 @@ class Date extends \DateTime implements \Serializable
         $month = $this->getMonth() + $months;
 
         if ($month < 1) {
-            $year  -= 1;
+            $year -= 1;
             $month += 12;
         } elseif ($month > 12) {
-            $year  += 1;
+            $year += 1;
             $month -= 12;
         }
 
@@ -1959,7 +1959,7 @@ class Date extends \DateTime implements \Serializable
         // PHP bug #65151. \DateTime objects that are created through
         // unserialization are not properly initialized until __construct() is
         // called.
-        $this->__construct('@'.$data[0]);
+        $this->__construct('@' . $data[0]);
 
         // \DateTime constructor with timestamp is always UTC so set time zone
         $this->setTimezone(new \DateTimeZone($data[1]));

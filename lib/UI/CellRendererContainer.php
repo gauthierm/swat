@@ -180,8 +180,8 @@ abstract class CellRendererContainer extends Object implements UIParent
             $this->addRenderer($child);
         } else {
             throw new Exception\InvalidClassException(
-                'Only \Silverorange\Swat\UI\CellRender objects may be nested '.
-                'within '.get_class($this).' objects.',
+                'Only \Silverorange\Swat\UI\CellRender objects may be ' .
+                'nested within ' . get_class($this) . ' objects.',
                 0,
                 $child
             );
@@ -376,8 +376,9 @@ abstract class CellRendererContainer extends Object implements UIParent
 
         foreach ($this->getRenderers() as $renderer) {
             $renderer_javascript = $renderer->getInlineJavaScript();
-            if ($renderer_javascript != '')
-                $javascript = "\n".$renderer_javascript;
+            if ($renderer_javascript != '') {
+                $javascript = "\n" . $renderer_javascript;
+            }
         }
 
         return $javascript;

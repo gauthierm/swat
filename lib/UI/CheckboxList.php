@@ -292,9 +292,9 @@ class CheckboxList extends OptionControl implements Model\State
     {
         $input_tag = new Html\Tag('input');
         $input_tag->type = 'checkbox';
-        $input_tag->name = $this->id.'['.$index.']';
+        $input_tag->name = $this->id . '[' . $index . ']';
         $input_tag->value = (string)$option->value;
-        $input_tag->id = $this->id.'_'.$index;
+        $input_tag->id = $this->id . '_' . $index;
         $input_tag->removeAttribute('checked');
 
         if (in_array($option->value, $this->values))
@@ -331,7 +331,7 @@ class CheckboxList extends OptionControl implements Model\State
             $this->label_tag->class = 'swat-control';
         }
 
-        $this->label_tag->for = $this->id.'_'.$index;
+        $this->label_tag->for = $this->id . '_' . $index;
         $this->label_tag->setContent($option->title, $option->content_type);
         $this->label_tag->display();
     }
@@ -356,7 +356,7 @@ class CheckboxList extends OptionControl implements Model\State
             if ($tag->class == '') {
                 $tag->class = 'swat-insensitive';
             } else {
-                $tag->class.= ' swat-insensitive';
+                $tag->class .= ' swat-insensitive';
             }
         }
 
@@ -382,10 +382,11 @@ class CheckboxList extends OptionControl implements Model\State
         // set check-all controller if it is visible
         $check_all = $this->getCompositeWidget('check_all');
         if ($check_all->visible) {
-            $javascript.= sprintf(
+            $javascript .= sprintf(
                 "\n%s_obj.setController(%s_obj);",
                 $check_all->id,
-                $this->id);
+                $this->id
+            );
         }
 
         return $javascript;
@@ -431,7 +432,7 @@ class CheckboxList extends OptionControl implements Model\State
      */
     protected function createCompositeWidgets()
     {
-        $this->addCompositeWidget(new SwatCheckAll(), 'check_all');
+        $this->addCompositeWidget(new CheckAll(), 'check_all');
     }
 
     // }}}

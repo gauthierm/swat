@@ -180,13 +180,13 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
             $loader_method = $this->getLoaderMethod($key);
             throw new Exception\Exception(
                 sprintf(
-                    "A property named '%s' does not exist on the %s ".
-                    "data-object. If the property corresponds directly to a ".
-                    "database field it should be added as a public property ".
-                    "of this data object. If the property should access a ".
-                    "sub-data-object, either specify a class when registering ".
-                    "the internal property named '%s' or define a custom ".
-                    "loader method named '%s()'.",
+                    "A property named '%s' does not exist on the %s " .
+                    "data-object. If the property corresponds directly to a " .
+                    "database field it should be added as a public property " .
+                    "of this data object. If the property should access a " .
+                    "sub-data-object, either specify a class when " .
+                    "registering the internal property named '%s' or define " .
+                    "a custom loader method named '%s()'.",
                     $key,
                     get_class($this),
                     $key,
@@ -232,11 +232,11 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
         } else {
             throw new Exception\Exception(
-                "A property named '{$key}' does not exist on this ".
-                'dataobject.  If the property corresponds directly to '.
-                'a database field it should be added as a public property '.
-                'of this data object.  If the property should access a '.
-                'sub-dataobject, specify a class when registering the '.
+                "A property named '{$key}' does not exist on this " .
+                'dataobject.  If the property corresponds directly to ' .
+                'a database field it should be added as a public property ' .
+                'of this data object.  If the property should access a ' .
+                'sub-dataobject, specify a class when registering the ' .
                 "internal field named '{$key}'."
             );
         }
@@ -415,7 +415,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
         // sub-dataobjects
         foreach ($this->sub_data_objects as $name => $object) {
-            $saver_method = 'save'.
+            $saver_method = 'save' .
                 str_replace(' ', '', ucwords(strtr($name, '_', ' ')));
 
             $object->setDatabase($this->db);
@@ -821,8 +821,8 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
                     if (!class_exists($class)) {
                         throw new SwatException\ClassNotFoundException(
                             sprintf(
-                                "Class '%s' registered for internal property ".
-                                "'%s' does not exist.",
+                                "Class '%s' registered for internal " .
+                                "property '%s' does not exist.",
                                 $class,
                                 $key
                             ),
@@ -1009,7 +1009,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         }
 
         foreach ($this->sub_data_objects as $name => $object) {
-            $saver_method = 'save'.
+            $saver_method = 'save' .
                 str_replace(' ', '', ucwords(strtr($name, '_', ' ')));
 
             if (method_exists($this, $saver_method)) {
@@ -1031,7 +1031,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         if ($this->db === null) {
             throw new Exception\NoDatabaseException(
                 sprintf(
-                    'No database available to this dataobject (%s). '.
+                    'No database available to this dataobject (%s). ' .
                     'Call the setDatabase method.',
                     get_class($this)
                 )
@@ -1192,7 +1192,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
     protected function saveSubDataObjects()
     {
         foreach ($this->sub_data_objects as $name => $object) {
-            $saver_method = 'save'.
+            $saver_method = 'save' .
                 str_replace(' ', '', ucwords(strtr($name, '_', ' ')));
 
             if (method_exists($this, $saver_method))
@@ -1515,7 +1515,7 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
                 } else {
                     throw new Exception\MarshallException(
                         sprintf(
-                            'Unable to marshall requested property "%s" '.
+                            'Unable to marshall requested property "%s" ' .
                             'for object of class %s.',
                             $key,
                             get_class($this)

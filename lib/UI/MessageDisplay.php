@@ -130,7 +130,7 @@ class MessageDisplay extends Control
             $message = new Model\Message($message);
         } elseif (!$message instanceof Model\Message) {
             throw new Exception\InvalidClassException(
-                'Cannot add message. $message must be either a string or a '.
+                'Cannot add message. $message must be either a string or a ' .
                 'Model\Message.',
                 0,
                 $message
@@ -251,15 +251,15 @@ class MessageDisplay extends Control
         $message_div = new Html\Tag('div');
         $container_div = new Html\Tag('div');
 
-        $message_div->id = $this->id.'_'.$message_id;
+        $message_div->id = $this->id . '_' . $message_id;
         $message_div->class = $message->getCSSClassString();
 
         if ($first) {
-            $message_div->class.= ' swat-message-first';
+            $message_div->class .= ' swat-message-first';
         }
 
         if ($last) {
-            $message_div->class.= ' swat-message-last';
+            $message_div->class .= ' swat-message-last';
         }
 
         $message_div->open();
@@ -338,11 +338,15 @@ class MessageDisplay extends Control
         }
 
         $dismissable_messages =
-            '['.implode(', ', $this->dismissable_messages).']';
+            '[' . implode(', ', $this->dismissable_messages) . ']';
 
-        $javascript.= sprintf("var %s_obj = new %s('%s', %s);",
-            $this->id, $this->getJavaScriptClass(), $this->id,
-            $dismissable_messages);
+        $javascript .= sprintf(
+            "var %s_obj = new %s('%s', %s);",
+            $this->id,
+            $this->getJavaScriptClass(),
+            $this->id,
+            $dismissable_messages
+        );
 
         return $javascript;
     }
@@ -358,7 +362,7 @@ class MessageDisplay extends Control
      * JavaScript form class.
      *
      * @return string the name of the JavaScript class to instantiate for this
-     *                form . Defaults to 'Model\MessageDisplay'.
+     *                message display. Defaults to 'Model\MessageDisplay'.
      */
     protected function getJavaScriptClass()
     {

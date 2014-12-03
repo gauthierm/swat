@@ -79,7 +79,7 @@ class MenuGroup extends Control implements UIParent
             $this->addItem($child);
         } else {
             throw new Exception\InvalidClassException(
-                'Only MenuItem objects may be nested within a MenuGroup '.
+                'Only MenuItem objects may be nested within a MenuGroup ' .
                 'object.',
                 0,
                 $child
@@ -115,8 +115,9 @@ class MenuGroup extends Control implements UIParent
 
         $ul_tag = new Html\Tag('ul');
         $ul_tag->class = ($this->title === null) ? '' : 'hastitle ';
-        if ($first)
-            $ul_tag->class.= 'first-of-type';
+        if ($first) {
+            $ul_tag->class .= 'first-of-type';
+        }
 
         $ul_tag->open();
 

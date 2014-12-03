@@ -240,8 +240,9 @@ abstract class TableViewRow extends Object
     {
         $copy = parent::copy($id_suffix);
 
-        if ($id_suffix != '' && $copy->id !== null)
-            $copy->id = $copy->id.$id_suffix;
+        if ($id_suffix != '' && $copy->id !== null) {
+            $copy->id = $copy->id . $id_suffix;
+        }
 
         return $copy;
     }

@@ -73,7 +73,7 @@ class Field
      */
     public function __toString()
     {
-        return $this->type.':'.$this->name;
+        return $this->type . ':' . $this->name;
     }
 
     // }}}

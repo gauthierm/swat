@@ -71,12 +71,13 @@ class UriEntry extends Entry
         }
 
         if (!$this->validateUri($this->value)) {
-            if ($this->validateUri($this->default_scheme.'://'.$this->value)) {
+            $default_uri = $this->default_scheme . '://' . $this->value;
+            if ($this->validateUri($default_uri)) {
                 if ($this->scheme_required) {
                     $this->addMessage($this->getValidationMessage(
                         'scheme-required'));
                 } else {
-                    $this->value = $this->default_scheme.'://'.$this->value;
+                    $this->value = $default_uri;
                 }
             } else {
                 $this->addMessage($this->getValidationMessage(
@@ -106,7 +107,7 @@ class UriEntry extends Entry
 
         $regexp = '_^
             # scheme
-            (('.$schemes.')://)
+            ((' . $schemes . ')://)
             # user:pass authentication
             (\S+(:\S*)?@)?
             # domain part

@@ -126,14 +126,14 @@ abstract class AbstractMenu extends Control
         $parameters = json_encode($parameters);
 
         return sprintf(
-            "YAHOO.util.Event.onContentReady(\n".
-            "\t%s,\n".
-            "\tfunction()\n".
-            "\t{\n".
-            "\t\tvar menu_obj = new %s(%s, %s);\n".
-            "\t\tmenu_obj.render();\n".
-            "\t\tmenu_obj.show();\n".
-            "\t}\n".
+            "YAHOO.util.Event.onContentReady(\n" .
+            "\t%s,\n" .
+            "\tfunction()\n" .
+            "\t{\n" .
+            "\t\tvar menu_obj = new %s(%s, %s);\n" .
+            "\t\tmenu_obj.render();\n" .
+            "\t\tmenu_obj.show();\n" .
+            "\t}\n" .
             ");\n",
             Util\JavaScript::quoteString($this->id),
             $this->getJavaScriptClass(),

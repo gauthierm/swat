@@ -38,11 +38,11 @@ abstract class Control extends Widget
             else
                 if ($this->parent->getTitleContentType() === 'text/xml') {
                     $field_title =
-                        '<strong>'.$this->parent->getTitle().'</strong>';
+                        '<strong>' . $this->parent->getTitle() . '</strong>';
                 } else {
                     $field_title =
-                        '<strong>'.
-                        Util\String::minimizeEntities($this->parent->getTitle()).
+                        '<strong>' .
+                        Util\String::minimizeEntities($this->parent->getTitle()) .
                         '</strong>';
                 }
         } else {

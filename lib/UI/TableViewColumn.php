@@ -419,7 +419,7 @@ class TableViewColumn extends CellRendererContainer
             }
         } else {
             throw new Exception\InvalidClassException(
-                'Only CellRenderer and InputCell objects may be nested '.
+                'Only CellRenderer and InputCell objects may be nested ' .
                 'within TableViewColumn objects.',
                 0,
                 $child
@@ -627,8 +627,9 @@ class TableViewColumn extends CellRendererContainer
     {
         $copy = parent::copy($id_suffix);
 
-        if ($id_suffix != '' && $copy->id !== null)
-            $copy->id = $copy->id.$id_suffix;
+        if ($id_suffix != '' && $copy->id !== null) {
+            $copy->id = $copy->id . $id_suffix;
+        }
 
         if ($this->input_cell !== null) {
             $copy_input_cell = $this->input_cell->copy($id_suffix);

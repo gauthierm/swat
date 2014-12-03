@@ -95,7 +95,7 @@ class InputCell extends Object implements UIParent, Titleable
             $this->setWidget($child);
         } else {
             throw new Exception\Exception(
-                'Can only add one widget to an input cell. Add a Container '.
+                'Can only add one widget to an input cell. Add a Container ' .
                 'instance if you need to add multiple widgets.'
             );
         }
@@ -255,7 +255,7 @@ class InputCell extends Object implements UIParent, Titleable
         }
 
         throw new Exception\Exception(
-            'The specified widget was not found with the specified row '.
+            'The specified widget was not found with the specified row ' .
             'identifier.'
         );
     }
@@ -548,15 +548,16 @@ class InputCell extends Object implements UIParent, Titleable
         $row = $this->getInputRow();
         if ($row === null) {
             throw new Exception\Exception(
-                'Cannot clone widgets until cell is added to a table-view '.
+                'Cannot clone widgets until cell is added to a table-view ' .
                 'and an input-row is added to the table-view.'
             );
         }
 
         $view = $this->getFirstAncestor('\Silverorange\Swat\UI\TableView');
         $view_id = ($view === null) ? null : $view->id;
-        $suffix = ($view_id === null) ? '_'.$row->id.'_'.$replicator_id :
-            '_'.$view_id.'_'.$row->id.'_'.$replicator_id;
+        $suffix = ($view_id === null)
+            ? '_' . $row->id . '_' . $replicator_id
+            : '_' . $view_id . '_' . $row->id . '_' . $replicator_id;
 
         $new_widget = $this->widget->copy($suffix);
         $new_widget->parent = $this;

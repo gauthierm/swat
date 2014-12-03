@@ -97,7 +97,7 @@ class ExpandableCheckboxTree extends CheckboxTree
 
         Widget::display();
 
-        $this->getForm()->addHiddenField($this->id.'_submitted', 1);
+        $this->getForm()->addHiddenField($this->id . '_submitted', 1);
 
         $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
@@ -107,7 +107,7 @@ class ExpandableCheckboxTree extends CheckboxTree
 
         $this->input_tag = new Html\Tag('input');
         $this->input_tag->type = 'checkbox';
-        $this->input_tag->name = $this->id.'[]';
+        $this->input_tag->name = $this->id . '[]';
 
         $div_tag->open();
 
@@ -200,18 +200,19 @@ class ExpandableCheckboxTree extends CheckboxTree
             $index = $node->getIndex();
         } else {
             // index of other nodes is a combination of parent indexes
-            $index = $parent_index.'.'.$node->getIndex();
+            $index = $parent_index . '.' . $node->getIndex();
 
             $li_tag = new Html\Tag('li');
-            if (count($child_nodes) > 0)
-                $li_tag->id = $this->id.'_'.$index.'_container';
+            if (count($child_nodes) > 0) {
+                $li_tag->id = $this->id . '_' . $index . '_container';
+            }
 
             $li_tag->open();
 
             if ($node->value === null) {
                 if ($this->dependent_boxes) {
                     // show a checkbox just for the check-all functionality
-                    $this->input_tag->id = $this->id.'_'.$index;
+                    $this->input_tag->id = $this->id . '_' . $index;
                     $this->input_tag->value = null;
                     $this->input_tag->checked = ($this->nodeIsChecked($node)) ?
                         'checked' : null;
@@ -219,7 +220,7 @@ class ExpandableCheckboxTree extends CheckboxTree
                     if (!$this->isSensitive())
                         $this->input_tag->disabled = 'disabled';
 
-                    $this->label_tag->for = $this->id.'_'.$index;
+                    $this->label_tag->for = $this->id . '_' . $index;
                     $this->label_tag->class =
                         'swat-control swat-expandable-checkbox-tree-null';
 
@@ -229,7 +230,7 @@ class ExpandableCheckboxTree extends CheckboxTree
                     $this->label_tag->display();
                 } else {
                     $span_tag = new Html\Tag('span');
-                    $span_tag->id = $this->id.'_'.$index;
+                    $span_tag->id = $this->id . '_' . $index;
                     $span_tag->class =
                         'swat-expandable-checkbox-tree-null-node';
 
@@ -237,7 +238,7 @@ class ExpandableCheckboxTree extends CheckboxTree
                     $span_tag->display();
                 }
             } else {
-                $this->input_tag->id = $this->id.'_'.$index;
+                $this->input_tag->id = $this->id . '_' . $index;
                 $this->input_tag->value = $node->value;
                 $this->input_tag->checked = ($this->nodeIsChecked($node)) ?
                     'checked' : null;
@@ -245,7 +246,7 @@ class ExpandableCheckboxTree extends CheckboxTree
                 if (!$this->isSensitive())
                     $this->input_tag->disabled = 'disabled';
 
-                $this->label_tag->for = $this->id.'_'.$index;
+                $this->label_tag->for = $this->id . '_' . $index;
                 $this->label_tag->class = 'swat-control';
                 $this->label_tag->setContent($node->title);
 
@@ -262,7 +263,7 @@ class ExpandableCheckboxTree extends CheckboxTree
 
             // don't make expandable if it is the root node
             if ($parent_index !== '') {
-                $ul_tag->id = $this->id.'_'.$index.'_branch';
+                $ul_tag->id = $this->id . '_' . $index . '_branch';
                 $ul_tag->class = 'swat-expandable-checkbox-tree-opened';
             }
 
@@ -350,7 +351,7 @@ class ExpandableCheckboxTree extends CheckboxTree
                 $id = $node->getIndex();
             } else {
                 // id of other nodes is a combination of parent id
-                $id = $parent_id.'.'.$node->getIndex();
+                $id = $parent_id . '.' . $node->getIndex();
                 $expandable_ids[] = $id;
             }
 

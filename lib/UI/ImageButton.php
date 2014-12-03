@@ -96,8 +96,8 @@ class ImageButton extends Button
 
         if ($this->alt == '') {
             throw new Exception\Exception(
-                'The $alt property of ImageButton must be set to an '.
-                'appropriate value. The "alt" attribute is required in '.
+                'The $alt property of ImageButton must be set to an ' .
+                'appropriate value. The "alt" attribute is required in ' .
                 'HTML5 and can not be an empty string.'
             );
         }

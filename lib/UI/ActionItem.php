@@ -124,7 +124,7 @@ class ActionItem extends Control implements UIParent
             $this->setWidget($child);
         } else {
             throw new Exception\InvalidClassException(
-                'Only Widget objects may be nested within an ActionItem '.
+                'Only Widget objects may be nested within an ActionItem ' .
                 'object.',
                 0,
                 $child

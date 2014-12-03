@@ -205,10 +205,10 @@ class Loader
             }
             if (!$found) {
                 throw new Exception\Exception(
-                    'Cannot load a UI tree into a container that is not part '.
-                    'of this loader. If you need to load a UI tree into '.
-                    'another loader you should specify the root container '.
-                    'when constructing this loader.'
+                    'Cannot load a UI tree into a container that is not ' .
+                    'part of this loader. If you need to load a UI tree ' .
+                    'into another loader you should specify the root ' .
+                    'container when constructing this loader.'
                 );
             }
         }
@@ -224,8 +224,8 @@ class Loader
             $paths = explode(':', ini_get('include_path'));
 
             foreach ($paths as $path) {
-                if (file_exists($path.'/'.$filename)) {
-                    $xml_file = $path.'/'.$filename;
+                if (file_exists($path . '/' . $filename)) {
+                    $xml_file = $path . '/' . $filename;
                     break;
                 }
             }
@@ -268,7 +268,7 @@ class Loader
             // back to version in svn
             $schema_file = '@DATA-DIR@/Swat/data/swatml.rng';
             if (!file_exists($schema_file)) {
-                $schema_file = __DIR__.'/../data/swatml.rng';
+                $schema_file = __DIR__ . '/../data/swatml.rng';
             }
             $document->relaxNGValidate($schema_file);
         }
@@ -279,14 +279,16 @@ class Loader
 
         if (count($xml_errors) > 0) {
             $message = '';
-            foreach ($xml_errors as $error)
-                $message.= sprintf("%s in %s, line %d\n",
+            foreach ($xml_errors as $error) {
+                $message .= sprintf(
+                    "%s in %s, line %d\n",
                     trim($error->message),
                     $error->file,
-                    $error->line);
-
+                    $error->line
+                );
+            }
             throw new Exception\InvalidSwatMLException(
-                "Invalid SwatML:\n".$message,
+                "Invalid SwatML:\n" . $message,
                 0,
                 $xml_file
             );
@@ -506,8 +508,8 @@ class Loader
                 // make sure id is unique
                 if (isset($this->widgets[$parsed_object->id])) {
                     throw new Exception\DuplicateIdException(
-                        "A widget with an id of '{$parsed_object->id}' ".
-                        'already exists.',
+                        "A widget with an id of '{$parsed_object->id}' " .
+                        "already exists.",
                         0,
                         $parsed_object->id
                     );
@@ -515,8 +517,8 @@ class Loader
             } elseif (!$parsed_object instanceof Widget) {
                 $class_name = get_class($parsed_object);
                 throw new Exception\InvalidClassException(
-                    "'{$class_name}' is defined in a widget element but is ".
-                    'not an instance of Widget.',
+                    "'{$class_name}' is defined in a widget element but is " .
+                    "not an instance of Widget.",
                     0,
                     $parsed_object
                 );
@@ -525,8 +527,8 @@ class Loader
             if ($parsed_object instanceof Widget) {
                 $class_name = get_class($parsed_object);
                 throw new Exception\InvalidClassException(
-                    "'{$class_name}' is defined in an object element but is ".
-                    "and instance of Widget and should be defined in a ".
+                    "'{$class_name}' is defined in an object element but is " .
+                    "and instance of Widget and should be defined in a " .
                     "widget element.",
                     0,
                     $parsed_object
@@ -553,7 +555,7 @@ class Loader
         } else {
             $class_name = get_class($parent);
             throw new Exception\DoesNotImplementException(
-                "Can not add object to parent. '{$class_name}' does not ".
+                "Can not add object to parent. '{$class_name}' does not " .
                 "implement UIParent.",
                 0,
                 $parent
@@ -590,9 +592,9 @@ class Loader
 
             if ($class_file === null) {
                 throw new Exception\ClassNotFoundException(
-                    "Class '{$class}' is not defined and no suitable filename ".
-                    "for the class could be found. You may have forgotten to ".
-                    "map the class prefix to a path.",
+                    "Class '{$class}' is not defined and no suitable " .
+                    "filename for the class could be found. You may have " .
+                    "forgotten to map the class prefix to a path.",
                     0,
                     $class
                 );
@@ -604,8 +606,8 @@ class Loader
         // NOTE: this works because Object is abstract
         if (!is_subclass_of($class, '\Silverorange\Swat\UI\Object')) {
             throw new Exception\InvalidClassException(
-                "Class '{$class}' is not a a descendant of Object and cannot ".
-                "be added to the widget tree."
+                "Class '{$class}' is not a a descendant of Object and " .
+                "cannot be added to the widget tree."
             );
         }
 
@@ -651,7 +653,7 @@ class Loader
         if (!array_key_exists($name, $class_properties)) {
             $class_name = get_class($object);
             throw new Exception\InvalidPropertyException(
-                "Property '{$name}' does not exist in class '{$class_name}' ".
+                "Property '{$name}' does not exist in class '{$class_name}' " .
                 "but is used in SwatML.",
                 0,
                 $object,
@@ -739,19 +741,26 @@ class Loader
         case 'date':
             return new Util\Date($value);
         case 'implicit-string':
-            if ($value == 'false' || $value == 'true' )
-                trigger_error(__CLASS__.': Possible missing type="boolean" '.
-                    'attribute on property element', E_USER_NOTICE);
+            if ($value == 'false' || $value == 'true') {
+                trigger_error(
+                    __CLASS__ . ': Possible missing type="boolean" ' .
+                    'attribute on property element',
+                    E_USER_NOTICE
+                );
+            }
 
-            if (is_numeric($value))
-                trigger_error(__CLASS__.': Possible missing type="integer" '.
-                    ' or type="float" attribute on property element',
-                    E_USER_NOTICE);
+            if (is_numeric($value)) {
+                trigger_error(
+                    __CLASS__ . ': Possible missing type="integer" or ' .
+                    'type="float" attribute on property element',
+                    E_USER_NOTICE
+                );
+            }
 
             return $this->translateValue($value, $translatable, $object);
         default:
             throw new Exception\InvalidPropertyTypeException(
-                "Property type '{$type}' is not a recognized type ".
+                "Property type '{$type}' is not a recognized type " .
                 "but is used in SwatML.",
                 0,
                 $object,
@@ -790,7 +799,7 @@ class Loader
 
         if ($renderer === null || $renderer_container === null) {
             throw new Exception\InvalidPropertyTypeException(
-                "Property type 'data' is only allowed on a CellRenderer or ".
+                "Property type 'data' is only allowed on a CellRenderer or " .
                 "or on a widget within a WidgetCellRenderer.",
                 0,
                 $object,
@@ -875,7 +884,7 @@ class Loader
         $prev_token = null;
 
         $parenthesis_exception = new Exception\InvalidConstantExpressionException(
-            "Mismatched parentheses in constant expression '{$expression}' ".
+            "Mismatched parentheses in constant expression '{$expression}' " .
             "in SwatML.",
             0,
             $expression
@@ -929,7 +938,7 @@ class Loader
                     $constant = constant($constant);
                 } else {
                     throw new Exception\UndefinedConstantException(
-                        "Undefined constant '{$constant}' in constant ".
+                        "Undefined constant '{$constant}' in constant " .
                         "expression '{$expression}' in SwatML.",
                         0,
                         $constant

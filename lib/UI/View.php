@@ -139,7 +139,7 @@ abstract class View extends Control
                 $selector = $this->selectors[$selector];
             } else {
                 throw new Exception\ObjectNotFoundException(
-                    "Selector with an id of {$selector} does not exist in ".
+                    "Selector with an id of {$selector} does not exist in " .
                     "this view.",
                     0,
                     $selector
@@ -209,7 +209,7 @@ abstract class View extends Control
                 $selector = $this->selectors[$selector];
             } else {
                 throw new Exception\ObjectNotFoundException(
-                    "Selector with an id of {$selector} does not exist in ".
+                    "Selector with an id of {$selector} does not exist in " .
                     "this view.",
                     0,
                     $selector

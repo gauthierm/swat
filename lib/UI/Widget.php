@@ -471,7 +471,7 @@ abstract class Widget extends Object
     {
         if ($this->parent === null) {
             throw new Exception\Exception(
-                'Widget does not have a parent, unable to replace this '.
+                'Widget does not have a parent, unable to replace this ' .
                 'widget with a container.'
             );
         }
@@ -504,8 +504,9 @@ abstract class Widget extends Object
     {
         $copy = parent::copy($id_suffix);
 
-        if ($id_suffix != '' && $copy->id !== null)
-            $copy->id = $copy->id.$id_suffix;
+        if ($id_suffix != '' && $copy->id !== null) {
+            $copy->id = $copy->id . $id_suffix;
+        }
 
         foreach ($this->composite_widgets as $key => $composite_widget) {
             $composite_copy = $composite_widget->copy($id_suffix);
@@ -580,7 +581,7 @@ abstract class Widget extends Object
         if (array_key_exists($key, $this->composite_widgets)) {
             throw new Exception\DuplicateIdException(
                 sprintf(
-                    "A composite widget with the key '%s' already exists in ".
+                    "A composite widget with the key '%s' already exists in " .
                     "this widget.",
                     $key
                 ),
@@ -623,8 +624,8 @@ abstract class Widget extends Object
         if (!array_key_exists($key, $this->composite_widgets)) {
             throw new Exception\WidgetNotFoundException(
                 sprintf(
-                    "Composite widget with key of '%s' not found in %s. ".
-                    "Make sure the composite widget was created and added ".
+                    "Composite widget with key of '%s' not found in %s. " .
+                    "Make sure the composite widget was created and added " .
                     "to this widget.",
                     $key,
                     get_class($this)

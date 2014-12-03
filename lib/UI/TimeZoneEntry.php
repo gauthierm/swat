@@ -137,7 +137,8 @@ class TimeZoneEntry extends InputControl implements Model\State
             $regions_flydown->value === null) {
             $this->value = null;
         } else {
-            $this->value = $areas_flydown->value.'/'.$regions_flydown->value;
+            $this->value = $areas_flydown->value . '/' .
+                $regions_flydown->value;
         }
 
         if (!$this->required && $this->value === null && $this->isSensitive()) {
@@ -210,13 +211,13 @@ class TimeZoneEntry extends InputControl implements Model\State
      */
     protected function createCompositeWidgets()
     {
-        $areas_flydown = new Flydown($this->id.'_areas');
+        $areas_flydown = new Flydown($this->id . '_areas');
         $areas_flydown->addOptionsByArray($this->areas);
         $areas_flydown->show_blank = true;
         $areas_flydown->blank_title = L::_('choose region …');
         $this->addCompositeWidget($areas_flydown, 'areas_flydown');
 
-        $regions_flydown = new CascadeFlydown($this->id.'_regions');
+        $regions_flydown = new CascadeFlydown($this->id . '_regions');
         $regions_flydown->show_blank = true;
         $regions_flydown->blank_value = null;
         $regions_flydown->cascade_from = $areas_flydown;
@@ -309,13 +310,13 @@ class TimeZoneEntry extends InputControl implements Model\State
         foreach ($regions as $region) {
             $title = $this->getRegionTitle($region);
 
-            if (isset($abbreviations[$area.'/'.$region])) {
-                $data = $abbreviations[$area.'/'.$region];
+            if (isset($abbreviations[$area . '/' . $region])) {
+                $data = $abbreviations[$area . '/' . $region];
 
                 if (!empty($data['dt']) && !empty($data['st'])) {
-                    $title.= sprintf(' (%s/%s)', $data['st'], $data['dt']);
+                    $title .= sprintf(' (%s/%s)', $data['st'], $data['dt']);
                 } elseif (!empty($data['st'])) {
-                    $title.= sprintf(' (%s)', $data['st']);
+                    $title .= sprintf(' (%s)', $data['st']);
                 }
             }
 
@@ -390,7 +391,7 @@ class TimeZoneEntry extends InputControl implements Model\State
         $region = explode('/', $region);
         $title = array_shift($region);
         foreach ($region as $part) {
-            $title.= ' ('.$part.')';
+            $title .= ' (' . $part . ')';
         }
 
         return $title;

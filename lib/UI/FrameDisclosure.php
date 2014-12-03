@@ -64,14 +64,14 @@ class FrameDisclosure extends Disclosure
             $ancestor = $ancestor->parent;
         }
 
-        $header_tag = new Html\Tag('h'.$level);
+        $header_tag = new Html\Tag('h' . $level);
         $header_tag->class = 'swat-frame-title';
 
         $control_div = $this->getControlDivTag();
         $span_tag = $this->getSpanTag();
         $input_tag = $this->getInputTag();
         $container_div = $this->getContainerDivTag();
-        $container_div->class.= ' swat-frame-contents';
+        $container_div->class .= ' swat-frame-contents';
         $animate_div = $this->getAnimateDivTag();
 
         $control_div->open();
@@ -101,7 +101,7 @@ class FrameDisclosure extends Disclosure
     protected function getContainerDivTag()
     {
         $div = new Html\Tag('div');
-        $div->class = 'swat-disclosure-container '.
+        $div->class = 'swat-disclosure-container ' .
             'swat-frame-disclosure-container';
 
         return $div;

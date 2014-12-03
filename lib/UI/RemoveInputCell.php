@@ -42,7 +42,7 @@ class RemoveInputCell extends InputCell
         $row = $this->getInputRow();
         if ($row === null) {
             throw new Exception\Exception(
-                'Remove input-cells can only be used inside table-views '.
+                'Remove input-cells can only be used inside table-views ' .
                 'with an input-row.'
             );
         }
@@ -53,7 +53,7 @@ class RemoveInputCell extends InputCell
 
         $view = $this->getFirstAncestor('\Silverorange\Swat\UI\TableView');
         $view_id = ($view === null) ? null : $view->id;
-        $id = ($view_id === null) ? $row->id : $view_id.'_'.$row->id;
+        $id = ($view_id === null) ? $row->id : $view_id . '_' . $row->id;
 
         $anchor_tag = new Html\Tag('a');
         $anchor_tag->title = L::_('remove this row');

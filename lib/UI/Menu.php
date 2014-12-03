@@ -114,7 +114,7 @@ class Menu extends AbstractMenu implements UIParent
         $ul_tag->open();
 
         $li_tag = new Html\Tag('li');
-        $li_tag->class = $this->getMenuItemCSSClassName().' first-of-type';
+        $li_tag->class = $this->getMenuItemCSSClassName() . ' first-of-type';
         $first = true;
         foreach ($this->items as $item) {
             ob_start();

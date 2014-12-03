@@ -74,12 +74,12 @@ abstract class InputControl extends Control
             $path = get_class($this);
             $object = $this->parent;
             while ($object !== null) {
-                $path = get_class($object).'/'.$path;
+                $path = get_class($object) . '/' . $path;
                 $object = $object->parent;
             }
             throw new Exception\Exception(
-                "Input controls must reside inside a Form widget. UI-Object ".
-                "path:\n".$path
+                "Input controls must reside inside a Form widget. UI-Object " .
+                "path:\n" . $path
             );
         }
 

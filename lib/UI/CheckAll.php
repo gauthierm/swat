@@ -117,11 +117,11 @@ class CheckAll extends Checkbox
         $div_tag->open();
 
         $label_tag = new Html\Tag('label');
-        $label_tag->for = $this->id.'_value';
+        $label_tag->for = $this->id . '_value';
         $label_tag->open();
 
         $old_id = $this->id;
-        $this->id.= '_value';
+        $this->id . = '_value';
         parent::display();
         $this->id = $old_id;
 
@@ -134,7 +134,7 @@ class CheckAll extends Checkbox
 
         if ($this->extended_count > $this->visible_count) {
             $div_tag = new Html\Tag('div');
-            $div_tag->id = $this->id.'_extended';
+            $div_tag->id = $this->id . '_extended';
             $div_tag->class = 'swat-hidden swat-extended-check-all';
             $div_tag->open();
             echo $this->getExtendedTitle();

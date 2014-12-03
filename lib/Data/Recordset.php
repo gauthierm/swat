@@ -216,7 +216,7 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
 
         if (!is_array($options)) {
             throw new \InvalidArgumentException(
-                'The $options parameter must either be an array or a string '.
+                'The $options parameter must either be an array or a string ' .
                 'containing the option name.'
             );
         }
@@ -328,7 +328,7 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         if ($this->db === null) {
             throw new Exception\NoDatabaseException(
                 sprintf(
-                    'No database available to this wrapper (%s). '.
+                    'No database available to this wrapper (%s). ' .
                     'Call the setDatabase method.',
                     get_class($this)
                 )
@@ -745,7 +745,7 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         if (count($this) > 0) {
             if (!$this->getFirst()->hasInternalValue($name)) {
                 throw new Exception\Exception(
-                    "Records in this recordset do not contain an internal ".
+                    "Records in this recordset do not contain an internal " .
                     "field named '{$name}'."
                 );
             }
@@ -824,8 +824,8 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         if ($sub_data_objects->index_field === null) {
             throw new Exception\Exception(
                 sprintf(
-                    'Index field must be specified in the sub-data-object '.
-                    'recordset wrapper class (%s::init()) '.
+                    'Index field must be specified in the sub-data-object ' .
+                    'recordset wrapper class (%s::init()) ' .
                     'in order to attach recordset as sub-dataobjects.',
                     get_class($sub_data_objects)
                 )
@@ -881,7 +881,7 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         if ($this->index_field === null) {
             throw new Exception\Exception(
                 sprintf(
-                    'Index field must be specified in the recordset wrapper '.
+                    'Index field must be specified in the recordset wrapper ' .
                     'class (%s::init()) in order to attach sub-recordsets.',
                     get_class($this)
                 )
@@ -916,12 +916,12 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
             $table, $binding_field->name, $record_ids);
 
         if ($where != '') {
-            $sql.= ' and '.$where;
+            $sql .= ' and ' . $where;
         }
 
-        $sql.= ' order by '.$binding_field->name;
+        $sql .= ' order by ' . $binding_field->name;
         if ($order_by != '') {
-            $sql.= ', '.$order_by;
+            $sql.= ', ' . $order_by;
         }
 
         // get all records
@@ -1009,7 +1009,7 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         if ($this->index_field === null) {
             throw new Exception\Exception(
                 sprintf(
-                    'Index field must be specified in the recordset wrapper '.
+                    'Index field must be specified in the recordset wrapper ' .
                     'class (%s::init()) in order to get the record indexes.',
                     get_class($this)
                 )
@@ -1322,8 +1322,8 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         $interfaces = class_implements($this->row_wrapper_class);
         if (!in_array('Silverorange\Swat\Data\Recordable', $interfaces)) {
             throw new SwatException\InvalidClassException(
-                'The recordset must define a row wrapper class that is an '.
-                'instance of Silverorange\Swat\Data\Recordable for recordset '.
+                'The recordset must define a row wrapper class that is an ' .
+                'instance of Silverorange\Swat\Data\Recordable for recordset ' .
                 'loading to work.',
                 0,
                 $this->row_wrapper_class

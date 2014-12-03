@@ -132,7 +132,7 @@ class TreeFlydown extends Flydown
         $pad = str_repeat('&nbsp;', $level * 3);
         $path[] = $tree_option->value;
 
-        $tree_option->title = $pad.$tree_option->title;
+        $tree_option->title = $pad . $tree_option->title;
         $tree_option->value = $path;
 
         $options[] = $tree_option;
@@ -156,7 +156,7 @@ class TreeFlydown extends Flydown
             $tree = Model\TreeFlydownNode::convertFromDataTree($tree);
         } elseif (!$tree instanceof Model\TreeFlydownNode) {
             throw new Exception\InvalidClassException(
-                'Tree must be an intance of either Model\DataTreeNode or '.
+                'Tree must be an intance of either Model\DataTreeNode or ' .
                 'Model\TreeFlydownNode.',
                 0,
                 $tree

@@ -147,7 +147,7 @@ class Disclosure extends DisplayableContainer
         $input->type = 'hidden';
         // initial value is blank, value is set by JavaScript
         $input->value = '';
-        $input->id = $this->id.'_input';
+        $input->id = $this->id . '_input';
 
         return $input;
     }

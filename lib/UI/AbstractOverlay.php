@@ -92,7 +92,7 @@ abstract class AbstractOverlay extends InputControl implements Model\State
 
         $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
-        $input_tag->id = $this->id.'_value';
+        $input_tag->id = $this->id . '_value';
         $input_tag->name = $this->id;
         $input_tag->value = $this->value;
         $input_tag->accesskey = $this->access_key;

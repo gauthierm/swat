@@ -92,7 +92,7 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
         if (!$child instanceof Widget) {
             throw new Exception\InvalidClassException(
                 sprintf(
-                    'Only Widget objects may be nested within '.
+                    'Only Widget objects may be nested within ' .
                     'TableViewWidgetRow. Attempting to add "%s".',
                     get_class($child)
                 ),

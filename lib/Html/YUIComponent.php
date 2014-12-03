@@ -101,10 +101,12 @@ class YUIComponent
 
         if ($this->beta) {
             $filename_template =
-                'packages/yui/'.$component_directory.'/'.$filename.'-beta%s.js';
+                'packages/yui/' . $component_directory . '/' . $filename .
+                '-beta%s.js';
         } else {
             $filename_template =
-                'packages/yui/'.$component_directory.'/'.$filename.'%s.js';
+                'packages/yui/' . $component_directory . '/' . $filename .
+                '%s.js';
         }
 
         foreach ($modes as $mode => $suffix) {
@@ -160,7 +162,7 @@ class YUIComponent
             $modes['min'] = '';
 
         $filename_template =
-            'packages/yui/'.$component_directory.'/'.$filename.'%s.css';
+            'packages/yui/' . $component_directory . '/' . $filename . '%s.css';
 
         foreach ($modes as $mode => $suffix) {
             $filename = sprintf($filename_template, $suffix);

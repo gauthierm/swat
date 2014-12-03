@@ -145,15 +145,15 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
 
         if ($this->title !== null) {
             $label_tag = new Html\Tag('label');
-            $label_tag->for = $this->id.'_checkbox_'.$this->value;
+            $label_tag->for = $this->id . '_checkbox_' . $this->value;
             $label_tag->setContent($this->title, $this->content_type);
             $label_tag->open();
         }
 
         $checkbox_tag = new Html\Tag('input');
         $checkbox_tag->type = 'checkbox';
-        $checkbox_tag->name = $this->id.'[]';
-        $checkbox_tag->id = $this->id.'_checkbox_'.$this->value;
+        $checkbox_tag->name = $this->id . '[]';
+        $checkbox_tag->id = $this->id . '_checkbox_' . $this->value;
         $checkbox_tag->value = $this->value;
         $checkbox_tag->tabindex = $this->tab_index;
 
@@ -233,8 +233,9 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
     {
         $copy = parent::copy($id_suffix);
 
-        if ($id_suffix != '')
-            $copy->id = $copy->id.$id_suffix;
+        if ($id_suffix != '') {
+            $copy->id = $copy->id . $id_suffix;
+        }
 
         return $copy;
     }

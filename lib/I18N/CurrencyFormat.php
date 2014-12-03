@@ -127,33 +127,33 @@ class CurrencyFormat extends NumberFormat
     {
         $string = parent::__toString();
 
-        $string.= 'fractional_digits => '.$this->fractional_digits."\n";
+        $string .= 'fractional_digits => ' . $this->fractional_digits . "\n";
 
-        $string.= 'p_cs_precedes => ';
-        $string.= ($this->p_cs_precedes) ? 'true' : 'false';
-        $string.= "\n";
+        $string .= 'p_cs_precedes => ';
+        $string .= ($this->p_cs_precedes) ? 'true' : 'false';
+        $string .= "\n";
 
-        $string.= 'n_cs_precedes => ';
-        $string.= ($this->n_cs_precedes) ? 'true' : 'false';
-        $string.= "\n";
+        $string .= 'n_cs_precedes => ';
+        $string .= ($this->n_cs_precedes) ? 'true' : 'false';
+        $string .= "\n";
 
-        $string.= 'p_separate_by_space => ';
-        $string.= ($this->p_separate_by_space) ? 'true' : 'false';
-        $string.= "\n";
+        $string .= 'p_separate_by_space => ';
+        $string .= ($this->p_separate_by_space) ? 'true' : 'false';
+        $string .= "\n";
 
-        $string.= 'n_separate_by_space => ';
-        $string.= ($this->n_separate_by_space) ? 'true' : 'false';
-        $string.= "\n";
+        $string .= 'n_separate_by_space => ';
+        $string .= ($this->n_separate_by_space) ? 'true' : 'false';
+        $string .= "\n";
 
-        $string.= 'p_sign_position => '.$this->p_sign_position."\n";
+        $string .= 'p_sign_position => ' . $this->p_sign_position . "\n";
 
-        $string.= 'n_sign_position => '.$this->n_sign_position."\n";
+        $string .= 'n_sign_position => ' . $this->n_sign_position . "\n";
 
-        $string.= 'p_sign => '.$this->p_sign."\n";
+        $string .= 'p_sign => ' . $this->p_sign . "\n";
 
-        $string.= 'n_sign => '.$this->n_sign."\n";
+        $string .= 'n_sign => ' . $this->n_sign . "\n";
 
-        $string.= 'symbol => '.$this->symbol."\n";
+        $string .= 'symbol => ' . $this->symbol . "\n";
 
         return $string;
     }

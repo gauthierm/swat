@@ -69,7 +69,7 @@ class MoneyEntry extends FloatEntry
         if ($this->display_currency) {
             $locale = I18N\Locale::get($this->locale);
             echo Util\String::minimizeEntities(
-                ' '.$locale->getInternationalCurrencySymbol()
+                ' ' . $locale->getInternationalCurrencySymbol()
             );
         }
     }
@@ -146,9 +146,9 @@ class MoneyEntry extends FloatEntry
                     $message = new Model\Message(
                         sprintf(
                             L::ngettext(
-                                'The %%s field has too many decimal places. '.
+                                'The %%s field has too many decimal places. ' .
                                 'There can be at most one decimal place.',
-                                'The %%s field has too many decimal places. '.
+                                'The %%s field has too many decimal places. ' .
                                 'There can be at most %s decimal places.',
                                 $max_decimal_places
                             ),
@@ -226,11 +226,11 @@ class MoneyEntry extends FloatEntry
             $text = sprintf(
                 $this->show_field_title_in_messages
                     ? L::_(
-                        'The %%s field must be a monetary value formatted '.
+                        'The %%s field must be a monetary value formatted ' .
                         'for %s (i.e. %s).'
                     )
                     : L::_(
-                        'This field must be a monetary value formatted for '.
+                        'This field must be a monetary value formatted for ' .
                         '%s (i.e. %s).'
                     ),
                 str_replace('%', '%%', $currency),
@@ -241,10 +241,10 @@ class MoneyEntry extends FloatEntry
         case 'currency-decimal-places':
             $text = $this->show_field_title_in_messages
                 ? L::_(
-                    'The %%s field has too many decimal places. The '.
+                    'The %%s field has too many decimal places. The ' .
                     'currency %s only allows %s.'
                 )
-                : L::_('This field has too many decimal places. The '.
+                : L::_('This field has too many decimal places. The ' .
                     'currency %s only allows %s.'
                 );
 

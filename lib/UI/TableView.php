@@ -379,7 +379,7 @@ class TableView extends View implements UIParent
             $this->appendColumn($child);
         } else {
             throw new Exception\InvalidClassException(
-                'Only TableViewColumn, TableViewGroup, or TableViewRow '.
+                'Only TableViewColumn, TableViewGroup, or TableViewRow ' .
                 'objects may be nested within TableView objects.',
                 0,
                 $child
@@ -975,8 +975,9 @@ class TableView extends View implements UIParent
         foreach ($this->columns as $column)
             $tr_tag->addAttributes($column->getTrAttributes($row));
 
-        if ($this->rowHasMessage($row))
-            $tr_tag->class.= ' swat-error';
+        if ($this->rowHasMessage($row)) {
+            $tr_tag->class .= ' swat-error';
+        }
 
         $tr_tag->open();
 
@@ -1003,10 +1004,11 @@ class TableView extends View implements UIParent
         $tr_tag = new Html\Tag('tr');
         $tr_tag->class = $this->getRowClassString($row, $count);
 
-        if ($this->rowHasMessage($row))
-            $tr_tag->class = $tr_tag->class.' swat-error';
+        if ($this->rowHasMessage($row)) {
+            $tr_tag->class = $tr_tag->class . ' swat-error';
+        }
 
-        $tr_tag->class.= ' swat-table-view-spanning-column';
+        $tr_tag->class .= ' swat-table-view-spanning-column';
 
         foreach ($this->spanning_columns as $column) {
             if ($column->visible && $column->hasVisibleRenderer($row)) {
@@ -1210,16 +1212,18 @@ class TableView extends View implements UIParent
             foreach ($this->columns as $column) {
                 if ($column->visible) {
                     $column_javascript = $column->getRendererInlineJavaScript();
-                    if ($column_javascript != '')
-                        $javascript.= "\n".$column_javascript;
+                    if ($column_javascript != '') {
+                        $javascript .= "\n" . $column_javascript;
+                    }
                 }
             }
 
             foreach ($this->spanning_columns as $column) {
                 if ($column->visible) {
                     $column_javascript = $column->getRendererInlineJavaScript();
-                    if ($column_javascript != '')
-                        $javascript.= "\n".$column_javascript;
+                    if ($column_javascript != '') {
+                        $javascript .= "\n" . $column_javascript;
+                    }
                 }
             }
         }
@@ -1227,24 +1231,27 @@ class TableView extends View implements UIParent
         foreach ($this->columns as $column) {
             if ($column->visible) {
                 $column_javascript = $column->getInlineJavaScript();
-                if ($column_javascript != '')
-                    $javascript.= "\n".$column_javascript;
+                if ($column_javascript != '') {
+                    $javascript .= "\n" . $column_javascript;
+                }
             }
         }
 
         foreach ($this->spanning_columns as $column) {
             if ($column->visible) {
                 $column_javascript = $column->getInlineJavaScript();
-                if ($column_javascript != '')
-                    $javascript.= "\n".$column_javascript;
+                if ($column_javascript != '') {
+                    $javascript .= "\n" . $column_javascript;
+                }
             }
         }
 
         foreach ($this->extra_rows as $row) {
             if ($row->visible) {
                 $row_javascript = $row->getInlineJavaScript();
-                if ($row_javascript != '')
-                    $javascript.= "\n".$row_javascript;
+                if ($row_javascript != '') {
+                    $javascript .= "\n" . $row_javascript;
+                }
             }
         }
 
@@ -1431,7 +1438,7 @@ class TableView extends View implements UIParent
     {
         if ($column->view !== $this) {
             throw new Exception\Exception(
-                'Can only set the default orderby on orderable columns in '.
+                'Can only set the default orderby on orderable columns in ' .
                 'this view.'
             );
         }
@@ -1458,7 +1465,7 @@ class TableView extends View implements UIParent
         if ($column->id !== null) {
             if (array_key_exists($column->id, $this->columns_by_id)) {
                 throw new Exception\DuplicateIdException(
-                    "A column with the id '{$column->id}' already exists ".
+                    "A column with the id '{$column->id}' already exists " .
                     "in this table view.",
                     0,
                     $column->id
@@ -1522,7 +1529,7 @@ class TableView extends View implements UIParent
 
             if ($key === false) {
                 throw new Exception\WidgetNotFoundException(
-                    'The reference column could not be found in this '.
+                    'The reference column could not be found in this ' .
                     'table-view.'
                 );
             }
@@ -1734,7 +1741,7 @@ class TableView extends View implements UIParent
         if ($group->id !== null) {
             if (array_key_exists($group->id, $this->groups_by_id)) {
                 throw new Exception\DuplicateIdException(
-                    "A group with the id '{$group->id}' already exists in ".
+                    "A group with the id '{$group->id}' already exists in " .
                     "this table view.",
                     0,
                     $group->id
@@ -1928,7 +1935,7 @@ class TableView extends View implements UIParent
         if ($row->id !== null) {
             if (array_key_exists($row->id, $this->rows_by_id)) {
                 throw new Exception\DuplicateIdException(
-                    "A row with the id '{$row->id}' already exists in this ".
+                    "A row with the id '{$row->id}' already exists in this " .
                     "table-view.",
                     0,
                     $row->id

@@ -371,8 +371,8 @@ abstract class CellRenderer extends Object
         if (array_key_exists($key, $this->composite_renderers)) {
             throw new Exception\DuplicateIdException(
                 sprintf(
-                    "A composite renderer with the key '%s' already exists in ".
-                    "this renderer.",
+                    "A composite renderer with the key '%s' already exists " .
+                    "in this renderer.",
                     $key
                 ),
                 0,
@@ -415,9 +415,9 @@ abstract class CellRenderer extends Object
         if (!array_key_exists($key, $this->composite_renderers)) {
             throw new Exception\WidgetNotFoundException(
                 sprintf(
-                    "Composite renderer with key of '%s' not found in %s. ".
-                    "Make sure the composite renderer was created and added ".
-                    "to this renderer.",
+                    "Composite renderer with key of '%s' not found in %s. " .
+                    "Make sure the composite renderer was created and " .
+                    "added to this renderer.",
                     $key,
                     get_class($this)
                 ),
@@ -514,7 +514,7 @@ abstract class CellRenderer extends Object
                 $this->static_properties[] = $property_name;
             } else {
                 throw new Exception\InvalidPropertyException(
-                    "Property {$property_name} is not a non-static public ".
+                    "Property {$property_name} is not a non-static public " .
                     "property and cannot be made static.",
                     0,
                     $this,

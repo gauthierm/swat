@@ -352,7 +352,7 @@ class SwatHtmlHeadEntrySetDisplayer
             $conflict_list = '';
             $count = 0;
             foreach ($conflicts as $file => $conflict) {
-                $conflict_list.= sprintf(
+                $conflict_list .= sprintf(
                     "\n- %s conflicts with %s",
                     $file,
                     implode(', ', $conflict));
@@ -360,8 +360,8 @@ class SwatHtmlHeadEntrySetDisplayer
                 $count++;
             }
             throw new SwatException(
-                'Could not display head entries because the following '.
-                'conflicts were detected: '.$conflict_list);
+                'Could not display head entries because the following ' .
+                'conflicts were detected: ' . $conflict_list);
         }
     }
 

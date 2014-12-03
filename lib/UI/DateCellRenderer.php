@@ -93,7 +93,7 @@ class DateCellRenderer extends CellRenderer
                 $date->convertTZById($this->display_time_zone);
             } elseif ($this->display_time_zone !== null) {
                 throw new \InvalidArgumentException(
-                    'The $display_time_zone must be either a string or a '.
+                    'The $display_time_zone must be either a string or a ' .
                     '\DateTimeZone object.'
                 );
             }

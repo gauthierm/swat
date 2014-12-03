@@ -437,7 +437,7 @@ class Form extends DisplayableContainer
         // from raw form data
         } elseif (!$this->processed && $this->isSubmitted()) {
             $raw_data = $this->getFormData();
-            $serialized_field_name = self::SERIALIZED_PREFIX.$name;
+            $serialized_field_name = self::SERIALIZED_PREFIX . $name;
             if (isset($raw_data[$serialized_field_name])) {
                 $data = $this->unserializeHiddenField(
                     $raw_data[$serialized_field_name]);
@@ -753,7 +753,7 @@ class Form extends DisplayableContainer
         }
 
         foreach ($fields as $name) {
-            $serialized_field_name = self::SERIALIZED_PREFIX.$name;
+            $serialized_field_name = self::SERIALIZED_PREFIX . $name;
             if (isset($raw_data[$serialized_field_name])) {
                 $this->hidden_fields[$name] = $this->unserializeHiddenField(
                     $raw_data[$serialized_field_name]);
@@ -797,11 +797,12 @@ class Form extends DisplayableContainer
                         // UTF-8 encoded values.
                         throw new Exception\InvalidCharacterEncodingException(
                             sprintf(
-                                "Form submitted with 8-bit encoding but form ".
-                                "data is not valid %s. If this form data is ".
-                                "expected, use the Form::set8BitEncoding() ".
-                                "method to set an appropriate 8-bit encoding ".
-                                "value.\n\nForm data: \n%s",
+                                "Form submitted with 8-bit encoding but " .
+                                "form data is not valid %s. If this form " .
+                                "data is expected, use the " .
+                                "Form::set8BitEncoding() method to set an " .
+                                "appropriate 8-bit encoding value.\n\nForm " .
+                                "data: \n%s",
                                 $this->_8bit_encoding,
                                 file_get_contents('php://input')
                             )
@@ -820,11 +821,12 @@ class Form extends DisplayableContainer
                         // UTF-8 encoded values.
                         throw new Exception\InvalidCharacterEncodingException(
                             sprintf(
-                                "Form submitted with 8-bit encoding but form ".
-                                "data is not valid %s. If this form data is ".
-                                "expected, use the Form::set8BitEncoding() ".
-                                "method to set an appropriate 8-bit encoding ".
-                                "value.\n\nForm data: \n%s",
+                                "Form submitted with 8-bit encoding but " .
+                                "form data is not valid %s. If this form " .
+                                "data is expected, use the " .
+                                "Form::set8BitEncoding() method to set an " .
+                                "appropriate 8-bit encoding value.\n\nForm " .
+                                "data: \n%s",
                                 $this->_8bit_encoding,
                                 file_get_contents('php://input')
                             )
@@ -840,7 +842,7 @@ class Form extends DisplayableContainer
             } elseif ($value !== self::ENCODING_UTF8_VALUE) {
                 // it's not 8-bit or UTF-8. Time to panic!
                 throw new Exception\InvalidCharacterEncodingException(
-                    "Unknown form data character encoding. Form data: \n".
+                    "Unknown form data character encoding. Form data: \n" .
                     file_get_contents('php://input')
                 );
             }
@@ -933,7 +935,7 @@ class Form extends DisplayableContainer
             $escaped_serialized_data = htmlspecialchars($serialized_data,
                 ENT_COMPAT, 'UTF-8');
 
-            $input_tag->name = self::SERIALIZED_PREFIX.$name;
+            $input_tag->name = self::SERIALIZED_PREFIX . $name;
             $input_tag->value = $escaped_serialized_data;
             $input_tag->display();
         }
@@ -1049,14 +1051,14 @@ class Form extends DisplayableContainer
                     $focusable = false;
             }
 
-            if ($focusable)
-                $javascript.=
-                    "\n{$this->id}_obj.setDefaultFocus('{$focus_id}');";
+            if ($focusable) {
+                $javascript .= "\n{$this->id}_obj.setDefaultFocus(" .
+                    "'{$focus_id}');";
+            }
         }
 
         if (!$this->autocomplete) {
-            $javascript.=
-                "\n{$this->id}_obj.setAutocomplete(false);";
+            $javascript .= "\n{$this->id}_obj.setAutocomplete(false);";
         }
 
         return $javascript;

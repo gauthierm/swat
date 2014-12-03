@@ -133,7 +133,7 @@ class MenuItem extends Control implements UIParent
                 $this->setSubMenu($child);
             } else {
                 throw new Exception\InvalidClassException(
-                    'Only a AbstractMenu object may be nested within a '.
+                    'Only a AbstractMenu object may be nested within a ' .
                     'MenuItem object.',
                     0,
                     $child

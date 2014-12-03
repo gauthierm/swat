@@ -151,7 +151,7 @@ class ClassMap
             if (!is_subclass_of($to_class_name, $from_class_name)) {
                 throw new Exception\InvalidClassException(
                     sprintf(
-                        'Invalid class-mapping detected. %s is not a '.
+                        'Invalid class-mapping detected. %s is not a ' .
                         'subclass of %s.',
                         $to_class_name,
                         $from_class_name

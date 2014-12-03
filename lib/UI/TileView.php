@@ -718,23 +718,28 @@ class TileView extends View implements UIParent
 
         if ($this->tile !== null) {
             $tile_javascript = $this->tile->getRendererInlineJavaScript();
-            if ($tile_javascript != '')
-                $javascript.= $tile_javascript;
+            if ($tile_javascript != '') {
+                $javascript .= $tile_javascript;
+            }
 
             $tile_javascript = $this->tile->getInlineJavaScript();
-            if ($tile_javascript != '')
-                $javascript.= "\n".$tile_javascript;
+            if ($tile_javascript != '') {
+                $javascript .= "\n" . $tile_javascript;
+            }
         }
 
         if ($this->showCheckAll()) {
             $check_all = $this->getCompositeWidget('check_all');
 
             $renderer = $this->getCheckboxCellRenderer();
-            $javascript.= "\n".$check_all->getInlineJavascript();
+            $javascript .= "\n" . $check_all->getInlineJavascript();
 
             // set the controller of the check-all widget
-            $javascript.= sprintf("\n%s_obj.setController(%s);",
-                $check_all->id, $renderer->id);
+            $javascript .= sprintf(
+                "\n%s_obj.setController(%s);",
+                $check_all->id,
+                $renderer->id
+            );
         }
 
         return $javascript;
@@ -965,7 +970,7 @@ class TileView extends View implements UIParent
         if ($group->id !== null) {
             if (array_key_exists($group->id, $this->groups_by_id)) {
                 throw new Exception\DuplicateIdException(
-                    "A group with the id '{$group->id}' already exists ".
+                    "A group with the id '{$group->id}' already exists " .
                     "in this tile view.",
                     0,
                     $group->id

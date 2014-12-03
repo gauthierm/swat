@@ -107,7 +107,7 @@ class Rating extends InputControl
         $div->id = $this->id;
         $div->class = $this->getCSSClassString();
         if (!$this->isSensitive()) {
-            $div->class.= ' swat-insensitive';
+            $div->class .= ' swat-insensitive';
         }
         $div->open();
         $flydown->display();
@@ -172,7 +172,7 @@ class Rating extends InputControl
     protected function createCompositeWidgets()
     {
         $flydown = new Flydown();
-        $flydown->id = $this->id.'_flydown';
+        $flydown->id = $this->id . '_flydown';
         $flydown->serialize_values = false;
         $this->addCompositeWidget($flydown, 'flydown');
     }

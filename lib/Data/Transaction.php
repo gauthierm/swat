@@ -87,7 +87,7 @@ class Transaction
     {
         if ($this->finished) {
             throw new Exception\Exception(
-                'Transaction objects cannot be reused. Create a new '.
+                'Transaction objects cannot be reused. Create a new ' .
                 'Transaction object to begin a new transaction.'
             );
         } else {
@@ -112,7 +112,7 @@ class Transaction
     {
         if ($this->finished) {
             throw new Exception\Exception(
-                'Transaction objects cannot be reused. Create a new '.
+                'Transaction objects cannot be reused. Create a new ' .
                 'Transaction object to begin a new transaction.'
             );
         } else {

@@ -88,7 +88,7 @@ abstract class JavaScript
         $string = str_replace($search, $replace, $string);
 
         // quote string
-        $string = "'".$string."'";
+        $string = "'" . $string . "'";
 
         return $string;
     }

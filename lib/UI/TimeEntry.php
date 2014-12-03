@@ -477,8 +477,11 @@ class TimeEntry extends InputControl implements Model\State
                     $option->value,
                     ($hour_flydown->show_blank) ? $key + 1 : $key);
 
-            $javascript.= sprintf("\n%s_obj.addLookupTable('hour', {%s});",
-                $this->id, implode(', ', $lookup_hours));
+            $javascript .= sprintf(
+                "\n%s_obj.addLookupTable('hour', {%s});",
+                $this->id,
+                implode(', ', $lookup_hours)
+            );
         }
 
         if ($this->display_parts & self::MINUTE) {
@@ -490,8 +493,11 @@ class TimeEntry extends InputControl implements Model\State
                     $option->value,
                     ($minute_flydown->show_blank) ? $key + 1 : $key);
 
-            $javascript.= sprintf("\n%s_obj.addLookupTable('minute', {%s});",
-                $this->id, implode(', ', $lookup_minutes));
+            $javascript .= sprintf(
+                "\n%s_obj.addLookupTable('minute', {%s});",
+                $this->id,
+                implode(', ', $lookup_minutes)
+            );
         }
 
         if ($this->display_parts & self::SECOND) {
@@ -503,8 +509,11 @@ class TimeEntry extends InputControl implements Model\State
                     $option->value,
                     ($second_flydown->show_blank) ? $key + 1 : $key);
 
-            $javascript.= sprintf("\n%s_obj.addLookupTable('second', {%s});",
-                $this->id, implode(', ', $lookup_seconds));
+            $javascript .= sprintf(
+                "\n%s_obj.addLookupTable('second', {%s});",
+                $this->id,
+                implode(', ', $lookup_seconds)
+            );
         }
 
         return $javascript;
@@ -524,7 +533,7 @@ class TimeEntry extends InputControl implements Model\State
         if (!$this->isStartTimeValid()) {
             $message = sprintf(
                 L::_(
-                    'The time you have entered is invalid. It must be on or '.
+                    'The time you have entered is invalid. It must be on or ' .
                     'after %s.'
                 ),
                 $this->getFormattedTime($this->valid_range_start)
@@ -533,7 +542,7 @@ class TimeEntry extends InputControl implements Model\State
         } elseif (!$this->isEndTimeValid()) {
             $message = sprintf(
                 L::_(
-                    'The time you have entered is invalid. It must be on or '.
+                    'The time you have entered is invalid. It must be on or ' .
                     'before %s.'
                 ),
                 $this->getFormattedTime($this->valid_range_end)
@@ -623,7 +632,7 @@ class TimeEntry extends InputControl implements Model\State
      */
     private function createHourFlydown()
     {
-        $flydown = new Flydown($this->id.'_hour');
+        $flydown = new Flydown($this->id . '_hour');
         $flydown->classes = array('swat-time-entry-hour');
 
         if ($this->twelve_hour) {
@@ -647,7 +656,7 @@ class TimeEntry extends InputControl implements Model\State
      */
     private function createMinuteFlydown()
     {
-        $flydown = new Flydown($this->id.'_minute');
+        $flydown = new Flydown($this->id . '_minute');
         $flydown->classes = array('swat-time-entry-minute');
 
         for ($i = 0; $i <= 59; $i++)
@@ -666,7 +675,7 @@ class TimeEntry extends InputControl implements Model\State
      */
     private function createSecondFlydown()
     {
-        $flydown = new Flydown($this->id.'_second');
+        $flydown = new Flydown($this->idi . '_second');
         $flydown->classes = array('swat-time-entry-second');
 
         for ($i = 0; $i <= 59; $i++)
@@ -685,7 +694,7 @@ class TimeEntry extends InputControl implements Model\State
      */
     private function createAmPmFlydown()
     {
-        $flydown = new Flydown($this->id.'_am_pm');
+        $flydown = new Flydown($this->id . '_am_pm');
         $flydown->classes = array('swat-time-entry-ampm');
         $flydown->addOptionsByArray(array(
             'am' => L::_('am'),
@@ -710,23 +719,25 @@ class TimeEntry extends InputControl implements Model\State
         $format = '';
 
         if ($this->display_parts & self::HOUR) {
-            $format.= ($this->twelve_hour) ? 'h' : 'H';
-            if ($this->display_parts & (self::MINUTE | self::SECOND))
-                $format.= ':';
+            $format .= ($this->twelve_hour) ? 'h' : 'H';
+            if ($this->display_parts & (self::MINUTE | self::SECOND)) {
+                $format .= ':';
+            }
         }
 
         if ($this->display_parts & self::MINUTE) {
-            $format.= 'mm';
-            if ($this->display_parts & self::SECOND)
-                $format.= ':';
+            $format .= 'mm';
+            if ($this->display_parts & self::SECOND) {
+                $format .= ':';
+            }
         }
 
         if ($this->display_parts & self::SECOND) {
-            $format.= 'ss';
+            $format .= 'ss';
         }
 
         if (($this->display_parts & self::HOUR) && $this->twelve_hour) {
-            $format.= ' a';
+            $format .= ' a';
         }
 
         return $time->formatLikeIntl($format);

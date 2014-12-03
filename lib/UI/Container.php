@@ -188,7 +188,7 @@ class Container extends Widget implements UIParent
 
         if ($child->parent !== $this) {
             throw new Exception\Exception(
-                'Attempting to insert before a child that is not in this '.
+                'Attempting to insert before a child that is not in this ' .
                 'container.'
             );
         }
@@ -539,7 +539,7 @@ class Container extends Widget implements UIParent
         } else {
             $class_name = get_class($child);
             throw new Exception\InvalidClassException(
-                'Only Widget objects may be nested within Container. '.
+                'Only Widget objects may be nested within Container. ' .
                 "Attempting to add '{$class_name}'.",
                 0,
                 $child

@@ -79,7 +79,7 @@ class ReplicableContainer extends DisplayableContainer implements Replicable
         if (!in_array($id, $this->replication_ids))
             $this->replication_ids[] = $id;
 
-        $suffix = '_'.$id;
+        $suffix = '_' . $id;
 
         foreach ($this->prototype_widgets as $prototype_widget) {
             $widget = $prototype_widget->copy($suffix);

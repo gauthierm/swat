@@ -105,7 +105,7 @@ class CheckboxEntryList extends CheckboxList
 
         Widget::display();
 
-        $this->getForm()->addHiddenField($this->id.'_submitted', 1);
+        $this->getForm()->addHiddenField($this->id . '_submitted', 1);
 
         $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
@@ -138,22 +138,22 @@ class CheckboxEntryList extends CheckboxList
         foreach ($options as $key => $option) {
             echo '<tr><td>';
 
-            $checkbox_id = $key.'_'.$option->value;
+            $checkbox_id = $key . '_' . $option->value;
 
             $input_tag->value = (string)$option->value;
             $input_tag->removeAttribute('checked');
-            $input_tag->name = $this->id.'['.$key.']';
+            $input_tag->name = $this->id . '[' . $key . ']';
 
             if (in_array($option->value, $this->values))
                 $input_tag->checked = 'checked';
 
-            $input_tag->id = $this->id.'_'.$checkbox_id;
+            $input_tag->id = $this->id . '_' . $checkbox_id;
             echo '<span class="swat-checkbox-wrapper">';
             $input_tag->display();
             echo '<span class="swat-checkbox-shim"></span>';
             echo '</span>';
 
-            $label_tag->for = $this->id.'_'.$checkbox_id;
+            $label_tag->for = $this->id . '_' . $checkbox_id;
             $label_tag->setContent($option->title, $option->content_type);
             $label_tag->display();
 
@@ -185,8 +185,10 @@ class CheckboxEntryList extends CheckboxList
      */
     public function process()
     {
-        if ($this->getForm()->getHiddenField($this->id.'_submitted') === null)
+        $id = $this->id . '_submitted';
+        if ($this->getForm()->getHiddenField($id) === null) {
             return;
+        }
 
         parent::process();
 
@@ -291,7 +293,7 @@ class CheckboxEntryList extends CheckboxList
         if (!in_array($option_value, $option_values)) {
             throw new Exception\InvalidPropertyException(
                 sprintf(
-                    'No option with a value of "%s" exists in this checkbox '.
+                    'No option with a value of "%s" exists in this checkbox ' .
                     'entry list',
                     $option_value
                 )
@@ -341,9 +343,13 @@ class CheckboxEntryList extends CheckboxList
             $this->id, $this->id);
 
         // set check-all controller if it is visible
-        if ($this->show_check_all && count($this->getOptions()) > 1)
-            $javascript.= sprintf("\n%s_obj.setController(%s_obj);",
-                $this->getCompositeWidget('check_all')->id, $this->id);
+        if ($this->show_check_all && count($this->getOptions()) > 1) {
+            $javascript .= sprintf(
+                "\n%s_obj.setController(%s_obj);",
+                $this->getCompositeWidget('check_all')->id,
+                $this->id
+            );
+        }
 
         return $javascript;
     }
@@ -401,7 +407,7 @@ class CheckboxEntryList extends CheckboxList
     protected function getEntryWidget($option_value)
     {
         if (!$this->hasEntryWidget($option_value)) {
-            $container = new FormField($this->id.'_field_'.$option_value);
+            $container = new FormField($this->id . '_field_' . $option_value);
             $container->add($this->createEntryWidget($option_value));
             $container->parent = $this;
             $container->init();
@@ -426,7 +432,7 @@ class CheckboxEntryList extends CheckboxList
      */
     protected function createEntryWidget($option_value)
     {
-        $widget = new Entry($this->id.'_entry_'.$option_value);
+        $widget = new Entry($this->id . '_entry_' . $option_value);
         $widget->size = $this->entry_size;
         $widget->maxlength = $this->entry_maxlength;
         return $widget;

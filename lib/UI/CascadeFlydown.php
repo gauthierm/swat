@@ -288,7 +288,7 @@ class CascadeFlydown extends Flydown
                     ? L::_('choose one ...')
                     : $this->blank_title;
 
-                $javascript.= sprintf(
+                $javascript .= sprintf(
                     "\n%s_cascade.addChild(%s, %s, %s);",
                     $this->id,
                     Util\JavaScript::quoteString($parent),
@@ -317,7 +317,7 @@ class CascadeFlydown extends Flydown
                         'true' : 'false';
                 }
 
-                $javascript.= sprintf(
+                $javascript .= sprintf(
                     "\n%s_cascade.addChild(%s, %s, %s, %s);",
                     $this->id,
                     Util\JavaScript::quoteString($parent),
@@ -328,8 +328,10 @@ class CascadeFlydown extends Flydown
             }
         }
 
-        $javascript.= sprintf("\n%s_cascade.init();",
-            $this->id);
+        $javascript .= sprintf(
+            "\n%s_cascade.init();",
+            $this->id
+        );
 
         return $javascript;
     }

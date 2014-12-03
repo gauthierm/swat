@@ -94,7 +94,7 @@ class Accordion extends NoteBook
                 $li_tag->class = 'swat-accordion-page';
             }
 
-            $li_tag->class.= ' '.implode(' ', $page->classes);
+            $li_tag->class .= ' ' . implode(' ', $page->classes);
 
             $li_tag->open();
 
@@ -102,7 +102,7 @@ class Accordion extends NoteBook
             $title = ($page->title === null) ? '' : $page->title;
             $anchor_tag = new Html\Tag('a');
             $anchor_tag->class = 'swat-accordion-page-toggle';
-            $anchor_tag->href = '#'.$page->id;
+            $anchor_tag->href = '#' . $page->id;
             $em_tag = new Html\Tag('em');
             $em_tag->setContent($title, $page->title_content_type);
             $anchor_tag->open();
@@ -138,11 +138,11 @@ class Accordion extends NoteBook
             $this->getJavascriptClassName(),
             $this->animate ? 'true' : 'false');
 
-        $javascript.= sprintf("\n%s_obj.animate = %s;",
+        $javascript .= sprintf("\n%s_obj.animate = %s;",
             $this->id,
             $this->animate ? 'true' : 'false');
 
-        $javascript.= sprintf("\n%s_obj.always_open = %s;",
+        $javascript .= sprintf("\n%s_obj.always_open = %s;",
             $this->id,
             $this->always_open ? 'true' : 'false');
 

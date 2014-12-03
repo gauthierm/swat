@@ -56,7 +56,7 @@ class ReplicableNoteBookChild extends ReplicableContainer
     {
         if (!$child instanceof NoteBookChild) {
             throw new Exception\InvalidClassException(
-                'Only NoteBookChild objects may be nested within a '.
+                'Only NoteBookChild objects may be nested within a ' .
                 'ReplicableNoteBookChild object.',
                 0,
                 $child

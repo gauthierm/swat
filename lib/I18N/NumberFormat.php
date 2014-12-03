@@ -74,7 +74,7 @@ class NumberFormat
         foreach ($format as $key => $value) {
             if (!array_key_exists($key, $vars)) {
                 throw new Exception\Exception(
-                    "Number formatting information contains invalid ".
+                    "Number formatting information contains invalid " .
                     "property {$key} and cannot override this number format."
                 );
             }
@@ -101,15 +101,14 @@ class NumberFormat
     {
         $string = '';
 
-        $string.= 'decimal_separator => '.$this->decimal_separator."\n";
+        $string .= 'decimal_separator => ' . $this->decimal_separator . "\n";
+        $string .= 'thousands_separator => ' . $this->thousands_separator . "\n";
+        $string .= 'grouping => ';
+        $string .= (is_array($this->grouping))
+            ? implode(', ', $this->grouping)
+            : $this->grouping;
 
-        $string.= 'thousands_separator => '.$this->thousands_separator."\n";
-
-        $string.= 'grouping => ';
-        $string.= (is_array($this->grouping)) ?
-            implode(', ', $this->grouping) : $this->grouping;
-
-        $string.= "\n";
+        $string .= "\n";
 
         return $string;
     }

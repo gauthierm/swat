@@ -193,7 +193,7 @@ class DB
 
         $id_list = implode(',', $ids);
 
-        $where = ($where === null) ? '' : 'and '.$where;
+        $where = ($where === null) ? '' : 'and ' . $where;
 
         $sql = sprintf($sql,
             $table,
@@ -588,8 +588,9 @@ class DB
 
             $value_list = implode(',', $values);
 
-            $insert_sql = 'insert into %s (%s, %s) select %s, %s from %s '.
-                'where %s not in (select %s from %s where %s = %s) and %s in (%s)';
+            $insert_sql = 'insert into %s (%s, %s) select %s, %s from %s ' .
+                'where %s not in (select %s from %s where %s = %s) ' .
+                'and %s in (%s)';
 
             $insert_sql = sprintf($insert_sql,
                 $table,
@@ -872,10 +873,10 @@ class DB
         $sql = sprintf($sql, $id_field->name, $title_field->name, $table);
 
         if ($where_clause != null)
-            $sql .= ' where '.$where_clause;
+            $sql .= ' where ' . $where_clause;
 
         if ($order_by_clause != null)
-            $sql .= ' order by '.$order_by_clause;
+            $sql .= ' order by ' . $order_by_clause;
 
         $rs = self::query($db, $sql, null);
 
@@ -959,12 +960,14 @@ class DB
         $sql = sprintf($sql, $id_field->name, $title_field->name,
             $cascade_field->name, $table);
 
-        if ($where_clause !== null)
-            $sql .= ' where '.$where_clause;
+        if ($where_clause !== null) {
+            $sql .= ' where ' . $where_clause;
+        }
 
-        $sql .= ' order by '.$cascade_field->name;
-        if ($order_by_clause !== null)
-            $sql.= ', '.$order_by_clause;
+        $sql .= ' order by ' . $cascade_field->name;
+        if ($order_by_clause !== null) {
+            $sql .= ', ' . $order_by_clause;
+        }
 
         $rs = self::query($db, $sql, null);
 
@@ -1091,17 +1094,19 @@ class DB
             "{$group_table}.{$group_id_field->name}",
             $table);
 
-        $sql.= ' inner join %s on %s = %s';
+        $sql .= ' inner join %s on %s = %s';
         $sql = sprintf($sql,
             $group_table,
             "{$group_table}.{$group_id_field->name}",
             "{$table}.{$group_field->name}");
 
-        if ($where_clause != null)
-            $sql.= ' where '.$where_clause;
+        if ($where_clause != null) {
+            $sql .= ' where ' . $where_clause;
+        }
 
-        if ($order_by_clause != null)
-            $sql.= ' order by '.$order_by_clause;
+        if ($order_by_clause != null) {
+            $sql .= ' order by ' . $order_by_clause;
+        }
 
         $rs = self::query($db, $sql, null);
 
@@ -1458,7 +1463,7 @@ class DB
                         echo '<hr />';
                     }
 
-                    echo "\n".$info['message']."\n";
+                    echo "\n" . $info['message'] . "\n";
 
                     $locale = I18N\Locale::get();
                     printf("<p>Query #%s</p>\n",
@@ -1483,7 +1488,7 @@ class DB
 
                         printf(
                             L::_(
-                                'Total time: %s ms (includes '.
+                                'Total time: %s ms (includes ' .
                                 'queries within the wrapper)'
                             ),
                             $locale->formatNumber($ms, 3)

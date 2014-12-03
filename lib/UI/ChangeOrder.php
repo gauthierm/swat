@@ -126,14 +126,14 @@ class ChangeOrder extends OptionControl implements Model\State
 
         $hidden_tag = new Html\Tag('input');
         $hidden_tag->type = 'hidden';
-        $hidden_tag->id = $this->id.'_value';
+        $hidden_tag->id = $this->id . '_value';
         $hidden_tag->name = $this->id;
         $hidden_tag->value = implode(',', $values);
         $hidden_tag->display();
 
         $hidden_items_tag = new Html\Tag('input');
         $hidden_items_tag->type = 'hidden';
-        $hidden_items_tag->id = $this->id.'_dynamic_items';
+        $hidden_items_tag->id = $this->id . '_dynamic_items';
         $hidden_items_tag->value = '';
         $hidden_items_tag->display();
 

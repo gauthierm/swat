@@ -188,7 +188,7 @@ class TableViewCheckboxColumn extends TableViewColumn
         }
 
         throw new Exception\Exception(
-            "The checkbox column ‘{$this->id}’ must contain a checkbox ".
+            "The checkbox column ‘{$this->id}’ must contain a checkbox " .
             "cell renderer."
         );
     }

@@ -180,7 +180,7 @@ XHTML;
 
             $error = str_replace('attvalue: " or \' expected',
                 L::_(
-                    'attribute values must be contained within quotation '.
+                    'attribute values must be contained within quotation ' .
                     'marks'
                 ),
                 $error
@@ -193,7 +193,7 @@ XHTML;
         }
 
         $content = L::_('%s must be valid XHTML markup: ');
-        $content.= '<ul><li>'.implode(',</li><li>', $errors).'.</li></ul>';
+        $content .= '<ul><li>' . implode(',</li><li>', $errors) . '.</li></ul>';
         $message = new Model\Message($content, 'error');
         $message->content_type = 'text/xml';
 
@@ -211,10 +211,10 @@ XHTML;
     protected function createCompositeWidgets()
     {
         $this->ignore_errors_checkbox = new Checkbox(
-            $this->id.'_ignore_checkbox'
+            $this->id . '_ignore_checkbox'
         );
 
-        $ignore_field = new FormField($this->id.'_ignore_field');
+        $ignore_field = new FormField($this->id . '_ignore_field');
         $ignore_field->title = L::_('Ignore XHTML validation errors');
         $ignore_field->add($this->ignore_errors_checkbox);
 

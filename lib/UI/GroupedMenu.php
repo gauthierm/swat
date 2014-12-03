@@ -66,7 +66,7 @@ class GroupedMenu extends AbstractMenu implements UIParent
             $this->addGroup($child);
         } else {
             throw new Exception\InvalidClassException(
-                'Only MenuGroup objects may be nested within a GroupedMenu '.
+                'Only MenuGroup objects may be nested within a GroupedMenu ' .
                 'object.',
                 0,
                 $child

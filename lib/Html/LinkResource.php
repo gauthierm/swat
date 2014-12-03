@@ -59,7 +59,7 @@ class LinkResource extends Resource
     public function __construct($uri, $relationship = null, $type = null,
         $title = null)
     {
-        $hash = md5($uri.$relationship.$type.$title);
+        $hash = md5($uri . $relationship . $type . $title);
         parent::__construct($hash);
 
         $this->link_uri = $uri;

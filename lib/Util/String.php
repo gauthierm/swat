@@ -154,8 +154,9 @@ class String
         $text = preg_replace($ending_breaking_then_break, "\\1", $text);
 
         // temporarily remove preformatted content so it is not auto-formatted
-            '(.*?)'.
-            '<\/('.$preformatted_elements.')>/usi';
+        $preformatted_search = '/<(' . $preformatted_elements . ')[^<>]*?\>' .
+            '(.*?)' .
+            '<\/(' . $preformatted_elements . ')>/usi';
 
         $preformatted_content = array();
         preg_match_all($preformatted_search, $text, $preformatted_content);
@@ -166,15 +167,17 @@ class String
         if (count($preformatted_content) > 0) {
             // replace preformatted content with sprintf place-holders
             $text = str_replace('%', '%%', $text);
-                '.*?'.
-                '(<\/('.$preformatted_elements.')>)/usi';
+            $preformat_replace = '/(<(' . $preformatted_elements . ')[^<>]*?\>)' .
+                '.*?' .
+                '(<\/(' . $preformatted_elements . ')>)/usi';
 
             $text = preg_replace($preformat_replace, '\1%s\3', $text);
         }
 
         // match paragraphs that are entirely preformatted elements
-            '%s'.
-            '<\/('.$preformatted_elements.')>$/ui';
+        $preformat = '/^<(' . $preformatted_elements . ')[^<>]*?\>' .
+            '%s' .
+            '<\/(' . $preformatted_elements . ')>$/ui';
 
         $paragraphs = explode("\n\n", $text);
 
@@ -200,7 +203,7 @@ class String
             // don't format wrap this paragraph if it is a preformatted
             // element.
             if ($is_preformatted) {
-                $paragraph = $paragraph."\n\n";
+                $paragraph = $paragraph . "\n\n";
             } else {
                 // split paragraph into tags and text
                 $tags = array();
@@ -230,7 +233,7 @@ class String
                     if (isset($tags[$tag_index]) &&
                         $tags[$tag_index][1] < $text[$text_index][1]) {
                         // assume tags are already formatted
-                        $paragraph.= $tags[$tag_index][0];
+                        $paragraph .= $tags[$tag_index][0];
                         $tag_index++;
                     } elseif (isset($text[$text_index])) {
                         // minimize entities for text
@@ -249,7 +252,7 @@ class String
             // if we are not in a blocklevel element or a preformatted
             // element, wrap the paragraph in paragraph tags
             if (!$in_blocklevel && !$is_preformatted)
-                $paragraph = '<p>'.$paragraph."</p>\n\n";
+                $paragraph = '<p>' . $paragraph . "</p>\n\n";
 
             if ($blocklevel_ended)
                 $in_blocklevel = false;
@@ -374,7 +377,7 @@ class String
             array('blockquote')
         );
         $blocklevel_elements = implode('|', $blocklevel_elements);
-        $blocklevel_tags = '/<\/?(?:'.$blocklevel_elements.')[^<>]*?\>/siu';
+        $blocklevel_tags = '/<\/?(?:' . $blocklevel_elements . ')[^<>]*?\>/siu';
         $text = preg_replace($blocklevel_tags, "\n", $text);
 
         // replace <br /> and <hr /> tags with line breaks.
@@ -762,7 +765,7 @@ class String
         $hole_end = strlen($string) - strlen($last_piece);
         $hole_length = strlen($ellipses);
 
-        $string = $first_piece.$ellipses.$last_piece;
+        $string = $first_piece . $ellipses . $last_piece;
 
         self::insertEntities($string, $matches,
             $hole_start, $hole_end, $hole_length);
@@ -841,8 +844,8 @@ class String
             if (setlocale(\LC_MONETARY, $locale) === false) {
                 throw new Exception\Exception(
                     sprintf(
-                        'Locale %s passed to the '.
-                        'getInternationalCurrencySymbol() method is not '.
+                        'Locale %s passed to the ' .
+                        'getInternationalCurrencySymbol() method is not ' .
                         'valid for this operating system.',
                         $locale
                     )
@@ -920,7 +923,7 @@ class String
             if (setlocale(\LC_ALL, $locale) === false) {
                 throw new Exception\Exception(
                     sprintf(
-                        'Locale %s passed to the numberFormat() method is '.
+                        'Locale %s passed to the numberFormat() method is ' .
                         'not valid for this operating system.',
                         $locale
                     )
@@ -1106,7 +1109,7 @@ class String
                 $padding = str_repeat($pad_string,
                     ceil($right_length / strlen($pad_string)));
 
-                $output = substr($padding, 0, $left_length).$input.
+                $output = substr($padding, 0, $left_length) . $input .
                     substr($padding, 0, $right_length);
 
                 break;
@@ -1271,18 +1274,18 @@ class String
             foreach ($iterator as $value) {
                 if ($count != 0) {
                     if ($count == count($iterator) - 1) {
-                        $list.= ($display_final_delimiter
+                        $list .= ($display_final_delimiter
                             && count($iterator) > 2) ? $delimiter : ' ';
 
                         if ($conjunction != '') {
-                            $list.= $conjunction.' ';
+                            $list .= $conjunction . ' ';
                         }
                     } else {
-                        $list.= $delimiter;
+                        $list .= $delimiter;
                     }
                 }
 
-                $list.= $value;
+                $list .= $value;
                 $count++;
             }
         }
@@ -1676,7 +1679,7 @@ class String
     {
         $salt = '';
         for ($i = 0; $i < $length; $i++)
-            $salt.= chr(mt_rand(1, 127));
+            $salt .= chr(mt_rand(1, 127));
 
         return $salt;
     }
@@ -1705,11 +1708,11 @@ class String
             $index = mt_rand(0, 63);
 
             if ($index >= 38) {
-                $salt.= chr($index - 38 + 97);
+                $salt .= chr($index - 38 + 97);
             } else if ($index >= 12) {
-                $salt.= chr($index - 12 + 65);
+                $salt .= chr($index - 12 + 65);
             } else {
-                $salt.= chr($index + 46);
+                $salt .= chr($index + 46);
             }
         }
 
@@ -1780,7 +1783,7 @@ class String
         $serialized_data = serialize($data);
         $signature_data = self::hash($serialized_data.(string)$salt);
 
-        return $signature_data.'|'.$serialized_data;
+        return $signature_data . '|' . $serialized_data;
     }
 
     // }}}
@@ -1860,8 +1863,8 @@ class String
     {
         $valid_name_word = '[-!#$%&\'*+.\\/0-9=?A-Z^_`{|}~]+';
         $valid_domain_word = '[-!#$%&\'*+\\/0-9=?A-Z^_`{|}~]+';
-        $valid_address_regexp = '/^'.$valid_name_word.'@'.
-            $valid_domain_word.'(\.'.$valid_domain_word.')+$/ui';
+        $valid_address_regexp = '/^' . $valid_name_word . '@' .
+            $valid_domain_word . '(\.' . $valid_domain_word . ')+$/ui';
 
         $valid = (preg_match($valid_address_regexp, $value) === 1);
 
@@ -1890,19 +1893,19 @@ class String
             $char = mb_substr($string, $i, 1, '8bit');
             $ord = ord($char);
             if ($ord === 9) {
-                $escaped.= '\t';
+                $escaped .= '\t';
             } elseif ($ord === 10) {
-                $escaped.= '\n';
+                $escaped .= '\n';
             } elseif ($ord === 13) {
-                $escaped.= '\r';
+                $escaped .= '\r';
             } elseif ($ord === 92) {
-                $escaped.= '\\\\';
+                $escaped .= '\\\\';
             } elseif ($ord < 16) {
-                $escaped.= '\x0'.strtoupper(dechex($ord));
+                $escaped .= '\x0' . strtoupper(dechex($ord));
             } elseif ($ord < 32 || $ord >= 127) {
-                $escaped.= '\x'.strtoupper(dechex($ord));
+                $escaped .= '\x' . strtoupper(dechex($ord));
             } else {
-                $escaped.= $char;
+                $escaped .= $char;
             }
         }
 
@@ -1924,7 +1927,7 @@ class String
      * made. Years are assumed to be 365 days. Months are assumed to be 30 days.
      *
      * @param array   $parts        array of date period parts. See
-     *                              {@link SwatString::getHumanReadableTimePeriodParts()}.
+     *                              {@link String::getHumanReadableTimePeriodParts()}.
      * @param boolean $largest_part optional. If true, only the largest
      *                              matching date part is returned. For the
      *                              above example, "5 years" is returned.
@@ -1998,8 +2001,8 @@ class String
 
             if ($position < $hole_start) {
                 // this entity falls before the hole
-                $string = substr($string, 0, $position).
-                    $entity.
+                $string = substr($string, 0, $position) .
+                    $entity .
                     substr($string, $position + 1);
 
                 $hole_start += strlen($entity);
@@ -2011,8 +2014,8 @@ class String
             } elseif ($position >= $hole_end) {
                 // this entity falls after the hole
                 $offset = -$hole_end + $hole_length + $hole_start + 1;
-                $string = substr($string, 0, $position + $offset).
-                    $entity.
+                $string = substr($string, 0, $position + $offset) .
+                    $entity .
                     substr($string, $position + $offset + 1);
 
             } else {
@@ -2034,16 +2037,22 @@ class String
         // negative sign shown as: (5.00)
         case 0:
             if (strpos($string, '(') !== false)
-                return '-'.str_replace(
-                    array('(', ')'), array(), $string);
+                return '-' . str_replace(
+                    array('(', ')'),
+                    array(),
+                    $string
+                );
             break;
 
         // negative sign trails number: 5.00-
         case 2:
             if ($lc['negative_sign'] != '' &&
                 strpos($string, $lc['negative_sign']) !== false)
-                return '-'.str_replace(
-                    $lc['negative_sign'], '', $string);
+                return '-' . str_replace(
+                    $lc['negative_sign'],
+                    '',
+                    $string
+                );
             break;
         // negative sign prefixes number: -5.00
         default:

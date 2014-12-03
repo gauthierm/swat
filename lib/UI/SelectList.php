@@ -41,21 +41,20 @@ class SelectList extends CheckboxList
 
         Widget::display();
 
-        $this->getForm()->addHiddenField($this->id.'_submitted', 1);
+        $this->getForm()->addHiddenField($this->id . '_submitted', 1);
 
         $select_tag = new Html\Tag('select');
         $select_tag->id = $this->id;
-        $select_tag->name = $this->id.'[]';
+        $select_tag->name = $this->id . '[]';
         $select_tag->class = 'swat-select-list';
         $select_tag->multiple = 'multiple';
         $select_tag->size = $this->size;
         $select_tag->open();
 
         foreach ($options as $key => $option) {
-
             $option_tag = new Html\Tag('option');
             $option_tag->value = (string)$option->value;
-            $option_tag->id = $this->id.'_'.$key.'_'.$option_tag->value;
+            $option_tag->id = $this->id . '_' . $key . '_' . $option_tag->value;
             $option_tag->selected = null;
             if (in_array($option->value, $this->values))
                 $option_tag->selected = 'selected';

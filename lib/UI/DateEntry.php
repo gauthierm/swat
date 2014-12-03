@@ -474,8 +474,11 @@ class DateEntry extends InputControl implements Model\State
                     $option->value,
                     ($day_flydown->show_blank) ? $key + 1 : $key);
 
-            $javascript.= sprintf("\n%s_obj.addLookupTable('day', {%s});",
-                $this->id, implode(', ', $lookup_days));
+            $javascript .= sprintf(
+                "\n%s_obj.addLookupTable('day', {%s});",
+                $this->id,
+                implode(', ', $lookup_days)
+            );
         }
 
         if ($this->display_parts & self::MONTH) {
@@ -487,8 +490,11 @@ class DateEntry extends InputControl implements Model\State
                     $option->value,
                     ($month_flydown->show_blank) ? $key + 1 : $key);
 
-            $javascript.= sprintf("\n%s_obj.addLookupTable('month', {%s});",
-                $this->id, implode(', ', $lookup_months));
+            $javascript .= sprintf(
+                "\n%s_obj.addLookupTable('month', {%s});",
+                $this->id,
+                implode(', ', $lookup_months)
+            );
         }
 
         if ($this->display_parts & self::YEAR) {
@@ -500,17 +506,28 @@ class DateEntry extends InputControl implements Model\State
                     $option->value,
                     ($year_flydown->show_blank) ? $key + 1 : $key);
 
-            $javascript.= sprintf("\n%s_obj.addLookupTable('year', {%s});",
-                $this->id, implode(', ', $lookup_years));
+            $javascript .= sprintf(
+                "\n%s_obj.addLookupTable('year', {%s});",
+                $this->id,
+                implode(', ', $lookup_years)
+            );
         }
 
-        if ($this->display_parts & self::TIME)
-            $javascript.= sprintf("\n%s_obj.setTimeEntry(%s_time_entry_obj);",
-                $this->id, $this->id);
+        if ($this->display_parts & self::TIME) {
+            $javascript .= sprintf(
+                "\n%s_obj.setTimeEntry(%s_time_entry_obj);",
+                $this->id,
+                $this->id
+            );
+        }
 
-        if ($this->display_parts & self::CALENDAR)
-            $javascript.= sprintf("\n%s_obj.setCalendar(%s_calendar_obj);",
-                $this->id, $this->id);
+        if ($this->display_parts & self::CALENDAR) {
+            $javascript .= sprintf(
+                "\n%s_obj.setCalendar(%s_calendar_obj);",
+                $this->id,
+                $this->id
+            );
+        }
 
         return $javascript;
     }
@@ -590,7 +607,7 @@ class DateEntry extends InputControl implements Model\State
         if (!$this->isStartDateValid()) {
             $message = sprintf(
                 L::_(
-                    'The date you have entered is invalid. It must be on or '.
+                    'The date you have entered is invalid. It must be on or ' .
                     'after %s.'
                 ),
                 $this->getFormattedDate($this->valid_range_start)
@@ -599,8 +616,8 @@ class DateEntry extends InputControl implements Model\State
         } elseif (!$this->isEndDateValid()) {
             $message = sprintf(
                 L::_(
-                    'The date you have entered is invalid. It must be before '.
-                    '%s.'
+                    'The date you have entered is invalid. It must be ' .
+                    'before %s.'
                 ),
                 $this->getFormattedDate($this->valid_range_end)
             );
@@ -664,7 +681,7 @@ class DateEntry extends InputControl implements Model\State
      */
     protected function createYearFlydown()
     {
-        $flydown = new Flydown($this->id.'_year');
+        $flydown = new Flydown($this->id . '_year');
         $flydown->classes = array('swat-date-entry-year');
 
         if ($this->show_blank_titles) {
@@ -709,7 +726,7 @@ class DateEntry extends InputControl implements Model\State
      */
     protected function createMonthFlydown()
     {
-        $flydown = new Flydown($this->id.'_month');
+        $flydown = new Flydown($this->id . '_month');
         $flydown->classes = array('swat-date-entry-month');
 
         if ($this->show_blank_titles) {
@@ -771,12 +788,12 @@ class DateEntry extends InputControl implements Model\State
         $text = '';
 
         if ($this->show_month_number) {
-            $text.= str_pad($month, 2, '0', \STR_PAD_LEFT).' - ';
+            $text .= str_pad($month, 2, '0', \STR_PAD_LEFT) . ' - ';
         }
 
-        $date = new Util\Date('2010-'.$month.'-01');
+        $date = new Util\Date('2010-' . $month . '-01');
 
-        $text.= $date->formatLikeIntl('MMMM');
+        $text .= $date->formatLikeIntl('MMMM');
 
         return $text;
     }
@@ -791,7 +808,7 @@ class DateEntry extends InputControl implements Model\State
      */
     protected function createDayFlydown()
     {
-        $flydown = new Flydown($this->id.'_day');
+        $flydown = new Flydown($this->id . '_day');
         $flydown->classes = array('swat-date-entry-day');
 
         if ($this->show_blank_titles) {
@@ -860,7 +877,7 @@ class DateEntry extends InputControl implements Model\State
      */
     protected function createTimeEntry()
     {
-        $time_entry = new TimeEntry($this->id.'_time_entry');
+        $time_entry = new TimeEntry($this->id . '_time_entry');
         $time_entry->classes = array('swat-date-entry-time');
         return $time_entry;
     }
@@ -875,7 +892,7 @@ class DateEntry extends InputControl implements Model\State
      */
     protected function createCalendar()
     {
-        $calendar = new Calendar($this->id.'_calendar');
+        $calendar = new Calendar($this->id . '_calendar');
         $calendar->classes = array('swat-date-entry-calendar');
         $calendar->valid_range_start = $this->valid_range_start;
         $calendar->valid_range_end   = $this->valid_range_end;
@@ -905,19 +922,19 @@ class DateEntry extends InputControl implements Model\State
         $format = '';
 
         if ($this->display_parts & self::MONTH) {
-            $format.= ' MMMM';
+            $format .= ' MMMM';
         }
 
         if ($this->display_parts & self::DAY) {
-            $format.= ' d,';
+            $format .= ' d,';
         }
 
         if ($this->display_parts & self::YEAR) {
-            $format.= ' yyyy';
+            $format .= ' yyyy';
         }
 
         if ($this->display_parts & self::TIME) {
-            $format.= ' h:mm a';
+            $format .= ' h:mm a';
         }
 
         $format = trim($format, ', ');

@@ -196,7 +196,7 @@ class TextareaEditor extends Textarea
         // hidden field to preserve editing mode in form data
         $input_tag = new Html\Tag('input');
         $input_tag->type = 'hidden';
-        $input_tag->id = $this->id.'_mode';
+        $input_tag->id = $this->id . '_mode';
         $input_tag->value = $this->mode;
         $input_tag->display();
 
@@ -301,11 +301,11 @@ class TextareaEditor extends Textarea
 
     protected function getInlineJavaScript()
     {
-        $base_href = 'editor_base_'.$this->id;
+        $base_href = 'editor_base_' . $this->id;
         ob_start();
 
         if ($this->base_href === null) {
-            echo "var {$base_href} = ".
+            echo "var {$base_href} = " .
                 "document.getElementsByTagName('base');\n";
 
             echo "if ({$base_href}.length) {\n";
@@ -318,8 +318,8 @@ class TextareaEditor extends Textarea
             echo "\t\t0, {$base_href}.lastIndexOf('/') + 1);\n";
             echo "}\n";
         } else {
-            echo "var {$base_href} = ".
-                Util\JavaScript::quoteString($this->base_href).";\n";
+            echo "var {$base_href} = " .
+                Util\JavaScript::quoteString($this->base_href) . ";\n";
         }
 
         echo "tinyMCE.init({\n";
@@ -331,7 +331,7 @@ class TextareaEditor extends Textarea
             } elseif (is_bool($value)) {
                 $value = ($value) ? 'true' : 'false';
             }
-            $lines[] = "\t".$name.": ".$value;
+            $lines[] = "\t" . $name . ": " . $value;
         }
 
         $lines[] = "\tdocument_base_url: {$base_href}";
@@ -339,46 +339,46 @@ class TextareaEditor extends Textarea
         echo implode(",\n", $lines);
 
         // Make removeformat button also clear inline alignments, styles,
-        // colors and classes.
-        echo ",\n".
-            "\tformats: {\n".
-            "\t\tremoveformat : [\n".
-            "\t\t\t{\n".
-            "\t\t\t\tselector     : 'b,strong,em,i,font,u,strike',\n".
-            "\t\t\t\tremove       : 'all',\n".
-            "\t\t\t\tsplit        : true,\n".
-            "\t\t\t\texpand       : false,\n".
-            "\t\t\t\tblock_expand : true,\n".
-            "\t\t\t\tdeep         : true\n".
-            "\t\t\t},\n".
-            "\t\t\t{\n".
-            "\t\t\t\tselector     : 'span',\n".
-            "\t\t\t\tattributes   : [\n".
-            "\t\t\t\t\t'style',\n".
-            "\t\t\t\t\t'class',\n".
-            "\t\t\t\t\t'align',\n".
-            "\t\t\t\t\t'color',\n".
-            "\t\t\t\t\t'background'\n".
-            "\t\t\t\t],\n".
-            "\t\t\t\tremove       : 'empty',\n".
-            "\t\t\t\tsplit        : true,\n".
-            "\t\t\t\texpand       : false,\n".
-            "\t\t\t\tdeep         : true\n".
-            "\t\t\t},\n".
-            "\t\t\t{\n".
-            "\t\t\t\tselector     : '*',\n".
-            "\t\t\t\tattributes   : [\n".
-            "\t\t\t\t\t'style',\n".
-            "\t\t\t\t\t'class',\n".
-            "\t\t\t\t\t'align',\n".
-            "\t\t\t\t\t'color',\n".
-            "\t\t\t\t\t'background'\n".
-            "\t\t\t\t],\n".
-            "\t\t\t\tsplit        : false,\n".
-            "\t\t\t\texpand       : false,\n".
-            "\t\t\t\tdeep         : true\n".
-            "\t\t\t}\n".
-            "\t\t]\n".
+        // colors and classes .
+        echo ",\n" .
+            "\tformats: {\n" .
+            "\t\tremoveformat : [\n" .
+            "\t\t\t{\n" .
+            "\t\t\t\tselector     : 'b,strong,em,i,font,u,strike',\n" .
+            "\t\t\t\tremove       : 'all',\n" .
+            "\t\t\t\tsplit        : true,\n" .
+            "\t\t\t\texpand       : false,\n" .
+            "\t\t\t\tblock_expand : true,\n" .
+            "\t\t\t\tdeep         : true\n" .
+            "\t\t\t},\n" .
+            "\t\t\t{\n" .
+            "\t\t\t\tselector     : 'span',\n" .
+            "\t\t\t\tattributes   : [\n" .
+            "\t\t\t\t\t'style',\n" .
+            "\t\t\t\t\t'class',\n" .
+            "\t\t\t\t\t'align',\n" .
+            "\t\t\t\t\t'color',\n" .
+            "\t\t\t\t\t'background'\n" .
+            "\t\t\t\t],\n" .
+            "\t\t\t\tremove       : 'empty',\n" .
+            "\t\t\t\tsplit        : true,\n" .
+            "\t\t\t\texpand       : false,\n" .
+            "\t\t\t\tdeep         : true\n" .
+            "\t\t\t},\n" .
+            "\t\t\t{\n" .
+            "\t\t\t\tselector     : '*',\n" .
+            "\t\t\t\tattributes   : [\n" .
+            "\t\t\t\t\t'style',\n" .
+            "\t\t\t\t\t'class',\n" .
+            "\t\t\t\t\t'align',\n" .
+            "\t\t\t\t\t'color',\n" .
+            "\t\t\t\t\t'background'\n" .
+            "\t\t\t\t],\n" .
+            "\t\t\t\tsplit        : false,\n" .
+            "\t\t\t\texpand       : false,\n" .
+            "\t\t\t\tdeep         : true\n" .
+            "\t\t\t}\n" .
+            "\t\t]\n" .
             "\t}";
 
         echo "\n});";

@@ -149,7 +149,7 @@ class NavBar extends Control implements \Countable
 
         throw new Exception\Exception(
             sprintf(
-                'Cannot replace element at position %s because NavBar does '.
+                'Cannot replace element at position %s because NavBar does ' .
                 'not contain an entry at position %s.',
                 $position,
                 $position
@@ -275,7 +275,7 @@ class NavBar extends Control implements \Countable
             $count = count($this);
             throw new Exception\Exception(
                 sprintf(
-                    'Unable to pop %s entries. NavBar only contains %s '.
+                    'Unable to pop %s entries. NavBar only contains %s ' .
                     'entries.',
                     $number,
                     $count

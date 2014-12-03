@@ -21,9 +21,9 @@ class StyleSheetResource extends Resource
 
         // append tag if it is set
         if ($tag !== null) {
-            $uri = (strpos($uri, '?') === false ) ?
-                $uri.'?'.$tag :
-                $uri.'&'.$tag;
+            $uri = (strpos($uri, '?') === false)
+                ? $uri . '?' . $tag
+                : $uri . '&' . $tag;
         }
 
         printf('<link rel="stylesheet" type="text/css" href="%s%s" />',
@@ -37,7 +37,7 @@ class StyleSheetResource extends Resource
     public function displayInline($path)
     {
         echo '<style type="text/css" media="all">';
-        readfile($path.$this->getUri());
+        readfile($path . $this->getUri());
         echo '</style>';
     }
 

@@ -494,7 +494,7 @@ class Locale
 
         $sign = ($value < 0) ? '-' : '';
 
-        $formatted_value = $sign.$integer_part.$fractional_part;
+        $formatted_value = $sign . $integer_part . $fractional_part;
 
         return $formatted_value;
     }
@@ -809,7 +809,7 @@ class Locale
 
         // assume encoding is a code-page if encoding is numeric
         if ($encoding !== null && ctype_digit($encoding)) {
-            $encoding = 'CP'.$encoding;
+            $encoding = 'CP' . $encoding;
         }
 
         return $encoding;
@@ -1081,7 +1081,7 @@ class Locale
                 STR_PAD_LEFT
             );
 
-            $formatted_value = $format->decimal_separator.$frac_part;
+            $formatted_value = $format->decimal_separator . $frac_part;
         }
 
         return $formatted_value;
@@ -1127,11 +1127,11 @@ class Locale
         }
 
         // filter out all chars except for digits and negative formatting chars
-        $char_class = '0-9'.preg_quote($negative_sign, '/');
+        $char_class = '0-9' . preg_quote($negative_sign, '/');
         if ($n_sign_position === 0) {
-            $char_class = '()'.$char_class;
+            $char_class = '()' . $char_class;
         }
-        $exp = '/[^'.$char_class.']/u';
+        $exp = '/[^' . $char_class . ']/u';
         $filtered = preg_replace($exp, '', $string);
 
         if ($filtered != '') {
@@ -1156,7 +1156,7 @@ class Locale
         }
 
         if ($negative) {
-            $string = '-'.$string;
+            $string = '-' . $string;
         }
 
         return $string;
@@ -1279,7 +1279,7 @@ class Locale
             $this->preferred_locale = self::setlocale(\LC_ALL, $this->locale);
             if ($this->preferred_locale === false) {
                 throw new Exception\Exception(
-                    "The locale {$this->locale} is not valid for this ".
+                    "The locale {$this->locale} is not valid for this " .
                     "operating system."
                 );
             }

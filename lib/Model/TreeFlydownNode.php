@@ -60,8 +60,8 @@ class TreeFlydownNode extends TreeNode
             $this->flydown_option = $param1;
         } elseif ($param2 === null) {
             throw new Exception\Exception(
-                'First parameter must be a Silverorange\Swat\Model\Option or '.
-                'second parameter must be specified.'
+                'First parameter must be a Silverorange\Swat\Model\Option ' .
+                'or second parameter must be specified.'
             );
         } else {
             $this->flydown_option = new Option($param1, $param2);

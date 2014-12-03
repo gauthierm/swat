@@ -78,7 +78,7 @@ class Checkbox extends InputControl implements Model\State
 
         parent::display();
 
-        $this->getForm()->addHiddenField($this->id.'_submitted', 1);
+        $this->getForm()->addHiddenField($this->id . '_submitted', 1);
 
         $input_tag = new Html\Tag('input');
         $input_tag->type = 'checkbox';
@@ -113,8 +113,10 @@ class Checkbox extends InputControl implements Model\State
     {
         parent::process();
 
-        if ($this->getForm()->getHiddenField($this->id.'_submitted') === null)
+        $id = $this->id . '_submitted';
+        if ($this->getForm()->getHiddenField($id) === null) {
             return;
+        }
 
         $data = &$this->getForm()->getFormData();
         $this->value = array_key_exists($this->id, $data);

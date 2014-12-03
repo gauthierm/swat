@@ -21,9 +21,9 @@ class JavaScriptResource extends Resource
 
         // append tag if it is set
         if ($tag !== null) {
-            $uri = (strpos($uri, '?') === false ) ?
-                $uri.'?'.$tag :
-                $uri.'&'.$tag;
+            $uri = (strpos($uri, '?') === false)
+                ? $uri . '?' . $tag
+                : $uri . '&' . $tag;
         }
 
         printf('<script type="text/javascript" src="%s%s"></script>',
@@ -37,7 +37,7 @@ class JavaScriptResource extends Resource
     public function displayInline($path)
     {
         echo '<script type="text/javascript">';
-        readfile($path.$this->getUri());
+        readfile($path . $this->getUri());
         echo '</script>';
     }
 

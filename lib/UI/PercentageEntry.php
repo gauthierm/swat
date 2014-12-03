@@ -27,7 +27,7 @@ class PercentageEntry extends FloatEntry
         if (is_numeric($value)) {
             $value = $value * 100;
             $value = parent::getDisplayValue($value);
-            $value = $value.'%';
+            $value = $value . '%';
         } else {
             $value = parent::getDisplayValue($value);
         }

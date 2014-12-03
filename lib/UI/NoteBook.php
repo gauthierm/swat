@@ -125,8 +125,11 @@ class NoteBook extends Widget implements UIParent
             $child->parent = $this;
         } else {
             throw new Exception\InvalidClassException(
-                'Only NoteBookChild objects may be nested within a '.
-                'NoteBook object.', 0, $child);
+                'Only NoteBookChild objects may be nested within a ' .
+                'NoteBook object.',
+                0,
+                $child
+            );
         }
     }
 
@@ -234,14 +237,15 @@ class NoteBook extends Widget implements UIParent
             $li_counter++;
             $li_tag = new Html\Tag('li');
 
-            $li_tag->class = 'tab'.$li_counter;
+            $li_tag->class = 'tab' . $li_counter;
 
             if (($this->selected_page === null && $li_counter == 1) ||
-                ($page->id == $this->selected_page))
-                $li_tag->class.= ' selected';
+                ($page->id == $this->selected_page)) {
+                $li_tag->class .= ' selected';
+            }
 
             $anchor_tag = new Html\Tag('a');
-            $anchor_tag->href = '#'.$page->id;
+            $anchor_tag->href = '#' . $page->id;
 
             $em_tag = new Html\Tag('em');
             $em_tag->setContent($page->title, $page->title_content_type);
@@ -551,9 +555,12 @@ class NoteBook extends Widget implements UIParent
             break;
         }
 
-        return sprintf("var %s_obj = new YAHOO.widget.TabView(".
-                "'%s', {orientation: '%s'});",
-                $this->id, $this->id, $position);
+        return sprintf(
+            "var %s_obj = new YAHOO.widget.TabView('%s', {orientation: '%s'});",
+            $this->id,
+            $this->id,
+            $position
+        );
     }
 
     // }}}

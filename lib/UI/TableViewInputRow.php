@@ -157,8 +157,9 @@ class TableViewInputRow extends TableViewRow
          * replicator ids.
          */
         $data = $this->getForm()->getFormData();
-        $replicator_field = isset($data[$this->getId().'_replicators']) ?
-            $data[$this->getId().'_replicators'] : null;
+        $replicator_field = (isset($data[$this->getId() . '_replicators']))
+            ? $data[$this->getId() . '_replicators']
+            : null;
 
         if ($replicator_field === null || $replicator_field == '')
             // use generated ids
@@ -239,8 +240,10 @@ class TableViewInputRow extends TableViewRow
         }
 
         // add replicator ids to the form as a hidden field
-        $this->getForm()->addHiddenField($this->getId().'_replicators',
-            implode(',', $this->replicators));
+        $this->getForm()->addHiddenField(
+            $this->getId() . '_replicators',
+            implode(',', $this->replicators)
+        );
 
         $this->displayInputRows();
         $this->displayEnterAnotherRow();
@@ -298,7 +301,7 @@ class TableViewInputRow extends TableViewRow
                 $widget_id);
 
         throw new Exception\Exception(
-            'No input cell for this row exists for the given column '.
+            'No input cell for this row exists for the given column ' .
             'identifier.'
         );
     }
@@ -334,7 +337,7 @@ class TableViewInputRow extends TableViewRow
             return $this->input_cells[$column_id]->getPrototypeWidget();
 
         throw new Exception\Exception(
-            'The specified column does not have an input cell bound to this '.
+            'The specified column does not have an input cell bound to this ' .
             'row or the column does not exist.'
         );
     }
@@ -539,7 +542,7 @@ class TableViewInputRow extends TableViewRow
         $id = $this->id;
 
         if ($this->parent->id !== null) {
-            $id = $this->parent->id.'_'.$id;
+            $id = $this->parent->id . '_' . $id;
         }
 
         return $id;
@@ -574,10 +577,11 @@ class TableViewInputRow extends TableViewRow
 
             $tr_tag = new Html\Tag('tr');
             $tr_tag->class = 'swat-table-view-input-row';
-            $tr_tag->id = $this->getId().'_row_'.$replicator_id;
+            $tr_tag->id = $this->getId() . '_row_' . $replicator_id;
 
-            if ($row_has_messages && $this->show_row_messages)
-                $tr_tag->class.= ' swat-error';
+            if ($row_has_messages && $this->show_row_messages) {
+                $tr_tag->class .= ' swat-error';
+            }
 
             $tr_tag->open();
 
@@ -595,7 +599,7 @@ class TableViewInputRow extends TableViewRow
                         $messages = array_merge($messages,
                             $widget->getMessages());
 
-                        $td_tag->class.= ' swat-error';
+                        $td_tag->class .= ' swat-error';
                     }
                 }
 
@@ -688,7 +692,7 @@ class TableViewInputRow extends TableViewRow
         $close_length = $this->parent->getXhtmlColspan() - $position - 1;
 
         $tr_tag = new Html\Tag('tr');
-        $tr_tag->id = $this->getId().'_enter_row';
+        $tr_tag->id = $this->getId() . '_enter_row';
         $tr_tag->open();
 
         if ($position > 0) {
@@ -746,7 +750,7 @@ class TableViewInputRow extends TableViewRow
             $td_tag = new Html\Tag('td', $td_attributes);
             $td_tag->open();
 
-            $suffix = '_'.$this->getId().'_%s';
+            $suffix = '_' . $this->getId() . '_%s';
 
             if (isset($this->input_cells[$column->id])) {
                 $widget = $this->input_cells[$column->id]->getPrototypeWidget();
@@ -781,7 +785,7 @@ class TableViewInputRow extends TableViewRow
 
         if ($form === null) {
             throw new Exception\Exception(
-                'TableView must be inside a Form for TableViewInputRow to '.
+                'TableView must be inside a Form for TableViewInputRow to ' .
                 'work.'
             );
         }

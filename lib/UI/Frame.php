@@ -75,7 +75,7 @@ class Frame extends DisplayableContainer implements Titleable
         if ($this->title === null)
             return $this->subtitle;
 
-        return $this->title.': '.$this->subtitle;
+        return $this->title . ': ' . $this->subtitle;
     }
 
     // }}}
@@ -126,7 +126,7 @@ class Frame extends DisplayableContainer implements Titleable
     {
         if ($this->title !== null) {
 
-            $header_tag = new Html\Tag('h'.$this->getHeaderLevel());
+            $header_tag = new Html\Tag('h' . $this->getHeaderLevel());
             $header_tag->class = 'swat-frame-title';
             $header_tag->setContent($this->title, $this->title_content_type);
 

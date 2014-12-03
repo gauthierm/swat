@@ -89,9 +89,9 @@ abstract class Object
         if ($this->html_head_entry_set === null) {
             throw new Exception\Exception(
                 sprintf(
-                    "Child class '%s' did not instantiate a HTML resource ".
-                    "set. This should be done in the constructor either by ".
-                    "calling parent::__construct() or by creating a new ".
+                    "Child class '%s' did not instantiate a HTML resource " .
+                    "set. This should be done in the constructor either by " .
+                    "calling parent::__construct() or by creating a new " .
                     "HTML resource set.",
                     get_class($this)
                 )
@@ -119,9 +119,9 @@ abstract class Object
         if ($this->html_head_entry_set === null) {
             throw new Exception\Exception(
                 sprintf(
-                    "Child class '%s' did not instantiate a HTML resource ".
-                    "set. This should be done in the constructor either by ".
-                    "calling parent::__construct() or by creating a new ".
+                    "Child class '%s' did not instantiate a HTML resource " .
+                    "set. This should be done in the constructor either by " .
+                    "calling parent::__construct() or by creating a new " .
                     "HTML resource set.",
                     get_class($this)
                 )
@@ -147,9 +147,9 @@ abstract class Object
         if ($this->html_head_entry_set === null) {
             throw new Exception\Exception(
                 sprintf(
-                    "Child class '%s' did not instantiate a HTML resource ".
-                    "set. This should be done in the constructor either by ".
-                    "calling parent::__construct() or by creating a new ".
+                    "Child class '%s' did not instantiate a HTML resource " .
+                    "set. This should be done in the constructor either by " .
+                    "calling parent::__construct() or by creating a new " .
                     "HTML resource set.",
                     get_class($this)
                 )
@@ -370,7 +370,7 @@ abstract class Object
 
         $counter++;
 
-        return get_class($this).$counter;
+        return get_class($this) . $counter;
     }
 
     // }}}

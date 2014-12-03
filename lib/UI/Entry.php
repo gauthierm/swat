@@ -145,7 +145,7 @@ class Entry extends InputControl implements Model\State
         if (!$this->autocomplete) {
             $nonce_tag = new Html\Tag('input');
             $nonce_tag->type = 'hidden';
-            $nonce_tag->name = $this->id.'_nonce';
+            $nonce_tag->name = $this->id . '_nonce';
             $nonce_tag->value = $this->getNonce();
             $nonce_tag->display();
         }
@@ -305,7 +305,7 @@ class Entry extends InputControl implements Model\State
         $tag->onmouseup = 'if(this._focus_click){'.
             'this.select();this._focus_click=false;}';
 
-        $tag->onfocus = 'this._focused=true;'.
+        $tag->onfocus = 'this._focused=true;' .
             'if(!this._focus_click){ this.select();}';
 
         $tag->onblur = 'this._focused=false;this._focus_click=false;';
@@ -373,8 +373,9 @@ class Entry extends InputControl implements Model\State
 
     protected function getNonce()
     {
-        if ($this->nonce === null)
-            $this->nonce = 'n'.md5(rand());
+        if ($this->nonce === null) {
+            $this->nonce = 'n' . md5(rand());
+        }
 
         return $this->nonce;
     }
@@ -402,8 +403,8 @@ class Entry extends InputControl implements Model\State
                 $value = $data[$id];
             }
         } else {
-            if (isset($data[$this->id.'_nonce'])) {
-                $id = $data[$this->id.'_nonce'];
+            if (isset($data[$this->id . '_nonce'])) {
+                $id = $data[$this->id . '_nonce'];
                 if (isset($data[$id]) && $data[$id] != '') {
                     $value = $data[$id];
                 }
@@ -439,8 +440,8 @@ class Entry extends InputControl implements Model\State
                 $has_value = true;
             }
         } else {
-            if (isset($data[$this->id.'_nonce'])) {
-                $id = $data[$this->id.'_nonce'];
+            if (isset($data[$this->id . '_nonce'])) {
+                $id = $data[$this->id . '_nonce'];
                 if (isset($data[$id])) {
                     $has_value = true;
                 }

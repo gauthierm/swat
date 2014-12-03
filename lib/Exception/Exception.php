@@ -283,14 +283,16 @@ class Exception extends \Exception
     {
         ob_start();
 
-        printf("%s Exception: %s\n\nMessage: %s\n\nCode:\n\t%s\n\n".
+        printf(
+            "%s Exception: %s\n\nMessage: %s\n\nCode:\n\t%s\n\n" .
             "Created in file '%s' on line %s.\n\n",
             $this->wasHandled() ? 'Caught' : 'Uncaught',
             $this->class,
             $this->getMessage(),
             $this->getCode(),
             $this->getFile(),
-            $this->getLine());
+            $this->getLine()
+        );
 
         echo "Stack Trace:\n";
         $count = count($this->backtrace);
@@ -342,18 +344,20 @@ class Exception extends \Exception
 
         echo '<div class="swat-exception">';
 
-        printf('<h3>%s Exception: %s</h3>'.
-                '<div class="swat-exception-body">'.
-                'Message:<div class="swat-exception-message">%s</div>'.
-                'Code:<div class="swat-exception-message">%s</div>'.
-                'Created in file <strong>%s</strong> '.
-                'on line <strong>%s</strong>.<br /><br />',
-                $this->wasHandled() ? 'Caught' : 'Uncaught',
-                $this->class,
-                $this->getMessageAsHtml(),
-                $this->getCode(),
-                $this->getFile(),
-                $this->getLine());
+        printf(
+            '<h3>%s Exception: %s</h3>' .
+            '<div class="swat-exception-body">' .
+            'Message:<div class="swat-exception-message">%s</div>' .
+            'Code:<div class="swat-exception-message">%s</div>' .
+            'Created in file <strong>%s</strong> ' .
+            'on line <strong>%s</strong>.<br /><br />',
+            $this->wasHandled() ? 'Caught' : 'Uncaught',
+            $this->class,
+            $this->getMessageAsHtml(),
+            $this->getCode(),
+            $this->getFile(),
+            $this->getLine()
+        );
 
         echo 'Stack Trace:<br /><dl>';
         $count = count($this->backtrace);
@@ -378,8 +382,9 @@ class Exception extends \Exception
             else
                 $arguments = '';
 
-            printf('<dt>%s.</dt><dd>In file <strong>%s</strong> '.
-                'line&nbsp;<strong>%s</strong>.<br />Method: '.
+            printf(
+                '<dt>%s.</dt><dd>In file <strong>%s</strong> ' .
+                'line&nbsp;<strong>%s</strong>.<br />Method: ' .
                 '<strong>%s%s%s(</strong>%s<strong>)</strong></dd>',
                 --$count,
                 array_key_exists('file', $entry) ? $entry['file'] : 'unknown',
@@ -387,7 +392,8 @@ class Exception extends \Exception
                 ($class === null) ? '' : $class,
                 array_key_exists('type', $entry) ? $entry['type'] : '',
                 ($function === null) ? '' : $function,
-                $arguments);
+                $arguments
+            );
         }
 
         echo '</dl></div></div>';
@@ -535,7 +541,7 @@ class Exception extends \Exception
      */
     protected function formatSensitiveParam($name, $value)
     {
-        return '[$'.$name.' FILTERED]';
+        return '[$' . $name . ' FILTERED]';
     }
 
     // }}}
@@ -553,14 +559,14 @@ class Exception extends \Exception
         $formatted_value = '<unknown parameter type>';
 
         if (is_object($value)) {
-            $formatted_value = '<'.get_class($value).' object>';
+            $formatted_value = '<' . get_class($value) . ' object>';
         } elseif ($value === null) {
             $formatted_value = '<null>';
         } elseif (is_string($value)) {
             if (Util\String::validateUtf8($value)) {
-                $formatted_value = "'".$value."'";
+                $formatted_value = "'" . $value . "'";
             } else {
-                $formatted_value = '"'.Util\String::escapeBinary($value).'"';
+                $formatted_value = '"' . Util\String::escapeBinary($value) . '"';
             }
         } elseif (is_int($value) || is_float($value)) {
             $formatted_value = strval($value);
@@ -586,17 +592,17 @@ class Exception extends \Exception
             $count = 0;
             foreach ($value as $key => $the_value) {
                 if ($count > 0) {
-                    $formatted_value.= ', ';
+                    $formatted_value .= ', ';
                 }
 
                 if ($associative) {
-                    $formatted_value.= $this->formatValue($key);
-                    $formatted_value.= ' => ';
+                    $formatted_value .= $this->formatValue($key);
+                    $formatted_value .= ' => ';
                 }
-                $formatted_value.= $this->formatValue($the_value);
+                $formatted_value .= $this->formatValue($the_value);
                 $count++;
             }
-            $formatted_value.= ')';
+            $formatted_value .= ')';
         }
 
         return $formatted_value;
@@ -617,16 +623,16 @@ class Exception extends \Exception
         static $displayed = false;
         if (!$displayed) {
             echo "<style>\n";
-            echo ".swat-exception { border: 1px solid #d43; margin: 1em; ".
-                "font-family: sans-serif; background: #fff !important; ".
-                "z-index: 9999 !important; color: #000; text-align: left; ".
+            echo ".swat-exception { border: 1px solid #d43; margin: 1em; " .
+                "font-family: sans-serif; background: #fff !important; " .
+                "z-index: 9999 !important; color: #000; text-align: left; " .
                 "min-width: 400px; }\n";
 
-            echo ".swat-exception h3 { background: #e65; margin: 0; padding: ".
+            echo ".swat-exception h3 { background: #e65; margin: 0; padding: " .
                 "5px; border-bottom: 1px solid #d43; color: #fff; }\n";
 
             echo ".swat-exception-body { padding: 0.8em; }\n";
-            echo ".swat-exception-message { margin-left: 2em; ".
+            echo ".swat-exception-message { margin-left: 2em; " .
                 "padding: 1em; }\n";
 
             echo ".swat-exception dt { float: left; margin-left: 1em; }\n";

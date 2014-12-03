@@ -133,7 +133,7 @@ class YUI
 
     private function getAttributionHtmlHeadEntry()
     {
-        $comment = "Yahoo! UI Library (YUI) is Copyright (c) 2007-2009, ".
+        $comment = "Yahoo! UI Library (YUI) is Copyright (c) 2007-2009, " .
             "Yahoo! Inc.\n\t     http://developer.yahoo.com/yui/license.html";
 
         return new CommentHtmlHeadEntry($comment);

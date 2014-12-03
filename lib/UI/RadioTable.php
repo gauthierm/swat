@@ -46,7 +46,7 @@ class RadioTable extends RadioList
 
         // add a hidden field so we can check if this list was submitted on
         // the process step
-        $this->getForm()->addHiddenField($this->id.'_submitted', 1);
+        $this->getForm()->addHiddenField($this->id . '_submitted', 1);
 
         if ($this->show_blank) {
             $options = array_merge(
@@ -105,9 +105,10 @@ class RadioTable extends RadioList
         } else {
             echo '<td class="swat-radio-table-input">';
             $this->displayOption($option, $index);
-            printf('</td><td id="%s" class="swat-radio-table-label">',
-                $this->id.'_'.(string)$option->value.'_label');
-
+            printf(
+                '</td><td id="%s" class="swat-radio-table-label">',
+                $this->id . '_' . (string)$option->value . '_label'
+            );
             $this->displayOptionLabel($option, $index);
             echo '</td>';
         }

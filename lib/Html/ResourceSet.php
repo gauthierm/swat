@@ -74,8 +74,8 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
 
             if ($class === null) {
                 throw new SwatClassNotFoundException(
-                    'SwatHtmlHeadEntry class not found for entry string of "'.
-                    $entry.'".');
+                    'SwatHtmlHeadEntry class not found for entry string of "' .
+                    $entry . '".');
             }
 
             $entry = new $class($entry);
@@ -83,7 +83,7 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
 
         if (!($entry instanceof SwatHtmlHeadEntry)) {
             throw new SwatInvalidTypeException(
-                'Added entry must be either a string or an instance of a'.
+                'Added entry must be either a string or an instance of a' .
                 'SwatHtmlHeadEntry.', 0, $entry);
         }
 
