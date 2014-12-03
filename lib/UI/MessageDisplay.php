@@ -211,7 +211,7 @@ class MessageDisplay extends Control
      * @return boolean true if this message display is visible and false if it
      *                 is not.
      *
-     * @see UIObject::isVisible()
+     * @see Object::isVisible()
      */
     public function isVisible()
     {

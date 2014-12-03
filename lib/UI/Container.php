@@ -362,8 +362,8 @@ class Container extends Widget implements UIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return UIObject the first descendant UI-object or null if no matching
-     *                  descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
      * @see UIParent::getFirstDescendant()
      */
@@ -532,7 +532,7 @@ class Container extends Widget implements UIParent
      *
      * @throws Exception\InvalidClassException
      */
-    public function addChild(UIObject $child)
+    public function addChild(Object $child)
     {
         if ($child instanceof Widget) {
             $this->add($child);
@@ -556,7 +556,7 @@ class Container extends Widget implements UIParent
      * @return Html\ResourceSet the {@link Html\Resource} objects needed by
      *                          this container.
      *
-     * @see UIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -578,7 +578,7 @@ class Container extends Widget implements UIParent
      * @return Html\ResourceSet the {@link Html\Resource} objects that may be
      *                          needed by this container.
      *
-     * @see UIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -648,10 +648,9 @@ class Container extends Widget implements UIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return UIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see UIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {

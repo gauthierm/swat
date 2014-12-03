@@ -14,7 +14,7 @@ use Silverorange\Swat\Exception;
  * @copyright 2006-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class CellRendererContainer extends UIObject implements UIParent
+abstract class CellRendererContainer extends Object implements UIParent
 {
     // {{{ protected properties
 
@@ -50,7 +50,7 @@ abstract class CellRendererContainer extends UIObject implements UIParent
      *                                 the cell renderer property.
      * @param string       $property   the property of the cell renderer to
      *                                 which the <i>$data_field</i> is mapped.
-     * @param UIObject     $object     optional. The object containing the
+     * @param Object       $object     optional. The object containing the
      *                                 property to map when the property does
      *                                 not belong to the cell renderer itself.
      *                                 If unspecified, the <i>$property</i>
@@ -174,7 +174,7 @@ abstract class CellRendererContainer extends UIObject implements UIParent
      *
      * @see UIParent::addChild()
      */
-    public function addChild(UIObject $child)
+    public function addChild(Object $child)
     {
         if ($child instanceof CellRenderer) {
             $this->addRenderer($child);
@@ -239,8 +239,8 @@ abstract class CellRendererContainer extends UIObject implements UIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return UIObject the first descendant UI-object or null if no matching
-     *                  descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
      * @see UIParent::getFirstDescendant()
      */
@@ -323,7 +323,7 @@ abstract class CellRendererContainer extends UIObject implements UIParent
      * @return Html\ResourceSet the Html\Resource objects needed by this cell
      *                          renderer container.
      *
-     * @see UIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -347,7 +347,7 @@ abstract class CellRendererContainer extends UIObject implements UIParent
      * @return Html\ResourceSet the Html\Resource objects that may be needed by
      *                          this cell renderer container.
      *
-     * @see UIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -392,10 +392,9 @@ abstract class CellRendererContainer extends UIObject implements UIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return UIObject a deep copy of the UI tree starting with this UI
-     *                  object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see UIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {

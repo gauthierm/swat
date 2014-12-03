@@ -21,7 +21,7 @@ use Silverorange\Swat\Exception;
  * @copyright 2006-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class InputCell extends UIObject implements UIParent, Titleable
+class InputCell extends Object implements UIParent, Titleable
 {
     // {{{ private properties
 
@@ -89,7 +89,7 @@ class InputCell extends UIObject implements UIParent, Titleable
      * @throws Exception\Exception if you try to add more than one prototype
      *         widget to this input cell.
      */
-    public function addChild(UIObject $child)
+    public function addChild(Object $child)
     {
         if ($this->widget === null) {
             $this->setWidget($child);
@@ -291,7 +291,7 @@ class InputCell extends UIObject implements UIParent, Titleable
      * @return Html\ResourceSet the Html\Resource objects needed by this input
      *                          cell.
      *
-     * @see UIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -309,7 +309,7 @@ class InputCell extends UIObject implements UIParent, Titleable
      * @return Html\ResourceSet the Html\Resource objects that may be needed by
      *                          this input cell.
      *
-     * @see UIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -375,8 +375,8 @@ class InputCell extends UIObject implements UIParent, Titleable
      *
      * @param string $class_name class name to look for.
      *
-     * @return UIObject the first descendant widget or null if no matching
-     *                  descendant is found.
+     * @return Object the first descendant widget or null if no matching
+     *                descendant is found.
      *
      * @see UIParent::getFirstDescendant()
      */
@@ -458,9 +458,9 @@ class InputCell extends UIObject implements UIParent, Titleable
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return UIObject a deep copy of the UI tree starting with this UI object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see UIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {

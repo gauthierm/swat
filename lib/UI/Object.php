@@ -305,7 +305,7 @@ abstract class Object
      * @return array the array of CSS classes that are applied to this
      *               user-interface object.
      *
-     * @see UIObject::getCSSClassString()
+     * @see Object::getCSSClassString()
      */
     protected function getCSSClassNames()
     {
@@ -337,7 +337,7 @@ abstract class Object
      *                has no CSS classes, null is returned rather than a blank
      *                string.
      *
-     * @see UIObject::getCSSClassNames()
+     * @see Object::getCSSClassNames()
      */
     protected final function getCSSClassString()
     {

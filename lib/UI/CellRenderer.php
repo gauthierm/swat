@@ -17,7 +17,7 @@ use Silverorange\Swat\Exception;
  * @copyright 2004-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-abstract class CellRenderer extends UIObject
+abstract class CellRenderer extends Object
 {
     // {{{ public properties
 
@@ -163,21 +163,21 @@ abstract class CellRenderer extends UIObject
      * Get a property name to use for mapping
      *
      * This method can be overridden by sub-classes that need to modify the
-     * name of a property mapping.  This allows cell renderers which conatin
-     * multiple UIObject object to mangle property names if necessary to avoid
+     * name of a property mapping.  This allows cell renderers which contain
+     * multiple UI objects to mangle property names if necessary to avoid
      * conflicts.
      *
-     * @param UIObject $object the object containing the property that is being
-     *                         mapped. Usually this is the cell renderer itself,
-     *                         but not necessarily. It could be a UI object
-     *                         within this cell renderer.
-     * @param string   $name   the name of the property being mapped.
+     * @param Object $object the object containing the property that is being
+     *                       mapped. Usually this is the cell renderer itself,
+     *                       but not necessarily. It could be a UI object
+     *                       within this cell renderer.
+     * @param string $name   the name of the property being mapped.
      *
      * @return string the name of the property to actually map. This property
      *                should either exist as a public property of the cell
      *                renderer or be handled by a magic __set() method.
      */
-    public function getPropertyNameToMap(UIObject $object, $name)
+    public function getPropertyNameToMap(Object $object, $name)
     {
         return $name;
     }

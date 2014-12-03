@@ -118,7 +118,7 @@ class ActionItem extends Control implements UIParent
      * @see UIParent
      * @see ActionItem::setWidget()
      */
-    public function addChild(UIObject $child)
+    public function addChild(Object $child)
     {
         if ($child instanceof Widget) {
             $this->setWidget($child);
@@ -227,8 +227,8 @@ class ActionItem extends Control implements UIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return UIObject the first descendant widget or null if no matching
-     *                      descendant is found.
+     * @return Object the first descendant widget or null if no matching
+     *                descendant is found.
      *
      * @see UIParent::getFirstDescendant()
      */
@@ -304,10 +304,9 @@ class ActionItem extends Control implements UIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return UIObject a deep copy of the UI tree starting with this UI
-     *                      object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see UIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {

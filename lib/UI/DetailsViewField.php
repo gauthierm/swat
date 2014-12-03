@@ -220,7 +220,7 @@ class DetailsViewField extends CellRendererContainer
      * @return Html\ResourceSet the Html\Resource objects needed by this
      *                          details-view field.
      *
-     * @see UIObject::getHtmlHeadEntrySet()
+     * @see Object::getHtmlHeadEntrySet()
      */
     public function getHtmlHeadEntrySet()
     {
@@ -244,7 +244,7 @@ class DetailsViewField extends CellRendererContainer
      * @return Html\ResourceSet the Html\Resource objects that may be needed by
      *                          this details-view field.
      *
-     * @see UIObject::getAvailableHtmlHeadEntrySet()
+     * @see Object::getAvailableHtmlHeadEntrySet()
      */
     public function getAvailableHtmlHeadEntrySet()
     {
@@ -338,7 +338,7 @@ class DetailsViewField extends CellRendererContainer
      *
      * @see CellRenderer::getInheritanceCSSClassNames()
      * @see CellRenderer::getBaseCSSClassNames()
-     * @see UIObject::getCSSClassNames()
+     * @see Object::getCSSClassNames()
      */
     protected function getCSSClassNames()
     {

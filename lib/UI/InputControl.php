@@ -60,7 +60,7 @@ abstract class InputControl extends Control
      * Gets the form that this control is contained in
      *
      * You can also get the parent form with the
-     * {@link UIObject::getFirstAncestor()} method but this method is more
+     * {@link Object::getFirstAncestor()} method but this method is more
      * convenient and throws an exception .
      *
      * @return Form the form this control is in.

@@ -60,7 +60,7 @@ class GroupedMenu extends AbstractMenu implements UIParent
      * @see UIParent
      * @see GroupedMenu::addGroup()
      */
-    public function addChild(UIObject $child)
+    public function addChild(Object $child)
     {
         if ($child instanceof MenuGroup) {
             $this->addGroup($child);
@@ -176,8 +176,8 @@ class GroupedMenu extends AbstractMenu implements UIParent
      *
      * @param string $class_name class name to look for.
      *
-     * @return UIObject the first descendant UI-object or null if no matching
-     *                  descendant is found.
+     * @return Object the first descendant UI-object or null if no matching
+     *                descendant is found.
      *
      * @see UIParent::getFirstDescendant()
      */
@@ -259,9 +259,9 @@ class GroupedMenu extends AbstractMenu implements UIParent
      * @param string $id_suffix optional. A suffix to append to copied UI
      *                          objects in the UI tree.
      *
-     * @return UIObject a deep copy of the UI tree starting with this UI object.
+     * @return Object a deep copy of the UI tree starting with this UI object.
      *
-     * @see UIObject::copy()
+     * @see Object::copy()
      */
     public function copy($id_suffix = '')
     {
