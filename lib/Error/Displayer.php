@@ -18,7 +18,7 @@ namespace Silverorange\Swat\Error;
  */
 abstract class Displayer
 {
-    // {{{ public abstract function display()
+    // {{{ abstract public function display()
 
     /**
      * Displays an error
@@ -27,7 +27,7 @@ abstract class Displayer
      *
      * @param Error $e the error to display.
      */
-    public abstract function display(Error $e);
+    abstract public function display(Error $e);
 
     // }}}
 }

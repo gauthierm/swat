@@ -633,7 +633,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function getFormatById()
+    // {{{ static public function getFormatById()
 
     /**
      * Gets a date format string by id
@@ -644,7 +644,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @throws \Exception
      */
-    public static function getFormatById($id)
+    static public function getFormatById($id)
     {
         // Note: The format() method does not localize results, so these
         // format codes are _not_ wrapped in gettext calls.
@@ -690,7 +690,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function getFormatLikeStrftimeById()
+    // {{{ static public function getFormatLikeStrftimeById()
 
     /**
      * Gets a strftime() date format string by id
@@ -701,7 +701,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @throws \Exception
      */
-    public static function getFormatLikeStrftimeById($id)
+    static public function getFormatLikeStrftimeById($id)
     {
         switch ($id) {
             case self::DF_MDY:
@@ -744,7 +744,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function getFormatLikeIntlById()
+    // {{{ static public function getFormatLikeIntlById()
 
     /**
      * Gets a strftime() date format string by id
@@ -755,7 +755,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @throws \Exception
      */
-    public static function getFormatLikeIntlById($id)
+    static public function getFormatLikeIntlById($id)
     {
         switch ($id) {
             case self::DF_MDY:
@@ -798,7 +798,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function getTimeZoneAbbreviations()
+    // {{{ static public function getTimeZoneAbbreviations()
 
     /**
      * Gets a mapping of time zone names to time zone abbreviations
@@ -812,7 +812,7 @@ class Date extends \DateTime implements \Serializable
      *               - 'st' for the standard time abbreviation, and
      *               - 'dt' for the daylight time abbreviation.
      */
-    public static function getTimeZoneAbbreviations()
+    static public function getTimeZoneAbbreviations()
     {
         static $shortnames = null;
 
@@ -846,7 +846,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function getTimeZoneAbbreviation()
+    // {{{ static public function getTimeZoneAbbreviation()
 
     /**
      * Gets an array of time zone abbreviations for a specific time zone
@@ -857,7 +857,7 @@ class Date extends \DateTime implements \Serializable
      *               - 'st' for the standard time abbreviation, and
      *               - 'dt' for the daylight time abbreviation.
      */
-    public static function getTimeZoneAbbreviation(\DateTimeZone $time_zone)
+    static public function getTimeZoneAbbreviation(\DateTimeZone $time_zone)
     {
         $abbreviations = self::getTimeZoneAbbreviations();
         $key = $time_zone->getName();
@@ -870,7 +870,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function compare()
+    // {{{ static public function compare()
 
     /**
      * Compares two date objects
@@ -884,7 +884,7 @@ class Date extends \DateTime implements \Serializable
      *                 0 indicates $date1 is equivalent to $date2 and 1
      *                 indicates $date1 is after $date2.
      */
-    public static function compare(\DateTime $date1, \DateTime $date2)
+    static public function compare(\DateTime $date1, \DateTime $date2)
     {
         // Not using getTimestamp() here because it is clamped to the 32-bit
         // signed integer range. Float compaison should be safe here as the
@@ -905,7 +905,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ public static function getIntervalFromSeconds()
+    // {{{ static public function getIntervalFromSeconds()
 
     /**
      * Gets a date interval with appropriate values for the specified
@@ -919,7 +919,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @return \DateInterval a date interval with the relevant parts set.
      */
-    public static function getIntervalFromSeconds($seconds)
+    static public function getIntervalFromSeconds($seconds)
     {
         // don't care about micro-seconds.
         $seconds = floor(abs($seconds));

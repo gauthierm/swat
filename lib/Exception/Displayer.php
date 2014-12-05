@@ -19,7 +19,7 @@ namespace Silverorange\Swat\Exception;
  */
 abstract class Displayer
 {
-    // {{{ public abstract function display()
+    // {{{ abstract public function display()
 
     /**
      * Displays a Swat exception
@@ -28,7 +28,7 @@ abstract class Displayer
      *
      * @param Exception $e the exception to display.
      */
-    public abstract function display(Exception $e);
+    abstract public function display(Exception $e);
 
     // }}}
 }

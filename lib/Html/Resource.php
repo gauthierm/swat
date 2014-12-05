@@ -39,7 +39,7 @@ abstract class Resource
     }
 
     // }}}
-    // {{{ public abstract function display()
+    // {{{ abstract public function display()
 
     /**
      * Displays this html head entry
@@ -51,10 +51,10 @@ abstract class Resource
      *                           is suffixed as a HTTP get var and can be used
      *                           to explicitly refresh the browser cache.
      */
-    public abstract function display($uri_prefix = '', $tag = null);
+    abstract public function display($uri_prefix = '', $tag = null);
 
     // }}}
-    // {{{ public abstract function displayInline()
+    // {{{ abstract public function displayInline()
 
     /**
      * Displays the resource referenced by this html head entry inline
@@ -63,7 +63,7 @@ abstract class Resource
      *
      * @param string $path the path containing the resource files.
      */
-    public abstract function displayInline($path);
+    abstract public function displayInline($path);
 
     // }}}
     // {{{ public function getUri()

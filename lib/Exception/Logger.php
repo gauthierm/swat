@@ -18,7 +18,7 @@ namespace Silverorange\Swat\Exception;
  */
 abstract class Logger
 {
-    // {{{ public abstract function log()
+    // {{{ abstract public function log()
 
     /**
      * Logs a Swat exception
@@ -27,7 +27,7 @@ abstract class Logger
      *
      * @param Exception $e the exception to log.
      */
-    public abstract function log(Exception $e);
+    abstract public function log(Exception $e);
 
     // }}}
 }

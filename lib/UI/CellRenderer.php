@@ -288,7 +288,7 @@ abstract class CellRenderer extends Object
     }
 
     // }}}
-    // {{{ public final function getInheritanceCSSClassNames()
+    // {{{ final public function getInheritanceCSSClassNames()
 
     /**
      * Gets the CSS class names of this cell renderer based on the inheritance
@@ -311,7 +311,7 @@ abstract class CellRenderer extends Object
      * @return array the array of CSS class names based on an inheritance tree
      *               for this cell renderer.
      */
-    public final function getInheritanceCSSClassNames()
+    final public function getInheritanceCSSClassNames()
     {
         $php_class_name = get_class($this);
         $css_class_names = array();
@@ -348,7 +348,7 @@ abstract class CellRenderer extends Object
     }
 
     // }}}
-    // {{{ protected final function addCompositeRenderer()
+    // {{{ final protected function addCompositeRenderer()
 
     /**
      * Adds a composite a renderer to this renderer
@@ -365,7 +365,7 @@ abstract class CellRenderer extends Object
      * @throws Exception\Exception if the specified renderer is already the
      *         child of another object.
      */
-    protected final function addCompositeRenderer(CellRenderer $renderer,
+    final protected function addCompositeRenderer(CellRenderer $renderer,
         $key)
     {
         if (array_key_exists($key, $this->composite_renderers)) {
@@ -391,7 +391,7 @@ abstract class CellRenderer extends Object
     }
 
     // }}}
-    // {{{ protected final function getCompositeRenderer()
+    // {{{ final protected function getCompositeRenderer()
 
     /**
      * Gets a composite renderer of this renderer by the composite renderer's
@@ -408,7 +408,7 @@ abstract class CellRenderer extends Object
      * @throws Exception\WidgetNotFoundException if no composite renderer with
      *         the specified key exists in this renderer.
      */
-    protected final function getCompositeRenderer($key)
+    final protected function getCompositeRenderer($key)
     {
         $this->confirmCompositeRenderers();
 
@@ -430,7 +430,7 @@ abstract class CellRenderer extends Object
     }
 
     // }}}
-    // {{{ protected final function getCompositeRenderers()
+    // {{{ final protected function getCompositeRenderers()
 
     /**
      * Gets all composite renderers added to this renderer
@@ -447,7 +447,7 @@ abstract class CellRenderer extends Object
      *
      * @see CellRenderer::addCompositeRenderer()
      */
-    protected final function getCompositeRenderers($class_name = null)
+    final protected function getCompositeRenderers($class_name = null)
     {
         $this->confirmCompositeRenderers();
 
@@ -465,7 +465,7 @@ abstract class CellRenderer extends Object
     }
 
     // }}}
-    // {{{ protected final function confirmCompositeRenderers()
+    // {{{ final protected function confirmCompositeRenderers()
 
     /**
      * Confirms composite renderers have been created
@@ -480,7 +480,7 @@ abstract class CellRenderer extends Object
      * {@link CellRenderer::getCompositeRenderer()} is called so it rarely
      * needs to be called manually.
      */
-    protected final function confirmCompositeRenderers()
+    final protected function confirmCompositeRenderers()
     {
         if (!$this->composite_renderers_created) {
             $this->createCompositeRenderers();
@@ -489,7 +489,7 @@ abstract class CellRenderer extends Object
     }
 
     // }}}
-    // {{{ protected final function makePropertyStatic()
+    // {{{ final protected function makePropertyStatic()
 
     /**
      * Make a public property static
@@ -502,10 +502,10 @@ abstract class CellRenderer extends Object
      * @see CellRenderer::isPropertyStatic()
      *
      * @throws Exception\InvalidPropertyException if the specified
-     *         <i>$property_name</i> is not a non-static public property of
+     *         <i>$property_name</i> is not a non-public static property of
      *         this class.
      */
-    protected final function makePropertyStatic($property_name)
+    final protected function makePropertyStatic($property_name)
     {
         $reflector = new \ReflectionObject($this);
         if ($reflector->hasProperty($property_name)) {
@@ -514,7 +514,7 @@ abstract class CellRenderer extends Object
                 $this->static_properties[] = $property_name;
             } else {
                 throw new Exception\InvalidPropertyException(
-                    "Property {$property_name} is not a non-static public " .
+                    "Property {$property_name} is not a non-public static " .
                     "property and cannot be made static.",
                     0,
                     $this,

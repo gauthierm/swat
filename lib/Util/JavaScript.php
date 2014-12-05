@@ -13,7 +13,7 @@ namespace Silverorange\Swat\Util;
  */
 abstract class JavaScript
 {
-    // {{{ public static function displayInlineJavaScript()
+    // {{{ static public function displayInlineJavaScript()
 
     /**
      * Displays inline JavaScript properly encapsulating the script in a CDATA
@@ -21,7 +21,7 @@ abstract class JavaScript
      *
      * @param string $javascript the inline JavaScript to display.
      */
-    public static function displayInline($javascript)
+    static public function displayInline($javascript)
     {
         if ($javascript != '') {
             echo '<script type="text/javascript">',
@@ -33,7 +33,7 @@ abstract class JavaScript
     }
 
     // }}}
-    // {{{ public static function quoteString()
+    // {{{ static public function quoteString()
 
     /**
      * Safely quotes a PHP string into a JavaScript string
@@ -48,7 +48,7 @@ abstract class JavaScript
      *                wrapped in single quotation marks and is safe to display
      *                in inline JavaScript.
      */
-    public static function quoteString($string)
+    static public function quoteString($string)
     {
         $search = array(
             '\\',           // backslash quote

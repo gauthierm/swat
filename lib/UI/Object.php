@@ -325,7 +325,7 @@ abstract class Object
     }
 
     // }}}
-    // {{{ protected final function getCSSClassString()
+    // {{{ final protected function getCSSClassString()
 
     /**
      * Gets the string representation of this user-interface object's list of
@@ -338,7 +338,7 @@ abstract class Object
      *
      * @see Object::getCSSClassNames()
      */
-    protected final function getCSSClassString()
+    final protected function getCSSClassString()
     {
         $class_string = null;
 
@@ -350,7 +350,7 @@ abstract class Object
     }
 
     // }}}
-    // {{{ protected final function getUniqueId()
+    // {{{ final protected function getUniqueId()
 
     /**
      * Generates a unique id for this UI object
@@ -362,7 +362,7 @@ abstract class Object
      *
      * @return string a unique identifier for this UI object.
      */
-    protected final function getUniqueId()
+    final protected function getUniqueId()
     {
         // Because this method is not static, this counter will start at zero
         // for each class.

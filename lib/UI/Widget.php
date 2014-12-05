@@ -559,7 +559,7 @@ abstract class Widget extends Object
     }
 
     // }}}
-    // {{{ protected final function addCompositeWidget()
+    // {{{ final protected function addCompositeWidget()
 
     /**
      * Adds a composite a widget to this widget
@@ -576,7 +576,7 @@ abstract class Widget extends Object
      * @throws Exception\Exception if the specified widget is already the
      *         child of another object.
      */
-    protected final function addCompositeWidget(Widget $widget, $key)
+    final protected function addCompositeWidget(Widget $widget, $key)
     {
         if (array_key_exists($key, $this->composite_widgets)) {
             throw new Exception\DuplicateIdException(
@@ -601,7 +601,7 @@ abstract class Widget extends Object
     }
 
     // }}}
-    // {{{ protected final function getCompositeWidget()
+    // {{{ final protected function getCompositeWidget()
 
     /**
      * Gets a composite widget of this widget by the composite widget's key
@@ -617,7 +617,7 @@ abstract class Widget extends Object
      * @throws Exception\WidgetNotFoundException if no composite widget with
      *         the specified key exists in this widget.
      */
-    protected final function getCompositeWidget($key)
+    final protected function getCompositeWidget($key)
     {
         $this->confirmCompositeWidgets();
 
@@ -639,7 +639,7 @@ abstract class Widget extends Object
     }
 
     // }}}
-    // {{{ protected final function getCompositeWidgets()
+    // {{{ final protected function getCompositeWidgets()
 
     /**
      * Gets all composite widgets added to this widget
@@ -656,7 +656,7 @@ abstract class Widget extends Object
      *
      * @see Widget::addCompositeWidget()
      */
-    protected final function getCompositeWidgets($class_name = null)
+    final protected function getCompositeWidgets($class_name = null)
     {
         $this->confirmCompositeWidgets();
 
@@ -674,7 +674,7 @@ abstract class Widget extends Object
     }
 
     // }}}
-    // {{{ protected final function confirmCompositeWidgets()
+    // {{{ final protected function confirmCompositeWidgets()
 
     /**
      * Confirms composite widgets have been created
@@ -688,7 +688,7 @@ abstract class Widget extends Object
      * process() and is called any time {@link Widget::getCompositeWidget()}
      * is called so it rarely needs to be called manually.
      */
-    protected final function confirmCompositeWidgets()
+    final protected function confirmCompositeWidgets()
     {
         if (!$this->composite_widgets_created) {
             $this->createCompositeWidgets();
