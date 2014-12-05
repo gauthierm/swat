@@ -111,12 +111,14 @@ class InputCell extends Object implements UIParent, Titleable
      */
     public function init()
     {
-        if ($this->widget !== null)
+        if ($this->widget !== null) {
             $this->widget->init();
+        }
 
         // ensure the widget has an id
-        if ($this->widget->id === null)
+        if ($this->widget->id === null) {
             $this->widget->id = $this->widget->getUniqueId();
+        }
     }
 
     // }}}
@@ -167,10 +169,11 @@ class InputCell extends Object implements UIParent, Titleable
      */
     public function getTitle()
     {
-        if ($this->parent === null)
+        if ($this->parent === null) {
             return '';
-        else
-            return $this->parent->title;
+        }
+
+        return $this->parent->title;
     }
 
     // }}}
@@ -275,11 +278,12 @@ class InputCell extends Object implements UIParent, Titleable
      */
     public function unsetWidget($replicator_id)
     {
-        if (isset($this->widgets[$replicator_id]))
+        if (isset($this->widgets[$replicator_id])) {
             unset($this->widgets[$replicator_id]);
-
-        if (isset($this->clones[$replicator_id]))
+        }
+        if (isset($this->clones[$replicator_id])) {
             unset($this->clones[$replicator_id]);
+        }
     }
 
     // }}}
@@ -340,17 +344,19 @@ class InputCell extends Object implements UIParent, Titleable
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->clones as $cloned_widget) {
             if ($class_name === null || $cloned_widget instanceof $class_name) {
-                if ($cloned_widget->id === null)
+                if ($cloned_widget->id === null) {
                     $out[] = $cloned_widget;
-                else
+                } else {
                     $out[$cloned_widget->id] = $cloned_widget;
+                }
             }
 
             if ($cloned_widget instanceof UIParent) {
@@ -382,8 +388,9 @@ class InputCell extends Object implements UIParent, Titleable
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -395,8 +402,9 @@ class InputCell extends Object implements UIParent, Titleable
 
             if ($cloned_widget instanceof UIParent) {
                 $out = $cloned_widget->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -509,13 +517,12 @@ class InputCell extends Object implements UIParent, Titleable
     protected function getInputRow()
     {
         $view = $this->getFirstAncestor('\Silverorange\Swat\UI\TableView');
-        if ($view === null)
+        if ($view === null) {
             return null;
-
+        }
         $row = $view->getFirstRowByClass(
             '\Silverorange\Swat\UI\TableViewInputRow'
         );
-
         return $row;
     }
 
@@ -539,11 +546,13 @@ class InputCell extends Object implements UIParent, Titleable
      */
     protected function getClonedWidget($replicator_id)
     {
-        if (isset($this->clones[$replicator_id]))
+        if (isset($this->clones[$replicator_id])) {
             return $this->clones[$replicator_id];
+        }
 
-        if ($this->widget === null)
+        if ($this->widget === null) {
             return null;
+        }
 
         $row = $this->getInputRow();
         if ($row === null) {

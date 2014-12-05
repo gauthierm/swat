@@ -43,8 +43,9 @@ class ContentBlock extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 

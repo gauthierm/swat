@@ -40,8 +40,9 @@ class Toolbar extends DisplayableContainer
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -67,8 +68,9 @@ class Toolbar extends DisplayableContainer
      */
     public function setToolLinkValues($value)
     {
-        foreach ($this->getToolLinks() as $tool)
+        foreach ($this->getToolLinks() as $tool) {
             $tool->value = $value;
+        }
     }
 
     // }}}
@@ -108,8 +110,9 @@ class Toolbar extends DisplayableContainer
             ob_start();
             $child->display();
             $content = ob_get_clean();
-            if ($content != '')
+            if ($content != '') {
                 echo '<li>', $content, '</li>';
+            }
         }
     }
 

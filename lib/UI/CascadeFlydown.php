@@ -83,8 +83,9 @@ class CascadeFlydown extends Flydown
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -114,9 +115,12 @@ class CascadeFlydown extends Flydown
      *                                         <i>$value</i> parameter is an
      *                                         option object.
      */
-    public function addOption($parent, $value, $title = '',
-        $content_type = 'text/plain')
-    {
+    public function addOption(
+        $parent,
+        $value,
+        $title = '',
+        $content_type = 'text/plain'
+    ) {
         if ($value instanceof Model\Option) {
             $option = $value;
         } else {
@@ -139,12 +143,14 @@ class CascadeFlydown extends Flydown
      *                             titles. If not specified, defaults to
      *                             'text/plain'.
      */
-    public function addOptionsByArray(array $options,
-        $content_type = 'text/plain')
-    {
+    public function addOptionsByArray(
+        array $options,
+        $content_type = 'text/plain'
+    ) {
         foreach ($options as $parent => $child_options) {
-            foreach ($child_options as $value => $title)
+            foreach ($child_options as $value => $title) {
                 $this->addOption($parent, $value, $title, $content_type);
+            }
         }
     }
 
@@ -262,15 +268,18 @@ class CascadeFlydown extends Flydown
             return;
         }
 
-        $javascript = sprintf("var %s_cascade = new SwatCascade('%s', '%s');",
+        $javascript = sprintf(
+            "var %s_cascade = new SwatCascade('%s', '%s');",
             $this->id,
             $this->cascade_from->id,
-            $this->id);
+            $this->id
+        );
 
         $salt = $this->getForm()->getSalt();
 
-        $flydown_value = ($this->serialize_values) ?
-            $this->value : (string)$this->value;
+        $flydown_value = ($this->serialize_values)
+            ? $this->value
+            : (string)$this->value;
 
         foreach ($this->options as $parent => $options) {
             if ($this->cascade_from->serialize_values) {

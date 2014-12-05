@@ -63,9 +63,9 @@ class Tag
     public function __construct($tag_name, $attributes = null)
     {
         $this->tag_name = $tag_name;
-
-        if (is_array($attributes))
+        if (is_array($attributes)) {
             $this->attributes = $attributes;
+        }
     }
 
     // }}}
@@ -107,8 +107,9 @@ class Tag
      */
     public function addAttributes($attributes)
     {
-        if (is_array($attributes))
+        if (is_array($attributes)) {
             $this->attributes = array_merge($this->attributes, $attributes);
+        }
     }
 
     // }}}
@@ -165,10 +166,11 @@ class Tag
     public function displayContent()
     {
         if ($this->content !== null) {
-            if ($this->content_type === 'text/plain')
+            if ($this->content_type === 'text/plain') {
                 echo Util\String::minimizeEntities($this->content);
-            else
+            } else {
                 echo $this->content;
+            }
         }
     }
 
@@ -243,10 +245,11 @@ class Tag
      */
     public function __get($attribute)
     {
-        if (isset($this->attributes[$attribute]))
+        if (isset($this->attributes[$attribute])) {
             return $this->attributes[$attribute];
-        else
+        } else {
             return null;
+        }
     }
 
     // }}}
@@ -263,8 +266,9 @@ class Tag
      */
     public function __set($attribute, $value)
     {
-        $this->attributes[$attribute] =
-            ($value === null) ? null : (string)$value;
+        $this->attributes[$attribute] = ($value === null)
+            ? null
+            : (string)$value;
     }
 
     // }}}
@@ -318,10 +322,11 @@ class Tag
             }
         }
 
-        if ($self_closing)
+        if ($self_closing) {
             echo ' />';
-        else
+        } else {
             echo '>';
+        }
     }
 
     // }}}

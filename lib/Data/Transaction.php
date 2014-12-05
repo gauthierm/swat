@@ -69,8 +69,9 @@ class Transaction
     {
         $this->db = $db;
         $this->in_another_transaction = ($this->db->in_transaction);
-        if (!$this->in_another_transaction)
+        if (!$this->in_another_transaction) {
             $this->db->beginTransaction();
+        }
     }
 
     // }}}

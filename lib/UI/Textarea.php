@@ -138,8 +138,9 @@ class Textarea extends InputControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -170,24 +171,26 @@ class Textarea extends InputControl implements Model\State
 
         $data = &$this->getForm()->getFormData();
 
-        if (!isset($data[$this->id]))
+        if (!isset($data[$this->id])) {
             return;
+        }
 
         $this->value = $data[$this->id];
         $length = $this->getValueLength();
 
-        if ($length == 0)
+        if ($length == 0) {
             $this->value = null;
+        }
 
         if ($this->required && $length == 0) {
             $message = $this->getValidationMessage('required');
             $this->addMessage($message);
-
         } elseif ($this->maxlength !== null && $length > $this->maxlength) {
             $message = $this->getValidationMessage('too-long');
-            $message->primary_content = sprintf($message->primary_content,
-                $this->maxlength);
-
+            $message->primary_content = sprintf(
+                $message->primary_content,
+                $this->maxlength
+            );
             $this->addMessage($message);
         }
     }
@@ -270,11 +273,13 @@ class Textarea extends InputControl implements Model\State
         $textarea_tag->accesskey = $this->access_key;
         $textarea_tag->tabindex = $this->tab_index;
 
-        if ($this->read_only)
+        if ($this->read_only) {
             $textarea_tag->readonly = 'readonly';
+        }
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $textarea_tag->disabled = 'disabled';
+        }
 
         if ($this->placeholder != '') {
             $textarea_tag->placeholder = $this->placeholder;
@@ -330,8 +335,12 @@ class Textarea extends InputControl implements Model\State
     protected function getInlineJavaScript()
     {
         $resizeable = ($this->resizeable) ? 'true' : 'false';
-        return sprintf("var %s_obj = new SwatTextarea('%s', %s);",
-            $this->id, $this->id, $resizeable);
+        return sprintf(
+            "var %s_obj = new SwatTextarea('%s', %s);",
+            $this->id,
+            $this->id,
+            $resizeable
+        );
     }
 
     // }}}

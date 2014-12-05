@@ -116,19 +116,21 @@ class ImageCellRenderer extends CellRenderer
      */
     public function render()
     {
-        if (!$this->visible || $this->image == '')
+        if (!$this->visible || $this->image == '') {
             return;
+        }
 
         parent::render();
 
         $image_tag = new Html\Tag('img');
 
-        if ($this->value === null)
+        if ($this->value === null) {
             $image_tag->src = $this->image;
-        elseif (is_array($this->value))
+        } elseif (is_array($this->value)) {
             $image_tag->src = vsprintf($this->image, $this->value);
-        else
+        } else {
             $image_tag->src = sprintf($this->image, $this->value);
+        }
 
         $image_tag->height = $this->height;
         $image_tag->width = $this->width;
@@ -138,23 +140,28 @@ class ImageCellRenderer extends CellRenderer
         $margin_y = 0;
 
         if ($this->occupy_width !== null &&
-            $this->occupy_width > $this->width)
+            $this->occupy_width > $this->width) {
             $margin_x = $this->occupy_width - $this->width;
+        }
 
         if ($this->occupy_height !== null &&
-            $this->occupy_height > $this->height)
+            $this->occupy_height > $this->height) {
             $margin_y = $this->occupy_height - $this->height;
+        }
 
-        if ($margin_x > 0 || $margin_y > 0)
+        if ($margin_x > 0 || $margin_y > 0) {
+            $style = ($margin_x % 2 == 0 && $margin_y % 2 == 0)
+                ? 'margin: %dpx %dpx'
+                : 'margin: %dpx %dpx %dpx %dpx;',
+
             $image_tag->style = sprintf(
-                ($margin_x % 2 == 0 && $margin_y % 2 == 0) ?
-                    'margin: %dpx %dpx' :
-                    'margin: %dpx %dpx %dpx %dpx;',
+                $style,
                 floor(((float)$margin_y) / 2),
                 ceil(((float)$margin_x) / 2),
                 ceil(((float)$margin_y) / 2),
                 floor(((float)$margin_x) / 2)
             );
+        }
 
         // alt is a required XHTML attribute. We should always display it even
         // if it is not specified.

@@ -8,7 +8,6 @@ use Silverorange\Swat\Html;
 use Silverorange\Swat\I18N;
 use Silverorange\Swat\L;
 
-
 /**
  * An input control for entering a delimited list of data
  *
@@ -106,8 +105,9 @@ class ListEntry extends Entry
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         // Do not have a maxlength on the XHTML input tag. This relies on
         // internal knowledge of the parent::display() method.
@@ -143,7 +143,7 @@ class ListEntry extends Entry
         $this->values = $this->splitValues($this->value);
         $locale = I18N\Locale::get();
 
-        if (!$this->required && count($this->values) == 0) {
+        if (!$this->required && count($this->values) === 0) {
             return;
 
         } elseif ($this->max_entries > 0 &&

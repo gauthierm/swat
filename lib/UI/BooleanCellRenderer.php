@@ -112,14 +112,17 @@ class BooleanCellRenderer extends CellRenderer
                 );
         }
 
-        if ($overwrite_properties || ($this->false_content === null))
+        if ($overwrite_properties || ($this->false_content === null)) {
             $this->false_content = $false_content;
+        }
 
-        if ($overwrite_properties || ($this->true_content === null))
+        if ($overwrite_properties || ($this->true_content === null)) {
             $this->true_content = $true_content;
+        }
 
-        if ($overwrite_properties || ($this->content_type === null))
+        if ($overwrite_properties || ($this->content_type === null)) {
             $this->content_type = $content_type;
+        }
     }
 
     // }}}
@@ -132,23 +135,27 @@ class BooleanCellRenderer extends CellRenderer
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::render();
 
-        if ($this->stock_id === null)
+        if ($this->stock_id === null) {
             $this->setFromStock('check-only', false);
-        else
+        } else {
             $this->setFromStock($this->stock_id, false);
+        }
 
-        if ($this->content_type = null)
+        if ($this->content_type = null) {
             $this->content_type = 'text/plain';
+        }
 
-        if ((boolean)$this->value)
+        if ((boolean)$this->value) {
             $this->renderTrue();
-        else
+        } else {
             $this->renderFalse();
+        }
     }
 
     // }}}
@@ -165,10 +172,11 @@ class BooleanCellRenderer extends CellRenderer
      */
     public function getDataSpecificCSSClassNames()
     {
-        if ((boolean)$this->value)
+        if ((boolean)$this->value) {
             return array('swat-boolean-cell-renderer-checked');
-        else
-            return array();
+        }
+
+        return array();
     }
 
     // }}}
@@ -179,10 +187,11 @@ class BooleanCellRenderer extends CellRenderer
      */
     protected function renderTrue()
     {
-        if ($this->content_type === 'text/plain')
+        if ($this->content_type === 'text/plain') {
             echo Util\String::minimizeEntities($this->true_content);
-        else
+        } else {
             echo $this->true_content;
+        }
     }
 
     // }}}
@@ -193,10 +202,11 @@ class BooleanCellRenderer extends CellRenderer
      */
     protected function renderFalse()
     {
-        if ($this->content_type === 'text/plain')
+        if ($this->content_type === 'text/plain') {
             echo Util\String::minimizeEntities($this->false_content);
-        else
+        } else {
             echo $this->false_content;
+        }
     }
 
     // }}}

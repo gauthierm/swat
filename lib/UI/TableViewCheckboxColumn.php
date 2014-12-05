@@ -124,9 +124,9 @@ class TableViewCheckboxColumn extends TableViewColumn
     public function process()
     {
         parent::process();
-
-        if ($this->show_check_all)
+        if ($this->show_check_all) {
             $this->check_all->process();
+        }
     }
 
     // }}}

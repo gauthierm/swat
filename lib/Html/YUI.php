@@ -80,8 +80,9 @@ class YUI
     {
         self::buildComponents();
 
-        if (!is_array($component_ids))
+        if (!is_array($component_ids)) {
             $component_ids = array($component_ids);
+        }
 
         $this->html_head_entry_set =
             $this->buildHtmlHeadEntrySet($component_ids, $mode);
@@ -120,7 +121,8 @@ class YUI
 
         foreach ($component_ids as $component_id) {
             $set->addEntrySet(
-                self::$components[$component_id]->getHtmlHeadEntrySet($mode));
+                self::$components[$component_id]->getHtmlHeadEntrySet($mode)
+            );
         }
 
         $set->addEntry($this->getAttributionHtmlHeadEntry());
@@ -153,8 +155,9 @@ class YUI
         static $components_built = false;
         static $components = array();
 
-        if ($components_built)
+        if ($components_built) {
             return;
+        }
 
         $components['animation'] = new YUIComponent('animation');
         $components['animation']->addJavaScript();
@@ -167,8 +170,11 @@ class YUI
 
         $components['button'] = new YUIComponent('button');
         $components['button']->addJavaScript();
-        $components['button']->addStyleSheet('button/assets/skins/sam', '',
-            false);
+        $components['button']->addStyleSheet(
+            'button/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['calendar'] = new YUIComponent('calendar');
         $components['calendar']->addJavaScript();
@@ -188,16 +194,22 @@ class YUI
 
         $components['container_core'] = new YUIComponent('container_core');
         $components['container_core']->addJavaScript('container');
-        $components['container_core']->addStyleSheet('container/assets',
-            'container-core', false);
+        $components['container_core']->addStyleSheet(
+            'container/assets',
+            'container-core',
+            false
+        );
 
         $components['datasource'] = new YUIComponent('datasource');
         $components['datasource']->addJavaScript();
 
         $components['datatable'] = new YUIComponent('datatable');
         $components['datatable']->addJavaScript();
-        $components['datatable']->addStyleSheet('datatable/assets/skins/sam', '',
-            false);
+        $components['datatable']->addStyleSheet(
+            'datatable/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['dom'] = new YUIComponent('dom');
         $components['dom']->addJavaScript();
@@ -207,13 +219,19 @@ class YUI
 
         $components['editor'] = new YUIComponent('editor');
         $components['editor']->addJavaScript();
-        $components['editor']->addStyleSheet('editor/assets/skins/sam', '',
-            false);
+        $components['editor']->addStyleSheet(
+            'editor/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['simpleeditor'] = new YUIComponent('simpleeditor');
         $components['simpleeditor']->addJavaScript('editor');
-        $components['simpleeditor']->addStyleSheet('editor/assets/skins/sam',
-            '', false);
+        $components['simpleeditor']->addStyleSheet(
+            'editor/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['element'] = new YUIComponent('element');
         $components['element']->addJavaScript();
@@ -225,8 +243,8 @@ class YUI
         $components['event-delegate']->addJavaScript();
 
         $components['event-mouseenter'] = new YUIComponent(
-            'event-mouseenter');
-
+            'event-mouseenter'
+        );
         $components['event-mouseenter']->addJavaScript();
 
         $components['fonts'] = new YUIComponent('fonts');
@@ -238,7 +256,10 @@ class YUI
         $components['imagecropper'] = new YUIComponent('imagecropper');
         $components['imagecropper']->addJavaScript();
         $components['imagecropper']->addStyleSheet(
-            'imagecropper/assets/skins/sam', '', false);
+            'imagecropper/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['json'] = new YUIComponent('json');
         $components['json']->addJavaScript();
@@ -253,7 +274,10 @@ class YUI
         $components['paginator'] = new YUIComponent('paginator');
         $components['paginator']->addJavaScript();
         $components['paginator']->addStyleSheet(
-            'paginator/assets/skins/sam', '', false);
+            'paginator/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['reset-fonts-grids'] = new YUIComponent('reset-fonts-grids');
         $components['reset-fonts-grids']->addStyleSheet('', '', false);
@@ -264,7 +288,10 @@ class YUI
         $components['resize'] = new YUIComponent('resize');
         $components['resize']->addJavaScript();
         $components['resize']->addStyleSheet(
-            'resize/assets/skins/sam', '', false);
+            'resize/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['selector'] = new YUIComponent('selector');
         $components['selector']->addJavaScript();
@@ -281,7 +308,10 @@ class YUI
         $components['tabview'] = new YUIComponent('tabview');
         $components['tabview']->addJavaScript();
         $components['tabview']->addStyleSheet(
-            'tabview/assets/skins/sam', '', false);
+            'tabview/assets/skins/sam',
+            '',
+            false
+        );
 
         $components['treeview'] = new YUIComponent('treeview');
         $components['treeview']->addJavaScript();

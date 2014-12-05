@@ -53,9 +53,9 @@ class PercentageEntry extends FloatEntry
         $value = trim($value);
         $value = str_replace('%', '', $value);
         $value = parent::getNumericValue($value);
-        if ($value !== null)
+        if ($value !== null) {
             $value = $value / 100;
-
+        }
         return $value;
     }
 

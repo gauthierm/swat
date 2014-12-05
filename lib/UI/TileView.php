@@ -180,14 +180,16 @@ class TileView extends View implements UIParent
     {
         parent::init();
 
-        if ($this->tile !== null)
+        if ($this->tile !== null) {
             $this->tile->init();
+        }
 
         foreach ($this->groups as $group) {
             $group->init();
             // index the group by id if it is not already indexed
-            if (!array_key_exists($group->id, $this->groups_by_id))
+            if (!array_key_exists($group->id, $this->groups_by_id)) {
                 $this->groups_by_id[$group->id] = $group;
+            }
         }
     }
 
@@ -204,8 +206,9 @@ class TileView extends View implements UIParent
      */
     public function process()
     {
-        if (!$this->isInitialized())
+        if (!$this->isInitialized()) {
             $this->init();
+        }
 
         if ($this->getFirstAncestor('\Silverorange\Swat\UIForm') !== null) {
             $this->getCompositeWidget('check_all')->process();
@@ -213,8 +216,9 @@ class TileView extends View implements UIParent
 
         $this->processed = true;
 
-        if ($this->tile !== null)
+        if ($this->tile !== null) {
             $this->tile->process();
+        }
     }
 
     // }}}
@@ -239,11 +243,13 @@ class TileView extends View implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
-        if ($this->model === null)
+        if ($this->model === null) {
             return;
+        }
 
         parent::display();
 
@@ -252,9 +258,10 @@ class TileView extends View implements UIParent
 
             $div = new Html\Tag('div');
             $div->class = 'swat-none';
-            $div->setContent($this->no_records_message,
-                $this->no_records_message_type);
-
+            $div->setContent(
+                $this->no_records_message,
+                $this->no_records_message_type
+            );
             $div->display();
             return;
         }
@@ -379,8 +386,9 @@ class TileView extends View implements UIParent
      */
     public function displayTileGroupHeaders($record, $next_record)
     {
-        foreach ($this->groups as $group)
+        foreach ($this->groups as $group) {
             $group->display($record);
+        }
     }
 
     // }}}
@@ -395,8 +403,9 @@ class TileView extends View implements UIParent
      */
     public function displayTileGroupFooters($record, $next_record)
     {
-        foreach ($this->groups as $group)
+        foreach ($this->groups as $group) {
             $group->displayFooter($record, $next_record);
+        }
     }
 
     // }}}
@@ -462,17 +471,19 @@ class TileView extends View implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         if ($this->tile !== null) {
             if ($class_name === null || $this->tile instanceof $class_name) {
-                if ($this->tile->id === null)
+                if ($this->tile->id === null) {
                     $out[] = $this->tile;
-                else
+                } else {
                     $out[$this->tile->id] = $this->tile;
+                }
             }
 
             if ($this->tile instanceof UIParent) {
@@ -485,10 +496,11 @@ class TileView extends View implements UIParent
 
         foreach ($this->groups as $group) {
             if ($class_name === null || $group instanceof $class_name) {
-                if ($group->id === null)
+                if ($group->id === null) {
                     $out[] = $group;
-                else
+                } else {
                     $out[$group->id] = $group;
+                }
             }
 
             if ($group instanceof UIParent) {
@@ -514,13 +526,15 @@ class TileView extends View implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
-        if ($this->tile instanceof $class_name)
+        if ($this->tile instanceof $class_name) {
             $out = $this->tile;
+        }
 
         if ($out === null && $this->tile instanceof UIParent) {
             $out = $this->tile->getFirstDescendant($class_name);
@@ -586,9 +600,9 @@ class TileView extends View implements UIParent
     public function getMessages()
     {
         $messages = parent::getMessages();
-        if ($this->tile !== null)
+        if ($this->tile !== null) {
             $messages = array_merge($messages, $this->tile->getMessages());
-
+        }
         return $messages;
     }
 
@@ -604,9 +618,9 @@ class TileView extends View implements UIParent
     public function hasMessage()
     {
         $has_message = parent::hasMessage();
-        if (!$has_message && $this->tile !== null)
+        if (!$has_message && $this->tile !== null) {
             $has_message = $this->tile->hasMessage();
-
+        }
         return $has_message;
     }
 
@@ -713,8 +727,11 @@ class TileView extends View implements UIParent
      */
     protected function getInlineJavaScript()
     {
-        $javascript = sprintf("var %s = new SwatTileView('%s');",
-            $this->id, $this->id);
+        $javascript = sprintf(
+            "var %s = new SwatTileView('%s');",
+            $this->id,
+            $this->id
+        );
 
         if ($this->tile !== null) {
             $tile_javascript = $this->tile->getRendererInlineJavaScript();
@@ -856,9 +873,9 @@ class TileView extends View implements UIParent
     public function setTile(Tile $tile)
     {
         // if we're overwriting an existing tile, remove it's parent link
-        if ($this->tile !== null)
+        if ($this->tile !== null) {
             $this->tile->parent = null;
-
+        }
         $this->tile = $tile;
         $tile->parent = $this;
     }
@@ -891,8 +908,9 @@ class TileView extends View implements UIParent
 
         $this->groups[] = $group;
 
-        if ($group->id !== null)
+        if ($group->id !== null) {
             $this->groups_by_id[$group->id] = $group;
+        }
 
         $group->view = $this;
         $group->parent = $this;

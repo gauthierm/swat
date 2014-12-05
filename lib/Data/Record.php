@@ -119,8 +119,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
         $this->init();
 
-        if ($data !== null)
+        if ($data !== null) {
             $this->initFromRow($data);
+        }
 
         $this->generatePropertyHashes();
     }
@@ -147,8 +148,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
      */
     public function getModifiedProperties()
     {
-        if ($this->read_only)
+        if ($this->read_only) {
             return array();
+        }
 
         $property_array = $this->getProperties();
         $modified_properties = array();
@@ -156,8 +158,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         foreach ($property_array as $name => $value) {
             $hashed_value = $this->getHashValue($value);
             if (array_key_exists($name, $this->property_hashes) &&
-                strcmp($hashed_value, $this->property_hashes[$name]) != 0)
+                strcmp($hashed_value, $this->property_hashes[$name]) != 0) {
                     $modified_properties[$name] = $value;
+            }
         }
 
         return $modified_properties;
@@ -168,13 +171,15 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
     public function __get($key)
     {
-        if (in_array($key, $this->deprecated_properties))
+        if (in_array($key, $this->deprecated_properties)) {
             return $this->getDeprecatedProperty($key);
+        }
 
         $value = $this->getUsingLoaderMethod($key);
 
-        if ($value === false)
+        if ($value === false) {
             $value = $this->getUsingInternalProperty($key);
+        }
 
         if ($value === false) {
             $loader_method = $this->getLoaderMethod($key);
@@ -277,27 +282,32 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         $properties = $this->getProperties();
 
         foreach ($this->getSerializableSubDataObjects() as $name) {
-            if (!isset($properties[$name]))
+            if (!isset($properties[$name])) {
                 $properties[$name] = null;
+            }
         }
 
         ob_start();
         printf('<h3>%s</h3>', get_class($this));
         echo $this->isModified() ? '(modified)' : '(not modified)', '<br />';
         foreach ($properties as $name => $value) {
-            if ($this->hasSubDataObject($name))
+            if ($this->hasSubDataObject($name)) {
                 $value = $this->getSubDataObject($name);
+            }
 
             $modified = isset($modified_properties[$name]);
 
-            if ($value instanceof SwatDBRecordable)
+            if ($value instanceof SwatDBRecordable) {
                 $value = get_class($value);
+            }
 
-            if (is_bool($value))
+            if (is_bool($value)) {
                 $value = $value ? 'true' : 'false';
+            }
 
-            if ($value === null)
+            if ($value === null) {
                 $value = '<null>';
+            }
 
             if (is_array($value)) {
                 $value = print_r($value, true);
@@ -305,10 +315,12 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
             $value = (string)$value;
 
-            printf("%s = %s%s<br />\n",
+            printf(
+                "%s = %s%s<br />\n",
                 Util\String::minimizeEntities($name),
                 Util\String::minimizeEntities($value),
-                $modified ? ' (modified)' : '');
+                $modified ? ' (modified)' : ''
+            );
         }
         /*
         $reflector = new ReflectionClass(get_class($this));
@@ -322,7 +334,6 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         */
         $string = ob_get_clean();
 
-
         // set db back again
         $this->db = $db;
 
@@ -334,10 +345,11 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
     public function getInternalValue($name)
     {
-        if (array_key_exists($name, $this->internal_properties))
+        if (array_key_exists($name, $this->internal_properties)) {
             return $this->internal_properties[$name];
-        else
+        } else {
             return null;
+        }
     }
 
     // }}}
@@ -409,9 +421,11 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
         // public properties
         $properties = $this->getPublicProperties();
-        foreach ($properties as $name => $value)
-            if ($name !== $id_field->name)
+        foreach ($properties as $name => $value) {
+            if ($name !== $id_field->name) {
                 $new_object->$name = $this->$name;
+            }
+        }
 
         // sub-dataobjects
         foreach ($this->sub_data_objects as $name => $object) {
@@ -419,26 +433,29 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
                 str_replace(' ', '', ucwords(strtr($name, '_', ' ')));
 
             $object->setDatabase($this->db);
-            if (method_exists($this, $saver_method))
+            if (method_exists($this, $saver_method)) {
                 $new_object->$name = $object->duplicate();
-            elseif (!array_key_exists($name, $this->internal_properties))
+            } elseif (!array_key_exists($name, $this->internal_properties)) {
                 $new_object->$name = $object;
+            }
         }
 
         // internal properties
         foreach ($this->internal_properties as $name => $value) {
             if (!(array_key_exists($name, $this->internal_property_accessible)
-                && $this->internal_property_accessible[$name]))
+                && $this->internal_property_accessible[$name])) {
                 continue;
+            }
 
             $autosave = $this->internal_property_autosave[$name];
 
             if ($this->hasSubDataObject($name)) {
                 $object = $this->getSubDataObject($name);
-                    if ($autosave)
-                        $new_object->$name = $object->duplicate();
-                    else
-                        $new_object->$name = $object;
+                if ($autosave) {
+                    $new_object->$name = $object->duplicate();
+                } else {
+                    $new_object->$name = $object;
+                }
             } else {
                 $new_object->$name = $value;
             }
@@ -454,8 +471,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
     protected function setInternalValue($name, $value)
     {
-        if (array_key_exists($name, $this->internal_properties))
+        if (array_key_exists($name, $this->internal_properties)) {
             $this->internal_properties[$name] = $value;
+        }
     }
 
     // }}}
@@ -476,9 +494,12 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
     // }}}
     // {{{ protected function registerInternalProperty()
 
-    protected function registerInternalProperty($name, $class = null,
-        $autosave = false, $accessible = true)
-    {
+    protected function registerInternalProperty(
+        $name,
+        $class = null,
+        $autosave = false,
+        $accessible = true
+    ) {
         $this->internal_properties[$name] = null;
         $this->internal_property_autosave[$name] = $autosave;
         $this->internal_property_accessible[$name] = $accessible;
@@ -515,8 +536,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
         $property_array = $this->getPublicProperties();
 
-        if (is_object($row))
+        if (is_object($row)) {
             $row = get_object_vars($row);
+        }
 
         foreach ($property_array as $name => $value) {
             // Use array_key_exists() instead of isset(), because isset() will
@@ -535,8 +557,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         }
 
         foreach ($this->internal_properties as $name => $value) {
-            if (isset($row[$name]))
+            if (isset($row[$name])) {
                 $this->internal_properties[$name] = $row[$name];
+            }
         }
 
         $this->loaded_from_database = true;
@@ -553,8 +576,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
      */
     protected function generatePropertyHashes()
     {
-        if ($this->read_only)
+        if ($this->read_only) {
             return;
+        }
 
         $property_array = $this->getProperties();
 
@@ -742,9 +766,10 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
     private function &getProperties()
     {
         $property_array = $this->getPublicProperties();
-        $property_array = array_merge($property_array,
-            $this->internal_properties);
-
+        $property_array = array_merge(
+            $property_array,
+            $this->internal_properties
+        );
         return $property_array;
     }
 
@@ -761,8 +786,11 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         static $cache = array();
 
         if (!array_key_exists($key, $cache)) {
-            $cache[$key] = 'load'.str_replace(' ', '',
-                ucwords(str_replace('_', ' ', $key)));
+            $cache[$key] = 'load' . str_replace(
+                ' ',
+                '',
+                ucwords(str_replace('_', ' ', $key))
+            );
         }
 
         return $cache[$key];
@@ -786,9 +814,10 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
 
                 // use loader method to load sub-dataobject
                 $this->checkDB();
-                $this->setSubDataObject($key,
-                    call_user_func(array($this, $loader_method)));
-
+                $this->setSubDataObject(
+                    $key,
+                    call_user_func(array($this, $loader_method))
+                );
                 $value = $this->getSubDataObject($key);
             }
         }
@@ -940,8 +969,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         $this->checkDB();
         $row = $this->loadInternal($id);
 
-        if ($row === null)
+        if ($row === null) {
             return false;
+        }
 
         $this->initFromRow($row);
         $this->generatePropertyHashes();
@@ -987,16 +1017,18 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
      */
     public function isModified()
     {
-        if ($this->read_only)
+        if ($this->read_only) {
             return false;
+        }
 
         $property_array = $this->getProperties();
 
         foreach ($property_array as $name => $value) {
             $hashed_value = $this->getHashValue($value);
             if (isset($this->property_hashes[$name]) &&
-                strcmp($hashed_value, $this->property_hashes[$name]) != 0)
+                strcmp($hashed_value, $this->property_hashes[$name]) != 0) {
                     return true;
+            }
         }
 
         foreach ($this->internal_property_autosave as $name => $autosave) {
@@ -1055,12 +1087,12 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         if ($this->table !== null && $this->id_field !== null) {
             $id_field = new Field($this->id_field, 'integer');
             $sql = 'select * from %s where %s = %s';
-
-            $sql = sprintf($sql,
+            $sql = sprintf(
+                $sql,
                 $this->table,
                 $id_field->name,
-                $this->db->quote($id, $id_field->type));
-
+                $this->db->quote($id, $id_field->type)
+            );
             $rs = DB::query($this->db, $sql, null);
             $row = $rs->fetchRow(\MDB2_FETCHMODE_ASSOC);
 
@@ -1081,8 +1113,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
     {
         $modified_properties = $this->getModifiedProperties();
 
-        if (count($modified_properties) == 0)
+        if (count($modified_properties) === 0) {
             return;
+        }
 
         if ($this->table === null) {
             trigger_error(
@@ -1132,14 +1165,13 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
         $values = array();
 
         foreach ($modified_properties as $name => $value) {
-            if ($name === $id_field->name)
+            if ($name === $id_field->name) {
                 continue;
-
+            }
             $type = $this->guessType($name, $value);
-
-            if ($type == 'date')
+            if ($type == 'date') {
                 $value = $value->getDate();
-
+            }
             $fields[] = sprintf('%s:%s', $type, $name);
             $values[$name] = $value;
         }
@@ -1195,8 +1227,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
             $saver_method = 'save' .
                 str_replace(' ', '', ucwords(strtr($name, '_', ' ')));
 
-            if (method_exists($this, $saver_method))
+            if (method_exists($this, $saver_method)) {
                 call_user_func(array($this, $saver_method));
+            }
         }
 
         /*
@@ -1224,13 +1257,15 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
      */
     protected function deleteInternal()
     {
-        if ($this->table === null || $this->id_field === null)
+        if ($this->table === null || $this->id_field === null) {
             return;
+        }
 
         $id_field = new Field($this->id_field, 'integer');
 
-        if (!property_exists($this, $id_field->name))
+        if (!property_exists($this, $id_field->name)) {
             return;
+        }
 
         $id_ref = $id_field->name;
         $id = $this->$id_ref;
@@ -1263,8 +1298,9 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
     {
         $modified_properties = $this->getModifiedProperties();
 
-        if (count($modified_properties) == 0)
+        if (count($modified_properties) === 0) {
             return;
+        }
 
         $fields = array();
         $values = array();
@@ -1292,8 +1328,10 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
             case 'float':
                 return 'float';
             case 'object':
-                if ($value instanceof Util\Date)
+                if ($value instanceof Util\Date) {
                     return 'date';
+                }
+                // fall through
             case 'string':
             default:
                 return 'text';
@@ -1461,7 +1499,8 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
                     $value->day,
                     $value->hour,
                     $value->minute,
-                    $value->second);
+                    $value->second
+                );
 
                 $tz_id = $value->tz->id;
 

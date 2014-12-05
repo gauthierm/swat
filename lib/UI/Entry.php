@@ -134,8 +134,9 @@ class Entry extends InputControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -174,30 +175,30 @@ class Entry extends InputControl implements Model\State
 
         if ($this->auto_trim) {
             $this->value = trim($this->value);
-            if ($this->value === '')
+            if ($this->value === '') {
                 $this->value = null;
+            }
         }
 
         $len = ($this->value === null) ? 0 : strlen($this->value);
 
         if (!$this->required && $this->value === null) {
             return;
-
         } elseif ($this->value === null) {
             $this->addMessage($this->getValidationMessage('required'));
-
         } elseif ($this->maxlength !== null && $len > $this->maxlength) {
             $message = $this->getValidationMessage('too-long');
-            $message->primary_content =
-                sprintf($message->primary_content, $this->maxlength);
-
+            $message->primary_content = sprintf(
+                $message->primary_content,
+                $this->maxlength
+            );
             $this->addMessage($message);
-
         } elseif ($this->minlength !== null && $len < $this->minlength) {
             $message = $this->getValidationMessage('too-short');
-            $message->primary_content =
-                sprintf($message->primary_content, $this->minlength);
-
+            $message->primary_content = sprintf(
+                $message->primary_content,
+                $this->minlength
+            );
             $this->addMessage($message);
         }
     }
@@ -247,10 +248,11 @@ class Entry extends InputControl implements Model\State
      */
     public function getFocusableHtmlId()
     {
-        if ($this->visible)
+        if ($this->visible) {
             return ($this->autocomplete) ? $this->id : $this->getNonce();
-        else
+        } else {
             return null;
+        }
     }
 
     // }}}
@@ -302,7 +304,7 @@ class Entry extends InputControl implements Model\State
 
         // event handlers to select on focus
         $tag->onmousedown = 'if(!this._focused){this._focus_click=true;}';
-        $tag->onmouseup = 'if(this._focus_click){'.
+        $tag->onmouseup = 'if(this._focus_click){' .
             'this.select();this._focus_click=false;}';
 
         $tag->onfocus = 'this._focused=true;' .
@@ -310,11 +312,13 @@ class Entry extends InputControl implements Model\State
 
         $tag->onblur = 'this._focused=false;this._focus_click=false;';
 
-        if ($this->read_only)
+        if ($this->read_only) {
             $tag->readonly = 'readonly';
+        }
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $tag->disabled = 'disabled';
+        }
 
         $value = $this->getDisplayValue($this->value);
 

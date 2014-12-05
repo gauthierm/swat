@@ -27,7 +27,7 @@ use Silverorange\Swat\Exception as SwatException;
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
 abstract class Recordset implements \Serializable, \ArrayAccess,
-    Model\TableModel, Recordable, Marshallable, Flushable
+ Model\TableModel, Recordable, Marshallable, Flushable
 {
     // {{{ protected properties
 
@@ -117,9 +117,10 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
      * @param array               $options optional. An array of options for
      *                                     this recordset.
      */
-    public function __construct(\MDB2_Result_Common $rs = null,
-        array $options = array())
-    {
+    public function __construct(
+        \MDB2_Result_Common $rs = null,
+        array $options = array()
+    ) {
         $this->init();
         $this->setOptions($options);
 
@@ -353,9 +354,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
      */
     public function offsetExists($offset)
     {
-        if ($this->index_field === null)
+        if ($this->index_field === null) {
             return isset($this->objects[$offset]);
-
+        }
         return isset($this->objects_by_index[$offset]);
     }
 
@@ -386,8 +387,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
             );
         }
 
-        if ($this->index_field === null)
+        if ($this->index_field === null) {
             return $this->objects[$offset];
+        }
 
         return $this->objects_by_index[$offset];
     }
@@ -479,8 +481,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         // objects. This step needs to happen after adding the new record
         // for the case where we replaced an object with itself.
         $keys = array_keys($this->removed_objects, $value, true);
-        foreach ($keys as $key)
+        foreach ($keys as $key) {
             unset($this->removed_objects[$key]);
+        }
     }
 
     // }}}
@@ -506,9 +509,10 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
                 unset($this->objects[$offset]);
 
                 // update iterator index
-                if ($this->current_index >= $offset && $this->current_index > 0)
+                if ($this->current_index >= $offset &&
+                    $this->current_index > 0) {
                     $this->current_index--;
-
+                }
             } else {
                 $object = $this->objects_by_index[$offset];
                 $this->removed_objects[] = $object;
@@ -520,8 +524,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
 
                     // update iterator index
                     if ($this->current_index >= $key &&
-                        $this->current_index > 0)
+                        $this->current_index > 0) {
                         $this->current_index--;
+                    }
                 }
             }
 
@@ -560,10 +565,11 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
     public function key()
     {
         if ($this->index_field !== null &&
-            isset($this->current()->{$this->index_field}))
+            isset($this->current()->{$this->index_field})) {
             $key = $this->current()->{$this->index_field};
-        else
+        } else {
             $key = $this->current_index;
+        }
 
         return $key;
     }
@@ -638,8 +644,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
             'options',
         );
 
-        foreach ($private_properties as $property)
+        foreach ($private_properties as $property) {
             $data[$property] = &$this->$property;
+        }
 
         return serialize($data);
     }
@@ -650,9 +657,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
     public function unserialize($data)
     {
         $data = unserialize($data);
-
-        foreach ($data as $property => $value)
+        foreach ($data as $property => $value) {
             $this->$property = $value;
+        }
     }
 
     // }}}
@@ -750,8 +757,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
                 );
             }
 
-            foreach ($this->objects as $object)
+            foreach ($this->objects as $object) {
                 $values[] = $object->getInternalValue($name);
+            }
         }
 
         return $values;
@@ -784,15 +792,20 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
      *
      * @return Recordset an instance of the wrapper, or null.
      */
-    public function loadAllSubDataObjects($name, \MDB2_Driver_Common $db, $sql,
-        $wrapper, $type = 'integer')
-    {
+    public function loadAllSubDataObjects(
+        $name,
+        \MDB2_Driver_Common $db,
+        $sql,
+        $wrapper,
+        $type = 'integer'
+    ) {
         $sub_data_objects = null;
 
         $values = $this->getInternalValues($name);
-        $values = array_filter($values,
-            create_function('$value', 'return $value !== null;'));
-
+        $values = array_filter(
+            $values,
+            create_function('$value', 'return $value !== null;')
+        );
         $values = array_unique($values);
 
         if (count($values) > 0) {
@@ -872,10 +885,15 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
      * @throws Exception\Exception if this recordset does not define an index
      *         field.
      */
-    public function loadAllSubRecordsets($name, $wrapper,
-        $table, $binding_field, $where = '', $order_by = '',
-        $fields = '*')
-    {
+    public function loadAllSubRecordsets(
+        $name,
+        $wrapper,
+        $table,
+        $binding_field,
+        $where = '',
+        $order_by = '',
+        $fields = '*'
+    ) {
         $this->checkDB();
 
         if ($this->index_field === null) {
@@ -910,10 +928,13 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         );
 
         // build SQL to select all records
-        $sql = sprintf('select %s from %s
-            where %s in (%s)',
+        $sql = sprintf(
+            'select %s from %s where %s in (%s)',
             $fields,
-            $table, $binding_field->name, $record_ids);
+            $table,
+            $binding_field->name,
+            $record_ids
+        );
 
         if ($where != '') {
             $sql .= ' and ' . $where;
@@ -956,9 +977,12 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
      * @throws Exception\Exception if this recordset does not define an index
      *         field.
      */
-    public function attachSubRecordset($name, $wrapper, $binding_field,
-        Recordset $recordset)
-    {
+    public function attachSubRecordset(
+        $name,
+        $wrapper,
+        $binding_field,
+        Recordset $recordset
+    ) {
         $this->checkDB();
 
         // assign empty recordsets for all records in this set
@@ -1044,10 +1068,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
     public function getFirst()
     {
         $first = null;
-
-        if (count($this->objects) > 0)
+        if (count($this->objects) > 0) {
             $first = reset($this->objects);
-
+        }
         return $first;
     }
 
@@ -1141,8 +1164,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
                 unset($this->objects[$key]);
 
                 // update iterator index
-                if ($this->current_index >= $key && $this->current_index > 0)
+                if ($this->current_index >= $key && $this->current_index > 0) {
                     $this->current_index--;
+                }
             }
 
             // reindex ordinal array of records
@@ -1201,9 +1225,11 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
         if ($this->index_field !== null) {
             $this->objects_by_index = array();
             $index_field = $this->index_field;
-            foreach ($this->objects as $object)
-                if (isset($object->$index_field))
+            foreach ($this->objects as $object) {
+                if (isset($object->$index_field)) {
                     $this->objects_by_index[$object->$index_field] = $object;
+                }
+            }
         }
     }
 
@@ -1352,10 +1378,9 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
             $this->objects = array();
             $this->objects_by_index = array();
             $this->removed_objects = array();
-
-            foreach($records as $record)
+            foreach ($records as $record) {
                 $this[] = $record;
-
+            }
             $this->reindex();
         }
 
@@ -1392,12 +1417,15 @@ abstract class Recordset implements \Serializable, \ArrayAccess,
      */
     public function isModified()
     {
-        if (count($this->removed_objects) > 0)
+        if (count($this->removed_objects) > 0) {
             return true;
+        }
 
-        foreach ($this->objects as $name => $object)
-            if ($object->isModified())
+        foreach ($this->objects as $name => $object) {
+            if ($object->isModified()) {
                 return true;
+            }
+        }
 
         return false;
     }

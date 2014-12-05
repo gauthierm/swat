@@ -72,9 +72,9 @@ class TableViewSpanningColumn extends TableViewColumn
         $offset = $this->offset;
 
         if ($this->title != '') {
-            if ($offset == 0)
+            if ($offset == 0) {
                 $offset = 1;
-
+            }
             $th_tag = new Html\Tag('th', $this->getThAttributes());
             $th_tag->colspan = $offset;
             $th_tag->setContent(

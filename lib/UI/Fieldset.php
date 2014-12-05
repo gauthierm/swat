@@ -104,8 +104,9 @@ class Fieldset extends DisplayableContainer implements Titleable
 
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -116,10 +117,9 @@ class Fieldset extends DisplayableContainer implements Titleable
 
         if ($this->title !== null) {
             $legend_tag = new Html\Tag('legend');
-
-            if ($this->access_key != '')
+            if ($this->access_key != '') {
                 $legend_tag->accesskey = $this->access_key;
-
+            }
             $legend_tag->setContent($this->title, $this->title_content_type);
             $legend_tag->display();
         }
@@ -141,8 +141,11 @@ class Fieldset extends DisplayableContainer implements Titleable
      */
     protected function getInlineJavaScript()
     {
-        return sprintf("var %s_obj = new SwatFieldset('%s');",
-            $this->id, $this->id);
+        return sprintf(
+            "var %s_obj = new SwatFieldset('%s');",
+            $this->id,
+            $this->id
+        );
     }
 
     // }}}

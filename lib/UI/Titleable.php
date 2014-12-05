@@ -2,15 +2,17 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
+namespace Silverorange\Swat\UI;
+
 /**
  * Objects that are titleable have a title that may be gotten
  *
  * @package   Swat
  * @copyright 2006-2010 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       SwatTitleable::getTitle()
+ * @see       Titleable::getTitle()
  */
-interface SwatTitleable
+interface Titleable
 {
     // {{{ public function getTitle()
 

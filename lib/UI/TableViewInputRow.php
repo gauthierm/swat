@@ -140,14 +140,16 @@ class TableViewInputRow extends TableViewRow
 
         $this->createEmbeddedWidgets();
         $this->enter_another_link->title = $this->enter_text;
-        $this->enter_another_link->link = sprintf("javascript:%s_obj.addRow();",
-            $this->getId());
-
+        $this->enter_another_link->link = sprintf(
+            "javascript:%s_obj.addRow();",
+            $this->getId()
+        );
         $this->enter_another_link->init();
 
         // init input cells
-        foreach ($this->input_cells as $cell)
+        foreach ($this->input_cells as $cell) {
             $cell->init();
+        }
 
         /*
          * Initialize replicators
@@ -161,13 +163,15 @@ class TableViewInputRow extends TableViewRow
             ? $data[$this->getId() . '_replicators']
             : null;
 
-        if ($replicator_field === null || $replicator_field == '')
+        if ($replicator_field === null || $replicator_field == '') {
             // use generated ids
-            for ($i = 0; $i < $this->number; $i++)
+            for ($i = 0; $i < $this->number; $i++) {
                 $this->replicators[] = $i;
-        else
+            }
+        } else {
             // retrieve ids from form
             $this->replicators = explode(',', $replicator_field);
+        }
     }
 
     // }}}
@@ -184,9 +188,11 @@ class TableViewInputRow extends TableViewRow
         parent::process();
 
         // process input cells
-        foreach ($this->replicators as $replicator_id)
-            foreach ($this->input_cells as $cell)
+        foreach ($this->replicators as $replicator_id) {
+            foreach ($this->input_cells as $cell) {
                 $cell->process($replicator_id);
+            }
+        }
     }
 
     // }}}
@@ -225,18 +231,21 @@ class TableViewInputRow extends TableViewRow
      */
     public function display()
     {
-        if (!$this->isVisible())
+        if (!$this->isVisible()) {
             return;
+        }
 
         parent::display();
 
         if (count($this->replicators) < $this->number) {
             $diff = $this->number - count($this->replicators);
-            $next_replicator = (count($this->replicators) == 0) ? 0 :
-                end($this->replicators) + 1;
+            $next_replicator = (count($this->replicators) === 0)
+                ? 0
+                : end($this->replicators) + 1;
 
-            for ($i = $next_replicator; $i < $diff + $next_replicator; $i++)
+            for ($i = $next_replicator; $i < $diff + $next_replicator; $i++) {
                 $this->replicators[] = $i;
+            }
         }
 
         // add replicator ids to the form as a hidden field
@@ -296,9 +305,12 @@ class TableViewInputRow extends TableViewRow
      */
     public function getWidget($column_id, $row_identifier, $widget_id = null)
     {
-        if (isset($this->input_cells[$column_id]))
-            return $this->input_cells[$column_id]->getWidget($row_identifier,
-                $widget_id);
+        if (isset($this->input_cells[$column_id])) {
+            return $this->input_cells[$column_id]->getWidget(
+                $row_identifier,
+                $widget_id
+            );
+        }
 
         throw new Exception\Exception(
             'No input cell for this row exists for the given column ' .
@@ -333,8 +345,9 @@ class TableViewInputRow extends TableViewRow
      */
     public function getPrototypeWidget($column_id)
     {
-        if (isset($this->input_cells[$column_id]))
+        if (isset($this->input_cells[$column_id])) {
             return $this->input_cells[$column_id]->getPrototypeWidget();
+        }
 
         throw new Exception\Exception(
             'The specified column does not have an input cell bound to this ' .
@@ -354,11 +367,14 @@ class TableViewInputRow extends TableViewRow
      */
     public function removeReplicatedRow($replicator_id)
     {
-        $this->replicators = array_diff($this->replicators,
-            array($replicator_id));
+        $this->replicators = array_diff(
+            $this->replicators,
+            array($replicator_id)
+        );
 
-        foreach ($this->input_cells as $cell)
+        foreach ($this->input_cells as $cell) {
             $cell->unsetWidget($replicator_id);
+        }
     }
 
     // }}}
@@ -487,8 +503,12 @@ class TableViewInputRow extends TableViewRow
         // encode newlines for JavaScript string
         $row_string = str_replace("\n", '\n', $row_string);
 
-        return sprintf("var %s_obj = new SwatTableViewInputRow('%s', '%s');",
-            $this->getId(), $this->getId(), trim($row_string));
+        return sprintf(
+            "var %s_obj = new SwatTableViewInputRow('%s', '%s');",
+            $this->getId(),
+            $this->getId(),
+            trim($row_string)
+        );
     }
 
     // }}}
@@ -529,7 +549,8 @@ class TableViewInputRow extends TableViewRow
 
         $this->createEmbeddedWidgets();
         $set->addEntrySet(
-            $this->enter_another_link->getAvailableHtmlHeadEntrySet());
+            $this->enter_another_link->getAvailableHtmlHeadEntrySet()
+        );
 
         return $set;
     }
@@ -592,23 +613,25 @@ class TableViewInputRow extends TableViewRow
 
                 if (isset($this->input_cells[$column->id])) {
                     $widget = $this->input_cells[$column->id]->getWidget(
-                        $replicator_id);
-
+                        $replicator_id
+                    );
                     if ($this->show_row_messages &&
                         count($widget->getMessages()) > 0) {
-                        $messages = array_merge($messages,
-                            $widget->getMessages());
-
+                        $messages = array_merge(
+                            $messages,
+                            $widget->getMessages()
+                        );
                         $td_tag->class .= ' swat-error';
                     }
                 }
 
                 $td_tag->open();
 
-                if (isset($this->input_cells[$column->id]))
+                if (isset($this->input_cells[$column->id])) {
                     $this->input_cells[$column->id]->display($replicator_id);
-                else
+                } else {
                     echo '&nbsp;';
+                }
 
                 $td_tag->close();
             }
@@ -629,9 +652,10 @@ class TableViewInputRow extends TableViewRow
 
                 $li_tag = new Html\Tag('li');
                 foreach ($messages as &$message) {
-                    $li_tag->setContent($message->primary_content,
-                        $message->content_type);
-
+                    $li_tag->setContent(
+                        $message->primary_content,
+                        $message->content_type
+                    );
                     $li_tag->class = $message->getCSSClassString();
                     $li_tag->display();
                 }

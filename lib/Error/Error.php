@@ -184,14 +184,15 @@ class Error
      */
     public function process()
     {
-        if (ini_get('display_errors'))
+        if (ini_get('display_errors')) {
             $this->display();
-
-        if (ini_get('log_errors'))
+        }
+        if (ini_get('log_errors')) {
             $this->log();
-
-        if ($this->severity & self::$fatal_severity)
+        }
+        if ($this->severity & self::$fatal_severity) {
             exit(1);
+        }
     }
 
     // }}}
@@ -244,10 +245,11 @@ class Error
     public function display()
     {
         if (self::$displayer === null) {
-            if (isset($_SERVER['REQUEST_URI']))
+            if (isset($_SERVER['REQUEST_URI'])) {
                 echo $this->toXHTML();
-            else
+            } else {
                 echo $this->toString();
+            }
         } else {
             $displayer = self::$displayer;
             $displayer->display($this);
@@ -268,10 +270,12 @@ class Error
     {
         ob_start();
 
-        printf("%s error in file '%s' line %s",
+        printf(
+            "%s error in file '%s' line %s",
             $this->getSeverityString(),
             $this->file,
-            $this->line);
+            $this->line
+        );
 
         return ob_get_clean();
     }
@@ -303,20 +307,27 @@ class Error
         $count = count($this->backtrace);
 
         foreach ($this->backtrace as $entry) {
-            $class = array_key_exists('class', $entry) ?
-                $entry['class'] : null;
+            $class = array_key_exists('class', $entry)
+                ? $entry['class']
+                : null;
 
-            $function = array_key_exists('function', $entry) ?
-                $entry['function'] : null;
+            $function = array_key_exists('function', $entry)
+                ? $entry['function']
+                : null;
 
 
-            if (array_key_exists('args', $entry))
+            if (array_key_exists('args', $entry)) {
                 $arguments = $this->getArguments(
-                    $entry['args'], $function, $class);
-            else
+                    $entry['args'],
+                    $function,
+                    $class
+                );
+            } else {
                 $arguments = '';
+            }
 
-            printf("%s. In file '%s' on line %s.\n%sMethod: %s%s%s(%s)\n",
+            printf(
+                "%s. In file '%s' on line %s.\n%sMethod: %s%s%s(%s)\n",
                 str_pad(--$count, 6, ' ', \STR_PAD_LEFT),
                 array_key_exists('file', $entry) ? $entry['file'] : 'unknown',
                 array_key_exists('line', $entry) ? $entry['line'] : 'unknown',
@@ -324,7 +335,8 @@ class Error
                 ($class === null) ? '' : $class,
                 array_key_exists('type', $entry) ? $entry['type'] : '',
                 ($function === null) ? '' : $function,
-                $arguments);
+                $arguments
+            );
         }
 
         echo "\n";
@@ -366,19 +378,28 @@ class Error
         $count = count($this->backtrace);
 
         foreach ($this->backtrace as $entry) {
-            $class = array_key_exists('class', $entry) ?
-                $entry['class'] : null;
+            $class = array_key_exists('class', $entry)
+                ? $entry['class']
+                : null;
 
-            $function = array_key_exists('function', $entry) ?
-                $entry['function'] : null;
+            $function = array_key_exists('function', $entry)
+                ? $entry['function']
+                : null;
 
 
-            if (array_key_exists('args', $entry))
-                $arguments = htmlspecialchars($this->getArguments(
-                    $entry['args'], $function, $class),
-                    null, 'UTF-8');
-            else
+            if (array_key_exists('args', $entry)) {
+                $arguments = htmlspecialchars(
+                    $this->getArguments(
+                        $entry['args'],
+                        $function,
+                        $class
+                    ),
+                    null,
+                    'UTF-8'
+                );
+            } else {
                 $arguments = '';
+            }
 
             printf(
                 '<dt>%s.</dt><dd>In file <strong>%s</strong> ' .
@@ -614,9 +635,9 @@ class Error
         );
 
         $out = null;
-        if (isset($error_types[$this->severity]))
+        if (isset($error_types[$this->severity])) {
             $out = $error_types[$this->severity];
-
+        }
         return $out;
     }
 
@@ -642,9 +663,10 @@ class Error
      * @return boolean true if the parameter is sensitive and false if the
      *                 method is not sensitive.
      */
-    protected function isSensitiveParameter(\ReflectionFunctionAbstract $method,
-        $name)
-    {
+    protected function isSensitiveParameter(
+        \ReflectionFunctionAbstract $method,
+        $name
+    ) {
         $sensitive = false;
 
         $exp =

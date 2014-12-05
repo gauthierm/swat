@@ -83,8 +83,9 @@ class GroupedMenu extends AbstractMenu implements UIParent
     public function init()
     {
         parent::init();
-        foreach ($this->groups as $group)
+        foreach ($this->groups as $group) {
             $group->init();
+        }
     }
 
     // }}}
@@ -95,8 +96,9 @@ class GroupedMenu extends AbstractMenu implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -147,17 +149,19 @@ class GroupedMenu extends AbstractMenu implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->groups as $group) {
             if ($class_name === null || $group instanceof $class_name) {
-                if ($group->id === null)
+                if ($group->id === null) {
                     $out[] = $group;
-                else
+                } else {
                     $out[$group->id] = $group;
+                }
             }
 
             if ($group instanceof UIParent) {
@@ -183,8 +187,9 @@ class GroupedMenu extends AbstractMenu implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -196,8 +201,9 @@ class GroupedMenu extends AbstractMenu implements UIParent
 
             if ($group instanceof UIParent) {
                 $out = $group->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 

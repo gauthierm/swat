@@ -58,8 +58,9 @@ class Flydown extends OptionControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -77,24 +78,28 @@ class Flydown extends OptionControl implements Model\State
         $options = $this->getOptions();
         $selected = false;
 
-        if ($this->show_blank)
+        if ($this->show_blank) {
             $options = array_merge(array($this->getBlankOption()), $options);
+        }
 
         // only show a select if there is more than one option
         if (count($options) > 1) {
-            $flydown_value = ($this->serialize_values) ?
-                $this->value : (string)$this->value;
+            $flydown_value = ($this->serialize_values)
+                ? $this->value
+                : (string)$this->value;
 
-            if ($this->serialize_values)
+            if ($this->serialize_values) {
                 $salt = $this->getForm()->getSalt();
+            }
 
             $select_tag = new Html\Tag('select');
             $select_tag->name = $this->id;
             $select_tag->id = $this->id;
             $select_tag->class = $this->getCSSClassString();
 
-            if (!$this->isSensitive())
+            if (!$this->isSensitive()) {
                 $select_tag->disabled = 'disabled';
+            }
 
             $option_tag = new Html\Tag('option');
 
@@ -122,7 +127,9 @@ class Flydown extends OptionControl implements Model\State
 
                     // add option-specific CSS classes from option metadata
                     $classes = $this->getOptionMetadata(
-                        $flydown_option, 'classes');
+                        $flydown_option,
+                        'classes'
+                    );
 
                     if (is_array($classes)) {
                         $option_tag->class = implode(' ', $classes);
@@ -131,8 +138,9 @@ class Flydown extends OptionControl implements Model\State
                     }
                 }
 
-                $value = ($this->serialize_values) ?
-                    $flydown_option->value : (string)$flydown_option->value;
+                $value = ($this->serialize_values)
+                    ? $flydown_option->value
+                    : (string)$flydown_option->value;
 
                 if ($flydown_value === $value && !$selected &&
                     !($flydown_option instanceof Model\FlydownDivider)) {
@@ -143,8 +151,10 @@ class Flydown extends OptionControl implements Model\State
                     $option_tag->removeAttribute('selected');
                 }
 
-                $option_tag->setContent($flydown_option->title,
-                    $flydown_option->content_type);
+                $option_tag->setContent(
+                    $flydown_option->title,
+                    $flydown_option->content_type
+                );
 
                 $option_tag->display();
             }
@@ -173,8 +183,9 @@ class Flydown extends OptionControl implements Model\State
     {
         parent::process();
 
-        if (!$this->processValue())
+        if (!$this->processValue()) {
             return;
+        }
 
         if ($this->required && $this->isSensitive()) {
             // When values are not serialized, an empty string is treated as
@@ -274,11 +285,12 @@ class Flydown extends OptionControl implements Model\State
 
         if ($this->visible) {
             $count = count($this->getOptions());
-            if ($this->show_blank)
+            if ($this->show_blank) {
                 $count++;
-
-            if ($count > 1)
+            }
+            if ($count > 1) {
                 $focusable_id = $this->id;
+            }
         }
 
         return $focusable_id;
@@ -297,8 +309,9 @@ class Flydown extends OptionControl implements Model\State
         $form = $this->getForm();
 
         $data = &$form->getFormData();
-        if (!isset($data[$this->id]))
+        if (!isset($data[$this->id])) {
             return false;
+        }
 
         if ($this->serialize_values) {
             $salt = $form->getSalt();

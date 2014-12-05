@@ -204,11 +204,12 @@ class TableViewGroup extends TableViewColumn
     {
         $reset = false;
         foreach ($this->parent->getGroups() as $group) {
-            if ($reset)
+            if ($reset) {
                 $group->reset();
-
-            if ($group === $this)
+            }
+            if ($group === $this) {
                 $reset = true;
+            }
         }
     }
 

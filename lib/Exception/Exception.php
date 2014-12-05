@@ -162,14 +162,15 @@ class Exception extends \Exception
     {
         $this->handled = $handled;
 
-        if (ini_get('display_errors'))
+        if (ini_get('display_errors')) {
             $this->display();
-
-        if (ini_get('log_errors'))
+        }
+        if (ini_get('log_errors')) {
             $this->log();
-
-        if ($exit)
+        }
+        if ($exit) {
             exit(1);
+        }
     }
 
     // }}}
@@ -258,13 +259,16 @@ class Exception extends \Exception
     {
         ob_start();
 
-        printf("%s in file '%s' line %s",
+        printf(
+            "%s in file '%s' line %s",
             $this->class,
             $this->getFile(),
-            $this->getLine());
+            $this->getLine()
+        );
 
-        if ($this->wasHandled())
+        if ($this->wasHandled()) {
             echo ' Exception was handled';
+        }
 
         return ob_get_clean();
     }
@@ -298,19 +302,26 @@ class Exception extends \Exception
         $count = count($this->backtrace);
 
         foreach ($this->backtrace as $entry) {
-            $class = array_key_exists('class', $entry) ?
-                $entry['class'] : null;
+            $class = array_key_exists('class', $entry)
+                ? $entry['class']
+                : null;
 
-            $function = array_key_exists('function', $entry) ?
-                $entry['function'] : null;
+            $function = array_key_exists('function', $entry)
+                ? $entry['function']
+                : null;
 
-            if (array_key_exists('args', $entry))
+            if (array_key_exists('args', $entry)) {
                 $arguments = $this->getArguments(
-                    $entry['args'], $function, $class);
-            else
+                    $entry['args'],
+                    $function,
+                    $class
+                );
+            } else {
                 $arguments = '';
+            }
 
-            printf("%s. In file '%s' on line %s.\n%sMethod: %s%s%s(%s)\n",
+            printf(
+                "%s. In file '%s' on line %s.\n%sMethod: %s%s%s(%s)\n",
                 str_pad(--$count, 6, ' ', \STR_PAD_LEFT),
                 array_key_exists('file', $entry) ? $entry['file'] : 'unknown',
                 array_key_exists('line', $entry) ? $entry['line'] : 'unknown',
@@ -318,7 +329,8 @@ class Exception extends \Exception
                 ($class === null) ? '' : $class,
                 array_key_exists('type', $entry) ? $entry['type'] : '',
                 ($function === null) ? '' : $function,
-                $arguments);
+                $arguments
+            );
         }
 
         echo "\n";
@@ -363,13 +375,15 @@ class Exception extends \Exception
         $count = count($this->backtrace);
 
         foreach ($this->backtrace as $entry) {
-            $class = array_key_exists('class', $entry) ?
-                $entry['class'] : null;
+            $class = array_key_exists('class', $entry)
+                ? $entry['class']
+                : null;
 
-            $function = array_key_exists('function', $entry) ?
-                $entry['function'] : null;
+            $function = array_key_exists('function', $entry)
+                ? $entry['function']
+                : null;
 
-            if (array_key_exists('args', $entry))
+            if (array_key_exists('args', $entry)) {
                 $arguments = htmlspecialchars(
                     $this->getArguments(
                         $entry['args'],
@@ -379,8 +393,9 @@ class Exception extends \Exception
                     null,
                     'UTF-8'
                 );
-            else
+            } else {
                 $arguments = '';
+            }
 
             printf(
                 '<dt>%s.</dt><dd>In file <strong>%s</strong> ' .
@@ -664,9 +679,10 @@ class Exception extends \Exception
      * @return boolean true if the parameter is sensitive and false if the
      *                 method is not sensitive.
      */
-    protected function isSensitiveParameter(\ReflectionFunctionAbstract $method,
-        $name)
-    {
+    protected function isSensitiveParameter(
+        \ReflectionFunctionAbstract $method,
+        $name
+    ) {
         $sensitive = false;
 
         $exp =

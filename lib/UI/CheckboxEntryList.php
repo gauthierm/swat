@@ -100,8 +100,9 @@ class CheckboxEntryList extends CheckboxList
     {
         $options = $this->getOptions();
 
-        if (!$this->visible || count($options) == 0)
+        if (!$this->visible || count($options) === 0) {
             return;
+        }
 
         Widget::display();
 
@@ -144,8 +145,9 @@ class CheckboxEntryList extends CheckboxList
             $input_tag->removeAttribute('checked');
             $input_tag->name = $this->id . '[' . $key . ']';
 
-            if (in_array($option->value, $this->values))
+            if (in_array($option->value, $this->values)) {
                 $input_tag->checked = 'checked';
+            }
 
             $input_tag->id = $this->id . '_' . $checkbox_id;
             echo '<span class="swat-checkbox-wrapper">';
@@ -192,8 +194,9 @@ class CheckboxEntryList extends CheckboxList
 
         parent::process();
 
-        foreach ($this->values as $option_value)
+        foreach ($this->values as $option_value) {
             $this->getEntryWidget($option_value)->process();
+        }
     }
 
     // }}}
@@ -287,8 +290,9 @@ class CheckboxEntryList extends CheckboxList
     {
         $options = $this->getOptions();
         $option_values = array();
-        foreach ($options as $option)
+        foreach ($options as $option) {
             $option_values[] = $option->value;
+        }
 
         if (!in_array($option_value, $option_values)) {
             throw new Exception\InvalidPropertyException(
@@ -324,8 +328,9 @@ class CheckboxEntryList extends CheckboxList
      */
     public function setEntryValuesByArray(array $entry_values)
     {
-        foreach ($entry_values as $option_value => $entry_value)
+        foreach ($entry_values as $option_value => $entry_value) {
             $this->setEntryValue($option_value, $entry_value);
+        }
     }
 
     // }}}
@@ -340,7 +345,9 @@ class CheckboxEntryList extends CheckboxList
     {
         $javascript = sprintf(
             "var %s_obj = new SwatCheckboxEntryList('%s');",
-            $this->id, $this->id);
+            $this->id,
+            $this->id
+        );
 
         // set check-all controller if it is visible
         if ($this->show_check_all && count($this->getOptions()) > 1) {

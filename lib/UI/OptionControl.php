@@ -170,14 +170,18 @@ abstract class OptionControl extends InputControl
      * @see OptionControl::addOption()
      * @see OptionControl::getOptionMetadata()
      */
-    public function addOptionMetadata(Model\Option $option, $metadata,
-        $value = null)
-    {
+    public function addOptionMetadata(
+        Model\Option $option,
+        $metadata,
+        $value = null
+    ) {
         $key = $this->getOptionMetadataKey($option);
 
         if (is_array($metadata)) {
             $this->option_metadata[$key] = array_merge(
-                $this->option_metadata[$key], $metadata);
+                $this->option_metadata[$key],
+                $metadata
+            );
         } else {
             $this->option_metadata[$key][$metadata] = $value;
         }
@@ -303,11 +307,13 @@ abstract class OptionControl extends InputControl
      *                             titles. If not specified, defaults to
      *                             'text/plain'.
      */
-    public function addOptionsByArray(array $options,
-        $content_type = 'text/plain')
-    {
-        foreach ($options as $value => $title)
+    public function addOptionsByArray(
+        array $options,
+        $content_type = 'text/plain'
+    ) {
+        foreach ($options as $value => $title) {
             $this->addOption($value, $title, $content_type);
+        }
     }
 
     // }}}
@@ -325,11 +331,11 @@ abstract class OptionControl extends InputControl
     public function getOptionsByValue($value)
     {
         $options = array();
-
-        foreach ($this->options as $option)
-            if ($option->value === $value)
+        foreach ($this->options as $option) {
+            if ($option->value === $value) {
                 $options[] = $option;
-
+            }
+        }
         return $options;
     }
 
@@ -363,10 +369,9 @@ abstract class OptionControl extends InputControl
     protected function getOption($index)
     {
         $option = null;
-
-        if (array_key_exists($index, $this->options))
+        if (array_key_exists($index, $this->options)) {
             $option = $this->options[$index];
-
+        }
         return $option;
     }
 

@@ -33,9 +33,9 @@ abstract class Control extends Widget
     {
         if ($this->parent instanceof SwatTitleable) {
             $title = $this->parent->getTitle();
-            if ($title === null)
+            if ($title === null) {
                 $field_title = '';
-            else
+            } else {
                 if ($this->parent->getTitleContentType() === 'text/xml') {
                     $field_title =
                         '<strong>' . $this->parent->getTitle() . '</strong>';
@@ -45,6 +45,7 @@ abstract class Control extends Widget
                         Util\String::minimizeEntities($this->parent->getTitle()) .
                         '</strong>';
                 }
+            }
         } else {
             $field_title = '';
         }

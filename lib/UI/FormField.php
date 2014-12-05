@@ -406,8 +406,9 @@ class FormField extends DisplayableContainer implements Titleable
 
     protected function displayMessages()
     {
-        if (!$this->display_messages || !$this->hasMessage())
+        if (!$this->display_messages || !$this->hasMessage()) {
             return;
+        }
 
         $messages = $this->getMessages();
 
@@ -419,13 +420,16 @@ class FormField extends DisplayableContainer implements Titleable
 
         foreach ($messages as $message) {
             $message_li->class = $message->getCSSClassString();
-            $message_li->setContent($message->primary_content,
-                $message->content_type);
-
+            $message_li->setContent(
+                $message->primary_content,
+                $message->content_type
+            );
             if ($message->secondary_content !== null) {
                 $secondary_span = new Html\Tag('span');
-                $secondary_span->setContent($message->secondary_content,
-                    $message->content_type);
+                $secondary_span->setContent(
+                    $message->secondary_content,
+                    $message->content_type
+                );
 
                 $message_li->open();
                 $message_li->displayContent();
@@ -457,11 +461,12 @@ class FormField extends DisplayableContainer implements Titleable
         $control = $this->getFirstDescendant($control_class);
         if ($control !== null) {
             $note = $control->getNote();
-            if ($note !== null)
+            if ($note !== null) {
                 $notes[] = $note;
+            }
         }
 
-        if (count($notes) == 1) {
+        if (count($notes) === 1) {
             $note = reset($notes);
             $note_div = new Html\Tag('div');
             $note_div->class = 'swat-note';
@@ -474,9 +479,10 @@ class FormField extends DisplayableContainer implements Titleable
 
             $li_tag = new Html\Tag('li');
             foreach ($notes as $note) {
-                $li_tag->setContent($note->primary_content,
-                    $note->content_type);
-
+                $li_tag->setContent(
+                    $note->primary_content,
+                    $note->content_type
+                );
                 $li_tag->display();
             }
 
@@ -497,14 +503,17 @@ class FormField extends DisplayableContainer implements Titleable
     {
         $classes = array('swat-form-field');
 
-        if ($this->widget_class !== null)
+        if ($this->widget_class !== null) {
             $classes[] = $this->widget_class;
+        }
 
-        if ($this->display_messages && $this->hasMessage())
+        if ($this->display_messages && $this->hasMessage()) {
             $classes[] = 'swat-form-field-with-messages';
+        }
 
-        if ($this->required)
+        if ($this->required) {
             $classes[] = 'swat-required';
+        }
 
         $classes = array_merge($classes, parent::getCSSClassNames());
         return $classes;
@@ -525,11 +534,17 @@ class FormField extends DisplayableContainer implements Titleable
         $label_tag = new Html\Tag('label');
 
         if ($this->title !== null) {
-            if ($this->show_colon)
-                $label_tag->setContent(sprintf(L::_('%s: '), $this->title),
-                    $this->title_content_type);
-            else
+            if ($this->show_colon) {
+                $label_tag->setContent(
+                    sprintf(
+                        L::_('%s: '),
+                        $this->title
+                    ),
+                    $this->title_content_type
+                );
+            } else {
                 $label_tag->setContent($this->title, $this->title_content_type);
+            }
         }
 
         $label_tag->for = $this->getFocusableHtmlId();

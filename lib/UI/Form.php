@@ -319,8 +319,9 @@ class Form extends DisplayableContainer
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -336,7 +337,8 @@ class Form extends DisplayableContainer
         if ($this->connection_close_uri != '') {
             $yui = new Html\YUI(array('event'));
             $this->html_head_entry_set->addEntrySet(
-                $yui->getHtmlHeadEntrySet());
+                $yui->getHtmlHeadEntrySet()
+            );
         }
 
         Util\JavaScript::displayInline($this->getInlineJavaScript());
@@ -365,9 +367,11 @@ class Form extends DisplayableContainer
             $this->processEncoding();
             $this->processHiddenFields();
 
-            foreach ($this->children as $child)
-                if ($child !== null && !$child->isProcessed())
+            foreach ($this->children as $child) {
+                if ($child !== null && !$child->isProcessed()) {
                     $child->process();
+                }
+            }
         }
     }
 
@@ -440,7 +444,8 @@ class Form extends DisplayableContainer
             $serialized_field_name = self::SERIALIZED_PREFIX . $name;
             if (isset($raw_data[$serialized_field_name])) {
                 $data = $this->unserializeHiddenField(
-                    $raw_data[$serialized_field_name]);
+                    $raw_data[$serialized_field_name]
+                );
             }
         }
 
@@ -552,8 +557,9 @@ class Form extends DisplayableContainer
          * If this form was not submitted, consider it authenticated. Processing
          * should be safe on forms that were not submitted.
          */
-        if (!$this->isSubmitted())
+        if (!$this->isSubmitted()) {
             return true;
+        }
 
         $raw_data = $this->getFormData();
 
@@ -756,7 +762,8 @@ class Form extends DisplayableContainer
             $serialized_field_name = self::SERIALIZED_PREFIX . $name;
             if (isset($raw_data[$serialized_field_name])) {
                 $this->hidden_fields[$name] = $this->unserializeHiddenField(
-                    $raw_data[$serialized_field_name]);
+                    $raw_data[$serialized_field_name]
+                );
             }
         }
     }
@@ -932,8 +939,11 @@ class Form extends DisplayableContainer
             // to be returned exactly as it was specified. This  necessitates
             // double-escaping to ensure any entities that were specified in
             // the hidden field value are returned correctly.
-            $escaped_serialized_data = htmlspecialchars($serialized_data,
-                ENT_COMPAT, 'UTF-8');
+            $escaped_serialized_data = htmlspecialchars(
+                $serialized_data,
+                ENT_COMPAT,
+                'UTF-8'
+            );
 
             $input_tag->name = self::SERIALIZED_PREFIX . $name;
             $input_tag->value = $escaped_serialized_data;
@@ -1025,11 +1035,13 @@ class Form extends DisplayableContainer
      */
     protected function getInlineJavaScript()
     {
-        $javascript = sprintf("var %s_obj = new %s(%s, %s);",
+        $javascript = sprintf(
+            "var %s_obj = new %s(%s, %s);",
             $this->id,
             $this->getJavaScriptClass(),
             Util\JavaScript::quoteString($this->id),
-            Util\JavaScript::quoteString($this->connection_close_uri));
+            Util\JavaScript::quoteString($this->connection_close_uri)
+        );
 
         if ($this->autofocus) {
             $focusable = true;
@@ -1040,15 +1052,17 @@ class Form extends DisplayableContainer
                     $focusable = false;
                 } else {
                     $focus_id = $control->getFocusableHtmlId();
-                    if ($focus_id === null)
+                    if ($focus_id === null) {
                         $focusable = false;
+                    }
                 }
             } else {
                 $focus_id =
                     $this->default_focused_control->getFocusableHtmlId();
 
-                if ($focus_id === null)
+                if ($focus_id === null) {
                     $focusable = false;
+                }
             }
 
             if ($focusable) {
@@ -1127,7 +1141,7 @@ class Form extends DisplayableContainer
         $value = str_replace('\x00', "\x00", $value);
         $value = str_replace('\x0a', "\x0a", $value);
         $value = str_replace('\x0d', "\x0d", $value);
-        $value = str_replace('\\\\', '\\',   $value);
+        $value = str_replace('\\\\', '\\', $value);
 
         $value = Util\String::signedUnserialize($value, $this->salt);
 

@@ -55,8 +55,9 @@ class RatingCellRenderer extends NumericCellRenderer
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         CellRenderer::render();
 

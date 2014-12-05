@@ -22,8 +22,9 @@ class DisplayableContainer extends Container
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 

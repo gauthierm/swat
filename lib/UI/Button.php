@@ -147,10 +147,11 @@ class Button extends InputControl
     {
         parent::init();
 
-        if ($this->stock_id === null)
+        if ($this->stock_id === null) {
             $this->setFromStock('submit', false);
-        else
+        } else {
             $this->setFromStock($this->stock_id, false);
+        }
     }
 
     // }}}
@@ -163,8 +164,9 @@ class Button extends InputControl
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -275,8 +277,9 @@ class Button extends InputControl
                 );
         }
 
-        if ($overwrite_properties || ($this->title === null))
+        if ($overwrite_properties || ($this->title === null)) {
             $this->title = $title;
+        }
 
         $this->stock_class = $class;
     }
@@ -331,11 +334,13 @@ class Button extends InputControl
             $form->getFirstDescendant('\Silverorange\Swat\UI\Button') === $this
         );
 
-        if ($primary)
+        if ($primary) {
             $classes[] = 'swat-primary';
+        }
 
-        if ($this->stock_class !== null)
+        if ($this->stock_class !== null) {
             $classes[] = $this->stock_class;
+        }
 
         $classes = array_merge($classes, parent::getCSSClassNames());
 
@@ -369,14 +374,17 @@ class Button extends InputControl
      */
     protected function getInlineJavaScript()
     {
-        $show_processing_throbber = ($this->show_processing_throbber) ?
-            'true' : 'false';
+        $show_processing_throbber = ($this->show_processing_throbber)
+            ? 'true'
+            : 'false';
 
-        $javascript = sprintf("var %s_obj = new %s('%s', %s);",
+        $javascript = sprintf(
+            "var %s_obj = new %s('%s', %s);",
             $this->id,
             $this->getJavaScriptClass(),
             $this->id,
-            $show_processing_throbber);
+            $show_processing_throbber
+        );
 
         if ($this->show_processing_throbber) {
             $javascript .= sprintf(

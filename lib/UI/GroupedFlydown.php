@@ -51,8 +51,9 @@ class GroupedFlydown extends TreeFlydown
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -69,17 +70,19 @@ class GroupedFlydown extends TreeFlydown
             $select_tag->id = $this->id;
             $select_tag->class = $this->getCSSClassString();
 
-            if (!$this->isSensitive())
+            if (!$this->isSensitive()) {
                 $select_tag->disabled = 'disabled';
+            }
 
             $select_tag->open();
 
-            foreach ($display_tree->getChildren() as $child)
+            foreach ($display_tree->getChildren() as $child) {
                 $this->displayNode($child, 1);
+            }
 
             $select_tag->close();
 
-        } elseif ($count == 1) {
+        } elseif ($count === 1) {
             // get first and only element
             $option = reset($display_tree->getChildren())->getOption();
             $this->displaySingle($option);
@@ -106,8 +109,9 @@ class GroupedFlydown extends TreeFlydown
             );
         }
 
-        foreach ($tree->getChildren() as $child)
+        foreach ($tree->getChildren() as $child) {
             $this->checkTree($child, $level + 1);
+        }
     }
 
     // }}}
@@ -127,9 +131,11 @@ class GroupedFlydown extends TreeFlydown
      * @param boolean               $selected whether or not an element has
      *                                        been selected yet.
      */
-    protected function displayNode(Model\TreeFlydownNode $node, $level = 0,
-        $selected = false)
-    {
+    protected function displayNode(
+        Model\TreeFlydownNode $node,
+        $level = 0,
+        $selected = false
+    ) {
         $children = $node->getChildren();
         $flydown_option = $node->getOption();
 
@@ -140,9 +146,9 @@ class GroupedFlydown extends TreeFlydown
             $optgroup_tag = new Html\Tag('optgroup');
             $optgroup_tag->label = $flydown_option->title;
             $optgroup_tag->open();
-            foreach($node->getChildren() as $child_node)
+            foreach ($node->getChildren() as $child_node) {
                 $this->displayNode($child_node, $level + 1, $selected);
-
+            }
             $optgroup_tag->close();
         } else {
             $option_tag = new Html\Tag('option');
@@ -178,8 +184,9 @@ class GroupedFlydown extends TreeFlydown
             $option_tag->setContent($flydown_option->title);
             $option_tag->display();
 
-            foreach($children as $child_node)
+            foreach ($children as $child_node) {
                 $this->displayNode($child_node, $level + 1, $selected);
+            }
         }
     }
 
@@ -196,16 +203,19 @@ class GroupedFlydown extends TreeFlydown
      * @param array                 $path   the current path of the display
      *                                      tree.
      */
-    protected function buildDisplayTree(Model\TreeFlydownNode $tree,
-        Model\TreeFlydownNode $parent, $path = array())
-    {
+    protected function buildDisplayTree(
+        Model\TreeFlydownNode $tree,
+        Model\TreeFlydownNode $parent,
+        $path = array()
+    ) {
         $flydown_option = $tree->getOption();
         $path[] = $flydown_option->value;
         $new_node = new Model\TreeFlydownNode($path, $flydown_option->title);
 
         $parent->addChild($new_node);
-        foreach ($tree->getChildren() as $child)
+        foreach ($tree->getChildren() as $child) {
             $this->buildDisplayTree($child, $new_node, $path);
+        }
     }
 
     // }}}
@@ -235,8 +245,9 @@ class GroupedFlydown extends TreeFlydown
             );
         }
 
-        foreach ($this->tree->getChildren() as $child)
+        foreach ($this->tree->getChildren() as $child) {
             $this->buildDisplayTree($child, $display_tree);
+        }
 
         return $display_tree;
     }

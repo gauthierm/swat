@@ -129,17 +129,19 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         if ($this->widget !== null) {
             if ($class_name === null || $this->widget instanceof $class_name) {
-                if ($this->widget->id === null)
+                if ($this->widget->id === null) {
                     $out[] = $this->widget;
-                else
+                } else {
                     $out[$this->widget->id] = $this->widget;
+                }
             }
 
             if ($this->widget instanceof UIParent) {
@@ -168,13 +170,15 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
-        if ($this->widget instanceof $class_name)
+        if ($this->widget instanceof $class_name) {
             $out = $this->widget;
+        }
 
         if ($out === null && $this->widget instanceof UIParent) {
             $out = $this->widget->getFirstDescendant($class_name);
@@ -272,9 +276,9 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
     public function init()
     {
         parent::init();
-
-        if ($this->widget !== null)
+        if ($this->widget !== null) {
             $this->widget->init();
+        }
     }
 
     // }}}
@@ -283,9 +287,9 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
     public function process()
     {
         parent::process();
-
-        if ($this->widget !== null)
+        if ($this->widget !== null) {
             $this->widget->process();
+        }
     }
 
     // }}}
@@ -293,8 +297,9 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
 
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -307,13 +312,15 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
 
         $tr_tag->open();
 
-        if ($this->offset > 0 && $this->position === self::POSITION_LEFT)
+        if ($this->offset > 0 && $this->position === self::POSITION_LEFT) {
             $this->displayOffsetCell($this->offset);
+        }
 
         $this->displayWidgetCell();
 
-        if ($this->offset > 0 && $this->position === self::POSITION_RIGHT)
+        if ($this->offset > 0 && $this->position === self::POSITION_RIGHT) {
             $this->displayOffsetCell($this->offset);
+        }
 
         $tr_tag->close();
     }
@@ -398,11 +405,9 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
     public function getMessages()
     {
         $messages = array();
-
         foreach ($this->getDescendants() as $widget) {
             $messages = array_merge($messages, $widget->getMessages());
         }
-
         return $messages;
     }
 
@@ -424,7 +429,6 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
                 break;
             }
         }
-
         return $has_message;
     }
 
@@ -446,13 +450,13 @@ class TableViewWidgetRow extends TableViewRow implements UIParent
 
     protected function displayWidgetCell()
     {
-            $td_tag = new Html\Tag('td');
-            $colspan = $this->view->getXhtmlColspan();
-            $td_tag->colspan = $colspan - $this->offset;
-            $td_tag->class = 'widget-cell';
-            $td_tag->open();
-            $this->widget->display();
-            $td_tag->close();
+        $td_tag = new Html\Tag('td');
+        $colspan = $this->view->getXhtmlColspan();
+        $td_tag->colspan = $colspan - $this->offset;
+        $td_tag->class = 'widget-cell';
+        $td_tag->open();
+        $this->widget->display();
+        $td_tag->close();
     }
 
     // }}}

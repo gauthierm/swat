@@ -106,8 +106,9 @@ class ImageDisplay extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -115,16 +116,19 @@ class ImageDisplay extends Control
         $image_tag->id = $this->id;
         $image_tag->class = $this->getCSSClassString();
 
-        if (count($this->values))
+        if (count($this->values)) {
             $image_tag->src = vsprintf($this->image, $this->values);
-        else
+        } else {
             $image_tag->src = $this->image;
+        }
 
-        if ($this->height !== null)
+        if ($this->height !== null) {
             $image_tag->height = $this->height;
+        }
 
-        if ($this->width !== null)
+        if ($this->width !== null) {
             $image_tag->width = $this->width;
+        }
 
         $image_tag->style = self::getOccupyMargin(
             $this->width,
@@ -133,8 +137,9 @@ class ImageDisplay extends Control
             $this->occupy_height
         );
 
-        if ($this->title !== null)
+        if ($this->title !== null) {
             $image_tag->title = $this->title;
+        }
 
         // alt is a required XHTML attribute. We should always display it even
         // if it is not specified.
@@ -146,23 +151,30 @@ class ImageDisplay extends Control
     // }}}
     // {{{ public static function getOccupyMargin()
 
-    public static function getOccupyMargin($width, $height,
-        $occupy_width = null, $occupy_height = null)
-    {
+    public static function getOccupyMargin(
+        $width,
+        $height,
+        $occupy_width = null,
+        $occupy_height = null
+    ) {
         $margin_x = 0;
         $margin_y = 0;
 
-        if ($occupy_width !== null && $occupy_width > $width)
+        if ($occupy_width !== null && $occupy_width > $width) {
             $margin_x = $occupy_width - $width;
+        }
 
-        if ($occupy_height !== null && $occupy_height > $height)
+        if ($occupy_height !== null && $occupy_height > $height) {
             $margin_y = $occupy_height - $height;
+        }
 
         if ($margin_x > 0 || $margin_y > 0) {
+            $margin = ($margin_x % 2 == 0 && $margin_y % 2 == 0)
+                ? 'margin: %dpx %dpx'
+                : 'margin: %dpx %dpx %dpx %dpx;';
+
             $style = sprintf(
-                ($margin_x % 2 == 0 && $margin_y % 2 == 0) ?
-                    'margin: %dpx %dpx' :
-                    'margin: %dpx %dpx %dpx %dpx;',
+                $magin,
                 floor(((float)$margin_y) / 2),
                 ceil(((float)$margin_x) / 2),
                 ceil(((float)$margin_y) / 2),

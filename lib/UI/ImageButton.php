@@ -89,8 +89,9 @@ class ImageButton extends Button
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -110,16 +111,18 @@ class ImageButton extends Button
         $input_tag->alt = $this->alt;
         $input_tag->class = $this->getCSSClassString();
 
-        if (count($this->values))
+        if (count($this->values)) {
             $input_tag->src = vsprintf($this->image, $this->values);
-        else
+        } else {
             $input_tag->src = $this->image;
+        }
 
         $input_tag->tabindex = $this->tab_index;
         $input_tag->accesskey = $this->access_key;
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $input_tag->disabled = 'disabled';
+        }
 
         $input_tag->display();
 

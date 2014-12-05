@@ -78,16 +78,20 @@ XHTML;
 
         parent::process();
 
-        $ignore_validation_errors = ($this->allow_ignore_validation_errors &&
-            $this->ignore_errors_checkbox->value);
+        $ignore_validation_errors = (
+            $this->allow_ignore_validation_errors &&
+            $this->ignore_errors_checkbox->value
+        );
 
         $xhtml_content = sprintf($xhtml_template, $this->getXHTMLContent());
 
         $errors = libxml_use_internal_errors(true);
 
         $document = new DOMDocument();
-        $document->loadXML($xhtml_content,
-            LIBXML_DTDLOAD | LIBXML_DTDATTR | LIBXML_DTDVALID);
+        $document->loadXML(
+            $xhtml_content,
+            LIBXML_DTDLOAD | LIBXML_DTDATTR | LIBXML_DTDVALID
+        );
 
         $xml_errors = libxml_get_errors();
         libxml_clear_errors();
@@ -104,8 +108,9 @@ XHTML;
 
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -178,7 +183,8 @@ XHTML;
                 $error
             );
 
-            $error = str_replace('attvalue: " or \' expected',
+            $error = str_replace(
+                'attvalue: " or \' expected',
                 L::_(
                     'attribute values must be contained within quotation ' .
                     'marks'
@@ -188,8 +194,9 @@ XHTML;
 
             $error = trim($error);
 
-            if (!in_array($error, $ignored_errors))
+            if (!in_array($error, $ignored_errors)) {
                 $errors[] = $error;
+            }
         }
 
         $content = L::_('%s must be valid XHTML markup: ');

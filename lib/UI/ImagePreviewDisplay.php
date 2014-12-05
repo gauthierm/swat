@@ -188,8 +188,9 @@ class ImagePreviewDisplay extends ImageDisplay
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         if (!$this->isPreviewDisplayable()) {
             parent::display();
@@ -335,7 +336,8 @@ class ImagePreviewDisplay extends ImageDisplay
 
         return sprintf(
             "SwatImagePreviewDisplay.close_text = '%s';\n",
-            $close_text);
+            $close_text
+        );
     }
 
     // }}}

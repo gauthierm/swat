@@ -83,8 +83,9 @@ class Menu extends AbstractMenu implements UIParent
     public function init()
     {
         parent::init();
-        foreach ($this->items as $item)
+        foreach ($this->items as $item) {
             $item->init();
+        }
     }
 
     // }}}
@@ -95,8 +96,9 @@ class Menu extends AbstractMenu implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -161,19 +163,20 @@ class Menu extends AbstractMenu implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->items as $item) {
             if ($class_name === null || $item instanceof $class_name) {
-                if ($item->id === null)
+                if ($item->id === null) {
                     $out[] = $item;
-                else
+                } else {
                     $out[$item->id] = $item;
+                }
             }
-
             if ($item instanceof UIParent) {
                 $out = array_merge($out, $item->getDescendants($class_name));
             }
@@ -197,8 +200,9 @@ class Menu extends AbstractMenu implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -210,8 +214,9 @@ class Menu extends AbstractMenu implements UIParent
 
             if ($item instanceof UIParent) {
                 $out = $item->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 

@@ -136,8 +136,9 @@ class ImageCropper extends InputControl
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -257,8 +258,9 @@ class ImageCropper extends InputControl
     protected function autoCropBoxDimensions()
     {
         // fix bad ratio
-        if ($this->crop_ratio == 0)
+        if ($this->crop_ratio == 0) {
             $this->crop_ratio = null;
+        }
 
         // autoset width
         if ($this->crop_width === null) {

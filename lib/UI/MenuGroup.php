@@ -99,16 +99,17 @@ class MenuGroup extends Control implements UIParent
      */
     public function display($first = false)
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
         if ($this->title !== null) {
             $header_tag = new Html\Tag('h6');
-            if ($first)
+            if ($first) {
                 $header_tag->class = 'first-of-type';
-
+            }
             $header_tag->setContent($this->title);
             $header_tag->display();
         }
@@ -157,8 +158,9 @@ class MenuGroup extends Control implements UIParent
     public function setMenuItemValues($value)
     {
         $items = $this->getDescendants('\Silverorange\Swat\UI\MenuItem');
-        foreach ($items as $item)
+        foreach ($items as $item) {
             $item->value = $value;
+        }
     }
 
     // }}}
@@ -180,17 +182,19 @@ class MenuGroup extends Control implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->items as $item) {
             if ($class_name === null || $item instanceof $class_name) {
-                if ($item->id === null)
+                if ($item->id === null) {
                     $out[] = $item;
-                else
+                } else {
                     $out[$item->id] = $item;
+                }
             }
 
             if ($item instanceof UIParent) {
@@ -216,8 +220,9 @@ class MenuGroup extends Control implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -229,8 +234,9 @@ class MenuGroup extends Control implements UIParent
 
             if ($item instanceof UIParent) {
                 $out = $item->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 

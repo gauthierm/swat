@@ -68,8 +68,9 @@ class TreeFlydown extends Flydown
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $actual_value = $this->value;
         if (count($this->path) == 0 && $this->value !== null) {
@@ -100,10 +101,9 @@ class TreeFlydown extends Flydown
     protected function &getOptions()
     {
         $options = array();
-
-        foreach ($this->tree->getChildren() as $child_node)
+        foreach ($this->tree->getChildren() as $child_node) {
             $this->flattenTree($options, $child_node);
-
+        }
         return $options;
     }
 
@@ -124,9 +124,12 @@ class TreeFlydown extends Flydown
      * @param array                 $path    the current path represented as an
      *                                       array of tree node option values.
      */
-    private function flattenTree(&$options, Model\TreeFlydownNode $node,
-        $level = 0, $path = array())
-    {
+    private function flattenTree(
+        &$options,
+        Model\TreeFlydownNode $node,
+        $level = 0,
+        $path = array()
+    ) {
         $tree_option = clone $node->getOption();
 
         $pad = str_repeat('&nbsp;', $level * 3);
@@ -137,8 +140,9 @@ class TreeFlydown extends Flydown
 
         $options[] = $tree_option;
 
-        foreach($node->getChildren() as $child_node)
+        foreach ($node->getChildren() as $child_node) {
             $this->flattenTree($options, $child_node, $level + 1, $path);
+        }
     }
 
     // }}}

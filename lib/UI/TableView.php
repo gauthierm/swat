@@ -235,29 +235,33 @@ class TableView extends View implements UIParent
         foreach ($this->columns as $column) {
             $column->init();
             // index the column by id if it is not already indexed
-            if (!array_key_exists($column->id, $this->columns_by_id))
+            if (!array_key_exists($column->id, $this->columns_by_id)) {
                 $this->columns_by_id[$column->id] = $column;
+            }
         }
 
         foreach ($this->extra_rows as $row) {
             $row->init();
             // index the row by id if it is not already indexed
-            if (!array_key_exists($row->id, $this->rows_by_id))
+            if (!array_key_exists($row->id, $this->rows_by_id)) {
                 $this->rows_by_id[$row->id] = $row;
+            }
         }
 
         foreach ($this->groups as $group) {
             $group->init();
             // index the group by id if it is not already indexed
-            if (!array_key_exists($group->id, $this->groups_by_id))
+            if (!array_key_exists($group->id, $this->groups_by_id)) {
                 $this->groups_by_id[$group->id] = $group;
+            }
         }
 
         foreach ($this->spanning_columns as $column) {
             $column->init();
             // index the row column by id if it is not already indexed
-            if (!array_key_exists($column->id, $this->spanning_columns_by_id))
+            if (!array_key_exists($column->id, $this->spanning_columns_by_id)) {
                 $this->spanning_columns_by_id[$column->id] = $column;
+            }
         }
     }
 
@@ -271,11 +275,13 @@ class TableView extends View implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
-        if ($this->model === null)
+        if ($this->model === null) {
             return;
+        }
 
         parent::display();
 
@@ -292,9 +298,10 @@ class TableView extends View implements UIParent
             if ($this->no_records_message != '') {
                 $div = new Html\Tag('div');
                 $div->class = 'swat-none';
-                $div->setContent($this->no_records_message,
-                    $this->no_records_message_type);
-
+                $div->setContent(
+                    $this->no_records_message,
+                    $this->no_records_message_type
+                );
                 $div->display();
             }
 
@@ -308,8 +315,9 @@ class TableView extends View implements UIParent
 
         $table_tag->open();
 
-        if ($this->hasHeader())
+        if ($this->hasHeader()) {
             $this->displayHeader();
+        }
 
         if ($this->use_invalid_tfoot_ordering) {
             $this->displayBody();
@@ -333,15 +341,15 @@ class TableView extends View implements UIParent
     public function process()
     {
         parent::process();
-
-        foreach ($this->columns as $column)
+        foreach ($this->columns as $column) {
             $column->process();
-
-        foreach ($this->spanning_columns as $column)
+        }
+        foreach ($this->spanning_columns as $column) {
             $column->process();
-
-        foreach ($this->extra_rows as $row)
+        }
+        foreach ($this->extra_rows as $row) {
             $row->process();
+        }
     }
 
     // }}}
@@ -400,11 +408,14 @@ class TableView extends View implements UIParent
         $messages = parent::getMessages();
 
         if ($this->model !== null) {
-            foreach ($this->model as $row)
-                foreach ($this->columns as $column)
-                    $messages =
-                        array_merge($messages, $column->getMessages($row));
-
+            foreach ($this->model as $row) {
+                foreach ($this->columns as $column) {
+                    $messages = array_merge(
+                        $messages,
+                        $column->getMessages($row)
+                    );
+                }
+            }
             foreach ($this->extra_rows as $row) {
                 if ($row instanceof TableViewWidgetRow) {
                     $messages = array_merge($messages, $row->getMessages());
@@ -464,9 +475,9 @@ class TableView extends View implements UIParent
     public function getXhtmlColspan()
     {
         $count = 0;
-        foreach ($this->getVisibleColumns() as $column)
+        foreach ($this->getVisibleColumns() as $column) {
             $count += $column->getXhtmlColspan();
-
+        }
         return $count;
     }
 
@@ -557,17 +568,19 @@ class TableView extends View implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->columns as $column) {
             if ($class_name === null || $column instanceof $class_name) {
-                if ($column->id === null)
+                if ($column->id === null) {
                     $out[] = $column;
-                else
+                } else {
                     $out[$column->id] = $column;
+                }
             }
 
             if ($column instanceof UIParent) {
@@ -577,10 +590,11 @@ class TableView extends View implements UIParent
 
         foreach ($this->spanning_columns as $column) {
             if ($class_name === null || $column instanceof $class_name) {
-                if ($column->id === null)
+                if ($column->id === null) {
                     $out[] = $column;
-                else
+                } else {
                     $out[$column->id] = $column;
+                }
             }
 
             if ($column instanceof UIParent) {
@@ -590,10 +604,11 @@ class TableView extends View implements UIParent
 
         foreach ($this->groups as $group) {
             if ($class_name === null || $group instanceof $class_name) {
-                if ($group->id === null)
+                if ($group->id === null) {
                     $out[] = $group;
-                else
+                } else {
                     $out[$group->id] = $group;
+                }
             }
 
             if ($group instanceof UIParent) {
@@ -603,10 +618,11 @@ class TableView extends View implements UIParent
 
         foreach ($this->extra_rows as $row) {
             if ($class_name === null || $row instanceof $class_name) {
-                if ($row->id === null)
+                if ($row->id === null) {
                     $out[] = $row;
-                else
+                } else {
                     $out[$row->id] = $row;
+                }
             }
 
             if ($row instanceof UIParent) {
@@ -632,8 +648,9 @@ class TableView extends View implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -645,8 +662,9 @@ class TableView extends View implements UIParent
 
             if ($column instanceof UIParent) {
                 $out = $column->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -659,8 +677,9 @@ class TableView extends View implements UIParent
 
                 if ($column instanceof UIParent) {
                     $out = $column->getFirstDescendant($class_name);
-                    if ($out !== null)
+                    if ($out !== null) {
                         break;
+                    }
                 }
             }
         }
@@ -674,8 +693,9 @@ class TableView extends View implements UIParent
 
                 if ($group instanceof UIParent) {
                     $out = $group->getFirstDescendant($class_name);
-                    if ($out !== null)
+                    if ($out !== null) {
                         break;
+                    }
                 }
             }
         }
@@ -689,8 +709,9 @@ class TableView extends View implements UIParent
 
                 if ($row instanceof UIParent) {
                     $out = $row->getFirstDescendant($class_name);
-                    if ($out !== null)
+                    if ($out !== null) {
                         break;
+                    }
                 }
             }
         }
@@ -844,8 +865,9 @@ class TableView extends View implements UIParent
         echo '<thead>';
         echo '<tr>';
 
-        foreach ($this->columns as $column)
+        foreach ($this->columns as $column) {
             $column->displayHeaderCell();
+        }
 
         echo '</tr>';
         echo '</thead>';
@@ -933,8 +955,9 @@ class TableView extends View implements UIParent
      */
     protected function displayRowGroupHeaders($row, $next_row, $count)
     {
-        foreach ($this->groups as $group)
+        foreach ($this->groups as $group) {
             $group->display($row);
+        }
     }
 
     // }}}
@@ -951,8 +974,9 @@ class TableView extends View implements UIParent
      */
     protected function displayRowGroupFooters($row, $next_row, $count)
     {
-        foreach ($this->groups as $group)
+        foreach ($this->groups as $group) {
             $group->displayFooter($row, $next_row);
+        }
     }
 
     // }}}
@@ -972,17 +996,18 @@ class TableView extends View implements UIParent
         // display a row of data
         $tr_tag = new Html\Tag('tr');
         $tr_tag->class = $this->getRowClassString($row, $count);
-        foreach ($this->columns as $column)
+        foreach ($this->columns as $column) {
             $tr_tag->addAttributes($column->getTrAttributes($row));
-
+        }
         if ($this->rowHasMessage($row)) {
             $tr_tag->class .= ' swat-error';
         }
 
         $tr_tag->open();
 
-        foreach ($this->columns as $column)
+        foreach ($this->columns as $column) {
             $column->display($row);
+        }
 
         $tr_tag->close();
     }
@@ -1030,8 +1055,9 @@ class TableView extends View implements UIParent
     protected function displayRowMessages($row)
     {
         $messages = array();
-        foreach ($this->columns as $column)
+        foreach ($this->columns as $column) {
             $messages = array_merge($messages, $column->getMessages($row));
+        }
 
         if (count($messages) > 0) {
             $tr_tag = new Html\Tag('tr');
@@ -1048,9 +1074,10 @@ class TableView extends View implements UIParent
 
             $li_tag = new Html\Tag('li');
             foreach ($messages as &$message) {
-                $li_tag->setContent($message->primary_content,
-                    $message->content_type);
-
+                $li_tag->setContent(
+                    $message->primary_content,
+                    $message->content_type
+                );
                 $li_tag->class = $message->getCssClass();
                 $li_tag->display();
             }
@@ -1074,16 +1101,17 @@ class TableView extends View implements UIParent
     {
         ob_start();
 
-        foreach ($this->extra_rows as $row)
+        foreach ($this->extra_rows as $row) {
             $row->display();
+        }
 
         $footer_content = ob_get_clean();
 
         if ($footer_content != '') {
             $tfoot_tag = new Html\Tag('tfoot');
-            if ($this->use_invalid_tfoot_ordering)
+            if ($this->use_invalid_tfoot_ordering) {
                 $tfoot_tag->class = 'swat-table-view-invalid-tfoot-ordering';
-
+            }
             $tfoot_tag->setContent($footer_content, 'text/xml');
             $tfoot_tag->display();
         }
@@ -1200,8 +1228,11 @@ class TableView extends View implements UIParent
      */
     protected function getInlineJavaScript()
     {
-        $javascript = sprintf("var %s = new SwatTableView('%s');",
-            $this->id, $this->id);
+        $javascript = sprintf(
+            "var %s = new SwatTableView('%s');",
+            $this->id,
+            $this->id
+        );
 
         $has_rows = (
             $this->model instanceof Model\TableModel &&
@@ -1291,9 +1322,10 @@ class TableView extends View implements UIParent
      * @throws Exception\DuplicateIdException if the column has the same id as
      *         a column already in this table-view.
      */
-    public function insertColumnBefore(TableViewColumn $column,
-        TableViewColumn $reference_column)
-    {
+    public function insertColumnBefore(
+        TableViewColumn $column,
+        TableViewColumn $reference_column
+    ) {
         $this->insertColumn($column, $reference_column, false);
     }
 
@@ -1312,9 +1344,10 @@ class TableView extends View implements UIParent
      * @throws Exception\DuplicateIdException if the column has the same id as
      *         a column already in this table-view.
      */
-    public function insertColumnAfter(TableViewColumn $column,
-        TableViewColumn $reference_column)
-    {
+    public function insertColumnAfter(
+        TableViewColumn $column,
+        TableViewColumn $reference_column
+    ) {
         $this->insertColumn($column, $reference_column, true);
     }
 
@@ -1397,10 +1430,11 @@ class TableView extends View implements UIParent
     public function getVisibleColumns()
     {
         $columns = array();
-        foreach ($this->columns as $column)
-            if ($column->visible)
+        foreach ($this->columns as $column) {
+            if ($column->visible) {
                 $columns[] = $column;
-
+            }
+        }
         return $columns;
     }
 
@@ -1434,8 +1468,8 @@ class TableView extends View implements UIParent
      */
     public function setDefaultOrderbyColumn(
         TableViewOrderableColumn $column,
-        $direction = TableViewOrderableColumn::ORDER_BY_DIR_DESCENDING)
-    {
+        $direction = TableViewOrderableColumn::ORDER_BY_DIR_DESCENDING
+    ) {
         if ($column->view !== $this) {
             throw new Exception\Exception(
                 'Can only set the default orderby on orderable columns in ' .
@@ -1519,9 +1553,11 @@ class TableView extends View implements UIParent
      * @see TableView::insertColumnBefore()
      * @see TableView::insertColumnAfter()
      */
-    protected function insertColumn(TableViewColumn $column,
-        TableViewColumn $reference_column = null, $after = true)
-    {
+    protected function insertColumn(
+        TableViewColumn $column,
+        TableViewColumn $reference_column = null,
+        $after = true
+    ) {
         $this->validateColumn($column);
 
         if ($reference_column !== null) {
@@ -1536,12 +1572,20 @@ class TableView extends View implements UIParent
 
             if ($after) {
                 // insert after reference column
-                array_splice($this->columns, $key, 1,
-                    array($reference_column, $column));
+                array_splice(
+                    $this->columns,
+                    $key,
+                    1,
+                    array($reference_column, $column)
+                );
             } else {
                 // insert before reference column
-                array_splice($this->columns, $key, 1,
-                    array($column, $reference_column));
+                array_splice(
+                    $this->columns,
+                    $key,
+                    1,
+                    array($column, $reference_column)
+                );
             }
         } else {
             if ($after) {
@@ -1553,8 +1597,9 @@ class TableView extends View implements UIParent
             }
         }
 
-        if ($column->id !== null)
+        if ($column->id !== null) {
             $this->columns_by_id[$column->id] = $column;
+        }
 
         $column->parent = $this;
     }
@@ -1662,8 +1707,9 @@ class TableView extends View implements UIParent
 
         $this->groups[] = $group;
 
-        if ($group->id !== null)
+        if ($group->id !== null) {
             $this->groups_by_id[$group->id] = $group;
+        }
 
         $group->view = $this;
         $group->parent = $this;
@@ -1788,9 +1834,10 @@ class TableView extends View implements UIParent
      * @throws Exception\Exception if the row is an input row and this
      *         table-view already contains an input-row.
      */
-    public function insertRowBefore(TableViewRow $row,
-        TableViewRow $reference_row)
-    {
+    public function insertRowBefore(
+        TableViewRow $row,
+        TableViewRow $reference_row
+    ) {
         $this->insertRow($row, $reference_row, false);
     }
 
@@ -1811,9 +1858,10 @@ class TableView extends View implements UIParent
      * @throws Exception\Exception if the row is an input row and this
      *         table-view already contains an input-row.
      */
-    public function insertRowAfter(TableViewRow $row,
-        TableViewRow $reference_row)
-    {
+    public function insertRowAfter(
+        TableViewRow $row,
+        TableViewRow $reference_row
+    ) {
         $this->insertRow($row, $reference_row, true);
     }
 
@@ -1871,10 +1919,11 @@ class TableView extends View implements UIParent
     public function getRowsByClass($class_name)
     {
         $rows = array();
-        foreach ($this->extra_rows as $row)
-            if ($row instanceof $class_name)
+        foreach ($this->extra_rows as $row) {
+            if ($row instanceof $class_name) {
                 $rows[] = $row;
-
+            }
+        }
         return $rows;
     }
 
@@ -1982,9 +2031,11 @@ class TableView extends View implements UIParent
      * @see TableView::insertRowBefore()
      * @see TableView::insertRowAfter()
      */
-    protected function insertRow(TableViewRow $row,
-        TableViewRow $reference_row = null, $after = true)
-    {
+    protected function insertRow(
+        TableViewRow $row,
+        TableViewRow $reference_row = null,
+        $after = true
+    ) {
         $this->validateRow($row);
 
         if ($reference_row !== null) {
@@ -1998,12 +2049,20 @@ class TableView extends View implements UIParent
 
             if ($after) {
                 // insert after reference row
-                array_splice($this->extra_rows, $key, 1,
-                    array($reference_row, $row));
+                array_splice(
+                    $this->extra_rows,
+                    $key,
+                    1,
+                    array($reference_row, $row)
+                );
             } else {
                 // insert before reference row
-                array_splice($this->extra_rows, $key, 1,
-                    array($row, $reference_row));
+                array_splice(
+                    $this->extra_rows,
+                    $key,
+                    1,
+                    array($row, $reference_row)
+                );
             }
         } else {
             if ($after) {
@@ -2015,8 +2074,9 @@ class TableView extends View implements UIParent
             }
         }
 
-        if ($row->id !== null)
+        if ($row->id !== null) {
             $this->rows_by_id[$row->id] = $row;
+        }
 
         $row->parent = $this;
     }

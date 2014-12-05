@@ -55,8 +55,9 @@ class ReCaptcha extends InputControl
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 

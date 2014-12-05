@@ -15,7 +15,7 @@ use Silverorange\Swat\L;
  */
 abstract class Number
 {
-    // {{{ static public function roundUp()
+    // {{{ public static function roundUp()
 
     /**
      * Rounds a number to the specified number of fractional digits using the
@@ -29,7 +29,7 @@ abstract class Number
      *
      * @return float the rounded value.
      */
-    static public function roundUp($value, $fractional_digits)
+    public static function roundUp($value, $fractional_digits)
     {
         $power = pow(10, $fractional_digits);
         $value = ceil($value * $power) / $power;
@@ -38,7 +38,7 @@ abstract class Number
     }
 
     // }}}
-    // {{{ static public function roundToEven()
+    // {{{ public static function roundToEven()
 
     /**
      * Rounds a number to the specified number of fractional digits using the
@@ -53,7 +53,7 @@ abstract class Number
      *
      * @return float the rounded value.
      */
-    static public function roundToEven($value, $fractional_digits)
+    public static function roundToEven($value, $fractional_digits)
     {
         $power = pow(10, $fractional_digits);
         $fractional_part = abs(fmod($value, 1)) * $power;
@@ -76,7 +76,7 @@ abstract class Number
     }
 
     // }}}
-    // {{{ static public function ordinal()
+    // {{{ public static function ordinal()
 
     /**
      * Formats an integer as an ordinal number (1st, 2nd, 3rd)
@@ -94,7 +94,7 @@ abstract class Number
      *
      * @return string the ordinal-formatted value.
      */
-    static public function ordinal($value)
+    public static function ordinal($value)
     {
         $value = intval($value);
 

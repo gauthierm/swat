@@ -101,8 +101,9 @@ class DetailsViewField extends CellRendererContainer
      */
     public function init()
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $renderer->init();
+        }
     }
 
     // }}}
@@ -110,8 +111,9 @@ class DetailsViewField extends CellRendererContainer
 
     public function process()
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $renderer->process();
+        }
     }
 
     // }}}
@@ -127,8 +129,9 @@ class DetailsViewField extends CellRendererContainer
      */
     public function display($data, $odd)
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $this->odd = $odd;
 
@@ -274,10 +277,7 @@ class DetailsViewField extends CellRendererContainer
             $header_title = '&nbsp;';
         } else {
             $header_title = ($this->show_colon)
-                ? sprintf(
-                    L::_('%s:'),
-                    $this->title
-                )
+                ? sprintf(L::_('%s:'), $this->title)
                 : $this->title;
         }
 
@@ -300,11 +300,11 @@ class DetailsViewField extends CellRendererContainer
 
         $first = true;
         foreach ($this->renderers as $renderer) {
-            if ($first)
+            if ($first) {
                 $first = false;
-            else
+            } else {
                 echo ' ';
-
+            }
             $renderer->render();
         }
 
@@ -358,17 +358,24 @@ class DetailsViewField extends CellRendererContainer
             $first_renderer instanceof CellRenderer) {
 
             // renderer inheritance classes
-            $classes = array_merge($classes,
-                $first_renderer->getInheritanceCSSClassNames());
+            $classes = array_merge(
+                $classes,
+                $first_renderer->getInheritanceCSSClassNames()
+            );
 
             // renderer base classes
-            $classes = array_merge($classes,
-                $first_renderer->getBaseCSSClassNames());
+            $classes = array_merge(
+                $classes,
+                $first_renderer->getBaseCSSClassNames()
+            );
 
             // renderer data specific classes
-            if ($this->renderers->mappingsApplied())
-                $classes = array_merge($classes,
-                    $first_renderer->getDataSpecificCSSClassNames());
+            if ($this->renderers->mappingsApplied()) {
+                $classes = array_merge(
+                    $classes,
+                    $first_renderer->getDataSpecificCSSClassNames()
+                );
+            }
 
             // renderer user-specified classes
             $classes = array_merge($classes, $first_renderer->classes);

@@ -69,11 +69,13 @@ class Frame extends DisplayableContainer implements Titleable
      */
     public function getTitle()
     {
-        if ($this->subtitle === null)
+        if ($this->subtitle === null) {
             return $this->title;
+        }
 
-        if ($this->title === null)
+        if ($this->title === null) {
             return $this->subtitle;
+        }
 
         return $this->title . ': ' . $this->subtitle;
     }
@@ -101,8 +103,9 @@ class Frame extends DisplayableContainer implements Titleable
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -135,9 +138,10 @@ class Frame extends DisplayableContainer implements Titleable
             } else {
                 $span_tag = new Html\Tag('span');
                 $span_tag->class = 'swat-frame-subtitle';
-                $span_tag->setContent($this->subtitle,
-                    $this->title_content_type);
-
+                $span_tag->setContent(
+                    $this->subtitle,
+                    $this->title_content_type
+                );
                 $header_tag->open();
                 $header_tag->displayContent();
                 echo $this->title_separator;

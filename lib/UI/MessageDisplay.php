@@ -140,13 +140,15 @@ class MessageDisplay extends Control
         $this->display_messages[] = $message;
 
         if ($dismissable == self::DISMISS_AUTO) {
-            $dismissable = (in_array($message->type,
-                $this->getDismissableMessageTypes())) ?
-                self::DISMISS_ON : self::DISMISS_OFF;
+            $type = $message->type;
+            $dismissable = (in_array($type, $this->getDismissableMessageTypes())
+                ? self::DISMISS_ON
+                : self::DISMISS_OFF;
         }
 
-        if ($dismissable == self::DISMISS_ON)
+        if ($dismissable == self::DISMISS_ON) {
             $this->dismissable_messages[] = count($this->display_messages) - 1;
+        }
     }
 
     // }}}
@@ -160,11 +162,13 @@ class MessageDisplay extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
-        if ($this->getMessageCount() == 0)
+        if ($this->getMessageCount() == 0) {
             return;
+        }
 
         parent::display();
 
@@ -245,9 +249,12 @@ class MessageDisplay extends Control
      * @param boolean     $last       optional. Whether or not the message is
      *                                the last message in this message display.
      */
-    protected function displayMessage($message_id, Model\Message $message,
-        $first = false, $last = false)
-    {
+    protected function displayMessage(
+        $message_id,
+        Model\Message $message,
+        $first = false,
+        $last = false
+    ) {
         $message_div = new Html\Tag('div');
         $container_div = new Html\Tag('div');
 
@@ -270,7 +277,9 @@ class MessageDisplay extends Control
         $primary_content = new Html\Tag('h3');
         $primary_content->class = 'swat-message-primary-content';
         $primary_content->setContent(
-            $message->primary_content, $message->content_type);
+            $message->primary_content,
+            $message->content_type
+        );
 
         $primary_content->display();
 
@@ -278,8 +287,9 @@ class MessageDisplay extends Control
             $secondary_div = new Html\Tag('div');
             $secondary_div->class = 'swat-message-secondary-content';
             $secondary_div->setContent(
-                $message->secondary_content, $message->content_type);
-
+                $message->secondary_content,
+                $message->content_type
+            );
             $secondary_div->display();
         }
 

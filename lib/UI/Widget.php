@@ -184,14 +184,17 @@ abstract class Widget extends Object
      */
     public function init()
     {
-        if ($this->requires_id && $this->id === null)
+        if ($this->requires_id && $this->id === null) {
             $this->id = $this->getUniqueId();
+        }
 
-        if ($this->stylesheet !== null)
+        if ($this->stylesheet !== null) {
             $this->addStyleSheet($this->stylesheet);
+        }
 
-        foreach ($this->getCompositeWidgets() as $widget)
+        foreach ($this->getCompositeWidgets() as $widget) {
             $widget->init();
+        }
 
         $this->initialized = true;
     }
@@ -212,11 +215,13 @@ abstract class Widget extends Object
      */
     public function process()
     {
-        if (!$this->isInitialized())
+        if (!$this->isInitialized()) {
             $this->init();
+        }
 
-        foreach ($this->getCompositeWidgets() as $widget)
+        foreach ($this->getCompositeWidgets() as $widget) {
             $widget->process();
+        }
 
         $this->processed = true;
     }
@@ -235,8 +240,9 @@ abstract class Widget extends Object
      */
     public function display()
     {
-        if (!$this->isInitialized())
+        if (!$this->isInitialized()) {
             $this->init();
+        }
 
         $this->displayed = true;
     }
@@ -335,9 +341,9 @@ abstract class Widget extends Object
     public function getMessages()
     {
         $messages = $this->messages;
-        foreach ($this->getCompositeWidgets() as $widget)
+        foreach ($this->getCompositeWidgets() as $widget) {
             $messages = array_merge($messages, $widget->getMessages());
-
+        }
         return $messages;
     }
 
@@ -537,8 +543,9 @@ abstract class Widget extends Object
     {
         $classes = array();
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $classes[] = 'swat-insensitive';
+        }
 
         $classes = array_merge($classes, parent::getCSSClassNames());
 
@@ -661,14 +668,17 @@ abstract class Widget extends Object
         $this->confirmCompositeWidgets();
 
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
-        foreach ($this->composite_widgets as $key => $widget)
-            if ($class_name === null || $widget instanceof $class_name)
+        foreach ($this->composite_widgets as $key => $widget) {
+            if ($class_name === null || $widget instanceof $class_name) {
                 $out[$key] = $widget;
+            }
+        }
 
         return $out;
     }

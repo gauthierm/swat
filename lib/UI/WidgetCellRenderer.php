@@ -108,8 +108,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
     public function getPropertyNameToMap(Object $object, $name)
     {
-        if ($this === $object)
+        if ($this === $object) {
             return $name;
+        }
 
         $mangled_name = $name;
         $suffix = 0;
@@ -145,8 +146,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
         $form = $this->getForm();
         if ($form !== null && $form->isSubmitted()) {
             $replicators = $form->getHiddenField(
-                $this->getReplicatorFieldName());
-
+                $this->getReplicatorFieldName()
+            );
             if ($replicators !== null) {
                 foreach ($replicators as $replicator) {
                     $this->createClonedWidget($replicator);
@@ -154,8 +155,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
             }
         }
 
-        if ($replicators === null)
+        if ($replicators === null) {
             $this->prototype_widget->init();
+        }
     }
 
     // }}}
@@ -168,7 +170,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
             $replicators = null;
         } else {
             $replicators = $form->getHiddenField(
-                $this->getReplicatorFieldName());
+                $this->getReplicatorFieldName()
+            );
         }
 
         if ($replicators === null) {
@@ -194,8 +197,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::render();
 
@@ -232,8 +236,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
             }
 
             $widget = $this->getClonedWidget($this->replicator_id);
-            if ($widget === null)
+            if ($widget === null) {
                 return;
+            }
 
             $form = $this->getForm();
             if ($form === null) {
@@ -245,8 +250,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
             $form->addHiddenField(
                 $this->getReplicatorFieldName(),
-                array_keys($this->clones));
-
+                array_keys($this->clones)
+            );
             $this->applyPropertyValuesToClonedWidget($widget);
             $widget->display();
 
@@ -332,8 +337,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
         $form = $this->getForm();
         if ($form !== null && $form->isSubmitted()) {
             $replicators = $form->getHiddenField(
-                $this->getReplicatorFieldName());
-
+                $this->getReplicatorFieldName()
+            );
             $widgets = array();
             if (is_array($replicators)) {
                 foreach ($this->clones as $replicator_id => $clone) {
@@ -461,8 +466,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
     {
         $title = null;
 
-        if (isset($this->parent->title))
+        if (isset($this->parent->title)) {
             $title = $this->parent->title;
+        }
 
         return $title;
     }
@@ -480,10 +486,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
     public function getTitleContentType()
     {
         $title_content_type = 'text/plain';
-
-        if (isset($this->parent->title_content_type))
+        if (isset($this->parent->title_content_type)) {
             $title_content_type = $this->parent->title_content_type;
-
+        }
         return $title_content_type;
     }
 
@@ -504,7 +509,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
         if ($this->using_null_replication) {
             $set->addEntrySet(
-                $this->getPrototypeWidget()->getHtmlHeadEntrySet());
+                $this->getPrototypeWidget()->getHtmlHeadEntrySet()
+            );
         } else {
             $widgets = $this->getWidgets();
             foreach ($widgets as $widget) {
@@ -533,7 +539,8 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
         if ($this->using_null_replication) {
             $set->addEntrySet(
-                $this->getPrototypeWidget()->getAvailableHtmlHeadEntrySet());
+                $this->getPrototypeWidget()->getAvailableHtmlHeadEntrySet()
+            );
         } else {
             $widgets = $this->getWidgets();
             foreach ($widgets as $widget) {
@@ -610,8 +617,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -623,8 +631,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
             if ($cloned_widget instanceof UIParent) {
                 $out = $cloned_widget->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -671,8 +680,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
     {
         $state = '\Silverorange\Swat\Model\State';
         foreach ($this->getDescendants($state) as $id => $object) {
-            if (isset($states[$id]))
+            if (isset($states[$id])) {
                 $object->setState($states[$id]);
+            }
         }
     }
 
@@ -728,8 +738,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
     private function getClonedWidget($replicator)
     {
-        if (!isset($this->clones[$replicator]))
+        if (!isset($this->clones[$replicator])) {
             $this->createClonedWidget($replicator);
+        }
 
         return $this->clones[$replicator];
     }
@@ -759,11 +770,14 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
             $cloned_descendants = array($cloned_widget);
 
             if ($this->prototype_widget instanceof UIParent) {
-                $prototype_descendants = array_merge($prototype_descendants,
-                    $this->prototype_widget->getDescendants());
-
-                $cloned_descendants = array_merge($cloned_descendants,
-                    $cloned_widget->getDescendants());
+                $prototype_descendants = array_merge(
+                    $prototype_descendants,
+                    $this->prototype_widget->getDescendants()
+                );
+                $cloned_descendants = array_merge(
+                    $cloned_descendants,
+                    $cloned_widget->getDescendants()
+                );
             }
 
             $cloned_object = null;
@@ -782,8 +796,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
                 );
             }
 
-            if ($cloned_object->$property instanceof CellRendererMapping)
+            if ($cloned_object->$property instanceof CellRendererMapping) {
                 $cloned_object->$property = $value;
+            }
         }
     }
 
@@ -792,8 +807,9 @@ class WidgetCellRenderer extends CellRenderer implements UIParent, Titleable
 
     private function createClonedWidget($replicator)
     {
-        if ($this->prototype_widget === null)
+        if ($this->prototype_widget === null) {
             return;
+        }
 
         $suffix = '_' . $this->id . '_' . $replicator;
         $new_widget = $this->prototype_widget->copy($suffix);

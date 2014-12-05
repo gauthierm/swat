@@ -131,8 +131,9 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::render();
 
@@ -148,14 +149,16 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
         $radio_button_tag->name = $this->id;
         $radio_button_tag->id = $this->id . '_radio_button_' . $this->value;
         $radio_button_tag->value = $this->value;
-        if (!$this->sensitive)
+        if (!$this->sensitive) {
             $radio_button_tag->disabled = 'disabled';
+        }
 
         $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
         if ($view !== null) {
             $selection = $view->getSelection($this);
-            if ($selection->contains($this->value))
+            if ($selection->contains($this->value)) {
                 $radio_button_tag->checked = 'checked';
+            }
         }
 
         echo '<span class="swat-radio-wrapper">';
@@ -199,7 +202,10 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
         if ($view !== null) {
             $javascript = sprintf(
                 "var %s = new SwatRadioButtonCellRenderer('%s', %s);",
-                $this->id, $this->id, $view->id);
+                $this->id,
+                $this->id,
+                $view->id
+            );
         } else {
             $javascript = '';
         }
@@ -224,8 +230,9 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
     {
         $copy = parent::copy($id_suffix);
 
-        if ($id_suffix != '')
-            $copy->id = $copy->id.$id_suffix;
+        if ($id_suffix != '') {
+            $copy->id = $copy->id . $id_suffix;
+        }
 
         return $copy;
     }

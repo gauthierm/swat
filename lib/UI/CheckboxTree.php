@@ -69,8 +69,9 @@ class CheckboxTree extends CheckboxList implements Model\State
 
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -88,10 +89,11 @@ class CheckboxTree extends CheckboxList implements Model\State
         $this->input_tag->type = 'checkbox';
         $this->input_tag->name = $this->id . '[]';
 
-        if ($this->tree !== null)
+        if ($this->tree !== null) {
             $num_nodes = $this->displayNode($this->tree);
-        else
+        } else {
             $num_nodes = 0;
+        }
 
         // Only display the check-all widget if more than one checkable item is
         // displayed.
@@ -159,9 +161,11 @@ class CheckboxTree extends CheckboxList implements Model\State
      *
      * @return integer the number of checkable nodes in the tree.
      */
-    private function displayNode(Model\DataTreeNode $node, $nodes = 0,
-        $parent_index = '')
-    {
+    private function displayNode(
+        Model\DataTreeNode $node,
+        $nodes = 0,
+        $parent_index = ''
+    ) {
         // build a unique id of the indexes of the tree
         if ($parent_index === '' || $parent_index === null) {
             // index of the first node is just the node index
@@ -176,13 +180,15 @@ class CheckboxTree extends CheckboxList implements Model\State
                 $this->input_tag->id = $this->id . '_' . $index;
                 $this->input_tag->value = $node->value;
 
-                if (in_array($node->value, $this->values))
+                if (in_array($node->value, $this->values)) {
                     $this->input_tag->checked = 'checked';
-                else
+                } else {
                     $this->input_tag->checked = null;
+                }
 
-                if (!$this->isSensitive())
+                if (!$this->isSensitive()) {
                     $this->input_tag->disabled = 'disabled';
+                }
 
                 $this->label_tag->for = $this->id . '_' . $index;
                 $this->label_tag->setContent($node->title);
@@ -212,8 +218,9 @@ class CheckboxTree extends CheckboxList implements Model\State
         }
 
         // count checkable nodes
-        if ($node->value !== null)
+        if ($node->value !== null) {
             $nodes++;
+        }
 
         return $nodes;
     }

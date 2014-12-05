@@ -40,7 +40,7 @@ class CrossSiteRequestForgeryException extends Exception
      * @param integer $code    the code of the exception.
      * @param UI\Form $form    the form that did not authenticate.
      */
-    public function __construct($message = null, $code = 0, UI\Form $form)
+    public function __construct($message, $code, UI\Form $form)
     {
         parent::__construct($message, $code);
         $this->form = $form;

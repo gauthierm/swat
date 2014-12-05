@@ -92,8 +92,9 @@ class TimeZoneEntry extends InputControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 

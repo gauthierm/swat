@@ -124,7 +124,6 @@ class ToolLink extends Control
     public function __construct($id = null)
     {
         parent::__construct($id);
-
         $this->addStyleSheet('packages/swat/styles/swat-tool-link.css');
     }
 
@@ -141,9 +140,9 @@ class ToolLink extends Control
     public function init()
     {
         parent::init();
-
-        if ($this->stock_id !== null)
+        if ($this->stock_id !== null) {
             $this->setFromStock($this->stock_id, false);
+        }
     }
 
     // }}}
@@ -154,8 +153,9 @@ class ToolLink extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -278,8 +278,9 @@ class ToolLink extends Control
                 );
         }
 
-        if ($overwrite_properties || ($this->title === null))
+        if ($overwrite_properties || ($this->title === null)) {
             $this->title = $title;
+        }
 
         $this->stock_class = $class;
     }
@@ -297,11 +298,13 @@ class ToolLink extends Control
     {
         $classes = array('swat-tool-link');
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $classes[] = 'swat-tool-link-insensitive';
+        }
 
-        if ($this->stock_class !== null)
+        if ($this->stock_class !== null) {
             $classes[] = $this->stock_class;
+        }
 
         $classes = array_merge($classes, $this->classes);
 
@@ -328,15 +331,17 @@ class ToolLink extends Control
             $tag->target = $this->target;
         }
 
-        if ($this->value === null)
+        if ($this->value === null) {
             $tag->href = $this->link;
-        elseif (is_array($this->value))
+        } elseif (is_array($this->value)) {
             $tag->href = vsprintf($this->link, $this->value);
-        else
+        } else {
             $tag->href = sprintf($this->link, $this->value);
+        }
 
-        if ($this->tooltip !== null)
+        if ($this->tooltip !== null) {
             $tag->title = $this->tooltip;
+        }
 
         $tag->accesskey = $this->access_key;
 
@@ -359,8 +364,9 @@ class ToolLink extends Control
         $tag->id = $this->id;
         $tag->class = $this->getCSSClassString();
 
-        if ($this->tooltip !== null)
+        if ($this->tooltip !== null) {
             $tag->title = $this->tooltip;
+        }
 
         return $tag;
     }

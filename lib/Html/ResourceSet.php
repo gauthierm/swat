@@ -2,11 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Swat/SwatHtmlHeadEntry.php';
-require_once 'Swat/SwatStyleSheetHtmlHeadEntry.php';
-require_once 'Swat/SwatLessStyleSheetHtmlHeadEntry.php';
-require_once 'Swat/SwatJavaScriptHtmlHeadEntry.php';
-require_once 'Swat/SwatInlineJavaScriptHtmlHeadEntry.php';
+namespace Silverorange\Swat\Html;
+
+use Silverorange\Swat\Exception;
 
 /**
  * A collection of HTML head entries
@@ -18,7 +16,7 @@ require_once 'Swat/SwatInlineJavaScriptHtmlHeadEntry.php';
  * @copyright 2006-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
+class HtmlHeadEntrySet implements \Countable, \IteratorAggregate
 {
     // {{{ protected properties
 
@@ -32,15 +30,15 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     protected $entries = array();
 
     /**
-     * Maps HTML head entry URIs to {@link SwatHtmlHeadEntry} class names
+     * Maps HTML head entry URIs to {@link Resource} class names
      *
-     * @see SwatHtmlHeadEntrySet::addEntry()
-     * @see SwatHtmlHeadEntrySet::addTypeMapping()
+     * @see ResourceSet::addEntry()
+     * @see ResourceSet::addTypeMapping()
      */
     protected $type_map = array(
-        '/\.js$/'  => 'SwatJavaScriptHtmlHeadEntry',
-        '/\.css$/' => 'SwatStyleSheetHtmlHeadEntry',
-        '/\.less$/' => 'SwatLessStyleSheetHtmlHeadEntry',
+        '/\.js$/'  => '\Silverorange\Swat\Html\JavaScriptResource',
+        '/\.css$/' => '\Silverorange\Swat\Html\StyleSheetResource',
+        '/\.less$/' => '\Silverorange\Swat\Html\LessResource',
     );
 
     // }}}
@@ -49,10 +47,10 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     /**
      * Creates a new HTML head entry collection
      *
-     * @param SwatHtmlHeadEntrySet $set an optional existing HTML head entry
-     *                                  set to build this set from.
+     * @param ResourceSet $set an optional existing HTML head entry set to
+     *                         build this set from.
      */
-    public function __construct(SwatHtmlHeadEntrySet $set = null)
+    public function __construct(ResourceSet $set = null)
     {
         if ($set !== null) {
             $this->addEntrySet($set);
@@ -65,7 +63,7 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     /**
      * Adds a HTML head entry to this set
      *
-     * @param SwatHtmlHeadEntry|string $entry the entry to add.
+     * @param Resource|string $entry the entry to add.
      */
     public function addEntry($entry)
     {
@@ -73,18 +71,22 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
             $class = $this->getClassFromType($entry);
 
             if ($class === null) {
-                throw new SwatClassNotFoundException(
-                    'SwatHtmlHeadEntry class not found for entry string of "' .
-                    $entry . '".');
+                throw new Exception\ClassNotFoundException(
+                    'Resource class not found for entry string of "' .
+                    $entry . '".'
+                );
             }
 
             $entry = new $class($entry);
         }
 
-        if (!($entry instanceof SwatHtmlHeadEntry)) {
-            throw new SwatInvalidTypeException(
+        if (!$entry instanceof Resource) {
+            throw new Exception\InvalidTypeException(
                 'Added entry must be either a string or an instance of a' .
-                'SwatHtmlHeadEntry.', 0, $entry);
+                'Resource.',
+                0,
+                $entry
+            );
         }
 
         $uri = $entry->getUri();
@@ -99,9 +101,9 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     /**
      * Adds a set of HTML head entries to this set
      *
-     * @param SwatHtmlHeadEntrySet $set the set to add.
+     * @param ResourceSet $set the set to add.
      */
-    public function addEntrySet(SwatHtmlHeadEntrySet $set)
+    public function addEntrySet(ResourceSet $set)
     {
         $this->entries = array_merge($this->entries, $set->entries);
     }
@@ -120,7 +122,7 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     /**
      * Gets the number of entries in this set
      *
-     * Fulfills the Coutnable interface.
+     * Fulfills the \Countable interface.
      *
      * @return integer the number of entries in this set.
      */
@@ -135,13 +137,13 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     /**
      * Gets an iterator over the entries in this set
      *
-     * Fulfills the IteratorAggregate interface.
+     * Fulfills the \IteratorAggregate interface.
      *
-     * @return Iterable an iterator over the entries in this set.
+     * @return \Traversable an iterator over the entries in this set.
      */
     public function getIterator()
     {
-        // return an array copy by design to fulfil the IteratorAggregate
+        // return an array copy by design to fulfil the \IteratorAggregate
         // interface.
         return $this->entries;
     }
@@ -153,21 +155,24 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
     {
         if (is_string($type)) {
             if ($class === null) {
-                throw new InvalidArgumentException(
-                    'If $type is specified, $class is required');
+                throw new \InvalidArgumentException(
+                    'If $type is specified, $class is required'
+                );
             }
             $type = array($type => (string)$class);
             $class = null;
         }
 
         if (!is_array($type)) {
-            throw new InvalidArgumentException(
-                'Type must either be an array or a string.');
+            throw new \InvalidArgumentException(
+                'Type must either be an array or a string.'
+            );
         }
 
         if ($class !== null) {
-            throw new InvalidArgumentException(
-                'If $type is an array, $class must not be specified.');
+            throw new \InvalidArgumentException(
+                'If $type is an array, $class must not be specified.'
+            );
         }
 
         $this->type_map = array_merge($this->type_map, $type);
@@ -180,11 +185,11 @@ class SwatHtmlHeadEntrySet implements Countable, IteratorAggregate
      * Gets a subset of this set by the entry type
      *
      * @param string $type the type of HTML head entry to get. For example,
-     *                     'SwatJavaScriptHtmlHeadEntry'.
+     *                     'JavaScriptResource'.
      *
-     * @return SwatHtmlHeadEntrySet a subset of this set containing only
-     *                              entries of the specified type. If no such
-     *                              entries exist, an empty set is returned.
+     * @return ResourceSet a subset of this set containing only entries of the
+     *                     specified type. If no such entries exist, an empty
+     *                     set is returned.
      */
     public function getByType($type)
     {

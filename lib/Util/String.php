@@ -16,14 +16,14 @@ use Silverorange\Swat\L;
  */
 class String
 {
-    // {{{ static public properties
+    // {{{ public static properties
 
     /**
      * Block level XHTML elements used when filtering strings
      *
      * @var array
      */
-    static public $blocklevel_elements = array(
+    public static $blocklevel_elements = array(
         'p',          'pre',     'dl',     'div',
         'blockquote', 'form',    'h[1-6]', 'table',
         'fieldset',   'address', 'ul',     'ol',
@@ -35,7 +35,7 @@ class String
      *
      * @var array
      */
-    static public $breaking_elements = array(
+    public static $breaking_elements = array(
         'li', 'dd', 'dt',
     );
 
@@ -44,7 +44,7 @@ class String
      *
      * @var array
      */
-    static public $table_elements = array(
+    public static $table_elements = array(
         'thead', 'tfoot',    'tbody', 'tr', 'th', 'td',
         'col',   'colgroup',
     );
@@ -56,7 +56,7 @@ class String
      *
      * @var array
      */
-    static public $xhtml_elements = array(
+    public static $xhtml_elements = array(
         'a',      'abbr',    'acronym',  'address',  'applet',   'area',
         'b',      'base',    'basefont', 'bdo',      'big',      'blockquote',
         'body',   'br',      'button',   'caption',  'center',   'cite',
@@ -80,12 +80,12 @@ class String
      *
      * @var array
      */
-    static public $preformatted_elements = array(
+    public static $preformatted_elements = array(
         'script', 'style', 'pre',
     );
 
     // }}}
-    // {{{ static public function toXHTML()
+    // {{{ public static function toXHTML()
 
     /**
      * Intelligently converts a text block to XHTML
@@ -101,7 +101,7 @@ class String
      *
      * @return string the text block converted to XHTML.
      */
-    static public function toXHTML($text)
+    public static function toXHTML($text)
     {
         $blocklevel_elements = implode('|', self::$blocklevel_elements);
         $breaking_elements = implode('|', self::$breaking_elements);
@@ -182,12 +182,13 @@ class String
         $paragraphs = explode("\n\n", $text);
 
         $in_blocklevel = false;
-        foreach($paragraphs as &$paragraph) {
+        foreach ($paragraphs as &$paragraph) {
             // ignore paragraphs containing all whitespace or empty paragraphs.
             // this prevents empty paragraph tags from appearing in the
             // returned string
-            if (trim($paragraph) == '')
+            if (trim($paragraph) == '') {
                 continue;
+            }
 
             $blocklevel_started =
                 (preg_match($starting_blocklevel, $paragraph) == 1);
@@ -195,8 +196,9 @@ class String
             $blocklevel_ended =
                 (preg_match($ending_blocklevel, $paragraph) == 1);
 
-            if ($blocklevel_started)
+            if ($blocklevel_started) {
                 $in_blocklevel = true;
+            }
 
             $is_preformatted = (preg_match($preformat, $paragraph) == 1);
 
@@ -237,25 +239,28 @@ class String
                         $tag_index++;
                     } elseif (isset($text[$text_index])) {
                         // minimize entities for text
-                        $paragraph.=
-                            self::minimizeEntities($text[$text_index][0]);
-
+                        $paragraph .= self::minimizeEntities(
+                            $text[$text_index][0]
+                        );
                         $text_index++;
                     }
                 }
 
                 // if we are in a blocklevel element, we are done
-                if ($in_blocklevel)
-                    $paragraph.= "\n\n";
+                if ($in_blocklevel) {
+                    $paragraph .= "\n\n";
+                }
             }
 
             // if we are not in a blocklevel element or a preformatted
             // element, wrap the paragraph in paragraph tags
-            if (!$in_blocklevel && !$is_preformatted)
+            if (!$in_blocklevel && !$is_preformatted) {
                 $paragraph = '<p>' . $paragraph . "</p>\n\n";
+            }
 
-            if ($blocklevel_ended)
+            if ($blocklevel_ended) {
                 $in_blocklevel = false;
+            }
         }
 
         $text = implode('', $paragraphs);
@@ -273,7 +278,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function minimizeEntities()
+    // {{{ public static function minimizeEntities()
 
     /**
      * Converts a UTF-8 text string to have the minimal number of entities
@@ -292,7 +297,7 @@ class String
      *
      * @return string the UTF-8 text string with minimal entities.
      */
-    static public function minimizeEntities($text)
+    public static function minimizeEntities($text)
     {
         // decode any entities that might already exist
         $text = html_entity_decode($text, \ENT_COMPAT, 'UTF-8');
@@ -305,7 +310,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function minimizeEntitiesWithTags()
+    // {{{ public static function minimizeEntitiesWithTags()
 
     /**
      * Same as {@link SwatString::minimizeEntities()} but also accepts a list
@@ -316,7 +321,7 @@ class String
      *
      * @return string the UTF-8 text string with minimal entities.
      */
-    static public function minimizeEntitiesWithTags($text, $tags)
+    public static function minimizeEntitiesWithTags($text, $tags)
     {
         $pattern = sprintf('/(<\/?(%s) ?.*>)/uU', implode('|', $tags));
 
@@ -340,7 +345,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function condense()
+    // {{{ public static function condense()
 
     /**
      * Takes a block of text and condenses it into a small fragment of XHTML.
@@ -360,7 +365,7 @@ class String
      * @return string the condensed text. The condensed text is an XHTML
      *                formatted string.
      */
-    static public function condense($text, $max_length = 300, $ellipses = ' …')
+    public static function condense($text, $max_length = 300, $ellipses = ' …')
     {
         // remove XML comments
         $xml_comments = '/<!--.*?-->/siu';
@@ -459,7 +464,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function condenseToName()
+    // {{{ public static function condenseToName()
 
     /**
      * Condenses a string to a name
@@ -480,7 +485,7 @@ class String
      *
      * @return string the string condensed into a name.
      */
-    static public function condenseToName($string, $max_length = 15)
+    public static function condenseToName($string, $max_length = 15)
     {
         if (!is_string($string)) {
             $string = strval($string);
@@ -526,15 +531,16 @@ class String
 
                 if ($first) {
                     // first word too long, so forced to chop it
-                    if (strlen($encoded_word) >= $max_length)
-                        return substr($encoded_word, 0 , $max_length);
-
+                    if (strlen($encoded_word) >= $max_length) {
+                        return substr($encoded_word, 0, $max_length);
+                    }
                     $first = false;
                 }
 
                 // this word would push us over the limit
-                if (strlen($string_out) + strlen($encoded_word) > $max_length)
+                if (strlen($string_out) + strlen($encoded_word) > $max_length) {
                     return $string_out;
+                }
 
                 $string_out .= $encoded_word;
             }
@@ -551,17 +557,18 @@ class String
             $string_exp = explode(' ', $string);
 
             // first word too long, so forced to chop it
-            if (strlen($string_exp[0]) >= $max_length)
-                return substr($string_exp[0], 0 , $max_length);
+            if (strlen($string_exp[0]) >= $max_length) {
+                return substr($string_exp[0], 0, $max_length);
+            }
 
             $string_out = '';
 
             // add words to output until it is too long
             foreach ($string_exp as $word) {
                 // this word would push us over the limit
-                if (strlen($string_out) + strlen($word) > $max_length)
+                if (strlen($string_out) + strlen($word) > $max_length) {
                     return $string_out;
-
+                }
                 $string_out .= $word;
             }
         }
@@ -570,7 +577,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function ellipsizeRight()
+    // {{{ public static function ellipsizeRight()
 
     /**
      * Ellipsizes a string to the right
@@ -614,10 +621,12 @@ class String
      *                appended with ellipses characters if it was longer than
      *                <code>$max_length</code>.
      */
-    static public function ellipsizeRight($string, $max_length,
-        // the space is a non-breaking space
-        $ellipses = ' …', &$flag = null)
-    {
+    public static function ellipsizeRight(
+        $string,
+        $max_length,
+        $ellipses = ' …',
+        &$flag = null
+    ) {
         $matches = array();
         self::stripEntities($string, $matches);
 
@@ -639,8 +648,9 @@ class String
         // find the last space up to the max_length in the string
         $chop_pos = strrpos($string, ' ');
 
-        if ($chop_pos !== false)
+        if ($chop_pos !== false) {
             $string = substr($string, 0, $chop_pos);
+        }
 
         $string = self::removeTrailingPunctuation($string);
 
@@ -653,7 +663,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function ellipsizeMiddle()
+    // {{{ public static function ellipsizeMiddle()
 
     /**
      * Ellipsizes a string in the middle
@@ -694,10 +704,12 @@ class String
      *                ellipses characters in roughly the middle if it was
      *                longer than <code>$max_length</code>.
      */
-    static public function ellipsizeMiddle($string, $max_length,
-        // the spaces are non-breaking spaces
-        $ellipses = ' … ', &$flag = null)
-    {
+    public static function ellipsizeMiddle(
+        $string,
+        $max_length,
+        $ellipses = ' … ',
+        &$flag = null
+    ) {
         $string = trim($string);
 
         $matches = array();
@@ -718,8 +730,10 @@ class String
 
             // just take a piece of the string from both ends
             $first_piece = substr($string, 0, $max_length / 2);
-            $last_piece = substr($string,
-                    -($max_length - strlen($first_piece)));
+            $last_piece = substr(
+                $string,
+                -($max_length - strlen($first_piece))
+            );
 
         } else {
 
@@ -748,8 +762,9 @@ class String
              *       the string than the last word.
              */
             $last_space = strrpos($last_piece, ' ');
-            if ($last_space !== false)
+            if ($last_space !== false) {
                 $last_piece = substr($last_piece, $last_space + 1);
+            }
 
             /*
              * Get the first piece by ellipsizing with a max_length of
@@ -757,8 +772,11 @@ class String
              */
             $max_first_length = $max_length - strlen($last_piece);
 
-            $first_piece =
-                self::ellipsizeRight($string, $max_first_length, '');
+            $first_piece = self::ellipsizeRight(
+                $string,
+                $max_first_length,
+                ''
+            );
         }
 
         $hole_start = strlen($first_piece);
@@ -767,15 +785,20 @@ class String
 
         $string = $first_piece . $ellipses . $last_piece;
 
-        self::insertEntities($string, $matches,
-            $hole_start, $hole_end, $hole_length);
+        self::insertEntities(
+            $string,
+            $matches,
+            $hole_start,
+            $hole_end,
+            $hole_length
+        );
 
         $flag = true;
         return $string;
     }
 
     // }}}
-    // {{{ static public function removeTrailingPunctuation()
+    // {{{ public static function removeTrailingPunctuation()
 
     /**
      * Removes trailing punctuation from a string
@@ -784,13 +807,13 @@ class String
      *
      * @return string the string with trailing punctuation removed.
      */
-    static public function removeTrailingPunctuation($string)
+    public static function removeTrailingPunctuation($string)
     {
         return preg_replace('/\W+$/su', '', $string);
     }
 
     // }}}
-    // {{{ static public function removeLeadingPunctuation()
+    // {{{ public static function removeLeadingPunctuation()
 
     /**
      * Removes leading punctuation from a string
@@ -799,13 +822,13 @@ class String
      *
      * @return string the string with leading punctuation removed.
      */
-    static public function removeLeadingPunctuation($string)
+    public static function removeLeadingPunctuation($string)
     {
         return preg_replace('/^\W+/su', '', $string);
     }
 
     // }}}
-    // {{{ static public function removePunctuation()
+    // {{{ public static function removePunctuation()
 
     /**
      * Removes both leading and trailing punctuation from a string
@@ -814,7 +837,7 @@ class String
      *
      * @return string the string with leading and trailing punctuation removed.
      */
-    static public function removePunctuation($string)
+    public static function removePunctuation($string)
     {
         $string = self::removeTrailingPunctuation($string);
         $string = self::removeLeadingPunctuation($string);
@@ -822,7 +845,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function getInternationalCurrencySymbol()
+    // {{{ public static function getInternationalCurrencySymbol()
 
     /**
      * Gets the international currency symbol of a locale
@@ -837,7 +860,7 @@ class String
      *
      * @throws Exception\Exception if the given locale could not be set.
      */
-    static public function getInternationalCurrencySymbol($locale = null)
+    public static function getInternationalCurrencySymbol($locale = null)
     {
         if ($locale !== null) {
             $old_locale = setlocale(\LC_MONETARY, 0);
@@ -875,14 +898,15 @@ class String
         // strip C99-defined spacing character
         $symbol = substr($symbol, 0, 3);
 
-        if ($locale !== null)
+        if ($locale !== null) {
             setlocale(\LC_ALL, $old_locale);
+        }
 
         return $symbol;
     }
 
     // }}}
-    // {{{ static public function numberFormat()
+    // {{{ public static function numberFormat()
 
     /**
      * Formats a number using locale-based separators
@@ -906,17 +930,24 @@ class String
      * @throws Exception\Exception if the locale-based output cannot be
      *         converted to UTF-8.
      */
-    static public function numberFormat($value, $decimals = null,
-        $locale = null, $show_thousands_separator = true)
-    {
+    public static function numberFormat(
+        $value,
+        $decimals = null,
+        $locale = null,
+        $show_thousands_separator = true
+    ) {
         // look up decimal precision if none is provided
         if ($decimals === null) {
             $decimals = self::getDecimalPrecision($value);
         }
 
         // number_format can't handle UTF-8 separators, so insert placeholders
-        $output =  number_format($value, $decimals, '.',
-            $show_thousands_separator ? ',' : '');
+        $output =  number_format(
+            $value,
+            $decimals,
+            '.',
+            $show_thousands_separator ? ',' : ''
+        );
 
         if ($locale !== null) {
             $old_locale = setlocale(\LC_ALL, 0);
@@ -961,7 +992,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function byteFormat()
+    // {{{ public static function byteFormat()
 
     /**
      * Format bytes in human readible units
@@ -997,9 +1028,12 @@ class String
      *
      * @return string the byte value formated according to IEC units.
      */
-    static public function byteFormat($value, $magnitude = -1,
-        $iec_units = false, $significant_digits = 3)
-    {
+    public static function byteFormat(
+        $value,
+        $magnitude = -1,
+        $iec_units = false,
+        $significant_digits = 3
+    ) {
         if ($iec_units) {
             $units = array(
                 60 => 'EiB',
@@ -1057,11 +1091,14 @@ class String
                 // round to number of significant digits
                 $integer_digits = floor(log10($value)) + 1;
 
-                $fractional_digits =
-                    max($significant_digits - $integer_digits, 0);
-
-                $formatted_value = self::numberFormat($value,
-                    $fractional_digits);
+                $fractional_digits = max(
+                    $significant_digits - $integer_digits,
+                    0
+                );
+                $formatted_value = self::numberFormat(
+                    $value,
+                    $fractional_digits
+                );
             } else {
                 // just round to one fractional digit
                 $formatted_value = self::numberFormat($value, 1);
@@ -1072,7 +1109,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function pad()
+    // {{{ public static function pad()
 
     /**
      * Pads a string in a UTF-8 safe way.
@@ -1087,14 +1124,18 @@ class String
      *
      * @return string the padded string.
      */
-    static public function pad($input, $pad_length, $pad_string = ' ',
-        $pad_type = \STR_PAD_RIGHT)
-    {
+    public static function pad(
+        $input,
+        $pad_length,
+        $pad_string = ' ',
+        $pad_type = \STR_PAD_RIGHT
+    ) {
         $output = '';
         $length = $pad_length - strlen($input);
 
-        if ($pad_string === null || strlen($pad_string) == 0)
+        if ($pad_string === null || strlen($pad_string) == 0) {
             $pad_string = ' ';
+        }
 
         if ($length > 0) {
             switch ($pad_type) {
@@ -1109,9 +1150,10 @@ class String
                 case \STR_PAD_BOTH:
                     $left_length = floor($length / 2);
                     $right_length = ceil($length / 2);
-                    $padding = str_repeat($pad_string,
-                        ceil($right_length / strlen($pad_string)));
-
+                    $padding = str_repeat(
+                        $pad_string,
+                        ceil($right_length / strlen($pad_string))
+                    );
                     $output = substr($padding, 0, $left_length) . $input .
                         substr($padding, 0, $right_length);
 
@@ -1128,11 +1170,12 @@ class String
         } else {
             $output = $input;
         }
+
         return $output;
     }
 
     // }}}
-    // {{{ static public function toInteger()
+    // {{{ public static function toInteger()
 
     /**
      * Convert a locale-formatted number and return it as an integer.
@@ -1153,7 +1196,7 @@ class String
      * @throws Exception\Exception if the converted number is too large to fit
      *         in an integer.
      */
-    static public function toInteger($string)
+    public static function toInteger($string)
     {
         $lc = localeconv();
 
@@ -1165,8 +1208,11 @@ class String
             $lc['thousands_sep'] => '',
         );
 
-        $value = str_replace(array_keys($remove_parts),
-            array_values($remove_parts), $string);
+        $value = str_replace(
+            array_keys($remove_parts),
+            array_values($remove_parts),
+            $string
+        );
 
         // note: This might be done better with a regexp, though
         // checking too closely how well a number matches its locale
@@ -1195,7 +1241,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function toFloat()
+    // {{{ public static function toFloat()
 
     /**
      * Convert a locale-formatted number and return it as an float.
@@ -1206,7 +1252,7 @@ class String
      *
      * @return float The converted value.
      */
-    static public function toFloat($string)
+    public static function toFloat($string)
     {
         $lc = localeconv();
 
@@ -1219,8 +1265,11 @@ class String
             $lc['thousands_sep'] => '',
         );
 
-        $value = str_replace(array_keys($remove_parts),
-            array_values($remove_parts), $string);
+        $value = str_replace(
+            array_keys($remove_parts),
+            array_values($remove_parts),
+            $string
+        );
 
         // note: This might be done better with a regexp, though
         // checking too closely how well a number matches its locale
@@ -1230,7 +1279,7 @@ class String
         return (is_numeric($value)) ? floatval($value) : null;
     }
     // }}}
-    // {{{ static public function toList()
+    // {{{ public static function toList()
 
     /**
      * Convert an iterable object or array into a human-readable, delimited
@@ -1259,9 +1308,12 @@ class String
      * @todo Think about using a mask to make this as flexible as possible for
      *       different locales.
      */
-    static public function toList($iterator, $conjunction = 'and',
-        $delimiter = ', ', $display_final_delimiter = true)
-    {
+    public static function toList(
+        $iterator,
+        $conjunction = 'and',
+        $delimiter = ', ',
+        $display_final_delimiter = true
+    ) {
         if (is_array($iterator)) {
             $iterator = new \ArrayIterator($iterator);
         }
@@ -1300,7 +1352,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function getTimePeriodParts()
+    // {{{ public static function getTimePeriodParts()
 
     /**
      * Gets the parts representing a time period matching a desired interval
@@ -1327,9 +1379,10 @@ class String
      *
      * @return array an array of time period parts.
      */
-    static public function getTimePeriodParts($seconds,
-        $interval_parts = null)
-    {
+    public static function getTimePeriodParts(
+        $seconds,
+        $interval_parts = null
+    ) {
         $interval = Date::getIntervalFromSeconds($seconds);
 
         if ($interval_parts === null) {
@@ -1422,7 +1475,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function getHumanReadableTimePeriodParts()
+    // {{{ public static function getHumanReadableTimePeriodParts()
 
     /**
      * Gets the parts to construct a human-readable string representing a time
@@ -1449,9 +1502,10 @@ class String
      *
      * @return array an array of human-readable time period string parts.
      */
-    static public function getHumanReadableTimePeriodParts($seconds,
-        $interval_parts = null)
-    {
+    public static function getHumanReadableTimePeriodParts(
+        $seconds,
+        $interval_parts = null
+    ) {
         // Depend on getTimePeriodParts() to return the correct parts requested
         $parts = static::getTimePeriodParts(
             $seconds,
@@ -1519,7 +1573,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function toHumanReadableTimePeriod()
+    // {{{ public static function toHumanReadableTimePeriod()
 
     /**
      * Gets a human-readable string representing a time period
@@ -1538,15 +1592,16 @@ class String
      *
      * @return string a human-readable time period.
      */
-    static public function toHumanReadableTimePeriod($seconds,
-        $largest_part = false)
-    {
+    public static function toHumanReadableTimePeriod(
+        $seconds,
+        $largest_part = false
+    ) {
         $parts = self::getHumanReadableTimePeriodParts($seconds);
         return self::toHumanReadableTimePeriodString($parts, $largest_part);
     }
 
     // }}}
-    // {{{ static public function toHumanReadableTimePeriodWithWeeks()
+    // {{{ public static function toHumanReadableTimePeriodWithWeeks()
 
     /**
      * Gets a human-readable string representing a time period that includes
@@ -1567,9 +1622,10 @@ class String
      *
      * @return string a human-readable time period.
      */
-    static public function toHumanReadableTimePeriodWithWeeks($seconds,
-        $largest_part = false)
-    {
+    public static function toHumanReadableTimePeriodWithWeeks(
+        $seconds,
+        $largest_part = false
+    ) {
         $interval_parts =
             Date::DI_YEARS   |
             Date::DI_WEEKS   |
@@ -1587,7 +1643,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function toHumanReadableTimePeriodWithWeeksAndDays()
+    // {{{ public static function toHumanReadableTimePeriodWithWeeksAndDays()
 
     /**
      * Gets a human-readable string representing a time period that includes
@@ -1604,7 +1660,7 @@ class String
      *
      * @return string a human-readable time period.
      */
-    static public function toHumanReadableTimePeriodWithWeeksAndDays($seconds)
+    public static function toHumanReadableTimePeriodWithWeeksAndDays($seconds)
     {
         $interval_parts =
             Date::DI_YEARS   |
@@ -1635,7 +1691,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function hash()
+    // {{{ public static function hash()
 
     /**
      * Gets a unique hash of a string
@@ -1649,7 +1705,7 @@ class String
      * @return string the unique hash of the given string. The returned string
      *                is safe to use inside a URI.
      */
-    static public function hash($string)
+    public static function hash($string)
     {
         $hash = md5($string, true);
         $hash = base64_encode($hash);
@@ -1665,7 +1721,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function getSalt()
+    // {{{ public static function getSalt()
 
     /**
      * Gets a salt value of the specified length
@@ -1681,17 +1737,17 @@ class String
      *
      * @return string a salt value of the specified length.
      */
-    static public function getSalt($length)
+    public static function getSalt($length)
     {
         $salt = '';
-        for ($i = 0; $i < $length; $i++)
+        for ($i = 0; $i < $length; $i++) {
             $salt .= chr(mt_rand(1, 127));
-
+        }
         return $salt;
     }
 
     // }}}
-    // {{{ static public function getCryptSalt()
+    // {{{ public static function getCryptSalt()
 
     /**
      * Gets a salt value for crypt(3)
@@ -1704,7 +1760,7 @@ class String
      *
      * @return string a salt value of the specified length.
      */
-    static public function getCryptSalt($length)
+    public static function getCryptSalt($length)
     {
         $length = max(0, intval($length));
 
@@ -1715,7 +1771,7 @@ class String
 
             if ($index >= 38) {
                 $salt .= chr($index - 38 + 97);
-            } else if ($index >= 12) {
+            } elseif ($index >= 12) {
                 $salt .= chr($index - 12 + 65);
             } else {
                 $salt .= chr($index + 46);
@@ -1726,7 +1782,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function stripXHTMLTags()
+    // {{{ public static function stripXHTMLTags()
 
     /**
      * Removes all XHTML tags from a string
@@ -1740,13 +1796,13 @@ class String
      *
      * @return string the given string with all XHTML tags removed.
      */
-    static public function stripXHTMLTags($string)
+    public static function stripXHTMLTags($string)
     {
         $elements = implode('|', self::$xhtml_elements);
     }
 
     // }}}
-    // {{{ static public function linkify()
+    // {{{ public static function linkify()
 
     /**
      * Replaces all URI's in a string with anchor markup tags
@@ -1760,14 +1816,17 @@ class String
      *
      * @return string the given string with all URI's wrapped in anchor tags.
      */
-    static public function linkify($string)
+    public static function linkify($string)
     {
-        return preg_replace ('@(https?://[^\s"\'\[\]]+\.[^\s"\'.\[\]]+)@iu',
-            '<a href="\1">\1</a>', $string);
+        return preg_replace(
+            '@(https?://[^\s"\'\[\]]+\.[^\s"\'.\[\]]+)@iu',
+            '<a href="\1">\1</a>',
+            $string
+        );
     }
 
     // }}}
-    // {{{ static public function signedSerialize()
+    // {{{ public static function signedSerialize()
 
     /**
      * Serializes and signs a value using a salt
@@ -1784,7 +1843,7 @@ class String
      *
      * @see String::signedSerialize()
      */
-    static public function signedSerialize($data, $salt)
+    public static function signedSerialize($data, $salt)
     {
         $serialized_data = serialize($data);
         $signature_data = self::hash($serialized_data.(string)$salt);
@@ -1793,7 +1852,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function signedUnserialize()
+    // {{{ public static function signedUnserialize()
 
     /**
      * Unserializes a signed serialized value
@@ -1809,7 +1868,7 @@ class String
      *
      * @see String::signedSerialize()
      */
-    static public function signedUnserialize($data, $salt)
+    public static function signedUnserialize($data, $salt)
     {
         $data_exp = explode('|', (string)$data, 2);
 
@@ -1836,7 +1895,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function validateUtf8()
+    // {{{ public static function validateUtf8()
 
     /**
      * Checks whether or not a string is valid UTF-8
@@ -1845,13 +1904,13 @@ class String
      *
      * @return boolean true if the string is valid UTF-8 and false if it is not.
      */
-    static public function validateUtf8($string)
+    public static function validateUtf8($string)
     {
         return (mb_detect_encoding($string, 'UTF-8', true) === 'UTF-8');
     }
 
     // }}}
-    // {{{ static public function validateEmailAddress()
+    // {{{ public static function validateEmailAddress()
 
     /**
      * Validates an email address
@@ -1865,7 +1924,7 @@ class String
      * @return boolean true if <i>$value</i> is a valid email address and
      *                 false if it is not.
      */
-    static public function validateEmailAddress($value)
+    public static function validateEmailAddress($value)
     {
         $valid_name_word = '[-!#$%&\'*+.\\/0-9=?A-Z^_`{|}~]+';
         $valid_domain_word = '[-!#$%&\'*+\\/0-9=?A-Z^_`{|}~]+';
@@ -1878,7 +1937,7 @@ class String
     }
 
     // }}}
-    // {{{ static public function escapeBinary()
+    // {{{ public static function escapeBinary()
 
     /**
      * Escapes a binary string making it safe to display using ASCII encoding
@@ -1891,7 +1950,7 @@ class String
      *
      * @return string the escaped, ASCII encoded string.
      */
-    static public function escapeBinary($string)
+    public static function escapeBinary($string)
     {
         $escaped = '';
 
@@ -1919,7 +1978,7 @@ class String
     }
 
     // }}}
-    // {{{ static protected function toHumanReadableTimePeriodString()
+    // {{{ protected static function toHumanReadableTimePeriodString()
 
     /**
      * Gets a human-readable string representing a time period from an array of
@@ -1940,9 +1999,10 @@ class String
      *
      * @return string a human-readable time period.
      */
-    static protected function toHumanReadableTimePeriodString(array $parts,
-        $largest_part = false)
-    {
+    protected static function toHumanReadableTimePeriodString(
+        array $parts,
+        $largest_part = false
+    ) {
         if ($largest_part && count($parts) > 0) {
             $parts = array(reset($parts));
         }
@@ -1951,7 +2011,7 @@ class String
     }
 
     // }}}
-    // {{{ static private function stripEntities()
+    // {{{ private static function stripEntities()
 
     /**
      * Strips entities from a string remembering their positions
@@ -1963,7 +2023,7 @@ class String
      * @param string &$string the string to strip entites from.
      * @param array  &$matches the array to store matches in.
      */
-    static private function stripEntities(&$string, &$matches)
+    private static function stripEntities(&$string, &$matches)
     {
         $reg_exp = '/&#?[a-z0-9]*?;/su';
 
@@ -1973,7 +2033,7 @@ class String
     }
 
     // }}}
-    // {{{ static private function insertEntities()
+    // {{{ private static function insertEntities()
 
     /**
      * Re-inserts stripped entities into a string in the correct positions
@@ -1989,9 +2049,13 @@ class String
      *                             and hole_start.
      * @param integer $hole_length the length of the new contents of the hole.
      */
-    static private function insertEntities(&$string, &$matches,
-        $hole_start = -1, $hole_end = -1, $hole_length = 0)
-    {
+    private static function insertEntities(
+        &$string,
+        &$matches,
+        $hole_start = -1,
+        $hole_end = -1,
+        $hole_length = 0
+    ) {
         for ($i = 0; $i < count($matches[0]); $i++) {
             $entity = $matches[0][$i][0];
             $position = $matches[0][$i][1];
@@ -2033,48 +2097,54 @@ class String
     }
 
     // }}}
-    //{{{ static private function parseNegativeNotation()
+    //{{{ private static function parseNegativeNotation()
 
-    static private function parseNegativeNotation($string)
+    private static function parseNegativeNotation($string)
     {
         $lc = localeconv();
 
         switch ($lc['n_sign_posn']) {
             // negative sign shown as: (5.00)
             case 0:
-                if (strpos($string, '(') !== false)
+                if (strpos($string, '(') !== false) {
                     return '-' . str_replace(
                         array('(', ')'),
                         array(),
                         $string
                     );
+                }
                 break;
 
             // negative sign trails number: 5.00-
             case 2:
                 if ($lc['negative_sign'] != '' &&
-                    strpos($string, $lc['negative_sign']) !== false)
+                    strpos($string, $lc['negative_sign']) !== false) {
                     return '-' . str_replace(
                         $lc['negative_sign'],
                         '',
                         $string
                     );
+                }
                 break;
             // negative sign prefixes number: -5.00
             default:
                 if ($lc['negative_sign'] != '' &&
-                    strpos($string, $lc['negative_sign']) !== false)
+                    strpos($string, $lc['negative_sign']) !== false) {
                     return str_replace(
-                        $lc['negative_sign'], '-', $string);
+                        $lc['negative_sign'],
+                        '-',
+                        $string
+                    );
+                }
         }
 
         return $string;
     }
 
     // }}}
-    // {{{ static private function getDecimalPrecision()
+    // {{{ private static function getDecimalPrecision()
 
-    static private function getDecimalPrecision($value)
+    private static function getDecimalPrecision($value)
     {
         $lc = localeconv();
 

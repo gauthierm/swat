@@ -73,9 +73,11 @@ class NavBar extends Control implements \Countable
      * @param string $link         an optional entry URI.
      * @param string $content_type an optional content type for the entry title.
      */
-    public function createEntry($title, $link = null,
-        $content_type = 'text/plain')
-    {
+    public function createEntry(
+        $title,
+        $link = null,
+        $content_type = 'text/plain'
+    ) {
         $this->addEntry(new Model\NavBarEntry($title, $link, $content_type));
     }
 
@@ -102,8 +104,9 @@ class NavBar extends Control implements \Countable
      */
     public function addEntries($entries)
     {
-        foreach ($entries as $entry)
+        foreach ($entries as $entry) {
             $this->entries[] = $entry;
+        }
     }
 
     // }}}
@@ -137,9 +140,10 @@ class NavBar extends Control implements \Countable
      * @thows Exception\Exception
      */
 
-    public function replaceEntryByPosition($position,
-        Model\NavBarEntry $new_entry)
-    {
+    public function replaceEntryByPosition(
+        $position,
+        Model\NavBarEntry $new_entry
+    ) {
         if (isset($this->entries[$position])) {
             $old_entry = $this->entries[$position];
             $this->entries[$position] = $new_entry;
@@ -178,8 +182,9 @@ class NavBar extends Control implements \Countable
      */
     public function getEntryByPosition($position)
     {
-        if ($position < 0)
+        if ($position < 0) {
             $position = count($this) + $position - 1;
+        }
 
         if (isset($this->entries[$position])) {
             return $this->entries[$position];
@@ -313,8 +318,9 @@ class NavBar extends Control implements \Countable
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -353,25 +359,27 @@ class NavBar extends Control implements \Countable
      * @param boolean           $first whether or not this entry should be
      *                                 displayed as the first entry.
      */
-    protected function displayEntry(Model\NavBarEntry $entry,
-        $show_link = true, $first = false)
-    {
+    protected function displayEntry(
+        Model\NavBarEntry $entry,
+        $show_link = true,
+        $first = false
+    ) {
         $title = ($entry->title === null) ? '' : $entry->title;
         $link  = $this->getLink($entry);
 
         if ($link !== null && $show_link) {
             $a_tag = new Html\Tag('a');
             $a_tag->href = $link;
-            if ($first)
+            if ($first) {
                 $a_tag->class = 'swat-navbar-first';
-
+            }
             $a_tag->setContent($title, $entry->content_type);
             $a_tag->display();
         } else {
             $span_tag = new Html\Tag('span');
-            if ($first)
+            if ($first) {
                 $span_tag->class = 'swat-navbar-first';
-
+            }
             $span_tag->setContent($title, $entry->content_type);
             $span_tag->display();
         }

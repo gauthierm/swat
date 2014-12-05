@@ -138,8 +138,9 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::render();
 
@@ -157,14 +158,16 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
         $checkbox_tag->value = $this->value;
         $checkbox_tag->tabindex = $this->tab_index;
 
-        if (!$this->sensitive)
+        if (!$this->sensitive) {
             $checkbox_tag->disabled = 'disabled';
+        }
 
         $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
         if ($view !== null) {
             $selection = $view->getSelection($this);
-            if ($selection->contains($this->value))
+            if ($selection->contains($this->value)) {
                 $checkbox_tag->checked = 'checked';
+            }
         }
 
         echo '<span class="swat-checkbox-wrapper">';
@@ -208,7 +211,10 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
         if ($view !== null) {
             $javascript = sprintf(
                 "var %s = new SwatCheckboxCellRenderer('%s', %s);",
-                $this->id, $this->id, $view->id);
+                $this->id,
+                $this->id,
+                $view->id
+            );
         } else {
             $javascript = '';
         }

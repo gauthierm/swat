@@ -61,8 +61,9 @@ class RadioList extends Flydown
     {
         $options = $this->getOptions();
 
-        if (!$this->visible || $options === null)
+        if (!$this->visible || $options === null) {
             return;
+        }
 
         Widget::display();
 
@@ -228,11 +229,13 @@ class RadioList extends Flydown
         $this->input_tag->id = $this->id . '_' . (string)$option->value;
 
         if ($this->serialize_values) {
-            if ($option->value === $this->value)
+            if ($option->value === $this->value) {
                 $this->input_tag->checked = 'checked';
+            }
         } else {
-            if ((string)$option->value === (string)$this->value)
+            if ((string)$option->value === (string)$this->value) {
                 $this->input_tag->checked = 'checked';
+            }
         }
 
         echo '<span class="swat-radio-wrapper">';

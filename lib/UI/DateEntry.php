@@ -199,8 +199,9 @@ class DateEntry extends InputControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -254,12 +255,13 @@ class DateEntry extends InputControl implements Model\State
 
             // if we aren't using the current date then we won't use the
             // current time
-            if (!$this->use_current_date)
+            if (!$this->use_current_date) {
                 $time_entry->use_current_time = false;
-
+            }
             echo ' ';
-            if ($time_entry->value === null && $this->value !== null)
+            if ($time_entry->value === null && $this->value !== null) {
                 $time_entry->value = $this->value;
+            }
 
             $time_entry->display();
         }
@@ -283,8 +285,9 @@ class DateEntry extends InputControl implements Model\State
     {
         parent::process();
 
-        if (!$this->isVisible())
+        if (!$this->isVisible()) {
             return;
+        }
 
         $year = 0;
         $month = 1;
@@ -415,10 +418,11 @@ class DateEntry extends InputControl implements Model\State
      */
     public function getState()
     {
-        if ($this->value === null)
+        if ($this->value === null) {
             return null;
-        else
-            return $this->value->getDate();
+        }
+
+        return $this->value->getDate();
     }
 
     // }}}
@@ -462,17 +466,24 @@ class DateEntry extends InputControl implements Model\State
     {
         $use_current_date = ($this->use_current_date) ? 'true' : 'false';
 
-        $javascript = sprintf("var %s_obj = new SwatDateEntry('%s', %s);",
-            $this->id, $this->id, $use_current_date);
+        $javascript = sprintf(
+            "var %s_obj = new SwatDateEntry('%s', %s);",
+            $this->id,
+            $this->id,
+            $use_current_date
+        );
 
         if ($this->display_parts & self::DAY) {
             $day_flydown = $this->getCompositeWidget('day_flydown');
 
             $lookup_days = array();
-            foreach ($day_flydown->options as $key => $option)
-                $lookup_days[] = sprintf('%s: %s',
+            foreach ($day_flydown->options as $key => $option) {
+                $lookup_days[] = sprintf(
+                    '%s: %s',
                     $option->value,
-                    ($day_flydown->show_blank) ? $key + 1 : $key);
+                    ($day_flydown->show_blank) ? $key + 1 : $key
+                );
+            }
 
             $javascript .= sprintf(
                 "\n%s_obj.addLookupTable('day', {%s});",
@@ -485,10 +496,13 @@ class DateEntry extends InputControl implements Model\State
             $month_flydown = $this->getCompositeWidget('month_flydown');
 
             $lookup_months = array();
-            foreach ($month_flydown->options as $key => $option)
-                $lookup_months[] = sprintf('%s: %s',
+            foreach ($month_flydown->options as $key => $option) {
+                $lookup_months[] = sprintf(
+                    '%s: %s',
                     $option->value,
-                    ($month_flydown->show_blank) ? $key + 1 : $key);
+                    ($month_flydown->show_blank) ? $key + 1 : $key
+                );
+            }
 
             $javascript .= sprintf(
                 "\n%s_obj.addLookupTable('month', {%s});",
@@ -501,10 +515,13 @@ class DateEntry extends InputControl implements Model\State
             $year_flydown = $this->getCompositeWidget('year_flydown');
 
             $lookup_years = array();
-            foreach ($year_flydown->options as $key => $option)
-                $lookup_years[] = sprintf('%s: %s',
+            foreach ($year_flydown->options as $key => $option) {
+                $lookup_years[] = sprintf(
+                    '%s: %s',
                     $option->value,
-                    ($year_flydown->show_blank) ? $key + 1 : $key);
+                    ($year_flydown->show_blank) ? $key + 1 : $key
+                );
+            }
 
             $javascript .= sprintf(
                 "\n%s_obj.addLookupTable('year', {%s});",
@@ -697,8 +714,9 @@ class DateEntry extends InputControl implements Model\State
         $range_end->subtractSeconds(1);
         $end_year = $range_end->getYear();
 
-        for ($i = $start_year; $i <= $end_year; $i++)
+        for ($i = $start_year; $i <= $end_year; $i++) {
             $flydown->addOption($i, $i);
+        }
 
         return $flydown;
     }
@@ -832,23 +850,25 @@ class DateEntry extends InputControl implements Model\State
 
         if ($start_year == $end_year && $start_month == $end_month) {
             // Only days left in the month
-            for ($i = $start_day; $i <= $end_day; $i++)
+            for ($i = $start_day; $i <= $end_day; $i++) {
                 $flydown->addOption($i, $i);
-
+            }
         } elseif (Util\Date::compare($end_check, $range_end, true) !== -1) {
             // extra days at the beginning of the next month allowed
             $days_in_month = $this->valid_range_start->getDaysInMonth();
 
-            for ($i = $start_day; $i <= $days_in_month; $i++)
+            for ($i = $start_day; $i <= $days_in_month; $i++) {
                 $flydown->addOption($i, $i);
+            }
 
-            for ($i = 1; $i <= $end_day; $i++)
+            for ($i = 1; $i <= $end_day; $i++) {
                 $flydown->addOption($i, $i);
-
+            }
         } else {
             // all days are valid
-            for ($i = 1; $i <= 31; $i++)
+            for ($i = 1; $i <= 31; $i++) {
                 $flydown->addOption($i, $i);
+            }
         }
 
         return $flydown;

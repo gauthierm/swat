@@ -46,8 +46,9 @@ class FrameDisclosure extends Disclosure
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 

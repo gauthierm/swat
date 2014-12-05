@@ -199,8 +199,9 @@ class TimeEntry extends InputControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -219,11 +220,12 @@ class TimeEntry extends InputControl implements Model\State
 
                 // convert 24-hour value to 12-hour display
                 if ($this->twelve_hour) {
-                    if ($hour > 12)
+                    if ($hour > 12) {
                         $hour -= 12;
-
-                    if ($hour == 0)
+                    }
+                    if ($hour == 0) {
                         $hour = 12;
+                    }
                 }
 
                 $hour_flydown->value = $hour;
@@ -231,8 +233,9 @@ class TimeEntry extends InputControl implements Model\State
 
             $hour_flydown->display();
 
-            if ($this->display_parts & (self::MINUTE | self::SECOND))
+            if ($this->display_parts & (self::MINUTE | self::SECOND)) {
                 echo ':';
+            }
         }
 
         if ($this->display_parts & self::MINUTE) {
@@ -245,24 +248,25 @@ class TimeEntry extends InputControl implements Model\State
             }
 
             $minute_flydown->display();
-            if ($this->display_parts & self::SECOND)
+            if ($this->display_parts & self::SECOND) {
                 echo ':';
+            }
         }
 
         if ($this->display_parts & self::SECOND) {
             $second_flydown = $this->getCompositeWidget('second_flydown');
-            if ($second_flydown->value === null && $this->value !== null)
+            if ($second_flydown->value === null && $this->value !== null) {
                 $second_flydown->value = $this->value->getSecond();
-
+            }
             $second_flydown->display();
         }
 
         if (($this->display_parts & self::HOUR) && $this->twelve_hour) {
             $am_pm_flydown = $this->getCompositeWidget('am_pm_flydown');
-            if ($am_pm_flydown->value === null && $this->value !== null)
+            if ($am_pm_flydown->value === null && $this->value !== null) {
                 $am_pm_flydown->value =
                     ($this->value->getHour() < 12) ? 'am' : 'pm';
-
+            }
             $am_pm_flydown->display();
         }
 
@@ -286,8 +290,9 @@ class TimeEntry extends InputControl implements Model\State
     {
         parent::process();
 
-        if (!$this->isVisible())
+        if (!$this->isVisible()) {
             return;
+        }
 
         $hour   = 0;
         $minute = 0;
@@ -323,10 +328,12 @@ class TimeEntry extends InputControl implements Model\State
                 }
 
                 // convert 12-hour display to 24-hour value
-                if ($hour !== null && $am_pm == 'pm' && $hour != 12)
+                if ($hour !== null && $am_pm == 'pm' && $hour != 12) {
                     $hour += 12;
-                if ($hour == 12 && $am_pm == 'am')
+                }
+                if ($hour == 12 && $am_pm == 'am') {
                     $hour = 0;
+                }
             }
         }
 
@@ -379,8 +386,11 @@ class TimeEntry extends InputControl implements Model\State
         } else {
             try {
                 $date = new Util\Date();
-                if ($date->setDate(self::$date_year,
-                    self::$date_month, self::$date_day) === false) {
+                if ($date->setDate(
+                    self::$date_year,
+                    self::$date_month,
+                    self::$date_day
+                ) === false) {
                     throw new Exception\Exception('Invalid date.');
                 }
 
@@ -416,10 +426,11 @@ class TimeEntry extends InputControl implements Model\State
      */
     public function getState()
     {
-        if ($this->value === null)
+        if ($this->value === null) {
             return null;
-        else
-            return $this->value->getDate();
+        }
+
+        return $this->value->getDate();
     }
 
     // }}}
@@ -465,17 +476,24 @@ class TimeEntry extends InputControl implements Model\State
     {
         $use_current_time = ($this->use_current_time) ? 'true' : 'false';
 
-        $javascript = sprintf("var %s_obj = new SwatTimeEntry('%s', %s);\n",
-            $this->id, $this->id, $use_current_time);
+        $javascript = sprintf(
+            "var %s_obj = new SwatTimeEntry('%s', %s);\n",
+            $this->id,
+            $this->id,
+            $use_current_time
+        );
 
         if ($this->display_parts & self::HOUR) {
             $hour_flydown = $this->getCompositeWidget('hour_flydown');
 
             $lookup_hours = array();
-            foreach ($hour_flydown->options as $key => $option)
-                $lookup_hours[] = sprintf('%s: %s',
+            foreach ($hour_flydown->options as $key => $option) {
+                $lookup_hours[] = sprintf(
+                    '%s: %s',
                     $option->value,
-                    ($hour_flydown->show_blank) ? $key + 1 : $key);
+                    ($hour_flydown->show_blank) ? $key + 1 : $key
+                );
+            }
 
             $javascript .= sprintf(
                 "\n%s_obj.addLookupTable('hour', {%s});",
@@ -488,10 +506,13 @@ class TimeEntry extends InputControl implements Model\State
             $minute_flydown = $this->getCompositeWidget('minute_flydown');
 
             $lookup_minutes = array();
-            foreach ($minute_flydown->options as $key => $option)
-                $lookup_minutes[] = sprintf('%s: %s',
+            foreach ($minute_flydown->options as $key => $option) {
+                $lookup_minutes[] = sprintf(
+                    '%s: %s',
                     $option->value,
-                    ($minute_flydown->show_blank) ? $key + 1 : $key);
+                    ($minute_flydown->show_blank) ? $key + 1 : $key
+                );
+            }
 
             $javascript .= sprintf(
                 "\n%s_obj.addLookupTable('minute', {%s});",
@@ -504,10 +525,13 @@ class TimeEntry extends InputControl implements Model\State
             $second_flydown = $this->getCompositeWidget('second_flydown');
 
             $lookup_seconds = array();
-            foreach ($second_flydown->options as $key => $option)
-                $lookup_seconds[] = sprintf('%s: %s',
+            foreach ($second_flydown->options as $key => $option) {
+                $lookup_seconds[] = sprintf(
+                    '%s: %s',
                     $option->value,
-                    ($second_flydown->show_blank) ? $key + 1 : $key);
+                    ($second_flydown->show_blank) ? $key + 1 : $key
+                );
+            }
 
             $javascript .= sprintf(
                 "\n%s_obj.addLookupTable('second', {%s});",
@@ -569,8 +593,13 @@ class TimeEntry extends InputControl implements Model\State
         $this->valid_range_start->setDay(self::$date_day);
         $this->valid_range_start->setTZById('UTC');
 
-        return (Util\Date::compare(
-            $this->value, $this->valid_range_start, true) >= 0);
+        return (
+            Util\Date::compare(
+                $this->value,
+                $this->valid_range_start,
+                true
+            ) >= 0
+        );
     }
 
     // }}}
@@ -590,8 +619,13 @@ class TimeEntry extends InputControl implements Model\State
         $this->valid_range_end->setDay(self::$date_day);
         $this->valid_range_end->setTZById('UTC');
 
-        return (Util\Date::compare(
-            $this->value, $this->valid_range_end, true) <= 0);
+        return (
+            Util\Date::compare(
+                $this->value,
+                $this->valid_range_end,
+                true
+            ) <= 0
+        );
     }
 
     // }}}
@@ -606,20 +640,31 @@ class TimeEntry extends InputControl implements Model\State
     {
         if ($this->display_parts & self::HOUR) {
             $this->addCompositeWidget(
-                $this->createHourFlydown(), 'hour_flydown');
+                $this->createHourFlydown(),
+                'hour_flydown'
+            );
 
-            if ($this->twelve_hour)
+            if ($this->twelve_hour) {
                 $this->addCompositeWidget(
-                    $this->createAmPmFlydown(), 'am_pm_flydown');
+                    $this->createAmPmFlydown(),
+                    'am_pm_flydown'
+                );
+            }
         }
 
-        if ($this->display_parts & self::MINUTE)
+        if ($this->display_parts & self::MINUTE) {
             $this->addCompositeWidget(
-                $this->createMinuteFlydown(), 'minute_flydown');
+                $this->createMinuteFlydown(),
+                'minute_flydown'
+            );
+        }
 
-        if ($this->display_parts & self::SECOND)
+        if ($this->display_parts & self::SECOND) {
             $this->addCompositeWidget(
-                $this->createSecondFlydown(), 'second_flydown');
+                $this->createSecondFlydown(),
+                'second_flydown'
+            );
+        }
     }
 
     // }}}
@@ -636,11 +681,13 @@ class TimeEntry extends InputControl implements Model\State
         $flydown->classes = array('swat-time-entry-hour');
 
         if ($this->twelve_hour) {
-            for ($i = 1; $i <= 12; $i++)
+            for ($i = 1; $i <= 12; $i++) {
                 $flydown->addOption($i, $i);
+            }
         } else {
-            for ($i = 0; $i < 24; $i++)
+            for ($i = 0; $i < 24; $i++) {
                 $flydown->addOption($i, $i);
+            }
         }
 
         return $flydown;
@@ -659,8 +706,9 @@ class TimeEntry extends InputControl implements Model\State
         $flydown = new Flydown($this->id . '_minute');
         $flydown->classes = array('swat-time-entry-minute');
 
-        for ($i = 0; $i <= 59; $i++)
+        for ($i = 0; $i <= 59; $i++) {
             $flydown->addOption($i, str_pad($i, 2, '0', STR_PAD_LEFT));
+        }
 
         return $flydown;
     }
@@ -678,8 +726,9 @@ class TimeEntry extends InputControl implements Model\State
         $flydown = new Flydown($this->idi . '_second');
         $flydown->classes = array('swat-time-entry-second');
 
-        for ($i = 0; $i <= 59; $i++)
-            $flydown->addOption($i, str_pad($i, 2 ,'0', STR_PAD_LEFT));
+        for ($i = 0; $i <= 59; $i++) {
+            $flydown->addOption($i, str_pad($i, 2, '0', STR_PAD_LEFT));
+        }
 
         return $flydown;
     }
@@ -696,11 +745,12 @@ class TimeEntry extends InputControl implements Model\State
     {
         $flydown = new Flydown($this->id . '_am_pm');
         $flydown->classes = array('swat-time-entry-ampm');
-        $flydown->addOptionsByArray(array(
-            'am' => L::_('am'),
-            'pm' => L::_('pm'),
-        ));
-
+        $flydown->addOptionsByArray(
+            array(
+                'am' => L::_('am'),
+                'pm' => L::_('pm'),
+            )
+        );
         return $flydown;
     }
 

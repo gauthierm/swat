@@ -218,8 +218,9 @@ class NoteBook extends Widget implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -231,8 +232,9 @@ class NoteBook extends Widget implements UIParent
 
         echo'<ul class="yui-nav">';
         foreach ($this->pages as $page) {
-            if (!$page->visible)
+            if (!$page->visible) {
                 continue;
+            }
 
             $li_counter++;
             $li_tag = new Html\Tag('li');
@@ -259,8 +261,9 @@ class NoteBook extends Widget implements UIParent
         echo'</ul>';
 
         echo '<div class="yui-content">';
-        foreach ($this->pages as $page)
+        foreach ($this->pages as $page) {
             $page->display();
+        }
 
         echo '</div>';
         $div_tag->close();
@@ -301,10 +304,9 @@ class NoteBook extends Widget implements UIParent
     public function getMessages()
     {
         $messages = parent::getMessages();
-
-        foreach ($this->pages as $page)
+        foreach ($this->pages as $page) {
             $messages = array_merge($messages, $page->getMessages());
-
+        }
         return $messages;
     }
 
@@ -346,11 +348,9 @@ class NoteBook extends Widget implements UIParent
     public function getHtmlHeadEntrySet()
     {
         $set = parent::getHtmlHeadEntrySet();
-
         foreach ($this->pages as $page) {
             $set->addEntrySet($page->getHtmlHeadEntrySet());
         }
-
         return $set;
     }
 
@@ -370,11 +370,9 @@ class NoteBook extends Widget implements UIParent
     public function getAvailableHtmlHeadEntrySet()
     {
         $set = parent::getAvailableHtmlHeadEntrySet();
-
         foreach ($this->pages as $page) {
             $set->addEntrySet($page->getAvailableHtmlHeadEntrySet());
         }
-
         return $set;
     }
 
@@ -397,17 +395,19 @@ class NoteBook extends Widget implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->pages as $page) {
             if ($class_name === null || $page instanceof $class_name) {
-                if ($page->id === null)
+                if ($page->id === null) {
                     $out[] = $page;
-                else
+                } else {
                     $out[$page->id] = $page;
+                }
             }
 
             if ($page instanceof UIParent) {
@@ -436,8 +436,9 @@ class NoteBook extends Widget implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -449,8 +450,9 @@ class NoteBook extends Widget implements UIParent
 
             if ($page instanceof UIParent) {
                 $out = $page->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 

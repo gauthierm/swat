@@ -126,8 +126,9 @@ class FileEntry extends InputControl
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -142,11 +143,13 @@ class FileEntry extends InputControl
 
         // note: the 'accept' attribute is part of the w3c standard, but
         //       is ignored by most browsers
-        if ($this->accept_mime_types !== null)
+        if ($this->accept_mime_types !== null) {
             $input_tag->accept = implode(',', $this->accept_mime_types);
+        }
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $input_tag->disabled = 'disabled';
+        }
 
         $input_tag->display();
 
@@ -183,12 +186,12 @@ class FileEntry extends InputControl
             if (!$this->hasValidMimeType()) {
                 $this->addMessage($this->getValidationMessage('mime-type'));
             }
-        } else if ($_FILES[$this->id]['error'] === UPLOAD_ERR_NO_FILE) {
+        } elseif ($_FILES[$this->id]['error'] === UPLOAD_ERR_NO_FILE) {
             if ($this->required) {
                 $this->addMessage($this->getValidationMessage('required'));
             }
-        } else if ($_FILES[$this->id]['error'] === UPLOAD_ERR_INI_SIZE ||
-                   $_FILES[$this->id]['error'] === UPLOAD_ERR_FORM_SIZE) {
+        } elseif ($_FILES[$this->id]['error'] === UPLOAD_ERR_INI_SIZE ||
+            $_FILES[$this->id]['error'] === UPLOAD_ERR_FORM_SIZE) {
 
             $this->addMessage($this->getValidationMessage('too-large'));
         } else {
@@ -341,9 +344,9 @@ class FileEntry extends InputControl
                 if (extension_loaded('fileinfo')) {
                     // Use the fileinfo extension if available.
                     $finfo = $this->getFinfo();
-                    $this->mime_type = reset(explode(';',
-                        $finfo->file($temp_file_name)));
-
+                    $this->mime_type = reset(
+                        explode(';', $finfo->file($temp_file_name))
+                    );
                 } elseif (function_exists('mime_content_type')) {
                     // Fall back to mime_content_type() if available.
                     $this->mime_type = mime_content_type($temp_file_name);
@@ -384,11 +387,13 @@ class FileEntry extends InputControl
      */
     public function saveFile($dst_dir, $dst_filename = null)
     {
-        if (!$this->isUploaded())
+        if (!$this->isUploaded()) {
             return false;
+        }
 
-        if ($dst_filename === null)
+        if ($dst_filename === null) {
             $dst_filename = $this->getUniqueFileName($dst_dir);
+        }
 
         if (is_dir($dst_dir)) {
             return move_uploaded_file(
@@ -437,8 +442,10 @@ class FileEntry extends InputControl
      */
     public static function getMaximumFileUploadSize()
     {
-        return min(self::parseFileUploadSize(ini_get('post_max_size')),
-            self::parseFileUploadSize(ini_get('upload_max_filesize')));
+        return min(
+            self::parseFileUploadSize(ini_get('post_max_size')),
+            self::parseFileUploadSize(ini_get('upload_max_filesize'))
+        );
     }
 
     // }}}
@@ -456,65 +463,66 @@ class FileEntry extends InputControl
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'mime-type':
-            $displayable_types = $this->getDisplayableTypes();
+            case 'mime-type':
+                $displayable_types = $this->getDisplayableTypes();
 
-            if ($this->show_field_title_in_messages) {
-                $text = sprintf(
-                    L::ngettext(
-                        'The %%s field must be of the following type: %s.',
-                        'The %%s field must be of the following type(s): %s.',
-                        count($displayable_types)
-                    ),
-                    implode(', ', $displayable_types)
-                );
-            } else {
-                $text = sprintf(
-                    L::ngettext(
-                        'This field must be of the following type: %s.',
-                        'This field must be of the following type(s): %s.',
-                        count($displayable_types)
-                    ),
-                    implode(', ', $displayable_types)
-                );
-            }
+                if ($this->show_field_title_in_messages) {
+                    $text = sprintf(
+                        L::ngettext(
+                            'The %%s field must be of the following type: %s.',
+                            'The %%s field must be of the following ' .
+                            'type(s): %s.',
+                            count($displayable_types)
+                        ),
+                        implode(', ', $displayable_types)
+                    );
+                } else {
+                    $text = sprintf(
+                        L::ngettext(
+                            'This field must be of the following type: %s.',
+                            'This field must be of the following type(s): %s.',
+                            count($displayable_types)
+                        ),
+                        implode(', ', $displayable_types)
+                    );
+                }
 
-            $message = new Model\Message($text, 'error');
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
 
-        case 'too-large':
-            if ($this->show_field_title_in_messages) {
-                $text = L::_(
-                    'The %s field exceeds the maximum allowable file size.'
-                );
-            } else {
-                $text = L::_(
-                    'This field exceeds the maximum allowable file size.'
-                );
-            }
+            case 'too-large':
+                if ($this->show_field_title_in_messages) {
+                    $text = L::_(
+                        'The %s field exceeds the maximum allowable file size.'
+                    );
+                } else {
+                    $text = L::_(
+                        'This field exceeds the maximum allowable file size.'
+                    );
+                }
 
-            $message = new Model\Message($text, 'error');
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
 
-        case 'upload-error':
-            if ($this->show_field_title_in_messages) {
-                $text = L::_(
-                    'The %s field encounted an error when trying to upload ' .
-                    'the file. Please try again.'
-                );
-            } else {
-                $text = L::_(
-                    'This field encounted an error when trying to upload ' .
-                    'the file. Please try again.'
-                );
-            }
+            case 'upload-error':
+                if ($this->show_field_title_in_messages) {
+                    $text = L::_(
+                        'The %s field encounted an error when trying to ' .
+                        'upload the file. Please try again.'
+                    );
+                } else {
+                    $text = L::_(
+                        'This field encounted an error when trying to upload ' .
+                        'the file. Please try again.'
+                    );
+                }
 
-            $message = new Model\Message($text, 'error');
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
 
-        default:
-            $message = parent::getValidationMessage($id);
-            break;
+            default:
+                $message = parent::getValidationMessage($id);
+                break;
         }
 
         return $message;
@@ -641,7 +649,8 @@ class FileEntry extends InputControl
     // }}}
     // {{{ private function generateUniqueFileName()
 
-    private function generateUniqueFileName($path, $count = 0) {
+    private function generateUniqueFileName($path, $count = 0)
+    {
         if (strpos($this->getFileName(), '.') === false) {
             $extension = '';
             $base_name = $this->getFileName();
@@ -674,17 +683,22 @@ class FileEntry extends InputControl
             $size  = strtoupper(substr($ini_value, -1));
             $value = (integer)substr($ini_value, 0, -1);
 
-            switch($size) {
+            switch ($size) {
                 case 'P':
                     $value *= 1024;
+                    break;
                 case 'T':
                     $value *= 1024;
+                    break;
                 case 'G':
                     $value *= 1024;
+                    break;
                 case 'M':
                     $value *= 1024;
+                    break;
                 case 'K':
                     $value *= 1024;
+                    break;
             }
         }
 

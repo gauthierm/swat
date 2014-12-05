@@ -247,9 +247,10 @@ class TableViewOrderableColumn extends TableViewColumn
      *
      * @return string the direction of ordering.
      */
-    public function getDirectionAsString($direction_id = null,
-        $include_nulls_ordering = true)
-    {
+    public function getDirectionAsString(
+        $direction_id = null,
+        $include_nulls_ordering = true
+    ) {
         if ($direction_id === null) {
             $direction_id = $this->direction;
         }
@@ -339,10 +340,9 @@ class TableViewOrderableColumn extends TableViewColumn
     protected function getBaseCSSClassNames()
     {
         $classes = array();
-
-        if ($this->view->orderby_column === $this)
+        if ($this->view->orderby_column === $this) {
             $classes[] = 'swat-table-view-orderable-column-selected';
-
+        }
         return $classes;
     }
 
@@ -382,12 +382,13 @@ class TableViewOrderableColumn extends TableViewColumn
 
             case self::ORDER_BY_DIR_DESCENDING:
             default:
-                if ($this->view->default_orderby_column === null)
+                if ($this->view->default_orderby_column === null) {
                     // tri-state
                     return self::ORDER_BY_DIR_NONE;
-                else
+                } else {
                     // bi-state
                     return self::ORDER_BY_DIR_ASCENDING;
+                }
         }
     }
 
@@ -440,7 +441,7 @@ class TableViewOrderableColumn extends TableViewColumn
         // unset GET vars that we want to ignore
         $vars = $_GET;
 
-        foreach($vars as $name => $value) {
+        foreach ($vars as $name => $value) {
             if (in_array($name, $this->unset_get_vars)) {
                 unset($vars[$name]);
             }
@@ -456,20 +457,22 @@ class TableViewOrderableColumn extends TableViewColumn
 
         if ($next_dir != $this->default_direction) {
             $vars[$key_orderby] = $this->id;
-            $vars[$key_orderbydir] = $this->getDirectionAsString($next_dir,
-                false);
+            $vars[$key_orderbydir] = $this->getDirectionAsString(
+                $next_dir,
+                false
+            );
         }
 
         // build the new link
         $link = $this->link . '?';
         $first = true;
 
-        foreach($vars as $name => $value) {
-            if ($first)
+        foreach ($vars as $name => $value) {
+            if ($first) {
                 $first = false;
-            else
+            } else {
                 $link .= '&amp;';
-
+            }
             $link .= $name . '=' . $value;
         }
 

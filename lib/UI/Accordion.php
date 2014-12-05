@@ -68,8 +68,9 @@ class Accordion extends NoteBook
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -81,8 +82,9 @@ class Accordion extends NoteBook
         $ul_tag->open();
 
         foreach ($this->pages as $page) {
-            if (!$page->visible)
+            if (!$page->visible) {
                 continue;
+            }
 
             $li_counter++;
             $li_tag = new Html\Tag('li');
@@ -133,19 +135,22 @@ class Accordion extends NoteBook
      */
     protected function getInlineJavaScript()
     {
-        $javascript = sprintf("var %1\$s_obj = new %2\$s('%1\$s', %3\$s);",
+        $javascript = sprintf(
+            "var %1\$s_obj = new %2\$s('%1\$s', %3\$s);",
             $this->id,
             $this->getJavascriptClassName(),
-            $this->animate ? 'true' : 'false');
-
-        $javascript .= sprintf("\n%s_obj.animate = %s;",
+            $this->animate ? 'true' : 'false'
+        );
+        $javascript .= sprintf(
+            "\n%s_obj.animate = %s;",
             $this->id,
-            $this->animate ? 'true' : 'false');
-
-        $javascript .= sprintf("\n%s_obj.always_open = %s;",
+            $this->animate ? 'true' : 'false'
+        );
+        $javascript .= sprintf(
+            "\n%s_obj.always_open = %s;",
             $this->id,
-            $this->always_open ? 'true' : 'false');
-
+            $this->always_open ? 'true' : 'false'
+        );
         return $javascript;
     }
 

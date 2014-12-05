@@ -89,15 +89,17 @@ class LinkCellRenderer extends CellRenderer
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::render();
 
-        if ($this->isSensitive())
+        if ($this->isSensitive()) {
             $this->renderSensitive();
-        else
+        } else {
             $this->renderInsensitive();
+        }
     }
 
     // }}}
@@ -161,12 +163,13 @@ class LinkCellRenderer extends CellRenderer
 
     protected function getText()
     {
-        if ($this->value === null)
+        if ($this->value === null) {
             $text = $this->text;
-        elseif (is_array($this->value))
+        } elseif (is_array($this->value)) {
             $text = vsprintf($this->text, $this->value);
-        else
+        } else {
             $text = sprintf($this->text, $this->value);
+        }
 
         return $text;
     }
@@ -180,10 +183,9 @@ class LinkCellRenderer extends CellRenderer
             $link = $this->link;
         } elseif (is_array($this->link_value)) {
             $link_values = array();
-
-            foreach ($this->link_value as $value)
+            foreach ($this->link_value as $value) {
                 $link_values[] = urlencode($value);
-
+            }
             $link = vsprintf($this->link, $link_values);
         } else {
             $link_value = urlencode($this->link_value);
@@ -204,10 +206,9 @@ class LinkCellRenderer extends CellRenderer
     public function getDataSpecificCSSClassNames()
     {
         $classes = array();
-
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $classes[] = 'swat-link-cell-renderer-insensitive';
-
+        }
         return $classes;
     }
 

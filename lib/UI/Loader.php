@@ -213,8 +213,9 @@ class Loader
             }
         }
 
-        if ($validate === null)
+        if ($validate === null) {
             $validate = self::$validate_mode;
+        }
 
         $xml_file = null;
 
@@ -461,8 +462,10 @@ class Loader
                 } else {
                     $parsed_object = $this->parseObject($child_node);
 
-                    $this->checkParsedObject($parsed_object,
-                        $child_node->nodeName);
+                    $this->checkParsedObject(
+                        $parsed_object,
+                        $child_node->nodeName
+                    );
 
                     /*
                      * No exceptions were thrown and the widget has an id
@@ -498,9 +501,10 @@ class Loader
      * @throws Exception\DuplicateIdException
      * @throws Exception\InvalidClassException
      */
-    private function checkParsedObject(Object $parsed_object,
-        $element_name)
-    {
+    private function checkParsedObject(
+        Object $parsed_object,
+        $element_name
+    ) {
         if ($element_name == 'widget') {
             if ($parsed_object instanceof Widget &&
                 $parsed_object->id !== null) {
@@ -614,8 +618,9 @@ class Loader
         $object = new $class();
 
         // id is optional in the schema
-        if ($node->hasAttribute('id'))
+        if ($node->hasAttribute('id')) {
             $object->id = $node->getAttribute('id');
+        }
 
         return $object;
     }
@@ -686,15 +691,17 @@ class Loader
                 $parsed_value->is_array = true;
                 $parsed_value->array_key = $array_key;
             } else {
-                if (!is_array($object->$name))
+                if (!is_array($object->$name)) {
                     $object->$name = array();
+                }
 
                 $array_ref = &$object->$name;
 
-                if ($array_key === null)
+                if ($array_key === null) {
                     $array_ref[] = $parsed_value;
-                else
+                } else {
                     $array_ref[$array_key] = $parsed_value;
+                }
             }
         } else {
             $object->$name = $parsed_value;
@@ -722,9 +729,13 @@ class Loader
      * @throws Exception\InvalidConstantExpressionException
      * @throws Exception\UndefinedConstantException
      */
-    private function parseValue($name, $value, $type, $translatable,
-        Object $object)
-    {
+    private function parseValue(
+        $name,
+        $value,
+        $type,
+        $translatable,
+        Object $object
+    ) {
         switch ($type) {
             case 'string':
                 return $this->translateValue($value, $translatable, $object);
@@ -791,7 +802,7 @@ class Loader
         foreach (array_reverse($this->stack) as $ancestor) {
             if ($renderer === null && $ancestor instanceof CellRenderer) {
                 $renderer = $ancestor;
-            } else if ($ancestor instanceof CellRendererContainer) {
+            } elseif ($ancestor instanceof CellRendererContainer) {
                 $renderer_container = $ancestor;
                 break;
             }
@@ -807,8 +818,12 @@ class Loader
             );
         }
 
-        $mapping = $renderer_container->addMappingToRenderer($renderer,
-            $value, $name, $object);
+        $mapping = $renderer_container->addMappingToRenderer(
+            $renderer,
+            $value,
+            $name,
+            $object
+        );
 
         return $mapping;
     }
@@ -828,11 +843,13 @@ class Loader
      */
     private function translateValue($value, $translatable, Object $object)
     {
-        if (!$translatable)
+        if (!$translatable) {
             return $value;
+        }
 
-        if ($this->translation_callback !== null)
+        if ($this->translation_callback !== null) {
             return call_user_func($this->translation_callback, $value);
+        }
 
         return $value;
     }
@@ -875,8 +892,12 @@ class Loader
 
         // this includes parentheses
         $reg_exp  = '/([\|&\+\/\*\(\)-])/u';
-        $tokens = preg_split($reg_exp, $expression, -1,
-            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $tokens = preg_split(
+            $reg_exp,
+            $expression,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+        );
 
         $stack = array();
         $queue = array();
@@ -900,38 +921,41 @@ class Loader
 
             if (strcmp($token, '(') == 0) {
                 array_push($stack, $token);
-
             } elseif (strcmp($token, ')') == 0) {
-                if (array_key_exists($prev_token, $operators))
+                if (array_key_exists($prev_token, $operators)) {
                     throw $syntax_exception;
+                }
 
                 while (array_key_exists(end($stack), $operators)) {
                     array_push($queue, array_pop($stack));
-                    if (count($stack) == 0)
+                    if (count($stack) === 0) {
                         throw $parenthesis_exception;
+                    }
                 }
 
-                if (strcmp(array_pop($stack), '(') != 0)
+                if (strcmp(array_pop($stack), '(') != 0) {
                     throw $parenthesis_exception;
-
+                }
             } elseif (array_key_exists($token, $operators)) {
                 if ($prev_token === null || strcmp($prev_token, '(') == 0 ||
-                    array_key_exists($prev_token, $operators))
+                    array_key_exists($prev_token, $operators)) {
                     throw $syntax_exception;
+                }
 
                 while (count($stack) > 0 &&
                     array_key_exists(end($stack), $operators) &&
-                    $operators[$token] <= $operators[end($stack)])
+                    $operators[$token] <= $operators[end($stack)]) {
                     array_push($queue, array_pop($stack));
+                }
 
                 array_push($stack, $token);
-
             } else {
                 $constant = trim($token);
 
                 // get a default scope for the constant
-                if (strpos($constant, '::') === false)
+                if (strpos($constant, '::') === false) {
                     $constant = get_class($object) . '::' . $constant;
+                }
 
                 // evaluate constant
                 if (defined($constant)) {
@@ -954,8 +978,9 @@ class Loader
         // collect left over operators
         while (count($stack) > 0) {
             $operator = array_pop($stack);
-            if (strcmp($operator, '(') == 0)
+            if (strcmp($operator, '(') == 0) {
                 throw $parenthesis_exception;
+            }
 
             array_push($queue, $operator);
         }
@@ -966,8 +991,9 @@ class Loader
                 $b = array_pop($eval_stack);
                 $a = array_pop($eval_stack);
 
-                if ($a === null || $b === null)
+                if ($a === null || $b === null) {
                     throw $syntax_exception;
+                }
 
                 switch ($value){
                     case '|':

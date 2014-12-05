@@ -96,8 +96,9 @@ class CheckboxList extends OptionControl implements Model\State
 
         // checks to see if there are duplicate values in the options array
         $options_count =  array();
-        foreach ($this->getOptions() as $option)
+        foreach ($this->getOptions() as $option) {
             $options_count[] = $option->value;
+        }
 
         foreach ((array_count_values($options_count)) as $count) {
             if ($count > 1) {
@@ -124,8 +125,9 @@ class CheckboxList extends OptionControl implements Model\State
     {
         $options = $this->getOptions();
 
-        if (!$this->visible || count($options) == 0)
+        if (!$this->visible || count($options) === 0) {
             return;
+        }
 
         parent::display();
 
@@ -138,8 +140,9 @@ class CheckboxList extends OptionControl implements Model\State
 
         $current_column = 1;
         $current_option = 0;
-        $columns = (is_array($this->columns)) ? $this->columns : array(ceil(
-            count($options) / (($this->columns > 0) ? $this->columns : 1)));
+        $columns = (is_array($this->columns))
+            ? $this->columns
+            : array(ceil(count($options) / max($this->columns, 1)));
 
         $multiple_columns = (count($options) > $columns[0]);
         $maximum_options  = array_shift($columns);
@@ -156,15 +159,17 @@ class CheckboxList extends OptionControl implements Model\State
                 $ul_tag->close();
 
                 $current_column++;
-                $current_option  = 0;
-                $maximum_options = (count($columns) > 0) ?
-                    array_shift($columns) : $maximum_options;
+                $current_option = 0;
+                $maximum_options = (count($columns) > 0)
+                    ? array_shift($columns)
+                    : $maximum_options;
 
-                $ul_tag->id = sprintf('%s_column_%s', $this->id,
-                    $current_column);
-
+                $ul_tag->id = sprintf(
+                    '%s_column_%s',
+                    $this->id,
+                    $current_column
+                );
                 $ul_tag->class = 'swat-checkbox-list-column';
-
                 $ul_tag->open();
             }
 
@@ -197,8 +202,9 @@ class CheckboxList extends OptionControl implements Model\State
      */
     public function process()
     {
-        if (!$this->getForm()->isSubmitted())
+        if (!$this->getForm()->isSubmitted()) {
             return;
+        }
 
         parent::process();
 
@@ -297,11 +303,13 @@ class CheckboxList extends OptionControl implements Model\State
         $input_tag->id = $this->id . '_' . $index;
         $input_tag->removeAttribute('checked');
 
-        if (in_array($option->value, $this->values))
+        if (in_array($option->value, $this->values)) {
             $input_tag->checked = 'checked';
+        }
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $input_tag->disabled = 'disabled';
+        }
 
         $li_tag = $this->getLiTag($option);
 
@@ -377,7 +385,8 @@ class CheckboxList extends OptionControl implements Model\State
             'var %s_obj = new %s(%s);',
             $this->id,
             $this->getJavaScriptClassName(),
-            Util\JavaScript::quoteString($this->id));
+            Util\JavaScript::quoteString($this->id)
+        );
 
         // set check-all controller if it is visible
         $check_all = $this->getCompositeWidget('check_all');

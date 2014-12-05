@@ -37,8 +37,9 @@ class ByteCellRenderer extends CellRenderer
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::render();
 

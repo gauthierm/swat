@@ -108,8 +108,9 @@ class CheckAll extends Checkbox
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
@@ -207,8 +208,11 @@ class CheckAll extends Checkbox
      */
     protected function getInlineJavaScript()
     {
-        return sprintf("var %s_obj = new SwatCheckAll('%s');",
-            $this->id, $this->id);
+        return sprintf(
+            "var %s_obj = new SwatCheckAll('%s');",
+            $this->id,
+            $this->id
+        );
 
     }
 

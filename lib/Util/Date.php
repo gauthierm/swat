@@ -208,8 +208,8 @@ class Date extends \DateTime implements \Serializable
     // }}}
     // {{{ protected properties
 
-    static $tz_abbreviations = null;
-    static $valid_tz_abbreviations = array(
+    protected static $tz_abbreviations = null;
+    protected static $valid_tz_abbreviations = array(
         'acdt'  => true,
         'acst'  => true,
         'act'   => true,
@@ -383,9 +383,11 @@ class Date extends \DateTime implements \Serializable
      *
      * @return string the formatted date according to the current locale.
      */
-    public function formatLikeStrftime($format, $tz_format = null,
-        $locale = null)
-    {
+    public function formatLikeStrftime(
+        $format,
+        $tz_format = null,
+        $locale = null
+    ) {
         if (is_int($format)) {
             $format = self::getFormatLikeStrftimeById($format);
         }
@@ -425,9 +427,11 @@ class Date extends \DateTime implements \Serializable
      *
      * @return string the formatted date according to the current locale.
      */
-    public function formatLikeIntl($format, $tz_format = null,
-        $locale = null)
-    {
+    public function formatLikeIntl(
+        $format,
+        $tz_format = null,
+        $locale = null
+    ) {
         if (is_int($format)) {
             $format = self::getFormatLikeIntlById($format);
         }
@@ -622,8 +626,8 @@ class Date extends \DateTime implements \Serializable
      * @return string A human-readable date diff.
      */
     public function getHumanReadableDateDiffWithWeeksAndDays(
-        Date $compare_date = null)
-    {
+        Date $compare_date = null
+    ) {
         if ($compare_date === null) {
             $compare_date = new Date();
         }
@@ -633,7 +637,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function getFormatById()
+    // {{{ public static function getFormatById()
 
     /**
      * Gets a date format string by id
@@ -644,7 +648,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @throws \Exception
      */
-    static public function getFormatById($id)
+    public static function getFormatById($id)
     {
         // Note: The format() method does not localize results, so these
         // format codes are _not_ wrapped in gettext calls.
@@ -690,7 +694,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function getFormatLikeStrftimeById()
+    // {{{ public static function getFormatLikeStrftimeById()
 
     /**
      * Gets a strftime() date format string by id
@@ -701,7 +705,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @throws \Exception
      */
-    static public function getFormatLikeStrftimeById($id)
+    public static function getFormatLikeStrftimeById($id)
     {
         switch ($id) {
             case self::DF_MDY:
@@ -744,7 +748,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function getFormatLikeIntlById()
+    // {{{ public static function getFormatLikeIntlById()
 
     /**
      * Gets a strftime() date format string by id
@@ -755,7 +759,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @throws \Exception
      */
-    static public function getFormatLikeIntlById($id)
+    public static function getFormatLikeIntlById($id)
     {
         switch ($id) {
             case self::DF_MDY:
@@ -798,7 +802,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function getTimeZoneAbbreviations()
+    // {{{ public static function getTimeZoneAbbreviations()
 
     /**
      * Gets a mapping of time zone names to time zone abbreviations
@@ -812,7 +816,7 @@ class Date extends \DateTime implements \Serializable
      *               - 'st' for the standard time abbreviation, and
      *               - 'dt' for the daylight time abbreviation.
      */
-    static public function getTimeZoneAbbreviations()
+    public static function getTimeZoneAbbreviations()
     {
         static $shortnames = null;
 
@@ -846,7 +850,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function getTimeZoneAbbreviation()
+    // {{{ public static function getTimeZoneAbbreviation()
 
     /**
      * Gets an array of time zone abbreviations for a specific time zone
@@ -857,7 +861,7 @@ class Date extends \DateTime implements \Serializable
      *               - 'st' for the standard time abbreviation, and
      *               - 'dt' for the daylight time abbreviation.
      */
-    static public function getTimeZoneAbbreviation(\DateTimeZone $time_zone)
+    public static function getTimeZoneAbbreviation(\DateTimeZone $time_zone)
     {
         $abbreviations = self::getTimeZoneAbbreviations();
         $key = $time_zone->getName();
@@ -870,7 +874,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function compare()
+    // {{{ public static function compare()
 
     /**
      * Compares two date objects
@@ -884,7 +888,7 @@ class Date extends \DateTime implements \Serializable
      *                 0 indicates $date1 is equivalent to $date2 and 1
      *                 indicates $date1 is after $date2.
      */
-    static public function compare(\DateTime $date1, \DateTime $date2)
+    public static function compare(\DateTime $date1, \DateTime $date2)
     {
         // Not using getTimestamp() here because it is clamped to the 32-bit
         // signed integer range. Float compaison should be safe here as the
@@ -905,7 +909,7 @@ class Date extends \DateTime implements \Serializable
     }
 
     // }}}
-    // {{{ static public function getIntervalFromSeconds()
+    // {{{ public static function getIntervalFromSeconds()
 
     /**
      * Gets a date interval with appropriate values for the specified
@@ -919,7 +923,7 @@ class Date extends \DateTime implements \Serializable
      *
      * @return \DateInterval a date interval with the relevant parts set.
      */
-    static public function getIntervalFromSeconds($seconds)
+    public static function getIntervalFromSeconds($seconds)
     {
         // don't care about micro-seconds.
         $seconds = floor(abs($seconds));

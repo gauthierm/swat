@@ -60,17 +60,22 @@ abstract class CellRendererContainer extends Object implements UIParent
      * @return CellRendererMapping a new mapping object that has been added to
      *                             the renderer.
      */
-    public function addMappingToRenderer($renderer, $data_field, $property,
-        $object = null)
-    {
-        if ($object !== null)
+    public function addMappingToRenderer(
+        $renderer,
+        $data_field,
+        $property,
+        $object = null
+    ) {
+        if ($object !== null) {
             $property = $renderer->getPropertyNameToMap($object, $property);
+        }
 
         $mapping = new CellRendererMapping($property, $data_field);
         $this->renderers->addMappingToRenderer($renderer, $mapping);
 
-        if ($object !== null)
+        if ($object !== null) {
             $object->$property = $mapping;
+        }
 
         return $mapping;
     }
@@ -101,9 +106,9 @@ abstract class CellRendererContainer extends Object implements UIParent
     {
         $out = array();
         $renderers = clone $this->renderers;
-        foreach ($renderers as $renderer)
+        foreach ($renderers as $renderer) {
             $out[] = $renderer;
-
+        }
         return $out;
     }
 
@@ -207,17 +212,19 @@ abstract class CellRendererContainer extends Object implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->getRenderers() as $renderer) {
             if ($class_name === null || $renderer instanceof $class_name) {
-                if ($renderer->id === null)
+                if ($renderer->id === null) {
                     $out[] = $renderer;
-                else
+                } else {
                     $out[$renderer->id] = $renderer;
+                }
             }
 
             if ($renderer instanceof UIParent) {
@@ -246,8 +253,9 @@ abstract class CellRendererContainer extends Object implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -259,8 +267,9 @@ abstract class CellRendererContainer extends Object implements UIParent
 
             if ($renderer instanceof UIParent) {
                 $out = $renderer->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -409,11 +418,13 @@ abstract class CellRendererContainer extends Object implements UIParent
 
             $copy_mappings = array();
             $mappings = $this->renderers->getMappingsByRenderer($renderer);
-            foreach ($mappings as $mapping)
+            foreach ($mappings as $mapping) {
                 $copy_mappings[] = clone $mapping;
-
+            }
             $copy->renderers->addMappingsToRenderer(
-                $copy_renderer, $copy_mappings);
+                $copy_renderer,
+                $copy_mappings
+            );
         }
 
         return $copy;

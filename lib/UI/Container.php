@@ -51,9 +51,9 @@ class Container extends Widget implements UIParent
     public function init()
     {
         parent::init();
-
-        foreach($this->children as $child_widget)
+        foreach ($this->children as $child_widget) {
             $child_widget->init();
+        }
     }
 
     // }}}
@@ -96,11 +96,13 @@ class Container extends Widget implements UIParent
                 $new_widget->parent = $this;
                 $widget->parent = null;
 
-                if ($widget->id !== null)
+                if ($widget->id !== null) {
                     unset($this->children_by_id[$widget->id]);
+                }
 
-                if ($new_widget->id !== null)
+                if ($new_widget->id !== null) {
                     $this->children_by_id[$new_widget->id] = $new_widget;
+                }
 
                 return $widget;
             }
@@ -131,8 +133,9 @@ class Container extends Widget implements UIParent
                 array_splice($this->children, $key, 1);
                 $widget->parent = null;
 
-                if ($widget->id !== null)
+                if ($widget->id !== null) {
                     unset($this->children_by_id[$widget->id]);
+                }
 
                 return $widget;
             }
@@ -161,8 +164,9 @@ class Container extends Widget implements UIParent
         array_unshift($this->children, $widget);
         $widget->parent = $this;
 
-        if ($widget->id !== null)
-                $this->children_by_id[$widget->id] = $widget;
+        if ($widget->id !== null) {
+            $this->children_by_id[$widget->id] = $widget;
+        }
 
         $this->sendAddNotifySignal($widget);
     }
@@ -234,8 +238,9 @@ class Container extends Widget implements UIParent
         $this->children[] = $widget;
         $widget->parent = $this;
 
-        if ($widget->id !== null)
+        if ($widget->id !== null) {
             $this->children_by_id[$widget->id] = $widget;
+        }
 
         $this->sendAddNotifySignal($widget);
     }
@@ -255,10 +260,11 @@ class Container extends Widget implements UIParent
      */
     public function getChild($id)
     {
-        if (array_key_exists($id, $this->children_by_id))
+        if (array_key_exists($id, $this->children_by_id)) {
             return $this->children_by_id[$id];
-        else
-            return null;
+        }
+
+        return null;
     }
 
     // }}}
@@ -299,14 +305,17 @@ class Container extends Widget implements UIParent
      */
     public function getChildren($class_name = null)
     {
-        if ($class_name === null)
+        if ($class_name === null) {
             return $this->children;
+        }
 
         $out = array();
 
-        foreach($this->children as $child_widget)
-            if ($child_widget instanceof $class_name)
+        foreach ($this->children as $child_widget) {
+            if ($child_widget instanceof $class_name) {
                 $out[] = $child_widget;
+            }
+        }
 
         return $out;
     }
@@ -330,17 +339,19 @@ class Container extends Widget implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->children as $child_widget) {
             if ($class_name === null || $child_widget instanceof $class_name) {
-                if ($child_widget->id === null)
+                if ($child_widget->id === null) {
                     $out[] = $child_widget;
-                else
+                } else {
                     $out[$child_widget->id] = $child_widget;
+                }
             }
 
             if ($child_widget instanceof UIParent) {
@@ -369,8 +380,9 @@ class Container extends Widget implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -382,8 +394,9 @@ class Container extends Widget implements UIParent
 
             if ($child_widget instanceof UIParent) {
                 $out = $child_widget->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -448,8 +461,9 @@ class Container extends Widget implements UIParent
         parent::process();
 
         foreach ($this->children as $child) {
-            if ($child !== null && !$child->isProcessed())
+            if ($child !== null && !$child->isProcessed()) {
                 $child->process();
+            }
         }
     }
 
@@ -462,8 +476,9 @@ class Container extends Widget implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -483,10 +498,9 @@ class Container extends Widget implements UIParent
     public function getMessages()
     {
         $messages = parent::getMessages();
-
-        foreach ($this->children as $child)
+        foreach ($this->children as $child) {
             $messages = array_merge($messages, $child->getMessages());
-
+        }
         return $messages;
     }
 
@@ -680,8 +694,9 @@ class Container extends Widget implements UIParent
      */
     protected function displayChildren()
     {
-        foreach ($this->children as &$child)
+        foreach ($this->children as &$child) {
             $child->display();
+        }
     }
 
     // }}}
@@ -713,9 +728,9 @@ class Container extends Widget implements UIParent
     protected function sendAddNotifySignal($widget)
     {
         $this->notifyOfAdd($widget);
-
-        if ($this->parent !== null && $this->parent instanceof Container)
+        if ($this->parent !== null && $this->parent instanceof Container) {
             $this->parent->sendAddNotifySignal($widget);
+        }
     }
 
     // }}}

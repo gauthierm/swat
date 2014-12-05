@@ -147,8 +147,9 @@ class TextareaEditor extends Textarea
 
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -177,19 +178,27 @@ class TextareaEditor extends Textarea
         // set element styles if width and/or height are specified
         if ($this->width !== null || $this->height !== null) {
             if ($this->width !== null && $this->height !== null) {
-                $textarea_tag->style = sprintf('width: %s; height: %s;',
-                    $this->width, $this->height);
+                $textarea_tag->style = sprintf(
+                    'width: %s; height: %s;',
+                    $this->width,
+                    $this->height
+                );
             } elseif ($this->width !== null) {
-                $textarea_tag->style = sprintf('width: %s;',
-                    $this->width);
+                $textarea_tag->style = sprintf(
+                    'width: %s;',
+                    $this->width
+                );
             } else {
-                $textarea_tag->style = sprintf('height: %s;',
-                    $this->height);
+                $textarea_tag->style = sprintf(
+                    'height: %s;',
+                    $this->height
+                );
             }
         }
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $textarea_tag->disabled = 'disabled';
+        }
 
         $textarea_tag->display();
 

@@ -33,9 +33,11 @@ class UndefinedMessageTypeException extends Exception
      * @param string  $message_type the name of the message type that is
      *                              undefined.
      */
-    public function __construct($message = null, $code = 0,
-        $message_type = null)
-    {
+    public function __construct(
+        $message = null,
+        $code = 0,
+        $message_type = null
+    ) {
         parent::__construct($message, $code);
         $this->message_type = $message_type;
     }

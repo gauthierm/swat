@@ -84,9 +84,9 @@ class DetailsView extends Control implements UIParent
     public function init()
     {
         parent::init();
-
-        foreach ($this->fields as $field)
+        foreach ($this->fields as $field) {
             $field->init();
+        }
     }
 
     // }}}
@@ -98,9 +98,9 @@ class DetailsView extends Control implements UIParent
     public function process()
     {
         parent::process();
-
-        foreach ($this->fields as $field)
+        foreach ($this->fields as $field) {
             $field->process();
+        }
     }
 
     // }}}
@@ -113,8 +113,9 @@ class DetailsView extends Control implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -163,9 +164,10 @@ class DetailsView extends Control implements UIParent
      * @throws Exception\DuplicateIdException if the field has the same id as
      *         a field already in this details-view.
      */
-    public function insertFieldBefore(DetailsViewField $field,
-        DetailsViewField $reference_field)
-    {
+    public function insertFieldBefore(
+        DetailsViewField $field,
+        DetailsViewField $reference_field
+    ) {
         $this->insertField($field, $reference_field, false);
     }
 
@@ -185,9 +187,10 @@ class DetailsView extends Control implements UIParent
      * @throws Exception\DuplicateIdException if the field has the same id as
      *         a field already in this details-view.
      */
-    public function insertFieldAfter(DetailsViewField $field,
-        DetailsViewField $reference_field)
-    {
+    public function insertFieldAfter(
+        DetailsViewField $field,
+        DetailsViewField $reference_field
+    ) {
         $this->insertField($field, $reference_field, true);
     }
 
@@ -349,17 +352,19 @@ class DetailsView extends Control implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->fields as $field) {
             if ($class_name === null || $field instanceof $class_name) {
-                if ($field->id === null)
+                if ($field->id === null) {
                     $out[] = $field;
-                else
+                } else {
                     $out[$field->id] = $field;
+                }
             }
 
             if ($field instanceof UIParent) {
@@ -385,8 +390,9 @@ class DetailsView extends Control implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -398,8 +404,9 @@ class DetailsView extends Control implements UIParent
 
             if ($field instanceof UIParent) {
                 $out = $field->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -555,9 +562,11 @@ class DetailsView extends Control implements UIParent
      * @see DetailsView::insertFieldBefore()
      * @see DetailsView::insertFieldAfter()
      */
-    protected function insertField(DetailsViewField $field,
-        DetailsViewField $reference_field = null, $after = true)
-    {
+    protected function insertField(
+        DetailsViewField $field,
+        DetailsViewField $reference_field = null,
+        $after = true
+    ) {
         $this->validateField($field);
 
         if ($reference_field !== null) {
@@ -572,12 +581,20 @@ class DetailsView extends Control implements UIParent
 
             if ($after) {
                 // insert after reference field
-                array_splice($this->fields, $key, 1,
-                    array($reference_field, $field));
+                array_splice(
+                    $this->fields,
+                    $key,
+                    1,
+                    array($reference_field, $field)
+                );
             } else {
                 // insert before reference field
-                array_splice($this->fields, $key, 1,
-                    array($field, $reference_field));
+                array_splice(
+                    $this->fields,
+                    $key,
+                    1,
+                    array($field, $reference_field)
+                );
             }
         } else {
             if ($after) {
@@ -589,8 +606,9 @@ class DetailsView extends Control implements UIParent
             }
         }
 
-        if ($field->id !== null)
+        if ($field->id !== null) {
             $this->fields_by_id[$field->id] = $field;
+        }
 
         $field->parent = $this;
     }

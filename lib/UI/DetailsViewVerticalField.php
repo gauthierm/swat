@@ -30,8 +30,9 @@ class DetailsViewVerticalField extends DetailsViewField
      */
     public function display($data, $odd)
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $this->odd = $odd;
 

@@ -187,8 +187,9 @@ abstract class Object
      */
     public function getFirstAncestor($class_name)
     {
-        if (!class_exists($class_name))
+        if (!class_exists($class_name)) {
             return null;
+        }
 
         if ($this->parent === null) {
             $out = null;
@@ -343,8 +344,9 @@ abstract class Object
         $class_string = null;
 
         $class_names = $this->getCSSClassNames();
-        if (count($class_names) > 0)
+        if (count($class_names) > 0) {
             $class_string = implode(' ', $class_names);
+        }
 
         return $class_string;
     }

@@ -29,25 +29,27 @@ class IntegerEntry extends NumericEntry
     {
         parent::process();
 
-        if ($this->value === null)
+        if ($this->value === null) {
             return;
+        }
 
         try {
             $integer_value = $this->getNumericValue($this->value);
-
-            if ($integer_value === null)
+            if ($integer_value === null) {
                 $this->addMessage($this->getValidationMessage('integer'));
-            else
+            } else {
                 $this->value = $integer_value;
-
+            }
         } catch (Exception\IntegerOverflowException $e) {
-            if ($e->getSign() > 0)
-                $this->addMessage($this->getValidationMessage(
-                    'integer-maximum'));
-            else
-                $this->addMessage($this->getValidationMessage(
-                    'integer-minimum'));
-
+            if ($e->getSign() > 0) {
+                $this->addMessage(
+                    $this->getValidationMessage('integer-maximum')
+                );
+            } else {
+                $this->addMessage(
+                    $this->getValidationMessage('integer-minimum')
+                );
+            }
             $integer_value = null;
         }
     }
@@ -66,11 +68,15 @@ class IntegerEntry extends NumericEntry
     {
         if (is_int($value)) {
             $locale = I18N\Locale::get();
-            $thousands_separator =
-                ($this->show_thousands_separator) ? null : '';
+            $thousands_separator = ($this->show_thousands_separator)
+                ? null
+                : '';
 
-            $value = $locale->formatNumber($value, 0,
-                array('thousands_separator' => $thousands_separator));
+            $value = $locale->formatNumber(
+                $value,
+                0,
+                array('thousands_separator' => $thousands_separator)
+            );
         } else {
             $value = parent::getDisplayValue($value);
         }

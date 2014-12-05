@@ -83,8 +83,9 @@ class ChangeOrder extends OptionControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -190,10 +191,11 @@ class ChangeOrder extends OptionControl implements Model\State
 
     public function getState()
     {
-        if ($this->values === null)
+        if ($this->values === null) {
             return array_keys($this->options);
-        else
+        } else {
             return $this->values;
+        }
     }
 
     // }}}
@@ -236,8 +238,9 @@ class ChangeOrder extends OptionControl implements Model\State
             }
 
             // add leftover options
-            foreach ($options as $option)
+            foreach ($options as $option) {
                 $ordered_options[] = $option;
+            }
         }
 
         return $ordered_options;
@@ -256,7 +259,6 @@ class ChangeOrder extends OptionControl implements Model\State
     protected function getCSSClassNames()
     {
         $classes = array('swat-change-order');
-
         $classes = array_merge($classes, parent::getCSSClassNames());
         return $classes;
     }
@@ -272,10 +274,12 @@ class ChangeOrder extends OptionControl implements Model\State
      */
     protected function getInlineJavaScript()
     {
-        return sprintf("var %s_obj = new SwatChangeOrder('%s', %s);",
+        return sprintf(
+            "var %s_obj = new SwatChangeOrder('%s', %s);",
             $this->id,
             $this->id,
-            $this->isSensitive() ? 'true' : 'false');
+            $this->isSensitive() ? 'true' : 'false'
+        );
     }
 
     // }}}
@@ -289,9 +293,9 @@ class ChangeOrder extends OptionControl implements Model\State
 
         $btn_tag = new Html\Tag('input');
         $btn_tag->type = 'button';
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $btn_tag->disabled = 'disabled';
-
+        }
         $btn_tag->value = L::_('Move to Top');
         $btn_tag->onclick = "{$this->id}_obj.moveToTop();";
         $btn_tag->name = "{$this->id}_buttons";

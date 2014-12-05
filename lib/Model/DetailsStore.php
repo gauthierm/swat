@@ -52,8 +52,9 @@ class DetailsStore
      */
     public function __construct($base_object = null)
     {
-        if ($base_object !== null && is_object($base_object))
+        if ($base_object !== null && is_object($base_object)) {
             $this->base_object = $base_object;
+        }
     }
 
     // }}}
@@ -81,18 +82,21 @@ class DetailsStore
      */
     public function __get($name)
     {
-        if (strpos($name, '.') !== false)
+        if (strpos($name, '.') !== false) {
             return $this->parsePath($this, $name);
+        }
 
-        if (array_key_exists($name, $this->data))
+        if (array_key_exists($name, $this->data)) {
             return $this->data[$name];
+        }
 
         if ($this->base_object !== null) {
-            if (property_exists($this->base_object, $name))
+            if (property_exists($this->base_object, $name)) {
                 return $this->base_object->$name;
-
-            if (method_exists($this->base_object, '__get'))
+            }
+            if (method_exists($this->base_object, '__get')) {
                 return $this->base_object->$name;
+            }
         }
 
         throw new Exception\InvalidPropertyException(
@@ -139,8 +143,9 @@ class DetailsStore
     {
         $is_set = isset($this->data[$name]);
 
-        if (!$is_set && $this->base_object !== null)
+        if (!$is_set && $this->base_object !== null) {
             $is_set = isset($this->base_object->$name);
+        }
 
         return $is_set;
     }
@@ -155,12 +160,13 @@ class DetailsStore
         $rest = substr($path, $pos + 1);
         $sub_object = $object->$name;
 
-        if ($sub_object === null)
+        if ($sub_object === null) {
             return null;
-        elseif (strpos($rest, '.') === false)
+        } elseif (strpos($rest, '.') === false) {
             return $sub_object->$rest;
-        else
+        } else {
             return $this->parsePath($sub_object, $rest);
+        }
     }
 
     // }}}

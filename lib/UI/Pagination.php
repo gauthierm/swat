@@ -194,20 +194,20 @@ class Pagination extends Control
      */
     public function getResultsMessage($unit = null, $unit_plural = null)
     {
-        if ($unit === null)
+        if ($unit === null) {
             $unit = L::_('record');
+        }
 
-        if ($unit_plural === null)
+        if ($unit_plural === null) {
             $unit_plural = L::_('records');
+        }
 
         $message = '';
 
         if ($this->total_records == 0) {
             $message = sprintf(L::_('No %s.'), $unit_plural);
-
         } elseif ($this->total_records == 1) {
             $message = sprintf(L::_('One %s.'), $unit);
-
         } else {
             $locale = I18N\Locale::get();
             $message = sprintf(
@@ -235,8 +235,9 @@ class Pagination extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -248,18 +249,18 @@ class Pagination extends Control
             $div_tag->class = $this->getCSSClassString();
             $div_tag->open();
 
-            if ($this->display_parts & self::POSITION)
+            if ($this->display_parts & self::POSITION) {
                 $this->displayPosition();
-
-            if ($this->display_parts & self::PREV)
+            }
+            if ($this->display_parts & self::PREV) {
                 $this->displayPrev();
-
-            if ($this->display_parts & self::PAGES)
+            }
+            if ($this->display_parts & self::PAGES) {
                 $this->displayPages();
-
-            if ($this->display_parts & self::NEXT)
+            }
+            if ($this->display_parts & self::NEXT) {
                 $this->displayNext();
-
+            }
             $div_tag->close();
         }
     }
@@ -277,7 +278,6 @@ class Pagination extends Control
     public function setCurrentPage($page)
     {
         $this->current_page = max(1, (int)$page);
-
         $this->current_record = ($this->current_page - 1) * $this->page_size;
     }
 
@@ -392,13 +392,11 @@ class Pagination extends Control
             if ($this->current_page < 7 && $i <= 10) {
                 // Current page is in the first 6, show the first 10 pages
                 $display = true;
-
             } elseif ($this->current_page > $this->total_pages - 6 &&
                 $i >= $this->total_pages - 10) {
 
                 // Current page is in the last 6, show the last 10 pages
                 $display = true;
-
             } elseif ($i < 3 || $i > $this->total_pages - 2 ||
                 abs($this->current_page - $i) <= 3) {
 
@@ -419,7 +417,6 @@ class Pagination extends Control
                 } else {
                     $anchor->href = sprintf($link, (string)$i);
                     $anchor->title = sprintf(L::_('Go to page %d'), $i);
-
                     $anchor->setContent((string)($i));
                     $anchor->display();
                 }
@@ -472,15 +469,17 @@ class Pagination extends Control
         $this->total_pages = ceil($this->total_records / $this->page_size);
 
         if (($this->total_pages <= 1) ||
-            ($this->total_pages == $this->current_page))
+            ($this->total_pages == $this->current_page)) {
             $this->next_page = 0;
-        else
+        } else {
             $this->next_page = $this->current_page + 1;
+        }
 
-        if ($this->current_page > 0)
+        if ($this->current_page > 0) {
             $this->prev_page = $this->current_page - 1;
-        else
+        } else {
             $this->prev_page = 0;
+        }
     }
 
     // }}}

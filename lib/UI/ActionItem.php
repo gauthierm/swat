@@ -52,9 +52,9 @@ class ActionItem extends Control implements UIParent
     public function init()
     {
         parent::init();
-
-        if ($this->widget !== null)
+        if ($this->widget !== null) {
             $this->widget->init();
+        }
     }
 
     // }}}
@@ -67,8 +67,9 @@ class ActionItem extends Control implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -195,17 +196,19 @@ class ActionItem extends Control implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         if ($this->widget !== null) {
             if ($class_name === null || $this->widget instanceof $class_name) {
-                if ($this->widget->id === null)
+                if ($this->widget->id === null) {
                     $out[] = $this->widget;
-                else
+                } else {
                     $out[$this->widget->id] = $this->widget;
+                }
             }
 
             if ($this->widget instanceof UIParent) {
@@ -234,13 +237,15 @@ class ActionItem extends Control implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
-        if ($this->widget instanceof $class_name)
+        if ($this->widget instanceof $class_name) {
             $out = $this->widget;
+        }
 
         if ($out === null && $this->widget instanceof UIParent) {
             $out = $this->widget->getFirstDescendant($class_name);

@@ -92,8 +92,9 @@ class ExpandableCheckboxTree extends CheckboxTree
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -154,10 +155,11 @@ class ExpandableCheckboxTree extends CheckboxTree
 
         if ($this->branch_state !== self::BRANCH_STATE_OPEN &&
             $this->branch_state !== self::BRANCH_STATE_CLOSED &&
-            $this->branch_state !== self::BRANCH_STATE_AUTO)
+            $this->branch_state !== self::BRANCH_STATE_AUTO) {
             $branch_state = self::BRANCH_STATE_AUTO;
-        else
+        } else {
             $branch_state = $this->branch_state;
+        }
 
         $expandable_node_ids = array_map(
             array('\Silverorange\Util\JavaScript', 'quoteString'),
@@ -172,7 +174,8 @@ class ExpandableCheckboxTree extends CheckboxTree
             $this->id,
             $dependent_boxes,
             $branch_state,
-            $expandable_node_ids);
+            $expandable_node_ids
+        );
 
         return $javascript;
     }
@@ -189,9 +192,11 @@ class ExpandableCheckboxTree extends CheckboxTree
      *
      * @return integer the number of checkable nodes in the tree.
      */
-    private function displayNode(Model\DataTreeNode $node, $nodes = 0,
-        $parent_index = '')
-    {
+    private function displayNode(
+        Model\DataTreeNode $node,
+        $nodes = 0,
+        $parent_index = ''
+    ) {
         $child_nodes = $node->getChildren();
 
         // build a unique id of the indexes of the tree
@@ -214,11 +219,13 @@ class ExpandableCheckboxTree extends CheckboxTree
                     // show a checkbox just for the check-all functionality
                     $this->input_tag->id = $this->id . '_' . $index;
                     $this->input_tag->value = null;
-                    $this->input_tag->checked = ($this->nodeIsChecked($node)) ?
-                        'checked' : null;
+                    $this->input_tag->checked = ($this->nodeIsChecked($node))
+                        ? 'checked'
+                        : null;
 
-                    if (!$this->isSensitive())
+                    if (!$this->isSensitive()) {
                         $this->input_tag->disabled = 'disabled';
+                    }
 
                     $this->label_tag->for = $this->id . '_' . $index;
                     $this->label_tag->class =
@@ -243,8 +250,9 @@ class ExpandableCheckboxTree extends CheckboxTree
                 $this->input_tag->checked = ($this->nodeIsChecked($node)) ?
                     'checked' : null;
 
-                if (!$this->isSensitive())
+                if (!$this->isSensitive()) {
                     $this->input_tag->disabled = 'disabled';
+                }
 
                 $this->label_tag->for = $this->id . '_' . $index;
                 $this->label_tag->class = 'swat-control';
@@ -283,8 +291,9 @@ class ExpandableCheckboxTree extends CheckboxTree
         }
 
         // count checkable nodes
-        if ($node->value !== null)
+        if ($node->value !== null) {
             $nodes++;
+        }
 
         return $nodes;
     }
@@ -336,9 +345,10 @@ class ExpandableCheckboxTree extends CheckboxTree
      *
      * @return array an array of expandable node XHTML ids.
      */
-    private function getExpandableNodeIds(Model\DataTreeNode $node,
-        $parent_id = '')
-    {
+    private function getExpandableNodeIds(
+        Model\DataTreeNode $node,
+        $parent_id = ''
+    ) {
         $expandable_ids = array();
 
         $child_nodes = $node->getChildren();
@@ -356,8 +366,10 @@ class ExpandableCheckboxTree extends CheckboxTree
             }
 
             foreach ($child_nodes as $child_node) {
-                $expandable_ids = array_merge($expandable_ids,
-                    $this->getExpandableNodeIds($child_node, $id));
+                $expandable_ids = array_merge(
+                    $expandable_ids,
+                    $this->getExpandableNodeIds($child_node, $id)
+                );
             }
 
         }

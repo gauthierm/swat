@@ -87,11 +87,13 @@ class YUIComponent
      */
     public function addJavaScript($component_directory = '', $filename = '')
     {
-        if ($component_directory == '')
+        if ($component_directory == '') {
             $component_directory = $this->id;
+        }
 
-        if ($filename == '')
+        if ($filename == '') {
             $filename = $this->id;
+        }
 
         $modes = array(
             'min'    => '-min',
@@ -143,14 +145,18 @@ class YUIComponent
      *                                     minimized version in the YUI
      *                                     distribution. Defaults to true.
      */
-    public function addStyleSheet($component_directory = '', $filename = '',
-        $has_min_version = true)
-    {
-        if ($component_directory == '')
+    public function addStyleSheet(
+        $component_directory = '',
+        $filename = '',
+        $has_min_version = true
+    ) {
+        if ($component_directory == '') {
             $component_directory = $this->id;
+        }
 
-        if ($filename == '')
+        if ($filename == '') {
             $filename = $this->id;
+        }
 
         $modes = array(
             'min'    => '-min',
@@ -158,8 +164,9 @@ class YUIComponent
             'normal' => '',
         );
 
-        if (!$has_min_version)
+        if (!$has_min_version) {
             $modes['min'] = '';
+        }
 
         $filename_template =
             'packages/yui/' . $component_directory . '/' . $filename . '%s.css';

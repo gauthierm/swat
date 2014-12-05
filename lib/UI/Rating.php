@@ -97,8 +97,9 @@ class Rating extends InputControl
     {
         parent::display();
 
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $flydown = $this->getCompositeWidget('flydown');
         $flydown->value = (string)$this->value;
@@ -157,8 +158,12 @@ class Rating extends InputControl
     protected function getInlineJavaScript()
     {
         $quoted_string = Util\JavaScript::quoteString($this->id);
-        return sprintf('var %s_obj = new SwatRating(%s, %s);',
-            $this->id, $quoted_string, intval($this->maximum_value));
+        return sprintf(
+            'var %s_obj = new SwatRating(%s, %s);',
+            $this->id,
+            $quoted_string,
+            intval($this->maximum_value)
+        );
     }
 
     // }}}

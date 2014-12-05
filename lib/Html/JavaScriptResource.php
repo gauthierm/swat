@@ -26,9 +26,11 @@ class JavaScriptResource extends Resource
                 : $uri . '&' . $tag;
         }
 
-        printf('<script type="text/javascript" src="%s%s"></script>',
+        printf(
+            '<script type="text/javascript" src="%s%s"></script>',
             $uri_prefix,
-            $uri);
+            $uri
+        );
     }
 
     // }}}

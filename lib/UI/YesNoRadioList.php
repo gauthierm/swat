@@ -35,7 +35,7 @@ class YesNoRadioList extends RadioList
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->addOption(self::NO,  L::_('No'));
+        $this->addOption(self::NO, L::_('No'));
         $this->addOption(self::YES, L::_('Yes'));
     }
 

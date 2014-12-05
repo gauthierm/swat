@@ -48,8 +48,9 @@ class Tile extends CellRendererContainer
      */
     public function display($data)
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $this->setupRenderers($data);
         $this->displayRenderers($data);
@@ -65,8 +66,9 @@ class Tile extends CellRendererContainer
      */
     public function init()
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $renderer->init();
+        }
     }
 
     // }}}
@@ -79,8 +81,9 @@ class Tile extends CellRendererContainer
      */
     public function process()
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $renderer->process();
+        }
     }
 
     // }}}
@@ -94,10 +97,9 @@ class Tile extends CellRendererContainer
     public function getMessages()
     {
         $messages = $this->messages;
-
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $messages = array_merge($messages, $renderer->getMessages());
-
+        }
         return $messages;
     }
 
@@ -129,8 +131,8 @@ class Tile extends CellRendererContainer
     {
         $has_message = false;
 
-        foreach ($this->renderers as $renderer){
-            if ($renderer->hasMessage()){
+        foreach ($this->renderers as $renderer) {
+            if ($renderer->hasMessage()) {
                 $has_message = true;
                 break;
             }
@@ -208,15 +210,18 @@ class Tile extends CellRendererContainer
             foreach ($this->renderers as $renderer) {
                 // get renderer class names
                 $classes = array('swat-tile-view-tile-renderer');
-                $classes = array_merge($classes,
-                    $renderer->getInheritanceCSSClassNames());
-
-                $classes = array_merge($classes,
-                    $renderer->getBaseCSSClassNames());
-
-                $classes = array_merge($classes,
-                    $renderer->getDataSpecificCSSClassNames());
-
+                $classes = array_merge(
+                    $classes,
+                    $renderer->getInheritanceCSSClassNames()
+                );
+                $classes = array_merge(
+                    $classes,
+                    $renderer->getBaseCSSClassNames()
+                );
+                $classes = array_merge(
+                    $classes,
+                    $renderer->getDataSpecificCSSClassNames()
+                );
                 $classes = array_merge($classes, $renderer->classes);
 
                 $div_tag->class = implode(' ', $classes);
@@ -266,17 +271,24 @@ class Tile extends CellRendererContainer
             $first_renderer instanceof CellRenderer) {
 
             // renderer inheritance classes
-            $classes = array_merge($classes,
-                $first_renderer->getInheritanceCSSClassNames());
+            $classes = array_merge(
+                $classes,
+                $first_renderer->getInheritanceCSSClassNames()
+            );
 
             // renderer base classes
-            $classes = array_merge($classes,
-                $first_renderer->getBaseCSSClassNames());
+            $classes = array_merge(
+                $classes,
+                $first_renderer->getBaseCSSClassNames()
+            );
 
             // renderer data specific classes
-            if ($this->renderers->mappingsApplied())
-                $classes = array_merge($classes,
-                    $first_renderer->getDataSpecificCSSClassNames());
+            if ($this->renderers->mappingsApplied()) {
+                $classes = array_merge(
+                    $classes,
+                    $first_renderer->getDataSpecificCSSClassNames()
+                );
+            }
 
             // renderer user-specified classes
             $classes = array_merge($classes, $first_renderer->classes);

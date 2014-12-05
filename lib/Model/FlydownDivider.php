@@ -27,12 +27,14 @@ class FlydownDivider extends Option
      * @param string $content_type optional. The content type of the divider.
      *                             If not specified, defaults to 'text/plain'.
      */
-    public function __construct($value = null, $title = null,
-        $content_type = 'text/plain')
-    {
-        if ($title === null)
+    public function __construct(
+        $value = null,
+        $title = null,
+        $content_type = 'text/plain'
+    ) {
+        if ($title === null) {
             $title = str_repeat('—', 6);
-
+        }
         parent::__construct($value, $title, $content_type);
     }
 

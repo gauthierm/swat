@@ -118,9 +118,9 @@ class Actions extends Control implements UIParent
     public function init()
     {
         parent::init();
-
-        foreach ($this->action_items as $action_item)
+        foreach ($this->action_items as $action_item) {
             $action_item->init();
+        }
     }
 
     // }}}
@@ -135,8 +135,9 @@ class Actions extends Control implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -161,10 +162,11 @@ class Actions extends Control implements UIParent
         }
 
         // select the current action item based upon the flydown value
-        if (isset($this->action_items_by_id[$flydown->value]))
+        if (isset($this->action_items_by_id[$flydown->value])) {
             $this->selected = $this->action_items_by_id[$flydown->value];
-        else
+        } else {
             $this->selected = null;
+        }
 
         $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;
@@ -227,10 +229,9 @@ class Actions extends Control implements UIParent
 
         if (isset($this->action_items_by_id[$selected_id])) {
             $this->selected = $this->action_items_by_id[$selected_id];
-
-            if ($this->selected->widget !== null)
+            if ($this->selected->widget !== null) {
                 $this->selected->widget->process();
-
+            }
         } else {
             $this->selected = null;
         }
@@ -251,8 +252,9 @@ class Actions extends Control implements UIParent
         $this->action_items[] = $item;
         $item->parent = $this;
 
-        if ($item->id !== null)
+        if ($item->id !== null) {
             $this->action_items_by_id[$item->id] = $item;
+        }
     }
 
     // }}}
@@ -301,10 +303,9 @@ class Actions extends Control implements UIParent
     public function getHtmlHeadEntrySet()
     {
         $set = parent::getHtmlHeadEntrySet();
-
-        foreach ($this->action_items as $child_widget)
+        foreach ($this->action_items as $child_widget) {
             $set->addEntrySet($child_widget->getHtmlHeadEntrySet());
-
+        }
         return $set;
     }
 
@@ -322,11 +323,9 @@ class Actions extends Control implements UIParent
     public function getAvailableHtmlHeadEntrySet()
     {
         $set = parent::getAvailableHtmlHeadEntrySet();
-
         foreach ($this->action_items as $child_widget) {
             $set->addEntrySet($child_widget->getAvailableHtmlHeadEntrySet());
         }
-
         return $set;
     }
 
@@ -364,17 +363,19 @@ class Actions extends Control implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->action_items as $action_item) {
             if ($class_name === null || $action_item instanceof $class_name) {
-                if ($action_item->id === null)
+                if ($action_item->id === null) {
                     $out[] = $action_item;
-                else
+                } else {
                     $out[$action_item->id] = $action_item;
+                }
             }
 
             if ($action_item instanceof UIParent) {
@@ -403,8 +404,9 @@ class Actions extends Control implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -416,8 +418,9 @@ class Actions extends Control implements UIParent
 
             if ($action_item instanceof UIParent) {
                 $out = $action_item->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 
@@ -620,8 +623,9 @@ class Actions extends Control implements UIParent
         }
 
         $values = array();
-        if ($this->show_blank)
+        if ($this->show_blank) {
             $values[] = "''";
+        }
 
         foreach ($this->action_items as $item) {
             if ($item->visible) {
@@ -629,8 +633,9 @@ class Actions extends Control implements UIParent
             }
         }
 
-        $selected_value = ($this->selected === null) ?
-            'null' : Util\JavaScript::quoteString($this->selected->id);
+        $selected_value = ($this->selected === null)
+            ? 'null'
+            : Util\JavaScript::quoteString($this->selected->id);
 
         $javascript .= sprintf(
             "var %s_obj = new SwatActions(%s, [%s], %s);",

@@ -320,12 +320,12 @@ abstract class CellRenderer extends Object
         // TODO: make work with namespaces
         while (strcmp($php_class_name, 'SwatCellRenderer') !== 0) {
             if (strncmp($php_class_name, 'Swat', 4) === 0) {
-                $css_class_name = strtolower(preg_replace('/([A-Z])/u',
-                    '-\1', $php_class_name));
-
-                if (substr($css_class_name, 0, 1) === '-')
+                $css_class_name = strtolower(
+                    preg_replace('/([A-Z])/u', '-\1', $php_class_name)
+                );
+                if (substr($css_class_name, 0, 1) === '-') {
                     $css_class_name = substr($css_class_name, 1);
-
+                }
                 array_unshift($css_class_names, $css_class_name);
             }
             $php_class_name = get_parent_class($php_class_name);
@@ -365,9 +365,10 @@ abstract class CellRenderer extends Object
      * @throws Exception\Exception if the specified renderer is already the
      *         child of another object.
      */
-    final protected function addCompositeRenderer(CellRenderer $renderer,
-        $key)
-    {
+    final protected function addCompositeRenderer(
+        CellRenderer $renderer,
+        $key
+    ) {
         if (array_key_exists($key, $this->composite_renderers)) {
             throw new Exception\DuplicateIdException(
                 sprintf(
@@ -452,14 +453,17 @@ abstract class CellRenderer extends Object
         $this->confirmCompositeRenderers();
 
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
-        foreach ($this->composite_renderers as $key => $renderer)
-            if ($class_name === null || $renderer instanceof $class_name)
+        foreach ($this->composite_renderers as $key => $renderer) {
+            if ($class_name === null || $renderer instanceof $class_name) {
                 $out[$key] = $renderer;
+            }
+        }
 
         return $out;
     }

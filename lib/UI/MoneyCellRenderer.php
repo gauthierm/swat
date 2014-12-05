@@ -106,8 +106,9 @@ class MoneyCellRenderer extends CellRenderer
      */
     public function render()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         if ($this->value === null && $this->null_display_value !== null) {
             $span_tag = new Html\Tag('span');

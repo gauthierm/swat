@@ -56,9 +56,12 @@ class LinkResource extends Resource
      *                             linked to by this link.
      * @param string $title        optional. The title of this link.
      */
-    public function __construct($uri, $relationship = null, $type = null,
-        $title = null)
-    {
+    public function __construct(
+        $uri,
+        $relationship = null,
+        $type = null,
+        $title = null
+    ) {
         $hash = md5($uri . $relationship . $type . $title);
         parent::__construct($hash);
 

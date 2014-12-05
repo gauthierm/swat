@@ -26,9 +26,11 @@ class LessResource extends StyleSheetResource
                 ? $uri . '&' . $tag;
         }
 
-        printf('<link rel="stylesheet/less" type="text/css" href="%s%s" />',
+        printf(
+            '<link rel="stylesheet/less" type="text/css" href="%s%s" />',
             $uri_prefix,
-            $uri);
+            $uri
+        );
     }
 
     // }}}

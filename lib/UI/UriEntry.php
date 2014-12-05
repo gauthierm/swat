@@ -60,8 +60,9 @@ class UriEntry extends Entry
     {
         parent::process();
 
-        if ($this->value === null)
+        if ($this->value === null) {
             return;
+        }
 
         $this->value = trim($this->value);
 
@@ -74,14 +75,16 @@ class UriEntry extends Entry
             $default_uri = $this->default_scheme . '://' . $this->value;
             if ($this->validateUri($default_uri)) {
                 if ($this->scheme_required) {
-                    $this->addMessage($this->getValidationMessage(
-                        'scheme-required'));
+                    $this->addMessage(
+                        $this->getValidationMessage('scheme-required')
+                    );
                 } else {
                     $this->value = $default_uri;
                 }
             } else {
-                $this->addMessage($this->getValidationMessage(
-                    'invalid-uri'));
+                $this->addMessage(
+                    $this->getValidationMessage('invalid-uri')
+                );
             }
         }
     }

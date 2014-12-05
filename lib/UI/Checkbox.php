@@ -73,8 +73,9 @@ class Checkbox extends InputControl implements Model\State
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -89,11 +90,13 @@ class Checkbox extends InputControl implements Model\State
         $input_tag->accesskey = $this->access_key;
         $input_tag->tabindex = $this->tab_index;
 
-        if ($this->value)
+        if ($this->value) {
             $input_tag->checked = 'checked';
+        }
 
-        if (!$this->isSensitive())
+        if (!$this->isSensitive()) {
             $input_tag->disabled = 'disabled';
+        }
 
         echo '<span class="swat-checkbox-wrapper">';
         $input_tag->display();

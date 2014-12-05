@@ -61,8 +61,9 @@ class MoneyEntry extends FloatEntry
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -88,13 +89,15 @@ class MoneyEntry extends FloatEntry
     {
         parent::process();
 
-        if ($this->value === null)
+        if ($this->value === null) {
             return;
+        }
 
         $locale = I18N\Locale::get($this->locale);
         $format = $locale->getNationalCurrencyFormat();
-        $max_decimal_places = ($this->decimal_places === null) ?
-            $format->fractional_digits : $this->decimal_places;
+        $max_decimal_places = ($this->decimal_places === null)
+            ? $format->fractional_digits
+            : $this->decimal_places;
 
         $value = $this->getRawValue();
 
@@ -106,11 +109,15 @@ class MoneyEntry extends FloatEntry
         if ($decimal_position === false) {
             $decimal_places = 0;
         } else {
-            $fractional_digits = substr(rtrim((string)$value, '0'),
-                $decimal_position + strlen($format->decimal_separator));
-
-            $decimal_places = preg_match_all('/[0-9]/', $fractional_digits,
-                $matches = array());
+            $fractional_digits = substr(
+                rtrim((string)$value, '0'),
+                $decimal_position + strlen($format->decimal_separator)
+            );
+            $decimal_places = preg_match_all(
+                '/[0-9]/',
+                $fractional_digits,
+                $matches = array()
+            );
         }
 
         // check if length of the given fractional part is more than the
@@ -121,25 +128,37 @@ class MoneyEntry extends FloatEntry
             $this->value = $value;
 
             if ($this->decimal_places === null) {
-                $message =
-                    $this->getValidationMessage('currency-decimal-places');
+                $message = $this->getValidationMessage(
+                    'currency-decimal-places'
+                );
 
-                $max_decimal_places_formatted = str_replace('%', '%%',
-                    $locale->formatNumber($max_decimal_places));
+                $max_decimal_places_formatted = str_replace(
+                    '%',
+                    '%%',
+                    $locale->formatNumber($max_decimal_places)
+                );
 
                 // C99 specification includes spacing character, remove it
-                $currency_formatted = str_replace('%', '%%',
-                    $locale->getInternationalCurrencySymbol());
+                $currency_formatted = str_replace(
+                    '%',
+                    '%%',
+                    $locale->getInternationalCurrencySymbol()
+                );
 
-                $message->primary_content = sprintf($message->primary_content,
+                $message->primary_content = sprintf(
+                    $message->primary_content,
                     $currency_formatted,
-                    $max_decimal_places_formatted);
+                    $max_decimal_places_formatted
+                );
             } else {
                 if ($max_decimal_places === 0) {
                     $message = $this->getValidationMessage('no-decimal-places');
                 } else {
-                    $max_decimal_places_formatted = str_replace('%', '%%',
-                        $locale->formatNumber($max_decimal_places));
+                    $max_decimal_places_formatted = str_replace(
+                        '%',
+                        '%%',
+                        $locale->formatNumber($max_decimal_places)
+                    );
 
                     // note: not using getValidationMessage() because of
                     // ngettext. We may want to add this ability to that method
@@ -220,22 +239,28 @@ class MoneyEntry extends FloatEntry
             case 'float':
                 $locale = I18N\Locale::get($this->locale);
                 $currency = $locale->getInternationalCurrencySymbol();
-                $example = $locale->formatCurrency(1036.95, false,
-                    array('fractional_digits' => $this->decimal_places));
+                $example = $locale->formatCurrency(
+                    1036.95,
+                    false,
+                    array('fractional_digits' => $this->decimal_places)
+                );
+
+                $text = ($this->show_field_title_in_messages)
+                    ? L::_(
+                        'The %%s field must be a monetary value ' .
+                        'formatted for %s (i.e. %s).'
+                    )
+                    : L::_(
+                        'This field must be a monetary value formatted ' .
+                        'for %s (i.e. %s).'
+                    );
 
                 $text = sprintf(
-                    $this->show_field_title_in_messages
-                        ? L::_(
-                            'The %%s field must be a monetary value ' .
-                            'formatted for %s (i.e. %s).'
-                        )
-                        : L::_(
-                            'This field must be a monetary value formatted ' .
-                            'for %s (i.e. %s).'
-                        ),
+                    $text,
                     str_replace('%', '%%', $currency),
                     str_replace('%', '%%', $example)
                 );
+
                 $message = new Model\Message($text, 'error');
                 break;
             case 'currency-decimal-places':
@@ -244,7 +269,8 @@ class MoneyEntry extends FloatEntry
                         'The %%s field has too many decimal places. The ' .
                         'currency %s only allows %s.'
                     )
-                    : L::_('This field has too many decimal places. The ' .
+                    : L::_(
+                        'This field has too many decimal places. The ' .
                         'currency %s only allows %s.'
                     );
 

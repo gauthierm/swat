@@ -26,9 +26,11 @@ class StyleSheetResource extends Resource
                 : $uri . '&' . $tag;
         }
 
-        printf('<link rel="stylesheet" type="text/css" href="%s%s" />',
+        printf(
+            '<link rel="stylesheet" type="text/css" href="%s%s" />',
             $uri_prefix,
-            $uri);
+            $uri
+        );
     }
 
     // }}}

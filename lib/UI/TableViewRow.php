@@ -154,8 +154,9 @@ abstract class TableViewRow extends Object
      */
     public function getVisibleByCount($count)
     {
-        if ($count == 0)
+        if ($count == 0) {
             return false;
+        }
 
         return true;
     }

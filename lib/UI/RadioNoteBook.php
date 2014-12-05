@@ -285,10 +285,9 @@ class RadioNoteBook extends InputControl implements UIParent
     public function getMessages()
     {
         $messages = parent::getMessages();
-
-        foreach ($this->pages as $page)
+        foreach ($this->pages as $page) {
             $messages = array_merge($messages, $page->getMessages());
-
+        }
         return $messages;
     }
 
@@ -381,17 +380,19 @@ class RadioNoteBook extends InputControl implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->pages as $page) {
             if ($class_name === null || $page instanceof $class_name) {
-                if ($page->id === null)
+                if ($page->id === null) {
                     $out[] = $page;
-                else
+                } else {
                     $out[$page->id] = $page;
+                }
             }
 
             if ($page instanceof UIParent) {
@@ -420,8 +421,9 @@ class RadioNoteBook extends InputControl implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
@@ -433,8 +435,9 @@ class RadioNoteBook extends InputControl implements UIParent
 
             if ($page instanceof UIParent) {
                 $out = $page->getFirstDescendant($class_name);
-                if ($out !== null)
+                if ($out !== null) {
                     break;
+                }
             }
         }
 

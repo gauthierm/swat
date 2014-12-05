@@ -30,15 +30,17 @@ class FloatEntry extends NumericEntry
     {
         parent::process();
 
-        if ($this->value === null)
+        if ($this->value === null) {
             return;
+        }
 
         $float_value = $this->getNumericValue($this->value);
 
-        if ($float_value === null)
+        if ($float_value === null) {
             $this->addMessage($this->getValidationMessage('float'));
-        else
+        } else {
             $this->value = $float_value;
+        }
     }
 
     // }}}
@@ -55,11 +57,15 @@ class FloatEntry extends NumericEntry
     {
         if (is_numeric($value)) {
             $locale = I18N\Locale::get();
-            $thousands_separator =
-                ($this->show_thousands_separator) ? null : '';
+            $thousands_separator = ($this->show_thousands_separator)
+                ? null
+                : '';
 
-            $value = $locale->formatNumber($value, null,
-                array('thousands_separator' => $thousands_separator));
+            $value = $locale->formatNumber(
+                $value,
+                null,
+                array('thousands_separator' => $thousands_separator)
+            );
         } else {
             $value = parent::getDisplayValue($value);
         }

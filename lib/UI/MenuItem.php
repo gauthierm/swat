@@ -156,11 +156,13 @@ class MenuItem extends Control implements UIParent
     {
         parent::init();
 
-        if ($this->stock_id !== null)
+        if ($this->stock_id !== null) {
             $this->setFromStock($this->stock_id, false);
+        }
 
-        if ($this->sub_menu !== null)
+        if ($this->sub_menu !== null) {
             $this->sub_menu->init();
+        }
     }
 
     // }}}
@@ -173,8 +175,9 @@ class MenuItem extends Control implements UIParent
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -189,12 +192,13 @@ class MenuItem extends Control implements UIParent
             $anchor_tag->id = $this->id;
             $anchor_tag->class = $this->getCSSClassString();
 
-            if ($this->value === null)
+            if ($this->value === null) {
                 $anchor_tag->href = $this->link;
-            elseif (is_array($this->value))
+            } elseif (is_array($this->value)) {
                 $anchor_tag->href = vsprintf($this->link, $this->value);
-            else
+            } else {
                 $anchor_tag->href = sprintf($this->link, $this->value);
+            }
 
             $anchor_tag->setContent($this->title);
             $anchor_tag->display();
@@ -284,8 +288,9 @@ class MenuItem extends Control implements UIParent
                 );
         }
 
-        if ($overwrite_properties || ($this->title === null))
+        if ($overwrite_properties || ($this->title === null)) {
             $this->title = $title;
+        }
 
         $this->stock_class = $class;
     }
@@ -309,18 +314,20 @@ class MenuItem extends Control implements UIParent
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         if ($this->sub_menu !== null) {
             if ($class_name === null ||
                 $this->sub_menu instanceof $class_name) {
-                if ($this->sub_menu->id === null)
+                if ($this->sub_menu->id === null) {
                     $out[] = $this->sub_menu;
-                else
+                } else {
                     $out[$this->sub_menu->id] = $this->sub_menu;
+                }
             }
 
             if ($this->sub_menu instanceof UIParent) {
@@ -349,13 +356,15 @@ class MenuItem extends Control implements UIParent
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = null;
 
-        if ($this->sub_menu instanceof $class_name)
+        if ($this->sub_menu instanceof $class_name) {
             $out = $this->sub_menu;
+        }
 
         if ($out === null && $this->sub_menu instanceof UIParent) {
             $out = $this->sub_menu->getFirstDescendant($class_name);
@@ -444,8 +453,9 @@ class MenuItem extends Control implements UIParent
      */
     protected function displaySubMenu()
     {
-        if ($this->sub_menu !== null)
+        if ($this->sub_menu !== null) {
             $this->sub_menu->display();
+        }
     }
 
     // }}}
@@ -461,8 +471,9 @@ class MenuItem extends Control implements UIParent
     {
         $classes = array('swat-menu-item');
 
-        if ($this->stock_class !== null)
+        if ($this->stock_class !== null) {
             $classes[] = $this->stock_class;
+        }
 
         $classes = array_merge($classes, parent::getCSSClassNames());
 

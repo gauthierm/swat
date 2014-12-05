@@ -32,8 +32,9 @@ class EmailEntry extends Entry
     {
         parent::process();
 
-        if ($this->value === null)
+        if ($this->value === null) {
             return;
+        }
 
         if ($this->value == '') {
             $this->value = null;

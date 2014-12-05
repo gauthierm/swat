@@ -44,8 +44,9 @@ class ConfirmEmailEntry extends EmailEntry
     {
         parent::process();
 
-        if ($this->value === null)
+        if ($this->value === null) {
             return;
+        }
 
         if ($this->email_widget === null) {
             throw new Exception\Exception(

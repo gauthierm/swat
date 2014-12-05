@@ -70,8 +70,9 @@ class Calendar extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -136,10 +137,11 @@ class Calendar extends Control
             $javascript = '';
         }
 
-        if (isset($this->valid_range_start))
+        if (isset($this->valid_range_start)) {
             $start_date = $this->valid_range_start->formatLikeIntl('MM/dd/yyyy');
-        else
+        } else {
             $start_date = '';
+        }
 
         if (isset($this->valid_range_end)) {
             // JavaScript calendar is inclusive, subtract one second from range

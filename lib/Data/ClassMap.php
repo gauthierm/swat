@@ -127,18 +127,23 @@ class ClassMap
                 foreach (self::$search_paths as $search_path) {
                     // check if search path is relative
                     if ($search_path[0] == '/') {
-                        $filename = sprintf('%s/%s.php',
-                            $search_path, $to_class_name);
-
+                        $filename = sprintf(
+                            '%s/%s.php',
+                            $search_path,
+                            $to_class_name
+                        );
                         if (file_exists($filename)) {
                             require_once $filename;
                             break;
                         }
                     } else {
                         foreach ($include_paths as $include_path) {
-                            $filename = sprintf('%s/%s/%s.php',
-                                $include_path, $search_path, $to_class_name);
-
+                            $filename = sprintf(
+                                '%s/%s/%s.php',
+                                $include_path,
+                                $search_path,
+                                $to_class_name
+                            );
                             if (file_exists($filename)) {
                                 require_once $filename;
                                 break 2;
@@ -203,8 +208,9 @@ class ClassMap
     public static function removePath($search_path)
     {
         $index = array_search($search_path, self::$search_paths);
-        if ($index !== false)
+        if ($index !== false) {
             array_splice(self::$search_paths, $index, 1);
+        }
     }
 
     // }}}

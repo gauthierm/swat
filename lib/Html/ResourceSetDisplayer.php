@@ -2,9 +2,9 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-require_once 'Concentrate/Concentrator.php';
-require_once 'Swat/SwatHtmlHeadEntrySet.php';
-require_once 'Swat/SwatInlineJavaScriptHtmlHeadEntry.php';
+namespace Silverorange\Swat\Html;
+
+use Silverorange\Swat\Exception;
 
 /**
  * Displays HTML head entries
@@ -16,7 +16,7 @@ require_once 'Swat/SwatInlineJavaScriptHtmlHeadEntry.php';
  * @copyright 2010-2012 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SwatHtmlHeadEntrySetDisplayer
+class ResourceSetDisplayer
 {
     // {{{ protected properties
 
@@ -44,36 +44,37 @@ class SwatHtmlHeadEntrySetDisplayer
     /**
      * Displays a set of HTML head entries
      *
-     * @param SwatHtmlHeadEntrySet $set        the HTML head entry set to
-     *                                         display.
-     * @param string               $uri_prefix an optional URI prefix to
-     *                                         prepend to all the displayed
-     *                                         HTML head entries.
-     * @param string               $tag        an optional tag to suffix the
-     *                                         URI with. This is suffixed as a
-     *                                         HTTP get var and can be used to
-     *                                         explicitly refresh the browser
-     *                                         cache.
-     * @param boolean              $combine    whether or not to combine files.
-     *                                         Defaults to false.
-     * @param boolean              $minify     whether or not to minify files.
-     *                                         Defaults to false.
-     * @param boolean              $compile    whether or not to use compiled
-     *                                         files. Defaults to false.
+     * @param ResourceSet $set        the resource set to display.
+     * @param string      $uri_prefix an optional URI prefix to prepend to all
+     *                                the displayed resources.
+     * @param string      $tag        an optional tag to suffix the URI with.
+     *                                This is suffixed as a HTTP GET var and
+     *                                can be used to explicitly refresh the
+     *                                browser cache.
+     * @param boolean     $combine    whether or not to combine files. Defaults
+     *                                to false.
+     * @param boolean     $minify     whether or not to minify files. Defaults
+     *                                to false.
+     * @param boolean     $compile    whether or not to use compiled files.
+     *                                . Defaults to false.
      */
-    public function display(SwatHtmlHeadEntrySet $set,
-        $uri_prefix = '', $tag = null, $combine = false, $minify = false,
-        $compile = false)
-    {
+    public function display(
+        ResourceSet $set,
+        $uri_prefix = '',
+        $tag = null,
+        $combine = false,
+        $minify = false,
+        $compile = false
+    ) {
         // clone set so displaying doesn't modify it
         $set = clone $set;
 
         // if not compiled and we have LESS entries, include the LESS client-
         // side JavaScript.
-        if (count($set->getByType('SwatLessStyleSheetHtmlHeadEntry')) > 0 &&
+        if (count($set->getByType('LessResource')) > 0 &&
             !$compile && class_exists('Less')) {
             $set->addEntry(
-                new SwatInlineJavaScriptHtmlHeadEntry(
+                new InlineJavaScriptResource(
                     'var less = { env: "development" };'
                 )
             );
@@ -113,13 +114,11 @@ class SwatHtmlHeadEntrySetDisplayer
 
             if ($minify &&
                 $this->concentrator->isMinified($entry->getUri()) &&
-                ($compile ||
-                $entry->getType() !== 'SwatLessStyleSheetHtmlHeadEntry')) {
+                ($compile || $entry->getType() !== 'LessResource')) {
                 $prefix = $prefix . 'min/';
             }
 
-            if ($compile &&
-                $entry->getType() === 'SwatLessStyleSheetHtmlHeadEntry') {
+            if ($compile && $entry->getType() === 'LessResource') {
                 $prefix = $prefix . 'compiled/';
                 $entry = $entry->getStyleSheetHeadEntry();
             }
@@ -137,8 +136,7 @@ class SwatHtmlHeadEntrySetDisplayer
     /**
      * Displays the contents of the set of HTML head entries inline
      */
-    public function displayInline(SwatHtmlHeadEntrySet $set,
-        $path, $type = null)
+    public function displayInline(ResourceSet $set, $path, $type = null)
     {
         $entries = $set->toArray();
 
@@ -180,11 +178,11 @@ class SwatHtmlHeadEntrySetDisplayer
         // add combines to set of entries
         foreach ($info['combines'] as $combine) {
             if (substr($combine, -4) === '.css') {
-                $class_name = 'SwatStyleSheetHtmlHeadEntry';
+                $class_name = 'StyleSheetResource';
             } elseif (substr($combine, -5) === '.less') {
-                $class_name = 'SwatLessStyleSheetHtmlHeadEntry';
+                $class_name = 'LessResource';
             } else {
-                $class_name = 'SwatJavaScriptHtmlHeadEntry';
+                $class_name = 'JavaScriptResource';
             }
             $entries[$combine] = new $class_name($combine, '__combine__');
         }
@@ -241,8 +239,7 @@ class SwatHtmlHeadEntrySetDisplayer
     // {{{ protected function compareEntries()
 
     /**
-     * Compares two {@link SwatHtmlHeadEntry} objects to get their display
-     * order
+     * Compares two {@link Resource} objects to get their display order
      *
      * @param array $a left side of comparison. A two element array containing
      *                 the keys 'order' and 'object'. The 'order' key contains
@@ -322,13 +319,13 @@ class SwatHtmlHeadEntrySetDisplayer
     protected function getTypeOrder()
     {
         return array(
-            'SwatStyleSheetHtmlHeadEntry'       => 0,
-            'SwatLessStyleSheetHtmlHeadEntry'   => 1,
-            'SwatLinkHtmlHeadEntry'             => 2,
-            'SwatInlineJavaScriptHtmlHeadEntry' => 3,
-            'SwatJavaScriptHtmlHeadEntry'       => 4,
-            'SwatCommentHtmlHeadEntry'          => 5,
-            '__unknown__'                       => 6,
+            'StyleSheetResource'       => 0,
+            'LessResource'             => 1,
+            'LinkResource'             => 2,
+            'InlineJavaScriptResource' => 3,
+            'JavaScriptResource'       => 4,
+            'CommentResource'          => 5,
+            '__unknown__'              => 6,
         );
     }
 
@@ -343,7 +340,7 @@ class SwatHtmlHeadEntrySetDisplayer
      *
      * @param array $uris the HTML head entry URIs to check.
      *
-     * @throws SwatException if one or more conflicts are present.
+     * @throws Exception\Exception if one or more conflicts are present.
      */
     protected function checkForConflicts(array $uris)
     {
@@ -355,13 +352,14 @@ class SwatHtmlHeadEntrySetDisplayer
                 $conflict_list .= sprintf(
                     "\n- %s conflicts with %s",
                     $file,
-                    implode(', ', $conflict));
-
+                    implode(', ', $conflict)
+                );
                 $count++;
             }
-            throw new SwatException(
+            throw new Exception\Exception(
                 'Could not display head entries because the following ' .
-                'conflicts were detected: ' . $conflict_list);
+                'conflicts were detected: ' . $conflict_list
+            );
         }
     }
 

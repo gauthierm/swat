@@ -75,8 +75,9 @@ class CellRendererSet implements \Iterator, \Countable
         $renderer_key = spl_object_hash($renderer);
         $this->mappings[$renderer_key] = array();
 
-        if ($renderer->id !== null)
+        if ($renderer->id !== null) {
             $this->renderers_by_id[$renderer->id] = $renderer;
+        }
     }
 
     // }}}
@@ -93,9 +94,10 @@ class CellRendererSet implements \Iterator, \Countable
      * @see CellRendererSet::addRenderer()
      * @see CellRendererSet::addMappingsToRenderer()
      */
-    public function addRendererWithMappings(UI\CellRenderer $renderer,
-        array $mappings = array())
-    {
+    public function addRendererWithMappings(
+        UI\CellRenderer $renderer,
+        array $mappings = array()
+    ) {
         $this->addRenderer($renderer);
         $this->addMappingsToRenderer($renderer, $mappings);
     }
@@ -115,9 +117,10 @@ class CellRendererSet implements \Iterator, \Countable
      * @throws Exception\Exception if an attepmt to map a static cell renderer
      *         property is made.
      */
-    public function addMappingsToRenderer(UI\CellRenderer $renderer,
-        array $mappings = array())
-    {
+    public function addMappingsToRenderer(
+        UI\CellRenderer $renderer,
+        array $mappings = array()
+    ) {
         $renderer_key = spl_object_hash($renderer);
 
         foreach ($mappings as $mapping) {
@@ -147,9 +150,10 @@ class CellRendererSet implements \Iterator, \Countable
      * @throws Exception\Exception if an attepmt to map a static cell renderer
      *         property is made.
      */
-    public function addMappingToRenderer(UI\CellRenderer $renderer,
-        CellRendererMapping $mapping)
-    {
+    public function addMappingToRenderer(
+        UI\CellRenderer $renderer,
+        CellRendererMapping $mapping
+    ) {
         if ($renderer->isPropertyStatic($mapping->property)) {
             throw new Exception\Exception(
                 sprintf(
@@ -175,9 +179,10 @@ class CellRendererSet implements \Iterator, \Countable
      * @param mixed           $data_object an object containg datafields to be
      *                                     mapped onto the cell renderer.
      */
-    public function applyMappingsToRenderer(UI\CellRenderer $renderer,
-        $data_object)
-    {
+    public function applyMappingsToRenderer(
+        UI\CellRenderer $renderer,
+        $data_object
+    ) {
         // array to track array properties that we've already seen
         $array_properties = array();
 
@@ -193,24 +198,26 @@ class CellRendererSet implements \Iterator, \Countable
                     // already have an array
                     $array_ref = &$renderer->$property;
 
-                    if ($mapping->array_key === null)
+                    if ($mapping->array_key === null) {
                         $array_ref[] = $data_object->$field;
-                    else
+                    } else {
                         $array_ref[$mapping->array_key] = $data_object->$field;
-
+                    }
                 } else {
                     // starting a new array
                     $array_properties[] = $mapping->property;
 
-                    if ($mapping->array_key === null)
+                    if ($mapping->array_key === null) {
                         $renderer->$property = array($data_object->$field);
-                    else
-                        $renderer->$property =
-                            array($mapping->array_key => $data_object->$field);
+                    } else {
+                        $renderer->$property = array(
+                            $mapping->array_key => $data_object->$field
+                        );
+                    }
                 }
             } else {
                 // look for leading '!' and inverse value if found
-                if (strncmp($field , '!', 1) === 0) {
+                if (strncmp($field, '!', 1) === 0) {
                     $field = substr($field, 1);
                     $renderer->$property = !($data_object->$field);
                 } else {
@@ -238,9 +245,9 @@ class CellRendererSet implements \Iterator, \Countable
      */
     public function getRendererByPosition($position = 0)
     {
-        if ($position < count($this->renderers))
+        if ($position < count($this->renderers)) {
             return $this->renderers[$position];
-
+        }
         throw new Exception\ObjectNotFoundException(
             'Set does not contain that many renderers.',
             0,
@@ -264,9 +271,9 @@ class CellRendererSet implements \Iterator, \Countable
      */
     public function getRenderer($renderer_id)
     {
-        if (array_key_exists($renderer_id, $this->renderers_by_id))
+        if (array_key_exists($renderer_id, $this->renderers_by_id)) {
             return $this->renderers_by_id[$renderer_id];
-
+        }
         throw new Exception\ObjectNotFoundException(
             "Cell renderer with an id of '{$renderer_id}' not found.",
             0,
@@ -383,10 +390,9 @@ class CellRendererSet implements \Iterator, \Countable
     public function getFirst()
     {
         $first = null;
-
-        if (count($this->renderers) > 0)
+        if (count($this->renderers) > 0) {
             $first = reset($this->renderers);
-
+        }
         return $first;
     }
 

@@ -145,8 +145,9 @@ class TableViewColumn extends CellRendererContainer
      */
     public function init()
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $renderer->init();
+        }
 
         if ($this->id === null) {
             $this->id = $this->getUniqueId();
@@ -172,8 +173,9 @@ class TableViewColumn extends CellRendererContainer
 
     public function process()
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $renderer->process();
+        }
     }
 
     // }}}
@@ -195,15 +197,17 @@ class TableViewColumn extends CellRendererContainer
      */
     public function displayHeaderCell()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $th_tag = new Html\Tag('th', $this->getThAttributes());
         $th_tag->scope = 'col';
 
         $colspan = $this->getXhtmlColspan();
-        if ($colspan > 1)
+        if ($colspan > 1) {
             $th_tag->colspan = $colspan;
+        }
 
         $th_tag->open();
         $this->displayHeader();
@@ -236,9 +240,10 @@ class TableViewColumn extends CellRendererContainer
             // Note: This always minimizes entities in titles regardless of
             // $this->title_content_type, as its a html tag attribute.
             $abbr_tag->title = Util\String::minimizeEntities($title);
-            $abbr_tag->setContent($this->abbreviated_title,
-                $this->abbreviated_title_content_type);
-
+            $abbr_tag->setContent(
+                $this->abbreviated_title,
+                $this->abbreviated_title_content_type
+            );
             $abbr_tag->display();
         }
     }
@@ -257,8 +262,9 @@ class TableViewColumn extends CellRendererContainer
      */
     public function display($row)
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $this->setupRenderers($row);
         $this->displayRenderers($row);
@@ -277,13 +283,14 @@ class TableViewColumn extends CellRendererContainer
      */
     public function getMessages($data)
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $this->renderers->applyMappingsToRenderer($renderer, $data);
+        }
 
         $messages = array();
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $messages = array_merge($messages, $renderer->getMessages());
-
+        }
         return $messages;
     }
 
@@ -302,8 +309,9 @@ class TableViewColumn extends CellRendererContainer
      */
     public function hasMessage($data)
     {
-        foreach ($this->renderers as $renderer)
+        foreach ($this->renderers as $renderer) {
             $this->renderers->applyMappingsToRenderer($renderer, $data);
+        }
 
         $has_message = false;
         foreach ($this->renderers as $renderer) {
@@ -312,7 +320,6 @@ class TableViewColumn extends CellRendererContainer
                 break;
             }
         }
-
         return $has_message;
     }
 
@@ -446,17 +453,19 @@ class TableViewColumn extends CellRendererContainer
     public function getDescendants($class_name = null)
     {
         if (!($class_name === null ||
-            class_exists($class_name) || interface_exists($class_name)))
+            class_exists($class_name) || interface_exists($class_name))) {
             return array();
+        }
 
         $out = array();
 
         foreach ($this->getRenderers() as $renderer) {
             if ($class_name === null || $renderer instanceof $class_name) {
-                if ($renderer->id === null)
+                if ($renderer->id === null) {
                     $out[] = $renderer;
-                else
+                } else {
                     $out[$renderer->id] = $renderer;
+                }
             }
 
             if ($renderer instanceof UIParent) {
@@ -470,10 +479,11 @@ class TableViewColumn extends CellRendererContainer
         if ($this->input_cell !== null) {
             if ($class_name === null ||
                 $this->input_cell instanceof $class_name) {
-                if ($this->input_cell->id === null)
+                if ($this->input_cell->id === null) {
                     $out[] = $this->input_cell;
-                else
+                } else {
                     $out[$this->input_cell->id] = $this->input_cell;
+                }
             }
 
             if ($this->input_cell instanceof UIParent) {
@@ -502,13 +512,15 @@ class TableViewColumn extends CellRendererContainer
      */
     public function getFirstDescendant($class_name)
     {
-        if (!class_exists($class_name) && !interface_exists($class_name))
+        if (!class_exists($class_name) && !interface_exists($class_name)) {
             return null;
+        }
 
         $out = parent::getFirstDescendant($class_name);
 
-        if ($out === null && $this->input_cell instanceof $class_name)
+        if ($out === null && $this->input_cell instanceof $class_name) {
             $out = $this->input_cell;
+        }
 
         if ($out === null && $this->input_cell instanceof UIParent) {
             $out = $this->input_cell->getFirstDescendant($class_name);
@@ -556,7 +568,8 @@ class TableViewColumn extends CellRendererContainer
 
         if ($this->input_cell !== null) {
             $set->addEntrySet(
-                $this->input_cell->getAvailableHtmlHeadEntrySet());
+                $this->input_cell->getAvailableHtmlHeadEntrySet()
+            );
         }
 
         return $set;
@@ -655,8 +668,9 @@ class TableViewColumn extends CellRendererContainer
         $td_tag = new Html\Tag('td', $this->getTdAttributes());
 
         $colspan = $this->getXhtmlColspan();
-        if ($colspan > 1)
+        if ($colspan > 1) {
             $td_tag->colspan = $colspan;
+        }
 
         $td_tag->open();
         $this->displayRenderersInternal($data);
@@ -687,25 +701,30 @@ class TableViewColumn extends CellRendererContainer
 
             $first = true;
             foreach ($this->renderers as $renderer) {
-                if (!$renderer->visible)
+                if (!$renderer->visible) {
                     continue;
+                }
 
-                if ($first)
+                if ($first) {
                     $first = false;
-                else
+                } else {
                     echo ' ';
+                }
 
                 // get renderer class names
                 $classes = array('swat-table-view-column-renderer');
-                $classes = array_merge($classes,
-                    $renderer->getInheritanceCSSClassNames());
-
-                $classes = array_merge($classes,
-                    $renderer->getBaseCSSClassNames());
-
-                $classes = array_merge($classes,
-                    $renderer->getDataSpecificCSSClassNames());
-
+                $classes = array_merge(
+                    $classes,
+                    $renderer->getInheritanceCSSClassNames()
+                );
+                $classes = array_merge(
+                    $classes,
+                    $renderer->getBaseCSSClassNames()
+                );
+                $classes = array_merge(
+                    $classes,
+                    $renderer->getDataSpecificCSSClassNames()
+                );
                 $classes = array_merge($classes, $renderer->classes);
 
                 $div_tag->class = implode(' ', $classes);
@@ -792,17 +811,24 @@ class TableViewColumn extends CellRendererContainer
             $first_renderer instanceof CellRenderer) {
 
             // renderer inheritance classes
-            $classes = array_merge($classes,
-                $first_renderer->getInheritanceCSSClassNames());
+            $classes = array_merge(
+                $classes,
+                $first_renderer->getInheritanceCSSClassNames()
+            );
 
             // renderer base classes
-            $classes = array_merge($classes,
-                $first_renderer->getBaseCSSClassNames());
+            $classes = array_merge(
+                $classes,
+                $first_renderer->getBaseCSSClassNames()
+            );
 
             // renderer data specific classes
-            if ($this->renderers->mappingsApplied())
-                $classes = array_merge($classes,
-                    $first_renderer->getDataSpecificCSSClassNames());
+            if ($this->renderers->mappingsApplied()) {
+                $classes = array_merge(
+                    $classes,
+                    $first_renderer->getDataSpecificCSSClassNames()
+                );
+            }
 
             // renderer user-specified classes
             $classes = array_merge($classes, $first_renderer->classes);

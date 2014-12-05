@@ -68,8 +68,9 @@ class Disclosure extends DisplayableContainer
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         Widget::display();
 
@@ -194,8 +195,13 @@ class Disclosure extends DisplayableContainer
     protected function getInlineJavaScript()
     {
         $open = ($this->open) ? 'true' : 'false';
-        return sprintf("var %s_obj = new %s('%s', %s);",
-            $this->id, $this->getJavaScriptClass(), $this->id, $open);
+        return sprintf(
+            "var %s_obj = new %s('%s', %s);",
+            $this->id,
+            $this->getJavaScriptClass(),
+            $this->id,
+            $open
+        );
     }
 
     // }}}

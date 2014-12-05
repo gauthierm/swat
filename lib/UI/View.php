@@ -231,14 +231,14 @@ abstract class View extends Control
     }
 
     // }}}
-    // {{{ protected final function addSelector()
+    // {{{ final protected function addSelector()
 
     /**
      * This method should be called internally by the
      * {@link View::init() method on all descendant UI-objects that are
      * ViewSelector objects.
      */
-    protected final function addSelector(ViewSelector $selector)
+    final protected function addSelector(ViewSelector $selector)
     {
         $this->selections[$selector->getId()] = new ViewSelection(array());
         $this->selectors[$selector->getId()] = $selector;

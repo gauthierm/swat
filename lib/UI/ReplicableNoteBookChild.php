@@ -11,8 +11,8 @@ namespace Silverorange\Swat\UI;
  * @copyright 2007-2008 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class ReplicableNoteBookChild extends ReplicableContainer
-    implements NoteBookChild
+class ReplicableNoteBookChild extends ReplicableContainer implements
+    NoteBookChild
 {
     // {{{ public function getPages()
 

@@ -160,8 +160,9 @@ class ProgressBar extends Control
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         parent::display();
 
@@ -241,12 +242,16 @@ class ProgressBar extends Control
             case self::ORIENTATION_BOTTOM_TO_TOP:
                 $bar_div_tag->class .= ' swat-progress-bar-bottom-to-top';
                 $bar_div_tag->style = sprintf('height: %s;', $this->length);
-                $full_div_tag->style = sprintf('height: %s; top: %s;',
-                    $full_length, $empty_length);
-
-                $empty_div_tag->style = sprintf('height: %s; top: -%s;',
-                    $empty_length, $full_length);
-
+                $full_div_tag->style = sprintf(
+                    'height: %s; top: %s;',
+                    $full_length,
+                    $empty_length
+                );
+                $empty_div_tag->style = sprintf(
+                    'height: %s; top: -%s;',
+                    $empty_length,
+                    $full_length
+                );
                 break;
 
             case self::ORIENTATION_TOP_TO_BOTTOM:
@@ -276,12 +281,13 @@ class ProgressBar extends Control
             // progress bar
             $text = '';
         } else {
-            if ($this->text_value === null)
+            if ($this->text_value === null) {
                 $text = $this->text;
-            elseif (is_array($this->text_value))
+            } elseif (is_array($this->text_value)) {
                 $text = vsprintf($this->text, $this->text_value);
-            else
+            } else {
                 $text = sprintf($this->text, $this->text_value);
+            }
         }
 
         $span_tag = new Html\Tag('span');
@@ -301,8 +307,13 @@ class ProgressBar extends Control
      */
     protected function getInlineJavaScript()
     {
-        return sprintf("var %s_obj = new SwatProgressBar('%s', %s, %s);",
-            $this->id, $this->id, $this->orientation, $this->value);
+        return sprintf(
+            "var %s_obj = new SwatProgressBar('%s', %s, %s);",
+            $this->id,
+            $this->id,
+            $this->orientation,
+            $this->value
+        );
     }
 
     // }}}

@@ -93,10 +93,12 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function query(\MDB2_Driver_Common $db, $sql,
+    public static function query(
+        \MDB2_Driver_Common $db,
+        $sql,
         $wrapper = 'Silverorange\Swat\Data\DefaultRecordsetWrapper',
-        $types = null)
-    {
+        $types = null
+    ) {
         $mdb2_types = $types === null ? true : $types;
 
         $rs = self::executeQuery(
@@ -175,33 +177,43 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function updateColumn(\MDB2_Driver_Common $db, $table, $field,
-        $value, $id_field, $ids, $where = null)
-    {
+    public static function updateColumn(
+        \MDB2_Driver_Common $db,
+        $table,
+        $field,
+        $value,
+        $id_field,
+        $ids,
+        $where = null
+    ) {
         $ids = self::initArray($ids);
 
-        if (count($ids) == 0)
+        if (count($ids) === 0) {
             return;
+        }
 
         $field = new Field($field, 'integer');
         $id_field = new Field($id_field, 'integer');
 
         $sql = 'update %s set %s = %s where %s in (%s) %s';
 
-        foreach ($ids as &$id)
+        foreach ($ids as &$id) {
             $id = $db->quote($id, $id_field->type);
+        }
 
         $id_list = implode(',', $ids);
 
         $where = ($where === null) ? '' : 'and ' . $where;
 
-        $sql = sprintf($sql,
+        $sql = sprintf(
+            $sql,
             $table,
             $field->name,
             $db->quote($value, $field->type),
             $id_field->name,
             $id_list,
-            $where);
+            $where
+        );
 
         return self::exec($db, $sql);
     }
@@ -240,9 +252,13 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function queryColumn(\MDB2_Driver_Common $db, $table, $field,
-        $id_field = null, $id = 0)
-    {
+    public static function queryColumn(
+        \MDB2_Driver_Common $db,
+        $table,
+        $field,
+        $id_field = null,
+        $id = 0
+    ) {
         $field = new Field($field, 'integer');
 
         if ($id_field == null) {
@@ -250,16 +266,20 @@ class DB
             $sql = sprintf($sql, $field->name, $table);
         } else {
             $id_field = new Field($id_field, 'integer');
-            $sql = 'select %s from %s where %s = %s';
-            $sql = sprintf($sql,
+            $sql = sprintf(
+                'select %s from %s where %s = %s',
                 $field->name,
                 $table,
                 $id_field->name,
-                $db->quote($id, $id_field->type));
+                $db->quote($id, $id_field->type)
+            );
         }
 
-        $values = self::executeQuery($db, 'queryCol',
-            array($sql, $field->type));
+        $values = self::executeQuery(
+            $db,
+            'queryCol',
+            array($sql, $field->type)
+        );
 
         return $values;
     }
@@ -304,13 +324,18 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function queryRow(\MDB2_Driver_Common $db, $sql,
-        $types = null)
-    {
+    public static function queryRow(
+        \MDB2_Driver_Common $db,
+        $sql,
+        $types = null
+    ) {
         $mdb2_types = $types === null ? true : $types;
 
-        $row = self::executeQuery($db, 'queryRow',
-            array($sql, $mdb2_types, \MDB2_FETCHMODE_OBJECT));
+        $row = self::executeQuery(
+            $db,
+            'queryRow',
+            array($sql, $mdb2_types, \MDB2_FETCHMODE_OBJECT)
+        );
 
         return $row;
     }
@@ -347,9 +372,13 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function queryOneFromTable(\MDB2_Driver_Common $db, $table,
-        $field, $id_field = null, $id = 0)
-    {
+    public static function queryOneFromTable(
+        \MDB2_Driver_Common $db,
+        $table,
+        $field,
+        $id_field = null,
+        $id = 0
+    ) {
         $field = new Field($field, 'integer');
 
         if ($id_field == null) {
@@ -357,9 +386,13 @@ class DB
             $sql = sprintf($sql, $field->name, $table);
         } else {
             $id_field = new Field($id_field, 'integer');
-            $sql = 'select %s from %s where %s = %s';
-            $sql = sprintf($sql, $field->name, $table, $id_field->name,
-                $db->quote($id, $id_field->type));
+            $sql = sprintf(
+                'select %s from %s where %s = %s',
+                $field->name,
+                $table,
+                $id_field->name,
+                $db->quote($id, $id_field->type)
+            );
         }
 
         $value = self::queryOne($db, $sql, $field->type);
@@ -402,19 +435,24 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function queryRowFromTable(\MDB2_Driver_Common $db, $table,
-        $fields, $id_field, $id)
-    {
+    public static function queryRowFromTable(
+        \MDB2_Driver_Common $db,
+        $table,
+        $fields,
+        $id_field,
+        $id
+    ) {
         self::initFields($fields);
         $id_field = new Field($id_field, 'integer');
-        $sql = 'select %s from %s where %s = %s';
         $field_list = implode(',', self::getFieldNameArray($fields));
 
-        $sql = sprintf($sql,
+        $sql = sprintf(
+            'select %s from %s where %s = %s',
             $field_list,
             $table,
             $id_field->name,
-            $db->quote($id, $id_field->type));
+            $db->quote($id, $id_field->type)
+        );
 
         $rs = self::query($db, $sql, null);
         $row = $rs->fetchRow(\MDB2_FETCHMODE_OBJECT);
@@ -457,10 +495,13 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function executeStoredProc(\MDB2_Driver_Common $db, $proc,
-        $params, $wrapper = 'Silverorange\Swat\Data\DefaultRecordsetWrapper',
-        $types = null)
-    {
+    public static function executeStoredProc(
+        \MDB2_Driver_Common $db,
+        $proc,
+        $params,
+        $wrapper = '\Silverorange\Swat\Data\DefaultRecordsetWrapper',
+        $types = null
+    ) {
         if (!is_array($params)) {
             $params = array($params);
         }
@@ -512,11 +553,14 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function executeStoredProcOne(\MDB2_Driver_Common $db, $proc,
-        $params)
-    {
-        if (!is_array($params))
+    public static function executeStoredProcOne(
+        \MDB2_Driver_Common $db,
+        $proc,
+        $params
+    ) {
+        if (!is_array($params)) {
             $params = array($params);
+        }
 
         $rs = self::executeStoredProc($db, $proc, $params);
         $row = $rs->getFirst();
@@ -565,26 +609,34 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function updateBinding(\MDB2_Driver_Common $db, $table,
-        $id_field, $id, $value_field, $values, $bound_table, $bound_field)
-    {
+    public static function updateBinding(
+        \MDB2_Driver_Common $db,
+        $table,
+        $id_field,
+        $id,
+        $value_field,
+        $values,
+        $bound_table,
+        $bound_field
+    ) {
         $id_field = new Field($id_field, 'integer');
         $value_field = new Field($value_field, 'integer');
         $bound_field = new Field($bound_field, 'integer');
 
         $values = self::initArray($values);
 
-        $delete_sql = 'delete from %s where %s = %s';
-
-        $delete_sql = sprintf($delete_sql,
+        $delete_sql = sprintf(
+            'delete from %s where %s = %s',
             $table,
             $id_field->name,
-            $db->quote($id, $id_field->type));
+            $db->quote($id, $id_field->type)
+        );
 
         if (count($values)) {
 
-            foreach ($values as &$value)
+            foreach ($values as &$value) {
                 $value = $db->quote($value, $value_field->type);
+            }
 
             $value_list = implode(',', $values);
 
@@ -592,7 +644,8 @@ class DB
                 'where %s not in (select %s from %s where %s = %s) ' .
                 'and %s in (%s)';
 
-            $insert_sql = sprintf($insert_sql,
+            $insert_sql = sprintf(
+                $insert_sql,
                 $table,
                 $id_field->name,
                 $value_field->name,
@@ -605,11 +658,14 @@ class DB
                 $id_field->name,
                 $db->quote($id, $id_field->type),
                 $bound_field->name,
-                $value_list);
+                $value_list
+            );
 
-            $delete_sql .= sprintf(' and %s not in (%s)',
+            $delete_sql .= sprintf(
+                ' and %s not in (%s)',
                 $value_field->name,
-                $value_list);
+                $value_list
+            );
         }
 
         $transaction = new Transaction($db);
@@ -617,9 +673,7 @@ class DB
             if (count($values)) {
                 self::exec($db, $insert_sql);
             }
-
             self::exec($db, $delete_sql);
-
         } catch (\Exception $e) {
             $transaction->rollback();
             throw $e;
@@ -665,9 +719,13 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function insertRow(\MDB2_Driver_Common $db, $table, $fields,
-        $values, $id_field = null)
-    {
+    public static function insertRow(
+        \MDB2_Driver_Common $db,
+        $table,
+        $fields,
+        $values,
+        $id_field = null
+    ) {
         self::initFields($fields);
 
         $ret = null;
@@ -753,29 +811,40 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function updateRow(\MDB2_Driver_Common $db, $table, $fields,
-        $values, $id_field, $id)
-    {
+    public static function updateRow(
+        \MDB2_Driver_Common $db,
+        $table,
+        $fields,
+        $values,
+        $id_field,
+        $id
+    ) {
         self::initFields($fields);
         $id_field = new Field($id_field, 'integer');
         $sql = 'update %s set %s where %s = %s';
         $updates = array();
 
         foreach ($fields as &$field) {
-            $value = isset($values[$field->name]) ?
-                $values[$field->name] : null;
+            $value = isset($values[$field->name])
+                ? $values[$field->name]
+                : null;
 
-            $updates[] = sprintf('%s = %s',
-                $field->name, $db->quote($value, $field->type));
+            $updates[] = sprintf(
+                '%s = %s',
+                $field->name,
+                $db->quote($value, $field->type)
+            );
         }
 
         $update_list = implode(',', $updates);
 
-        $sql = sprintf($sql,
+        $sql = sprintf(
+            $sql,
             $table,
             $update_list,
             $id_field->name,
-            $db->quote($id, $id_field->type));
+            $db->quote($id, $id_field->type)
+        );
 
         self::exec($db, $sql);
     }
@@ -803,16 +872,20 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function deleteRow(\MDB2_Driver_Common $db, $table,
-        $id_field, $id)
-    {
+    public static function deleteRow(
+        \MDB2_Driver_Common $db,
+        $table,
+        $id_field,
+        $id
+    ) {
         $id_field = new Field($id_field, 'integer');
-        $sql = 'delete from %s where %s = %s';
 
-        $sql = sprintf($sql,
+        $sql = sprintf(
+            'delete from %s where %s = %s',
             $table,
             $id_field->name,
-            $db->quote($id, $id_field->type));
+            $db->quote($id, $id_field->type)
+        );
 
         self::exec($db, $sql);
     }
@@ -863,20 +936,27 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function getOptionArray(\MDB2_Driver_Common $db, $table,
-        $title_field, $id_field, $order_by_clause = null, $where_clause = null)
-    {
+    public static function getOptionArray(
+        \MDB2_Driver_Common $db,
+        $table,
+        $title_field,
+        $id_field,
+        $order_by_clause = null,
+        $where_clause = null
+    ) {
         $title_field = new Field($title_field, 'text');
         $id_field = new Field($id_field, 'integer');
 
         $sql = 'select %s, %s from %s';
         $sql = sprintf($sql, $id_field->name, $title_field->name, $table);
 
-        if ($where_clause != null)
+        if ($where_clause != null) {
             $sql .= ' where ' . $where_clause;
+        }
 
-        if ($order_by_clause != null)
+        if ($order_by_clause != null) {
             $sql .= ' order by ' . $order_by_clause;
+        }
 
         $rs = self::query($db, $sql, null);
 
@@ -948,17 +1028,26 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function getCascadeOptionArray(\MDB2_Driver_Common $db,
-        $table, $title_field, $id_field, $cascade_field,
-        $order_by_clause = null, $where_clause = null)
-    {
+    public static function getCascadeOptionArray(
+        \MDB2_Driver_Common $db,
+        $table,
+        $title_field,
+        $id_field,
+        $cascade_field,
+        $order_by_clause = null,
+        $where_clause = null
+    ) {
         $title_field = new Field($title_field, 'text');
         $id_field = new Field($id_field, 'integer');
         $cascade_field = new Field($cascade_field, 'integer');
 
-        $sql = 'select %s, %s, %s from %s';
-        $sql = sprintf($sql, $id_field->name, $title_field->name,
-            $cascade_field->name, $table);
+        $sql = sprintf(
+            'select %s, %s, %s from %s',
+            $id_field->name,
+            $title_field->name,
+            $cascade_field->name,
+            $table
+        );
 
         if ($where_clause !== null) {
             $sql .= ' where ' . $where_clause;
@@ -985,7 +1074,6 @@ class DB
                 $current = $row->$cascade_field_name;
                 $options[$current] = array();
             }
-
             $options[$current][$row->$id_field_name] = $row->$title_field_name;
         }
 
@@ -1073,32 +1161,42 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function getGroupedOptionArray(\MDB2_Driver_Common $db,
-        $table, $title_field, $id_field, $group_table, $group_title_field,
-        $group_id_field, $group_field, $order_by_clause = null,
-        $where_clause = null, $tree = null)
-    {
+    public static function getGroupedOptionArray(
+        \MDB2_Driver_Common $db,
+        $table,
+        $title_field,
+        $id_field,
+        $group_table,
+        $group_title_field,
+        $group_id_field,
+        $group_field,
+        $order_by_clause = null,
+        $where_clause = null,
+        $tree = null
+    ) {
         $title_field = new Field($title_field, 'text');
         $id_field = new Field($id_field, 'integer');
         $group_title_field = new Field($group_title_field, 'text');
         $group_id_field = new Field($group_id_field, 'integer');
         $group_field = new Field($group_field, 'text');
 
-        $sql = 'select %s as id, %s as title, %s as group_title, %s as group_id
-            from %s';
-
-        $sql = sprintf($sql,
+        $sql = sprintf(
+            'select %s as id, %s as title, %s as group_title, ' .
+            '%s as group_id from %s',
             "{$table}.{$id_field->name}",
             "{$table}.{$title_field->name}",
             "{$group_table}.{$group_title_field->name}",
             "{$group_table}.{$group_id_field->name}",
-            $table);
+            $table
+        );
 
         $sql .= ' inner join %s on %s = %s';
-        $sql = sprintf($sql,
+        $sql = sprintf(
+            $sql,
             $group_table,
             "{$group_table}.{$group_id_field->name}",
-            "{$table}.{$group_field->name}");
+            "{$table}.{$group_field->name}"
+        );
 
         if ($where_clause != null) {
             $sql .= ' where ' . $where_clause;
@@ -1165,8 +1263,12 @@ class DB
     {
         $field = new Field($field, 'integer');
 
-        $sql = sprintf('select max(%s) as %s from %s',
-            $field->name, $field->name, $table);
+        $sql = sprintf(
+            'select max(%s) as %s from %s',
+            $field->name,
+            $field->name,
+            $table
+        );
 
         return self::queryOne($db, $sql);
     }
@@ -1188,14 +1290,15 @@ class DB
      */
     public static function equalityOperator($value, $neg = false)
     {
-        if ($value === null && $neg)
+        if ($value === null && $neg) {
             return 'is not';
-        elseif ($value === null)
+        } elseif ($value === null) {
             return 'is';
-        elseif ($neg)
+        } elseif ($neg) {
             return '!=';
-        else
+        } else {
             return '=';
+        }
     }
 
     // }}}
@@ -1236,9 +1339,13 @@ class DB
      *
      * @throws Exception\Exception
      */
-    public static function getDataTree(Recordset $rs, $title_field_name,
-        $id_field_name, $level_field_name, $tree = null)
-    {
+    public static function getDataTree(
+        Recordset $rs,
+        $title_field_name,
+        $id_field_name,
+        $level_field_name,
+        $tree = null
+    ) {
         $stack = array();
         if ($tree !== null && $tree instanceof Model\DataTreeNode) {
             $current_parent = $tree;
@@ -1286,13 +1393,15 @@ class DB
      *
      * @return string the imploded view ready for inclusion in an SQL statement.
      */
-    public static function implodeSelection(\MDB2_Driver_Common $db,
-        UI\ViewSelection $selection, $type = 'integer')
-    {
+    public static function implodeSelection(
+        \MDB2_Driver_Common $db,
+        UI\ViewSelection $selection,
+        $type = 'integer'
+    ) {
         $quoted_ids = array();
-        foreach ($selection as $id)
+        foreach ($selection as $id) {
             $quoted_ids[] = $db->quote($id, $type);
-
+        }
         return implode(',', $quoted_ids);
     }
 
@@ -1318,13 +1427,15 @@ class DB
 
     private static function getFieldNameArray($fields)
     {
-        if (count($fields) == 0)
+        if (count($fields) === 0) {
             return;
+        }
 
         $names = array();
 
-        foreach ($fields as &$field)
+        foreach ($fields as &$field) {
             $names[] = $field->name;
+        }
 
         return $names;
     }
@@ -1334,13 +1445,15 @@ class DB
 
     private static function getFieldTypeArray($fields)
     {
-        if (count($fields) == 0)
+        if (count($fields) === 0) {
             return;
+        }
 
         $types = array();
 
-        foreach ($fields as &$field)
+        foreach ($fields as &$field) {
             $types[] = $field->type;
+        }
 
         return $types;
     }
@@ -1360,12 +1473,14 @@ class DB
      */
     private function initFields(&$fields)
     {
-        if (count($fields) == 0)
+        if (count($fields) === 0) {
             // TODO: throw exception instead of returning
             return;
+        }
 
-        foreach ($fields as &$field)
+        foreach ($fields as &$field) {
             $field = new Field($field, 'text');
+        }
     }
 
     // }}}
@@ -1390,9 +1505,9 @@ class DB
             return $array;
         } elseif ($array instanceof \Iterator) {
             $return = array();
-            foreach ($array as $value)
+            foreach ($array as $value) {
                 $return[] = $value;
-
+            }
             return $return;
         }
 
@@ -1415,17 +1530,22 @@ class DB
                 }
             }
 
-            $class = (array_key_exists('class', $entry)) ?
-                $entry['class'] : null;
+            $class = (array_key_exists('class', $entry))
+                ? $entry['class']
+                : null;
 
-            $function = (array_key_exists('function', $entry)) ?
-                $entry['function'] : null;
+            $function = (array_key_exists('function', $entry))
+                ? $entry['function']
+                : null;
 
             ob_start();
-            printf("<strong>%s%s%s()</strong><br />\n",
+
+            printf(
+                "<strong>%s%s%s()</strong><br />\n",
                 ($class === null) ? '' : $class,
                 array_key_exists('type', $entry) ? $entry['type'] : '',
-                ($function === null) ? '' : $function);
+                ($function === null) ? '' : $function
+            );
 
             echo $message;
             $debug_message = ob_get_clean();
@@ -1455,8 +1575,10 @@ class DB
 
                 foreach (self::$debug_info as $info) {
                     if ($info['depth'] < $depth) {
-                        echo str_repeat('</blockquote>',
-                            $depth - $info['depth']);
+                        echo str_repeat(
+                            '</blockquote>',
+                            $depth - $info['depth']
+                        );
                     } elseif ($info['depth'] > $depth) {
                         echo '<blockquote class="swat-db-debug">';
                     } elseif ($info['depth'] == 0) {
@@ -1466,8 +1588,10 @@ class DB
                     echo "\n" . $info['message'] . "\n";
 
                     $locale = I18N\Locale::get();
-                    printf("<p>Query #%s</p>\n",
-                        $locale->formatNumber($info['count']));
+                    printf(
+                        "<p>Query #%s</p>\n",
+                        $locale->formatNumber($info['count'])
+                    );
 
                     if (count(self::$debug_info) > $count + 1) {
                         $time = self::$debug_info[$count + 1]['time'];
@@ -1477,8 +1601,10 @@ class DB
 
                     $ms = $time - $info['time'];
 
-                    printf("<p><strong>%s ms</strong></p>\n",
-                        $locale->formatNumber($ms, 3));
+                    printf(
+                        "<p><strong>%s ms</strong></p>\n",
+                        $locale->formatNumber($ms, 3)
+                    );
 
                     if ($info['depth'] == 0 &&  count(self::$debug_info) > 1) {
                         $ms = (microtime(true) * 1000) -

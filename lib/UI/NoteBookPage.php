@@ -60,8 +60,9 @@ class NoteBookPage extends Container implements NoteBookChild
      */
     public function display()
     {
-        if (!$this->visible)
+        if (!$this->visible) {
             return;
+        }
 
         $div_tag = new Html\Tag('div');
         $div_tag->id = $this->id;

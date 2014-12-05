@@ -36,8 +36,9 @@ class SelectList extends CheckboxList
     {
         $options = $this->getOptions();
 
-        if (!$this->visible || count($options) == 0)
+        if (!$this->visible || count($options) === 0) {
             return;
+        }
 
         Widget::display();
 
@@ -56,9 +57,9 @@ class SelectList extends CheckboxList
             $option_tag->value = (string)$option->value;
             $option_tag->id = $this->id . '_' . $key . '_' . $option_tag->value;
             $option_tag->selected = null;
-            if (in_array($option->value, $this->values))
+            if (in_array($option->value, $this->values)) {
                 $option_tag->selected = 'selected';
-
+            }
             $option_tag->setContent($option->title, $option->content_type);
             $option_tag->display();
         }

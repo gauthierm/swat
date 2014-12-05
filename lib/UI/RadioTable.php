@@ -39,8 +39,9 @@ class RadioTable extends RadioList
     {
         $options = $this->getOptions();
 
-        if (!$this->visible || $options === null)
+        if (!$this->visible || $options === null) {
             return;
+        }
 
         Widget::display();
 
