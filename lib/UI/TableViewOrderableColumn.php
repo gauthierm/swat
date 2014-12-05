@@ -255,44 +255,44 @@ class TableViewOrderableColumn extends TableViewColumn
         }
 
         switch ($direction_id) {
-        case self::ORDER_BY_DIR_NONE:
-            $direction = '';
-            break;
-
-        case self::ORDER_BY_DIR_ASCENDING:
-            $direction = 'asc';
-            break;
-
-        case self::ORDER_BY_DIR_DESCENDING:
-            $direction = 'desc';
-            break;
-
-        default:
-            throw new Exception\Exception(
-                sprintf(
-                    "Ordering direction '%s' not found.",
-                    $direction_id
-                )
-            );
-        }
-
-        if ($include_nulls_ordering && $this->nulls_ordering !== null) {
-            switch ($this->nulls_ordering) {
-            case self::NULLS_FIRST:
-                $direction .= ' nulls first';
+            case self::ORDER_BY_DIR_NONE:
+                $direction = '';
                 break;
 
-            case self::NULLS_LAST:
-                $direction .= ' nulls last';
+            case self::ORDER_BY_DIR_ASCENDING:
+                $direction = 'asc';
+                break;
+
+            case self::ORDER_BY_DIR_DESCENDING:
+                $direction = 'desc';
                 break;
 
             default:
                 throw new Exception\Exception(
                     sprintf(
-                        "Nulls ordering '%s' not found.",
-                        $this->nulls_ordering
+                        "Ordering direction '%s' not found.",
+                        $direction_id
                     )
                 );
+        }
+
+        if ($include_nulls_ordering && $this->nulls_ordering !== null) {
+            switch ($this->nulls_ordering) {
+                case self::NULLS_FIRST:
+                    $direction .= ' nulls first';
+                    break;
+
+                case self::NULLS_LAST:
+                    $direction .= ' nulls last';
+                    break;
+
+                default:
+                    throw new Exception\Exception(
+                        sprintf(
+                            "Nulls ordering '%s' not found.",
+                            $this->nulls_ordering
+                        )
+                    );
             }
         }
 
@@ -374,20 +374,20 @@ class TableViewOrderableColumn extends TableViewColumn
     protected function getNextDirection()
     {
         switch ($this->direction) {
-        case self::ORDER_BY_DIR_NONE:
-            return self::ORDER_BY_DIR_ASCENDING;
-
-        case self::ORDER_BY_DIR_ASCENDING:
-            return self::ORDER_BY_DIR_DESCENDING;
-
-        case self::ORDER_BY_DIR_DESCENDING:
-        default:
-            if ($this->view->default_orderby_column === null)
-                // tri-state
-                return self::ORDER_BY_DIR_NONE;
-            else
-                // bi-state
+            case self::ORDER_BY_DIR_NONE:
                 return self::ORDER_BY_DIR_ASCENDING;
+
+            case self::ORDER_BY_DIR_ASCENDING:
+                return self::ORDER_BY_DIR_DESCENDING;
+
+            case self::ORDER_BY_DIR_DESCENDING:
+            default:
+                if ($this->view->default_orderby_column === null)
+                    // tri-state
+                    return self::ORDER_BY_DIR_NONE;
+                else
+                    // bi-state
+                    return self::ORDER_BY_DIR_ASCENDING;
         }
     }
 
@@ -409,18 +409,18 @@ class TableViewOrderableColumn extends TableViewColumn
         $direction = strtolower($direction);
 
         switch ($direction) {
-        case 'ascending':
-        case 'asc':
-            $this->direction = self::ORDER_BY_DIR_ASCENDING;
-            break;
+            case 'ascending':
+            case 'asc':
+                $this->direction = self::ORDER_BY_DIR_ASCENDING;
+                break;
 
-        case 'descending':
-        case 'desc':
-            $this->direction = self::ORDER_BY_DIR_DESCENDING;
-            break;
+            case 'descending':
+            case 'desc':
+                $this->direction = self::ORDER_BY_DIR_DESCENDING;
+                break;
 
-        default:
-            $this->direction = self::ORDER_BY_DIR_NONE;
+            default:
+                $this->direction = self::ORDER_BY_DIR_NONE;
         }
     }
 

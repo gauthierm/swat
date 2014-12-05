@@ -112,38 +112,38 @@ class IntegerEntry extends NumericEntry
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'integer':
-            if ($this->minimum_value < 0) {
+            case 'integer':
+                if ($this->minimum_value < 0) {
+                    $text = $this->show_field_title_in_messages
+                        ? L::_('The %s field must be an integer.')
+                        : L::_('This field must be an integer.');
+                } else {
+                    $text = $this->show_field_title_in_messages
+                        ? L::_('The %s field must be a whole number.')
+                        : L::_('This field must be a whole number.');
+                }
+                $message = new Model\Message($text, 'error');
+                break;
+
+            case 'integer-maximum':
                 $text = $this->show_field_title_in_messages
-                    ? L::_('The %s field must be an integer.')
-                    : L::_('This field must be an integer.');
-            } else {
+                    ? L::_('The %s field is too big.')
+                    : L::_('This field is too big.');
+
+                $message = new Model\Message($text, 'error');
+                break;
+
+            case 'integer-minimum':
                 $text = $this->show_field_title_in_messages
-                    ? L::_('The %s field must be a whole number.')
-                    : L::_('This field must be a whole number.');
-            }
-            $message = new Model\Message($text, 'error');
-            break;
+                    ? L::_('The %s field is too small.')
+                    : L::_('The this field is too small.');
 
-        case 'integer-maximum':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %s field is too big.')
-                : L::_('This field is too big.');
+                $message = new Model\Message($text, 'error');
+                break;
 
-            $message = new Model\Message($text, 'error');
-            break;
-
-        case 'integer-minimum':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %s field is too small.')
-                : L::_('The this field is too small.');
-
-            $message = new Model\Message($text, 'error');
-            break;
-
-        default:
-            $message = parent::getValidationMessage($id);
-            break;
+            default:
+                $message = parent::getValidationMessage($id);
+                break;
         }
 
         return $message;

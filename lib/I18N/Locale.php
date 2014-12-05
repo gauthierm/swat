@@ -336,110 +336,110 @@ class Locale
 
         // now format the sign and symbol
         switch ($sign_position) {
-        case 0:
-            // parentheses surround the quantity and currency symbol
-            if ($cs_precedes) {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('(%s %s)',
-                        $symbol, $formatted_value);
+            case 0:
+                // parentheses surround the quantity and currency symbol
+                if ($cs_precedes) {
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('(%s %s)',
+                            $symbol, $formatted_value);
+                    } else {
+                        $formatted_value = sprintf('(%s%s)',
+                            $symbol, $formatted_value);
+                    }
                 } else {
-                    $formatted_value = sprintf('(%s%s)',
-                        $symbol, $formatted_value);
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('(%s %s)',
+                            $formatted_value, $symbol);
+                    } else {
+                        $formatted_value = sprintf('(%s%s)',
+                            $formatted_value, $symbol);
+                    }
                 }
-            } else {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('(%s %s)',
-                        $formatted_value, $symbol);
-                } else {
-                    $formatted_value = sprintf('(%s%s)',
-                        $formatted_value, $symbol);
-                }
-            }
-            break;
+                break;
 
-        case 1:
-            // the sign string precedes the quantity and currency symbol
-            if ($cs_precedes) {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s%s %s',
-                        $sign, $symbol, $formatted_value);
+            case 1:
+                // the sign string precedes the quantity and currency symbol
+                if ($cs_precedes) {
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s%s %s',
+                            $sign, $symbol, $formatted_value);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $sign, $symbol, $formatted_value);
+                    }
                 } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $sign, $symbol, $formatted_value);
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s%s %s',
+                            $sign, $formatted_value, $symbol);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $sign, $formatted_value, $symbol);
+                    }
                 }
-            } else {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s%s %s',
-                        $sign, $formatted_value, $symbol);
-                } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $sign, $formatted_value, $symbol);
-                }
-            }
-            break;
+                break;
 
-        case 2:
-            // the sign string succeeds the quantity and currency symbol
-            if ($cs_precedes) {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s %s%s',
-                        $symbol, $formatted_value, $sign);
+            case 2:
+                // the sign string succeeds the quantity and currency symbol
+                if ($cs_precedes) {
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s %s%s',
+                            $symbol, $formatted_value, $sign);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $symbol, $formatted_value, $sign);
+                    }
                 } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $symbol, $formatted_value, $sign);
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s %s%s',
+                            $formatted_value, $symbol, $sign);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $sign, $formatted_value, $symbol);
+                    }
                 }
-            } else {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s %s%s',
-                        $formatted_value, $symbol, $sign);
-                } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $sign, $formatted_value, $symbol);
-                }
-            }
-            break;
+                break;
 
-        case 3:
-            // the sign string immediately precedes the currency symbol
-            if ($cs_precedes) {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s%s %s',
-                        $sign, $symbol, $formatted_value);
+            case 3:
+                // the sign string immediately precedes the currency symbol
+                if ($cs_precedes) {
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s%s %s',
+                            $sign, $symbol, $formatted_value);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $sign, $symbol, $formatted_value);
+                    }
                 } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $sign, $symbol, $formatted_value);
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s %s%s',
+                            $formatted_value, $sign, $symbol);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $formatted_value, $sign, $symbol);
+                    }
                 }
-            } else {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s %s%s',
-                        $formatted_value, $sign, $symbol);
-                } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $formatted_value, $sign, $symbol);
-                }
-            }
-            break;
+                break;
 
-        case 4:
-            // the sign string immediately succeeds the currency symbol
-            if ($cs_precedes) {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s%s %s',
-                        $symbol, $sign, $formatted_value);
+            case 4:
+                // the sign string immediately succeeds the currency symbol
+                if ($cs_precedes) {
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s%s %s',
+                            $symbol, $sign, $formatted_value);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $symbol, $sign, $formatted_value);
+                    }
                 } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $symbol, $sign, $formatted_value);
+                    if ($separate_by_space) {
+                        $formatted_value = sprintf('%s %s%s',
+                            $formatted_value, $symbol, $sign);
+                    } else {
+                        $formatted_value = sprintf('%s%s%s',
+                            $formatted_value, $symbol, $sign);
+                    }
                 }
-            } else {
-                if ($separate_by_space) {
-                    $formatted_value = sprintf('%s %s%s',
-                        $formatted_value, $symbol, $sign);
-                } else {
-                    $formatted_value = sprintf('%s%s%s',
-                        $formatted_value, $symbol, $sign);
-                }
-            }
-            break;
+                break;
 
         }
 
@@ -834,20 +834,20 @@ class Locale
 
         // special-cases and workarounds
         switch ($this->preferred_locale) {
-        // Hebrew-Israeli
-        case 'he_IL':
-        case 'he_IL.utf8':
-            $this->locale_info['currency_symbol'] = '₪';
-            break;
+            // Hebrew-Israeli
+            case 'he_IL':
+            case 'he_IL.utf8':
+                $this->locale_info['currency_symbol'] = '₪';
+                break;
 
-        // Japanese and Chinese
-        case 'ja_JP':
-        case 'ja_JP.utf8':
-        case 'zh_CN':
-        case 'zh_CN.utf8':
-            // use single-width Yen character, renders by default in Windows
-            $this->locale_info['currency_symbol'] = '¥';
-            break;
+            // Japanese and Chinese
+            case 'ja_JP':
+            case 'ja_JP.utf8':
+            case 'zh_CN':
+            case 'zh_CN.utf8':
+                // use single-width Yen character, renders by default in Windows
+                $this->locale_info['currency_symbol'] = '¥';
+                break;
         }
     }
 
@@ -900,14 +900,14 @@ class Locale
 
         // special-cases and workarounds
         switch ($this->preferred_locale) {
-        // Hebrew-Israeli
-        case 'he_IL':
-        case 'he_IL.utf8':
-            $format->p_sign_position = 1;
-            $format->n_sign_position = 1;
-            $format->p_cs_precedes = false;
-            $format->n_cs_precedes = false;
-            break;
+            // Hebrew-Israeli
+            case 'he_IL':
+            case 'he_IL.utf8':
+                $format->p_sign_position = 1;
+                $format->n_sign_position = 1;
+                $format->p_cs_precedes = false;
+                $format->n_cs_precedes = false;
+                break;
         }
 
         $this->national_currency_format = $format;

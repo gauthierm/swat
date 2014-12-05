@@ -90,26 +90,26 @@ class BooleanCellRenderer extends CellRenderer
         $content_type = 'text/plain';
 
         switch ($stock_id) {
-        case 'yes-no':
-            $false_content = L::_('No');
-            $true_content = L::_('Yes');
-            break;
+            case 'yes-no':
+                $false_content = L::_('No');
+                $true_content = L::_('Yes');
+                break;
 
-        case 'check-only':
-            $content_type = 'text/xml';
-            $false_content = ' '; // non-breaking space
+            case 'check-only':
+                $content_type = 'text/xml';
+                $false_content = ' '; // non-breaking space
 
-            ob_start();
-            $this->displayCheck();
-            $true_content = ob_get_clean();
-            break;
+                ob_start();
+                $this->displayCheck();
+                $true_content = ob_get_clean();
+                break;
 
-        default:
-            throw new Exception\UndefinedStockTypeException(
-                "Stock type with id of '{$stock_id}' not found.",
-                0,
-                $stock_id
-            );
+            default:
+                throw new Exception\UndefinedStockTypeException(
+                    "Stock type with id of '{$stock_id}' not found.",
+                    0,
+                    $stock_id
+                );
         }
 
         if ($overwrite_properties || ($this->false_content === null))

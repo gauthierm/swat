@@ -215,67 +215,67 @@ class ToolLink extends Control
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
         switch ($stock_id) {
-        case 'create':
-            $title = L::_('Create');
-            $class = 'swat-tool-link-create';
-            break;
+            case 'create':
+                $title = L::_('Create');
+                $class = 'swat-tool-link-create';
+                break;
 
-        case 'add':
-            $title = L::_('Add');
-            $class = 'swat-tool-link-add';
-            break;
+            case 'add':
+                $title = L::_('Add');
+                $class = 'swat-tool-link-add';
+                break;
 
-        case 'edit':
-            $title = L::_('Edit');
-            $class = 'swat-tool-link-edit';
-            break;
+            case 'edit':
+                $title = L::_('Edit');
+                $class = 'swat-tool-link-edit';
+                break;
 
-        case 'download':
-            $title = L::_('Download');
-            $class = 'swat-tool-link-download';
-            break;
+            case 'download':
+                $title = L::_('Download');
+                $class = 'swat-tool-link-download';
+                break;
 
-        case 'delete':
-            $title = L::_('Delete');
-            $class = 'swat-tool-link-delete';
-            break;
+            case 'delete':
+                $title = L::_('Delete');
+                $class = 'swat-tool-link-delete';
+                break;
 
-        case 'cancel':
-            $title = L::_('Cancel');
-            $class = 'swat-tool-link-cancel';
-            break;
+            case 'cancel':
+                $title = L::_('Cancel');
+                $class = 'swat-tool-link-cancel';
+                break;
 
-        case 'preview':
-            $title = L::_('Preview');
-            $class = 'swat-tool-link-preview';
-            break;
+            case 'preview':
+                $title = L::_('Preview');
+                $class = 'swat-tool-link-preview';
+                break;
 
-        case 'change-order':
-            $title = L::_('Change Order');
-            $class = 'swat-tool-link-change-order';
-            break;
+            case 'change-order':
+                $title = L::_('Change Order');
+                $class = 'swat-tool-link-change-order';
+                break;
 
-        case 'help':
-            $title = L::_('Help');
-            $class = 'swat-tool-link-help';
-            break;
+            case 'help':
+                $title = L::_('Help');
+                $class = 'swat-tool-link-help';
+                break;
 
-        case 'print':
-            $title = L::_('Print');
-            $class = 'swat-tool-link-print';
-            break;
+            case 'print':
+                $title = L::_('Print');
+                $class = 'swat-tool-link-print';
+                break;
 
-        case 'email':
-            $title = L::_('Email');
-            $class = 'swat-tool-link-email';
-            break;
+            case 'email':
+                $title = L::_('Email');
+                $class = 'swat-tool-link-email';
+                break;
 
-        default:
-            throw new Exception\UndefinedStockTypeException(
-                "Stock type with id of '{$stock_id}' not found.",
-                0,
-                $stock_id
-            );
+            default:
+                throw new Exception\UndefinedStockTypeException(
+                    "Stock type with id of '{$stock_id}' not found.",
+                    0,
+                    $stock_id
+                );
         }
 
         if ($overwrite_properties || ($this->title === null))

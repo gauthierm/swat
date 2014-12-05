@@ -74,17 +74,17 @@ class EmailEntry extends Entry
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'email':
-            $text = L::_(
-                'The email address you have entered is not ' .
-                'properly formatted.'
-            );
-            $message = new Model\Message($text, 'error');
-            break;
+            case 'email':
+                $text = L::_(
+                    'The email address you have entered is not ' .
+                    'properly formatted.'
+                );
+                $message = new Model\Message($text, 'error');
+                break;
 
-        default:
-            $message = parent::getValidationMessage($id);
-            break;
+            default:
+                $message = parent::getValidationMessage($id);
+                break;
         }
 
         return $message;

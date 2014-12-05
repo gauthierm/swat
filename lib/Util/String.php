@@ -325,14 +325,14 @@ class String
 
         foreach ($parts as $index => $part) {
             switch ($index % 3) {
-            case 0:
-                // the stuff in between
-                $output.= self::minimizeEntities($part);
-                break;
-            case 1:
-                // a valid tag
-                $output.= $part;
-                break;
+                case 0:
+                    // the stuff in between
+                    $output .= self::minimizeEntities($part);
+                    break;
+                case 1:
+                    // a valid tag
+                    $output .= $part;
+                    break;
             }
         }
 
@@ -1098,26 +1098,32 @@ class String
 
         if ($length > 0) {
             switch ($pad_type) {
-            case \STR_PAD_LEFT:
-                $padding = str_repeat($pad_string, ceil($length / strlen($pad_string)));
-                $output = substr($padding, 0, $length) . $input;
-                break;
+                case \STR_PAD_LEFT:
+                    $padding = str_repeat(
+                        $pad_string,
+                        ceil($length / strlen($pad_string))
+                    );
+                    $output = substr($padding, 0, $length) . $input;
+                    break;
 
-            case \STR_PAD_BOTH:
-                $left_length = floor($length / 2);
-                $right_length = ceil($length / 2);
-                $padding = str_repeat($pad_string,
-                    ceil($right_length / strlen($pad_string)));
+                case \STR_PAD_BOTH:
+                    $left_length = floor($length / 2);
+                    $right_length = ceil($length / 2);
+                    $padding = str_repeat($pad_string,
+                        ceil($right_length / strlen($pad_string)));
 
-                $output = substr($padding, 0, $left_length) . $input .
-                    substr($padding, 0, $right_length);
+                    $output = substr($padding, 0, $left_length) . $input .
+                        substr($padding, 0, $right_length);
 
-                break;
+                    break;
 
-            case \STR_PAD_RIGHT:
-            default:
-                $padding = str_repeat($pad_string, ceil($length / strlen($pad_string)));
-                $output = $input . substr($padding, 0, $length);
+                case \STR_PAD_RIGHT:
+                default:
+                    $padding = str_repeat(
+                        $pad_string,
+                        ceil($length / strlen($pad_string))
+                    );
+                    $output = $input . substr($padding, 0, $length);
             }
         } else {
             $output = $input;
@@ -2034,32 +2040,32 @@ class String
         $lc = localeconv();
 
         switch ($lc['n_sign_posn']) {
-        // negative sign shown as: (5.00)
-        case 0:
-            if (strpos($string, '(') !== false)
-                return '-' . str_replace(
-                    array('(', ')'),
-                    array(),
-                    $string
-                );
-            break;
+            // negative sign shown as: (5.00)
+            case 0:
+                if (strpos($string, '(') !== false)
+                    return '-' . str_replace(
+                        array('(', ')'),
+                        array(),
+                        $string
+                    );
+                break;
 
-        // negative sign trails number: 5.00-
-        case 2:
-            if ($lc['negative_sign'] != '' &&
-                strpos($string, $lc['negative_sign']) !== false)
-                return '-' . str_replace(
-                    $lc['negative_sign'],
-                    '',
-                    $string
-                );
-            break;
-        // negative sign prefixes number: -5.00
-        default:
-            if ($lc['negative_sign'] != '' &&
-                strpos($string, $lc['negative_sign']) !== false)
-                return str_replace(
-                    $lc['negative_sign'], '-', $string);
+            // negative sign trails number: 5.00-
+            case 2:
+                if ($lc['negative_sign'] != '' &&
+                    strpos($string, $lc['negative_sign']) !== false)
+                    return '-' . str_replace(
+                        $lc['negative_sign'],
+                        '',
+                        $string
+                    );
+                break;
+            // negative sign prefixes number: -5.00
+            default:
+                if ($lc['negative_sign'] != '' &&
+                    strpos($string, $lc['negative_sign']) !== false)
+                    return str_replace(
+                        $lc['negative_sign'], '-', $string);
         }
 
         return $string;

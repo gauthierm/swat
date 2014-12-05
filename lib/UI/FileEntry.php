@@ -675,16 +675,16 @@ class FileEntry extends InputControl
             $value = (integer)substr($ini_value, 0, -1);
 
             switch($size) {
-            case 'P':
-                $value *= 1024;
-            case 'T':
-                $value *= 1024;
-            case 'G':
-                $value *= 1024;
-            case 'M':
-                $value *= 1024;
-            case 'K':
-                $value *= 1024;
+                case 'P':
+                    $value *= 1024;
+                case 'T':
+                    $value *= 1024;
+                case 'G':
+                    $value *= 1024;
+                case 'M':
+                    $value *= 1024;
+                case 'K':
+                    $value *= 1024;
             }
         }
 

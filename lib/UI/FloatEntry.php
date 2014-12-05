@@ -102,17 +102,17 @@ class FloatEntry extends NumericEntry
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'float':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %s field must be a number.')
-                : L::_('This field must be a number.');
+            case 'float':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %s field must be a number.')
+                    : L::_('This field must be a number.');
 
-            $message = new Model\Message($text, 'error');
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
 
-        default:
-            $message = parent::getValidationMessage($id);
-            break;
+            default:
+                $message = parent::getValidationMessage($id);
+                break;
         }
 
         return $message;

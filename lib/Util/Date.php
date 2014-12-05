@@ -475,52 +475,52 @@ class Date extends \DateTime implements \Serializable
         $out = '';
 
         switch ($format) {
-        case self::TZ_ID:
-            $out = $this->format('e');
-            break;
+            case self::TZ_ID:
+                $out = $this->format('e');
+                break;
 
-        case self::TZ_SHORT:
-        case self::TZ_LONG:
-            $id = $this->format('e');
-            $abbreviations = self::getTimeZoneAbbreviations();
-            if (isset($abbreviations[$id]) &&
-                isset($abbreviations[$id]['st'])) {
-                $out = $abbreviations[$id]['st'];
-            }
-            break;
-
-        case self::TZ_DST_SHORT:
-        case self::TZ_DST_LONG:
-            $id = $this->format('e');
-            $abbreviations = self::getTimeZoneAbbreviations();
-            if (isset($abbreviations[$id])) {
-                if (isset($abbreviations[$id]['dt'])) {
-                    $out = $abbreviations[$id]['dt'];
-                } else {
+            case self::TZ_SHORT:
+            case self::TZ_LONG:
+                $id = $this->format('e');
+                $abbreviations = self::getTimeZoneAbbreviations();
+                if (isset($abbreviations[$id]) &&
+                    isset($abbreviations[$id]['st'])) {
                     $out = $abbreviations[$id]['st'];
                 }
-            }
-            break;
+                break;
 
-        case self::TZ_CURRENT_SHORT:
-        case self::TZ_CURRENT_LONG:
-            $out = $this->format('T');
-            break;
+            case self::TZ_DST_SHORT:
+            case self::TZ_DST_LONG:
+                $id = $this->format('e');
+                $abbreviations = self::getTimeZoneAbbreviations();
+                if (isset($abbreviations[$id])) {
+                    if (isset($abbreviations[$id]['dt'])) {
+                        $out = $abbreviations[$id]['dt'];
+                    } else {
+                        $out = $abbreviations[$id]['st'];
+                    }
+                }
+                break;
 
-        case self::TZ_COMBINED:
-            $out = array();
-            $id = $this->format('e');
-            $abbreviations = self::getTimeZoneAbbreviations();
-            if (isset($abbreviations[$id])) {
-                if (isset($abbreviations[$id]['st'])) {
-                    $out[] = $abbreviations[$id]['st'];
+            case self::TZ_CURRENT_SHORT:
+            case self::TZ_CURRENT_LONG:
+                $out = $this->format('T');
+                break;
+
+            case self::TZ_COMBINED:
+                $out = array();
+                $id = $this->format('e');
+                $abbreviations = self::getTimeZoneAbbreviations();
+                if (isset($abbreviations[$id])) {
+                    if (isset($abbreviations[$id]['st'])) {
+                        $out[] = $abbreviations[$id]['st'];
+                    }
+                    if (isset($abbreviations[$id]['dt'])) {
+                        $out[] = $abbreviations[$id]['dt'];
+                    }
                 }
-                if (isset($abbreviations[$id]['dt'])) {
-                    $out[] = $abbreviations[$id]['dt'];
-                }
-            }
-            $out = implode('/', $out);
-            break;
+                $out = implode('/', $out);
+                break;
         }
 
         return $out;
@@ -650,42 +650,42 @@ class Date extends \DateTime implements \Serializable
         // format codes are _not_ wrapped in gettext calls.
 
         switch ($id) {
-        case self::DF_MDY:
-            return 'm/d/y';
-        case self::DF_MDY_SHORT:
-            return 'mdy';
-        case self::DF_DATE:
-            return 'F j, Y';
-        case self::DF_DATE_LONG:
-            return 'l, F j, Y';
-        case self::DF_DATE_TIME:
-            return 'F j, Y g:i a';
-        case self::DF_DATE_TIME_LONG:
-            return 'l, F j, Y g:i a';
-        case self::DF_TIME:
-            return 'g:i a';
-        case self::DF_DATE_SHORT:
-            return 'M j, Y';
-        case self::DF_DATE_SHORT_NOYEAR:
-            return 'M j';
-        case self::DF_DATE_TIME_SHORT:
-            return 'M j, Y g:i a';
-        case self::DF_DATE_TIME_SHORT_NOYEAR:
-            return 'M j, g:i a';
-        case self::DF_MY:
-            return 'F Y';
-        case self::DF_CC_MY:
-            return 'm / Y';
-        case self::DF_Y:
-            return 'Y';
-        case self::DF_ISO_8601_BASIC:
-            return 'Ymd\THis';
-        case self::DF_ISO_8601_EXTENDED:
-            return 'Y-m-d\TH:i:s';
-        case self::DF_RFC_2822:
-            return 'r';
-        default:
-            throw new \Exception("Unknown date format id '$id'.");
+            case self::DF_MDY:
+                return 'm/d/y';
+            case self::DF_MDY_SHORT:
+                return 'mdy';
+            case self::DF_DATE:
+                return 'F j, Y';
+            case self::DF_DATE_LONG:
+                return 'l, F j, Y';
+            case self::DF_DATE_TIME:
+                return 'F j, Y g:i a';
+            case self::DF_DATE_TIME_LONG:
+                return 'l, F j, Y g:i a';
+            case self::DF_TIME:
+                return 'g:i a';
+            case self::DF_DATE_SHORT:
+                return 'M j, Y';
+            case self::DF_DATE_SHORT_NOYEAR:
+                return 'M j';
+            case self::DF_DATE_TIME_SHORT:
+                return 'M j, Y g:i a';
+            case self::DF_DATE_TIME_SHORT_NOYEAR:
+                return 'M j, g:i a';
+            case self::DF_MY:
+                return 'F Y';
+            case self::DF_CC_MY:
+                return 'm / Y';
+            case self::DF_Y:
+                return 'Y';
+            case self::DF_ISO_8601_BASIC:
+                return 'Ymd\THis';
+            case self::DF_ISO_8601_EXTENDED:
+                return 'Y-m-d\TH:i:s';
+            case self::DF_RFC_2822:
+                return 'r';
+            default:
+                throw new \Exception("Unknown date format id '$id'.");
         }
     }
 
@@ -704,42 +704,42 @@ class Date extends \DateTime implements \Serializable
     public static function getFormatLikeStrftimeById($id)
     {
         switch ($id) {
-        case self::DF_MDY:
-            return L::_('%m/%d/%y');
-        case self::DF_MDY_SHORT:
-            return L::_('%m%d%y');
-        case self::DF_DATE:
-            return L::_('%B %e, %Y');
-        case self::DF_DATE_LONG:
-            return L::_('%A, %B %e, %Y');
-        case self::DF_DATE_TIME:
-            return L::_('%B %e, %Y %i:%M %p');
-        case self::DF_DATE_TIME_LONG:
-            return L::_('%A, %B %e, %Y %i:%M %p');
-        case self::DF_TIME:
-            return L::_('%i:%M %p');
-        case self::DF_DATE_SHORT:
-            return L::_('%b %e %Y');
-        case self::DF_DATE_SHORT_NOYEAR:
-            return L::_('%b %e');
-        case self::DF_DATE_TIME_SHORT:
-            return L::_('%b %e, %Y %i:%M %p');
-        case self::DF_DATE_TIME_SHORT_NOYEAR:
-            return L::_('%b %e, %i:%M %p');
-        case self::DF_MY:
-            return L::_('%B %Y');
-        case self::DF_CC_MY:
-            return L::_('%m / %Y');
-        case self::DF_Y:
-            return L::_('%Y');
-        case self::DF_ISO_8601_BASIC:
-            return L::_('%Y%m%dT%H%M%S');
-        case self::DF_ISO_8601_EXTENDED:
-            return L::_('%Y-%m-%dT%H:%M:%S');
-        case self::DF_RFC_2822:
-            return L::_('%a, %d %b %Y %T');
-        default:
-            throw new \Exception("Unknown date format id '$id'.");
+            case self::DF_MDY:
+                return L::_('%m/%d/%y');
+            case self::DF_MDY_SHORT:
+                return L::_('%m%d%y');
+            case self::DF_DATE:
+                return L::_('%B %e, %Y');
+            case self::DF_DATE_LONG:
+                return L::_('%A, %B %e, %Y');
+            case self::DF_DATE_TIME:
+                return L::_('%B %e, %Y %i:%M %p');
+            case self::DF_DATE_TIME_LONG:
+                return L::_('%A, %B %e, %Y %i:%M %p');
+            case self::DF_TIME:
+                return L::_('%i:%M %p');
+            case self::DF_DATE_SHORT:
+                return L::_('%b %e %Y');
+            case self::DF_DATE_SHORT_NOYEAR:
+                return L::_('%b %e');
+            case self::DF_DATE_TIME_SHORT:
+                return L::_('%b %e, %Y %i:%M %p');
+            case self::DF_DATE_TIME_SHORT_NOYEAR:
+                return L::_('%b %e, %i:%M %p');
+            case self::DF_MY:
+                return L::_('%B %Y');
+            case self::DF_CC_MY:
+                return L::_('%m / %Y');
+            case self::DF_Y:
+                return L::_('%Y');
+            case self::DF_ISO_8601_BASIC:
+                return L::_('%Y%m%dT%H%M%S');
+            case self::DF_ISO_8601_EXTENDED:
+                return L::_('%Y-%m-%dT%H:%M:%S');
+            case self::DF_RFC_2822:
+                return L::_('%a, %d %b %Y %T');
+            default:
+                throw new \Exception("Unknown date format id '$id'.");
         }
     }
 
@@ -758,42 +758,42 @@ class Date extends \DateTime implements \Serializable
     public static function getFormatLikeIntlById($id)
     {
         switch ($id) {
-        case self::DF_MDY:
-            return L::_('MM/dd/yy');
-        case self::DF_MDY_SHORT:
-            return L::_('MMddyy');
-        case self::DF_DATE:
-            return L::_('MMMM d, yyyy');
-        case self::DF_DATE_LONG:
-            return L::_('EEEE, MMMM d, yyyy');
-        case self::DF_DATE_TIME:
-            return L::_('MMMM d, yyyy h:mm a');
-        case self::DF_DATE_TIME_LONG:
-            return L::_('EEEE, MMMM d, yyyy h:mm a');
-        case self::DF_TIME:
-            return L::_('h:mm a');
-        case self::DF_DATE_SHORT:
-            return L::_('MMM d yyyy');
-        case self::DF_DATE_SHORT_NOYEAR:
-            return L::_('MMM d');
-        case self::DF_DATE_TIME_SHORT:
-            return L::_('MMM d, yyyy h:mm a');
-        case self::DF_DATE_TIME_SHORT_NOYEAR:
-            return L::_('MMM d, h:mm a');
-        case self::DF_MY:
-            return L::_('MMMM yyyy');
-        case self::DF_CC_MY:
-            return L::_('MM / yyyy');
-        case self::DF_Y:
-            return L::_('yyyy');
-        case self::DF_ISO_8601_BASIC:
-            return L::_('yyyyMMdd\'T\'HHmmss');
-        case self::DF_ISO_8601_EXTENDED:
-            return L::_('yyyy-MM-dd\'T\'HH:mm:ss');
-        case self::DF_RFC_2822:
-            return L::_('EEE, dd MMM yyyy HH:mm:ss');
-        default:
-            throw new \Exception("Unknown date format id '$id'.");
+            case self::DF_MDY:
+                return L::_('MM/dd/yy');
+            case self::DF_MDY_SHORT:
+                return L::_('MMddyy');
+            case self::DF_DATE:
+                return L::_('MMMM d, yyyy');
+            case self::DF_DATE_LONG:
+                return L::_('EEEE, MMMM d, yyyy');
+            case self::DF_DATE_TIME:
+                return L::_('MMMM d, yyyy h:mm a');
+            case self::DF_DATE_TIME_LONG:
+                return L::_('EEEE, MMMM d, yyyy h:mm a');
+            case self::DF_TIME:
+                return L::_('h:mm a');
+            case self::DF_DATE_SHORT:
+                return L::_('MMM d yyyy');
+            case self::DF_DATE_SHORT_NOYEAR:
+                return L::_('MMM d');
+            case self::DF_DATE_TIME_SHORT:
+                return L::_('MMM d, yyyy h:mm a');
+            case self::DF_DATE_TIME_SHORT_NOYEAR:
+                return L::_('MMM d, h:mm a');
+            case self::DF_MY:
+                return L::_('MMMM yyyy');
+            case self::DF_CC_MY:
+                return L::_('MM / yyyy');
+            case self::DF_Y:
+                return L::_('yyyy');
+            case self::DF_ISO_8601_BASIC:
+                return L::_('yyyyMMdd\'T\'HHmmss');
+            case self::DF_ISO_8601_EXTENDED:
+                return L::_('yyyy-MM-dd\'T\'HH:mm:ss');
+            case self::DF_RFC_2822:
+                return L::_('EEE, dd MMM yyyy HH:mm:ss');
+            default:
+                throw new \Exception("Unknown date format id '$id'.");
         }
     }
 
@@ -1132,28 +1132,28 @@ class Date extends \DateTime implements \Serializable
     public function getFormattedOffsetById($id)
     {
         switch ($id) {
-        case self::DF_ISO_8601_BASIC:
-        case self::DF_ISO_8601_EXTENDED:
-        case self::DF_RFC_2822:
-            $offset = $this->getOffset();
-            $offset = floor($offset / 60); // minutes
+            case self::DF_ISO_8601_BASIC:
+            case self::DF_ISO_8601_EXTENDED:
+            case self::DF_RFC_2822:
+                $offset = $this->getOffset();
+                $offset = floor($offset / 60); // minutes
 
-            if ($offset == 0) {
-                $offset = 'Z';
-            } else {
-                $offset_hours   = floor($offset / 60);
-                $offset_minutes = abs($offset % 60);
+                if ($offset == 0) {
+                    $offset = 'Z';
+                } else {
+                    $offset_hours   = floor($offset / 60);
+                    $offset_minutes = abs($offset % 60);
 
-                $offset = sprintf(
-                    '%+03.0d:%02.0d',
-                    $offset_hours,
-                    $offset_minutes
-                );
-            }
+                    $offset = sprintf(
+                        '%+03.0d:%02.0d',
+                        $offset_hours,
+                        $offset_minutes
+                    );
+                }
 
-            return $offset;
-        default:
-            throw new \Exception("Unknown offset format for id '$id'.");
+                return $offset;
+            default:
+                throw new \Exception("Unknown offset format for id '$id'.");
         }
     }
 

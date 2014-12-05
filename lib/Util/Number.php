@@ -126,30 +126,42 @@ abstract class Number
             $ordinal_value = abs($value);
 
             switch ($ordinal_value % 100) {
-            case 11:
-            case 12:
-            case 13:
-                $ordinal_value = sprintf(L::_('%sth'), $ordinal_value);
-                break;
-
-            default:
-                // Handle 1st, 2nd, 3rd
-                switch($value % 10) {
-                case 1:
-                    $ordinal_value = sprintf(L::_('%sst'), $ordinal_value);
-                    break;
-
-                case 2:
-                    $ordinal_value = sprintf(L::_('%snd'), $ordinal_value);
-                    break;
-
-                case 3:
-                    $ordinal_value = sprintf(L::_('%srd'), $ordinal_value);
+                case 11:
+                case 12:
+                case 13:
+                    $ordinal_value = sprintf(L::_('%sth'), $ordinal_value);
                     break;
 
                 default:
-                    $ordinal_value = sprintf(L::_('%sth'), $ordinal_value);
-                }
+                    // Handle 1st, 2nd, 3rd
+                    switch($value % 10) {
+                        case 1:
+                            $ordinal_value = sprintf(
+                                L::_('%sst'),
+                                $ordinal_value
+                            );
+                            break;
+
+                        case 2:
+                            $ordinal_value = sprintf(
+                                L::_('%snd'),
+                                $ordinal_value
+                            );
+                            break;
+
+                        case 3:
+                            $ordinal_value = sprintf(
+                                L::_('%srd'),
+                                $ordinal_value
+                            );
+                            break;
+
+                        default:
+                            $ordinal_value = sprintf(
+                                L::_('%sth'),
+                                $ordinal_value
+                            );
+                    }
             }
 
         }

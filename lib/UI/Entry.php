@@ -268,14 +268,14 @@ class Entry extends InputControl implements Model\State
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'too-short':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %%s must be at least %s characters long.')
-                : L::_('This field must be at least %s characters long.');
+            case 'too-short':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %%s must be at least %s characters long.')
+                    : L::_('This field must be at least %s characters long.');
 
-            break;
-        default:
-            return parent::getValidationMessage($id);
+                break;
+            default:
+                return parent::getValidationMessage($id);
         }
 
         $message = new Model\Message($text, 'error');

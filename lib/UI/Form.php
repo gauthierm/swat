@@ -497,12 +497,12 @@ class Form extends DisplayableContainer
         $data = null;
 
         switch ($this->method) {
-        case Form::METHOD_POST:
-            $data = &$_POST;
-            break;
-        case Form::METHOD_GET:
-            $data = &$_GET;
-            break;
+            case Form::METHOD_POST:
+                $data = &$_POST;
+                break;
+            case Form::METHOD_GET:
+                $data = &$_GET;
+                break;
         }
 
         return $data;

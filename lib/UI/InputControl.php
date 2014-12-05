@@ -101,24 +101,24 @@ abstract class InputControl extends Control
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'required':
-            $text = $this->show_field_title_in_messages
-                ? L::_('%s is required.')
-                : L::_('This field is required.');
+            case 'required':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('%s is required.')
+                    : L::_('This field is required.');
 
-            break;
-        case 'too-long':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %%s field can be at most %s characters long.')
-                : L::_('This field can be at most %s characters long.');
+                break;
+            case 'too-long':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %%s field can be at most %s characters long.')
+                    : L::_('This field can be at most %s characters long.');
 
-            break;
-        default:
-            $text = $this->show_field_title_in_messages
-                ? L::_('There is a problem with the %s field.')
-                : L::_('There is a problem with this field.');
+                break;
+            default:
+                $text = $this->show_field_title_in_messages
+                    ? L::_('There is a problem with the %s field.')
+                    : L::_('There is a problem with this field.');
 
-            break;
+                break;
         }
 
         $message = new Model\Message($text, 'error');

@@ -726,46 +726,46 @@ class Loader
         Object $object)
     {
         switch ($type) {
-        case 'string':
-            return $this->translateValue($value, $translatable, $object);
-        case 'boolean':
-            return ($value == 'true') ? true : false;
-        case 'integer':
-            return intval($value);
-        case 'float':
-            return floatval($value);
-        case 'constant':
-            return $this->parseConstantExpression($value, $object);
-        case 'data':
-            return $this->parseMapping($name, $value, $object);
-        case 'date':
-            return new Util\Date($value);
-        case 'implicit-string':
-            if ($value == 'false' || $value == 'true') {
-                trigger_error(
-                    __CLASS__ . ': Possible missing type="boolean" ' .
-                    'attribute on property element',
-                    E_USER_NOTICE
-                );
-            }
+            case 'string':
+                return $this->translateValue($value, $translatable, $object);
+            case 'boolean':
+                return ($value == 'true') ? true : false;
+            case 'integer':
+                return intval($value);
+            case 'float':
+                return floatval($value);
+            case 'constant':
+                return $this->parseConstantExpression($value, $object);
+            case 'data':
+                return $this->parseMapping($name, $value, $object);
+            case 'date':
+                return new Util\Date($value);
+            case 'implicit-string':
+                if ($value == 'false' || $value == 'true') {
+                    trigger_error(
+                        __CLASS__ . ': Possible missing type="boolean" ' .
+                        'attribute on property element',
+                        E_USER_NOTICE
+                    );
+                }
 
-            if (is_numeric($value)) {
-                trigger_error(
-                    __CLASS__ . ': Possible missing type="integer" or ' .
-                    'type="float" attribute on property element',
-                    E_USER_NOTICE
-                );
-            }
+                if (is_numeric($value)) {
+                    trigger_error(
+                        __CLASS__ . ': Possible missing type="integer" or ' .
+                        'type="float" attribute on property element',
+                        E_USER_NOTICE
+                    );
+                }
 
-            return $this->translateValue($value, $translatable, $object);
-        default:
-            throw new Exception\InvalidPropertyTypeException(
-                "Property type '{$type}' is not a recognized type " .
-                "but is used in SwatML.",
-                0,
-                $object,
-                $type
-            );
+                return $this->translateValue($value, $translatable, $object);
+            default:
+                throw new Exception\InvalidPropertyTypeException(
+                    "Property type '{$type}' is not a recognized type " .
+                    "but is used in SwatML.",
+                    0,
+                    $object,
+                    $type
+                );
         }
     }
 
@@ -970,24 +970,24 @@ class Loader
                     throw $syntax_exception;
 
                 switch ($value){
-                case '|':
-                    array_push($eval_stack, $a | $b);
-                    break;
-                case '&':
-                    array_push($eval_stack, $a & $b);
-                    break;
-                case '-':
-                    array_push($eval_stack, $a - $b);
-                    break;
-                case '+':
-                    array_push($eval_stack, $a + $b);
-                    break;
-                case '/':
-                    array_push($eval_stack, $a / $b);
-                    break;
-                case '*':
-                    array_push($eval_stack, $a * $b);
-                    break;
+                    case '|':
+                        array_push($eval_stack, $a | $b);
+                        break;
+                    case '&':
+                        array_push($eval_stack, $a & $b);
+                        break;
+                    case '-':
+                        array_push($eval_stack, $a - $b);
+                        break;
+                    case '+':
+                        array_push($eval_stack, $a + $b);
+                        break;
+                    case '/':
+                        array_push($eval_stack, $a / $b);
+                        break;
+                    case '*':
+                        array_push($eval_stack, $a * $b);
+                        break;
                 }
             } else {
                 array_push($eval_stack, $value);

@@ -124,25 +124,25 @@ abstract class NumericEntry extends Entry
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'below-minimum':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %%s field must not be less than %s.')
-                : L::_('This field must not be less than %s.');
+            case 'below-minimum':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %%s field must not be less than %s.')
+                    : L::_('This field must not be less than %s.');
 
-            $message = new Model\Message($text, 'error');
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
 
-        case 'above-maximum':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %%s field must not be more than %s.')
-                : L::_('This field must not be more than %s.');
+            case 'above-maximum':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %%s field must not be more than %s.')
+                    : L::_('This field must not be more than %s.');
 
-            $message = new Model\Message($text, 'error');
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
 
-        default:
-            $message = parent::getValidationMessage($id);
-            break;
+            default:
+                $message = parent::getValidationMessage($id);
+                break;
         }
 
         return $message;

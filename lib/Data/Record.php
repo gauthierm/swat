@@ -1285,18 +1285,18 @@ class Record implements \Serializable, Recordable, Marshallable, Flushable
     protected function guessType($name, $value)
     {
         switch (gettype($value)) {
-        case 'boolean':
-            return 'boolean';
-        case 'integer':
-            return 'integer';
-        case 'float':
-            return 'float';
-        case 'object':
-            if ($value instanceof Util\Date)
-                return 'date';
-        case 'string':
-        default:
-            return 'text';
+            case 'boolean':
+                return 'boolean';
+            case 'integer':
+                return 'integer';
+            case 'float':
+                return 'float';
+            case 'object':
+                if ($value instanceof Util\Date)
+                    return 'date';
+            case 'string':
+            default:
+                return 'text';
         }
     }
 

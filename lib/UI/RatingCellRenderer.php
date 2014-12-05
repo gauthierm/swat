@@ -102,25 +102,25 @@ class RatingCellRenderer extends NumericCellRenderer
     public function getDisplayValue()
     {
         switch ($this->round_mode) {
-        case self::ROUND_FLOOR:
-            $value = floor($this->value);
-            break;
+            case self::ROUND_FLOOR:
+                $value = floor($this->value);
+                break;
 
-        case self::ROUND_CEIL:
-            $value = ceil($this->value);
-            break;
+            case self::ROUND_CEIL:
+                $value = ceil($this->value);
+                break;
 
-        case self::ROUND_UP:
-            $value = round($this->value, $this->precision);
-            break;
+            case self::ROUND_UP:
+                $value = round($this->value, $this->precision);
+                break;
 
-        case self::ROUND_NONE:
-            $value = $this->value;
-            break;
+            case self::ROUND_NONE:
+                $value = $this->value;
+                break;
 
-        case self::ROUND_HALF:
-            $value = round($this->value * 2) / 2;
-            break;
+            case self::ROUND_HALF:
+                $value = round($this->value * 2) / 2;
+                break;
         }
 
         return $value;

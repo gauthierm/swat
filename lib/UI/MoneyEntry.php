@@ -217,49 +217,49 @@ class MoneyEntry extends FloatEntry
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'float':
-            $locale = I18N\Locale::get($this->locale);
-            $currency = $locale->getInternationalCurrencySymbol();
-            $example = $locale->formatCurrency(1036.95, false,
-                array('fractional_digits' => $this->decimal_places));
+            case 'float':
+                $locale = I18N\Locale::get($this->locale);
+                $currency = $locale->getInternationalCurrencySymbol();
+                $example = $locale->formatCurrency(1036.95, false,
+                    array('fractional_digits' => $this->decimal_places));
 
-            $text = sprintf(
-                $this->show_field_title_in_messages
-                    ? L::_(
-                        'The %%s field must be a monetary value formatted ' .
-                        'for %s (i.e. %s).'
-                    )
-                    : L::_(
-                        'This field must be a monetary value formatted for ' .
-                        '%s (i.e. %s).'
-                    ),
-                str_replace('%', '%%', $currency),
-                str_replace('%', '%%', $example)
-            );
-            $message = new Model\Message($text, 'error');
-            break;
-        case 'currency-decimal-places':
-            $text = $this->show_field_title_in_messages
-                ? L::_(
-                    'The %%s field has too many decimal places. The ' .
-                    'currency %s only allows %s.'
-                )
-                : L::_('This field has too many decimal places. The ' .
-                    'currency %s only allows %s.'
+                $text = sprintf(
+                    $this->show_field_title_in_messages
+                        ? L::_(
+                            'The %%s field must be a monetary value ' .
+                            'formatted for %s (i.e. %s).'
+                        )
+                        : L::_(
+                            'This field must be a monetary value formatted ' .
+                            'for %s (i.e. %s).'
+                        ),
+                    str_replace('%', '%%', $currency),
+                    str_replace('%', '%%', $example)
                 );
+                $message = new Model\Message($text, 'error');
+                break;
+            case 'currency-decimal-places':
+                $text = $this->show_field_title_in_messages
+                    ? L::_(
+                        'The %%s field has too many decimal places. The ' .
+                        'currency %s only allows %s.'
+                    )
+                    : L::_('This field has too many decimal places. The ' .
+                        'currency %s only allows %s.'
+                    );
 
-            $message = new Model\Message($text, 'error');
-            break;
-        case 'no-decimal-places':
-            $text = $this->show_field_title_in_messages
-                ? L::_('The %s field must not have any decimal places.')
-                : L::_('This field must not have any decimal places.');
+                $message = new Model\Message($text, 'error');
+                break;
+            case 'no-decimal-places':
+                $text = $this->show_field_title_in_messages
+                    ? L::_('The %s field must not have any decimal places.')
+                    : L::_('This field must not have any decimal places.');
 
-            $message = new Model\Message($text, 'error');
-            break;
-        default:
-            $message = parent::getValidationMessage($id);
-            break;
+                $message = new Model\Message($text, 'error');
+                break;
+            default:
+                $message = parent::getValidationMessage($id);
+                break;
         }
 
         return $message;

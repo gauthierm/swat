@@ -237,42 +237,42 @@ class Button extends InputControl
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
         switch ($stock_id) {
-        case 'submit':
-            $title = L::_('Submit');
-            $class = 'swat-button-submit';
-            break;
+            case 'submit':
+                $title = L::_('Submit');
+                $class = 'swat-button-submit';
+                break;
 
-        case 'create':
-            $title = L::_('Create');
-            $class = 'swat-button-create';
-            break;
+            case 'create':
+                $title = L::_('Create');
+                $class = 'swat-button-create';
+                break;
 
-        case 'add':
-            $title = L::_('Add');
-            $class = 'swat-button-add';
-            break;
+            case 'add':
+                $title = L::_('Add');
+                $class = 'swat-button-add';
+                break;
 
-        case 'apply':
-            $title = L::_('Apply');
-            $class = 'swat-button-apply';
-            break;
+            case 'apply':
+                $title = L::_('Apply');
+                $class = 'swat-button-apply';
+                break;
 
-        case 'delete':
-            $title = L::_('Delete');
-            $class = 'swat-button-delete';
-            break;
+            case 'delete':
+                $title = L::_('Delete');
+                $class = 'swat-button-delete';
+                break;
 
-        case 'cancel':
-            $title = L::_('Cancel');
-            $class = 'swat-button-cancel';
-            break;
+            case 'cancel':
+                $title = L::_('Cancel');
+                $class = 'swat-button-cancel';
+                break;
 
-        default:
-            throw new Exception\UndefinedStockTypeException(
-                "Stock type with id of '{$stock_id}' not found.",
-                0,
-                $stock_id
-            );
+            default:
+                throw new Exception\UndefinedStockTypeException(
+                    "Stock type with id of '{$stock_id}' not found.",
+                    0,
+                    $stock_id
+                );
         }
 
         if ($overwrite_properties || ($this->title === null))

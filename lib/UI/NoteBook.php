@@ -540,19 +540,19 @@ class NoteBook extends Widget implements UIParent
     protected function getInlineJavaScript()
     {
         switch ($this->tab_position) {
-        case self::POSITION_RIGHT:
-            $position = 'right';
-            break;
-        case self::POSITION_LEFT:
-            $position = 'left';
-            break;
-        case self::POSITION_BOTTOM:
-            $position = 'bottom';
-            break;
-        case self::POSITION_TOP:
-        default:
-            $position = 'top';
-            break;
+            case self::POSITION_RIGHT:
+                $position = 'right';
+                break;
+            case self::POSITION_LEFT:
+                $position = 'left';
+                break;
+            case self::POSITION_BOTTOM:
+                $position = 'bottom';
+                break;
+            case self::POSITION_TOP:
+            default:
+                $position = 'top';
+                break;
         }
 
         return sprintf(

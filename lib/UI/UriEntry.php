@@ -140,21 +140,21 @@ class UriEntry extends Entry
     protected function getValidationMessage($id)
     {
         switch ($id) {
-        case 'scheme-required':
-            $text = sprintf(
-                L::_('“%s” must include a prefix (i.e. %s).'),
-                $this->value,
-                $this->default_scheme
-            );
-            break;
-        case 'invalid-uri':
-            $text = sprintf(
-                L::_('“%s” is not a properly formatted address.'),
-                $this->value
-            );
-            break;
-        default:
-            return parent::getValidationMessage($id);
+            case 'scheme-required':
+                $text = sprintf(
+                    L::_('“%s” must include a prefix (i.e. %s).'),
+                    $this->value,
+                    $this->default_scheme
+                );
+                break;
+            case 'invalid-uri':
+                $text = sprintf(
+                    L::_('“%s” is not a properly formatted address.'),
+                    $this->value
+                );
+                break;
+            default:
+                return parent::getValidationMessage($id);
         }
 
         $message = new Model\Message($text, 'error');

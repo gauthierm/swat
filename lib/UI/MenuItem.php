@@ -231,57 +231,57 @@ class MenuItem extends Control implements UIParent
     public function setFromStock($stock_id, $overwrite_properties = true)
     {
         switch ($stock_id) {
-        case 'create':
-            $title = L::_('Create');
-            $class = 'swat-menu-item-create';
-            break;
+            case 'create':
+                $title = L::_('Create');
+                $class = 'swat-menu-item-create';
+                break;
 
-        case 'add':
-            $title = L::_('Add');
-            $class = 'swat-menu-item-add';
-            break;
+            case 'add':
+                $title = L::_('Add');
+                $class = 'swat-menu-item-add';
+                break;
 
-        case 'edit':
-            $title = L::_('Edit');
-            $class = 'swat-menu-item-edit';
-            break;
+            case 'edit':
+                $title = L::_('Edit');
+                $class = 'swat-menu-item-edit';
+                break;
 
-        case 'delete':
-            $title = L::_('Delete');
-            $class = 'swat-menu-item-delete';
-            break;
+            case 'delete':
+                $title = L::_('Delete');
+                $class = 'swat-menu-item-delete';
+                break;
 
-        case 'preview':
-            $title = L::_('Preview');
-            $class = 'swat-menu-item-preview';
-            break;
+            case 'preview':
+                $title = L::_('Preview');
+                $class = 'swat-menu-item-preview';
+                break;
 
-        case 'change-order':
-            $title = L::_('Change Order');
-            $class = 'swat-menu-item-change-order';
-            break;
+            case 'change-order':
+                $title = L::_('Change Order');
+                $class = 'swat-menu-item-change-order';
+                break;
 
-        case 'help':
-            $title = L::_('Help');
-            $class = 'swat-menu-item-help';
-            break;
+            case 'help':
+                $title = L::_('Help');
+                $class = 'swat-menu-item-help';
+                break;
 
-        case 'print':
-            $title = L::_('Print');
-            $class = 'swat-menu-item-print';
-            break;
+            case 'print':
+                $title = L::_('Print');
+                $class = 'swat-menu-item-print';
+                break;
 
-        case 'email':
-            $title = L::_('Email');
-            $class = 'swat-menu-item-email';
-            break;
+            case 'email':
+                $title = L::_('Email');
+                $class = 'swat-menu-item-email';
+                break;
 
-        default:
-            throw new Exception\UndefinedStockTypeException(
-                "Stock type with id of '{$stock_id}' not found.",
-                0,
-                $stock_id
-            );
+            default:
+                throw new Exception\UndefinedStockTypeException(
+                    "Stock type with id of '{$stock_id}' not found.",
+                    0,
+                    $stock_id
+                );
         }
 
         if ($overwrite_properties || ($this->title === null))
