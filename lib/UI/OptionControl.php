@@ -301,14 +301,14 @@ abstract class OptionControl extends InputControl
     /**
      * Adds options to this option control using an associative array
      *
-     * @param array  $options      an associative array of options. Keys are
-     *                             option values. Values are option titles.
-     * @param string $content_type optional. The content type of the option
-     *                             titles. If not specified, defaults to
-     *                             'text/plain'.
+     * @param \Traversable $options an associative array of options. Keys are
+     *                              option values. Values are option titles.
+     * @param string $content_type  optional. The content type of the option
+     *                              titles. If not specified, defaults to
+     *                              'text/plain'.
      */
     public function addOptionsByArray(
-        array $options,
+        \Traversable $options,
         $content_type = 'text/plain'
     ) {
         foreach ($options as $value => $title) {
