@@ -4,9 +4,8 @@
 
 namespace Silverorange\Swat\Data;
 
-use Silverorange\Swat\Model;
-use Silverorange\Swat\UI;
 use Silverorange\Swat\I18N;
+use Silverorange\Swat\Model;
 use Silverorange\Swat\L;
 
 /**
@@ -1386,7 +1385,7 @@ class DB
      *
      * @param \MDB2_Driver_Common $db        the database connection to use to
      *                                       implode the view selection.
-     * @param UI\ViewSelection    $selection the selection to implode.
+     * @param Model\ViewSelection $selection the selection to implode.
      * @param string              $type      optional. The datatype to use. Must
      *                                       be a valid MDB2 datat ype. If
      *                                       unspecified, 'integer' is used.
@@ -1395,7 +1394,7 @@ class DB
      */
     public static function implodeSelection(
         \MDB2_Driver_Common $db,
-        UI\ViewSelection $selection,
+        Model\ViewSelection $selection,
         $type = 'integer'
     ) {
         $quoted_ids = array();

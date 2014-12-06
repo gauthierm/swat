@@ -4,8 +4,9 @@
 
 namespace Silverorange\Swat\UI;
 
-use Silverorange\Swat\Html;
 use Silverorange\Swat\Exception;
+use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
 
 /**
  * A view selector cell renderer displayed as a radio button
@@ -114,7 +115,7 @@ class RadioButtonCellRenderer extends CellRenderer implements ViewSelector
 
                 $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
                 if ($view !== null) {
-                    $selection = new ViewSelection(
+                    $selection = new Model\ViewSelection(
                         array($this->selected_value)
                     );
                     $view->setSelection($selection, $this);

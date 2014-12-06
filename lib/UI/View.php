@@ -6,6 +6,7 @@ namespace Silverorange\Swat\UI;
 
 use Silverorange\Swat\Exception;
 use Silverorange\Swat\Html;
+use Silverorange\Swat\Model;
 
 /**
  * An abstract class from which to derive recordset views
@@ -33,7 +34,7 @@ abstract class View extends Control
     /**
      * The selections of this view
      *
-     * This is an array of {@link ViewSelection} objects indexed by
+     * This is an array of {@link Model\ViewSelection} objects indexed by
      * selector id.
      *
      * @var array
@@ -109,8 +110,8 @@ abstract class View extends Control
      *                                      the first selector in the view
      *                                      is used.
      *
-     * @return ViewSelection the selection of this view for the specified
-     *                        selector.
+     * @return Model\ViewSelection the selection of this view for the specified
+     *                             selector.
      *
      * @throws Exception\ObjectNotFoundException if the <i>$selector</i>
      *         parameter is specified as a string and this view does not
@@ -172,7 +173,7 @@ abstract class View extends Control
      * This method may also be used to override the selection provided by a
      * selector.
      *
-     * @param ViewSelection       $selection the selection object to set.
+     * @param Model\ViewSelection $selection the selection object to set.
      * @param ViewSelector|string $selector  optional. The view selector
      *                                       object or the view selector
      *                                       identifier for which to get
@@ -194,8 +195,10 @@ abstract class View extends Control
      * @throws Exception\Exception if the <i>$selector</i> parameter is
      *         specified and this view has no selectors.
      */
-    public function setSelection(ViewSelection $selection, $selector = null)
-    {
+    public function setSelection(
+        Model\ViewSelection $selection,
+        $selector = null
+    ) {
         if ($selector === null) {
             if (count($this->selectors) > 0) {
                 $selector = reset($this->selectors);
@@ -240,7 +243,9 @@ abstract class View extends Control
      */
     final protected function addSelector(ViewSelector $selector)
     {
-        $this->selections[$selector->getId()] = new ViewSelection(array());
+        $this->selections[$selector->getId()] = new Model\ViewSelection(
+            array()
+        );
         $this->selectors[$selector->getId()] = $selector;
     }
 

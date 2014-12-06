@@ -10,7 +10,7 @@ namespace Silverorange\Swat\UI;
  * @package   Swat
  * @copyright 2007 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
- * @see       ViewSelection
+ * @see       Model\ViewSelection
  * @see       View
  */
 interface ViewSelector

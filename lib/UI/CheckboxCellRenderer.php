@@ -123,7 +123,9 @@ class CheckboxCellRenderer extends CellRenderer implements ViewSelector
 
                 $view = $this->getFirstAncestor('\Silverorange\Swat\UI\View');
                 if ($view !== null) {
-                    $selection = new ViewSelection($this->selected_values);
+                    $selection = new Model\ViewSelection(
+                        $this->selected_values
+                    );
                     $view->setSelection($selection, $this);
                 }
             }

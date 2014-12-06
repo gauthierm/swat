@@ -2,7 +2,7 @@
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-namespace Silverorange\Swat\UI;
+namespace Silverorange\Swat\Model;
 
 /**
  * A selection on a view
