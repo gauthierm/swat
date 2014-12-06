@@ -9,7 +9,7 @@ use Silverorange\Swat\Util;
 use Silverorange\Swat\L;
 
 /**
- * Simple color selector widget.
+ * A color selector widget.
  *
  * This color selector displays a simple palette to the user with a set of
  * predefined color choices. It requires JavaScript to work correctly.
@@ -18,7 +18,7 @@ use Silverorange\Swat\L;
  * @copyright 2005-2014 silverorange
  * @license   http://www.gnu.org/copyleft/lesser.html LGPL License 2.1
  */
-class SimpleColorEntry extends AbstractOverlay
+class ColorEntry extends AbstractOverlay
 {
     // {{{ public properties
 
@@ -61,7 +61,7 @@ class SimpleColorEntry extends AbstractOverlay
     // {{{ public function __construct()
 
     /**
-     * Creates a new simple color selection widget
+     * Creates a new color selection widget
      *
      * @param string $id a non-visible unique id for this widget.
      *
@@ -76,7 +76,7 @@ class SimpleColorEntry extends AbstractOverlay
         }
 
         $this->addJavaScript(
-            'packages/swat/javascript/swat-simple-color-entry.js'
+            'packages/swat/javascript/swat-color-entry.js'
         );
 
         $this->addJavaScript(
@@ -128,15 +128,15 @@ class SimpleColorEntry extends AbstractOverlay
     // {{{ protected function getCSSClassNames()
 
     /**
-     * Gets the array of CSS classes that are applied to this simple color
-     * entry widget
+     * Gets the array of CSS classes that are applied to this color entry
+     * widget
      *
-     * @return array the array of CSS classes that are applied to this simple
-     *               color entry widget.
+     * @return array the array of CSS classes that are applied to this color
+     *               entry widget.
      */
     protected function getCSSClassNames()
     {
-        $classes = array('swat-simple-color-entry');
+        $classes = array('swat-color-entry');
         $classes = array_merge($classes, parent::getCSSClassNames());
         return $classes;
     }
@@ -145,11 +145,11 @@ class SimpleColorEntry extends AbstractOverlay
     // {{{ protected function getInlineJavaScript()
 
     /**
-     * Gets simple color selector inline JavaScript
+     * Gets color selector inline JavaScript
      *
-     * The JavaScript is the majority of the simple color selector code
+     * The JavaScript is the majority of the color selector code
      *
-     * @return string simple color selector inline JavaScript.
+     * @return string color selector inline JavaScript.
      */
     protected function getInlineJavaScript()
     {
@@ -216,7 +216,7 @@ class SimpleColorEntry extends AbstractOverlay
      */
     protected function getJavaScriptClassName()
     {
-        return 'SwatSimpleColorEntry';
+        return 'SwatColorEntry';
     }
 
     // }}}
