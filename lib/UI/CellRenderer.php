@@ -313,19 +313,31 @@ abstract class CellRenderer extends Object
      */
     final public function getInheritanceCSSClassNames()
     {
+        $prefix = 'swat-';
         $php_class_name = get_class($this);
         $css_class_names = array();
 
+        $ns_length = strlen(__NAMESPACE__);
+
         // get the ancestors that are swat classes
-        // TODO: make work with namespaces
-        while (strcmp($php_class_name, 'SwatCellRenderer') !== 0) {
-            if (strncmp($php_class_name, 'Swat', 4) === 0) {
+        while (strcmp($php_class_name, __CLASS__) !== 0) {
+            if (strncmp($php_class_name, __NAMESPACE__, $ns_length) === 0) {
+                $unqualified_class_name = end(explode('\\', $php_class_name));
+
+                // Convert CamelCase to dashed-names
                 $css_class_name = strtolower(
-                    preg_replace('/([A-Z])/u', '-\1', $php_class_name)
+                    preg_replace('/([A-Z])/u', '-\1', $unqualified_class_name)
                 );
-                if (substr($css_class_name, 0, 1) === '-') {
+
+                // If class name had two or more parts, it has an extra dash
+                // at the beginning
+                if ($css_class_name[0] === '-') {
                     $css_class_name = substr($css_class_name, 1);
                 }
+
+                // Add the swat- prefix
+                $css_class_name = $prefix . $css_class_name;
+
                 array_unshift($css_class_names, $css_class_name);
             }
             $php_class_name = get_parent_class($php_class_name);
