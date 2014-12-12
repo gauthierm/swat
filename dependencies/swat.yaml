@@ -48,6 +48,7 @@ Swat:
     packages/swat/javascript/swat-color-entry.js:
       Depends:
         - packages/swat/javascript/swat-z-index-manager.js
+        - packages/swat/javascript/swat-abstract-overlay.js
     packages/swat/javascript/swat-date-entry.js:
       OptionalDepends:
         - packages/swat/javascript/swat-calendar.js
@@ -63,10 +64,6 @@ Swat:
     packages/swat/javascript/swat-radio-button-cell-renderer.js:
     packages/swat/javascript/swat-rating.js:
     packages/swat/javascript/swat-search-entry.js:
-    packages/swat/javascript/swat-simple-color-entry.js:
-      Depends:
-        - packages/swat/javascript/swat-z-index-manager.js
-        - packages/swat/javascript/swat-abstract-overlay.js
     packages/swat/javascript/swat-table-view-input-row.js:
     packages/swat/javascript/swat-table-view.js:
       Depends:
@@ -101,7 +98,6 @@ Swat:
       Depends:
         - packages/swat/styles/swat-disclosure.css
     packages/swat/styles/swat-image-preview-display.css:
-    packages/swat/styles/swat-menu.css:
     packages/swat/styles/swat-message.css:
       Depends:
         - packages/swat/styles/swat.css
