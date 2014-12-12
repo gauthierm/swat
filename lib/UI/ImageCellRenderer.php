@@ -152,7 +152,7 @@ class ImageCellRenderer extends CellRenderer
         if ($margin_x > 0 || $margin_y > 0) {
             $style = ($margin_x % 2 == 0 && $margin_y % 2 == 0)
                 ? 'margin: %dpx %dpx'
-                : 'margin: %dpx %dpx %dpx %dpx;',
+                : 'margin: %dpx %dpx %dpx %dpx;';
 
             $image_tag->style = sprintf(
                 $style,

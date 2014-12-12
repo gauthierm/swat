@@ -156,7 +156,7 @@ class TableViewColumn extends CellRendererContainer
 
         // add the input cell to this column's view's input row
         if ($this->input_cell !== null) {
-            $row_class '\Silverorange\Swat\UI\TableViewInputRow';
+            $row_class = '\Silverorange\Swat\UI\TableViewInputRow';
             $input_row = $this->parent->getFirstRowByClass($row_class);
             if ($input_row === null) {
                 throw new Exception\Exception(

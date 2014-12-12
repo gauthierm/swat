@@ -122,7 +122,7 @@ class CheckAll extends Checkbox
         $label_tag->open();
 
         $old_id = $this->id;
-        $this->id . = '_value';
+        $this->id .= '_value';
         parent::display();
         $this->id = $old_id;
 

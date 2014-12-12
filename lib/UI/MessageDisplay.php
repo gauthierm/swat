@@ -141,7 +141,7 @@ class MessageDisplay extends Control
 
         if ($dismissable == self::DISMISS_AUTO) {
             $type = $message->type;
-            $dismissable = (in_array($type, $this->getDismissableMessageTypes())
+            $dismissable = in_array($type, $this->getDismissableMessageTypes())
                 ? self::DISMISS_ON
                 : self::DISMISS_OFF;
         }
