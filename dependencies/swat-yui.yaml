@@ -1,3 +1,4 @@
+# vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2:
 ##
 ## Static Web-resource dependencies for the SwatYUI sub-package
 ##
@@ -165,5 +166,3 @@ SwatYUI:
         - packages/yui/resize/assets/skins/sam/resize.css
     packages/yui/menu/assets/skins/sam/menu.css:
     packages/yui/tabview/assets/skins/sam/tabview.css:
-
-# vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2:

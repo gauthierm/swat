@@ -1,3 +1,4 @@
+# vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2:
 ##
 ## Static Web-resource dependencies for the Swat package
 ##
@@ -128,5 +129,3 @@ Swat:
     packages/swat/styles/swat-title-link-cell-renderer.css:
     packages/swat/styles/swat-toolbar.css:
     packages/swat/styles/swat-tool-link.css:
-
-# vim: set expandtab tabstop=2 shiftwidth=2 softtabstop=2:
