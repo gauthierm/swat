@@ -19,28 +19,26 @@ class Loader
     // {{{ private properties
 
     /**
-     * An associative array of class-prefix-to-filename-mappings
+     * An associative array of prefix to namespace mappings
      *
      * The array is of the form:
      * <code>
      * <?php
      * array(
-     *    $package_prefix => $path,
+     *    $prefix => $namespace,
      *    // ...
      * );
      * </code>
      *
-     * Where <kbd>$package_prefix</kbd> is the class name prefix used for the
-     * package and <kbd>$path</kbd> is the path where the source files
-     * for the package may be included from. Paths should be relative to the
-     * PHP include path.
+     * Where <kbd>$prefix</kbd> is a short-hand prefix for loading classes in
+     * the specified <kbd>$namespace</kbd>.
      *
      * @var array
      *
-     * @see Loader::mapClassPrefixToPath()
+     * @see Loader::mapPrefixToNamespace()
      */
-    private static $class_map = array(
-        'Swat' => 'Swat',
+    private static $ns_map = array(
+        'Swat' => 'Silverorange\Swat\UI',
     );
 
     /**
@@ -107,23 +105,17 @@ class Loader
     }
 
     // }}}
-    // {{{ public static function mapClassPrefixToPath()
+    // {{{ public static function mapPrefixToNamespace()
 
     /**
-     * Maps a class prefix to a path for filename lookup in this UI
+     * Maps a shorthand prefix to a namespace for loading classes
      *
-     * The class path map is used to find source files for widget classes
-     * specified in XML.
-     *
-     * @param string $class_prefix the prefix of the class to map to the given
-     *                             path.
-     * @param string $path         the path to which to map the given class
-     *                             prefix. Paths should be relative to the PHP
-     *                             include path.
+     * @param string $prefix    the prefix to use in the XML.
+     * @param string $namespace the namespace to which to map the given prefix.
      */
-    public static function mapClassPrefixToPath($class_prefix, $path)
+    public static function mapPrefixToNamespace($prefix, $namespace)
     {
-        self::$class_map[$class_prefix] = $path;
+        self::$ns_map[$prefix] = $namespace;
     }
 
     // }}}
@@ -584,38 +576,37 @@ class Loader
         // class is required in the schema
         $class = $node->getAttribute('class');
 
-        if (!class_exists($class)) {
+        $full_class_name = $class;
 
-            $class_file = null;
-            foreach (self::$class_map as $package_prefix => $path) {
-                if (strncmp($class, $package_prefix, strlen($package_prefix)) == 0) {
-                    $class_file = "{$path}/{$class}.php";
-                    break;
-                }
+        // map prefixed classes to fully-qualified classes
+        foreach (self::$ns_map as $prefix => $namespace) {
+            if (strncmp($class, $prefix, strlen($prefix)) === 0) {
+                $full_class_name = $namespace .
+                    '/' . substr($class, strlen($prefix));
+
+                break;
             }
-
-            if ($class_file === null) {
-                throw new Exception\ClassNotFoundException(
-                    "Class '{$class}' is not defined and no suitable " .
-                    "filename for the class could be found. You may have " .
-                    "forgotten to map the class prefix to a path.",
-                    0,
-                    $class
-                );
-            }
-
-            require_once $class_file;
         }
 
-        // NOTE: this works because Object is abstract
-        if (!is_subclass_of($class, '\Silverorange\Swat\UI\Object')) {
-            throw new Exception\InvalidClassException(
-                "Class '{$class}' is not a a descendant of Object and " .
-                "cannot be added to the widget tree."
+        if (!class_exists($full_class_name, true)) {
+            throw new Exception\ClassNotFoundException(
+                "Class '{$full_class_name}' is not defined and no suitable " .
+                "filename for the class could be loaded. You may have " .
+                "forgotten to map the prefix to a namespace.",
+                0,
+                $class
             );
         }
 
-        $object = new $class();
+        // NOTE: this works because Object is abstract
+        if (!is_subclass_of($full_class_name, '\Silverorange\Swat\UI\Object')) {
+            throw new Exception\InvalidClassException(
+                "Class '{$full_class_name}' is not a a descendant of Object " .
+                "and cannot be added to the widget tree."
+            );
+        }
+
+        $object = new $full_class_name();
 
         // id is optional in the schema
         if ($node->hasAttribute('id')) {
