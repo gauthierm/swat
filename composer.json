@@ -32,6 +32,8 @@
 		"ext-iconv": "*",
 		"ext-intl": "*",
 		"ext-mbstring": "*",
+		"pear/pear_exception": "^1.0.0",
+		"pear/mdb2": "^2.4.1",
 		"silverorange/concentrate": ">=0.0.13",
 		"silverorange/silverorange_autoloader": "*",
 		"silverorange/yui": "^1.0.11"
