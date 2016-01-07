@@ -25,6 +25,10 @@
 		{
 			"name": "Steven Garrity",
 			"email": "steven@silverorange.com"
+		},
+		{
+			"name": "Charles Waddell",
+			"email": "charles@silverorange.com"
 		}
 	],
 	"require": {
