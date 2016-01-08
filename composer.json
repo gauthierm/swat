@@ -7,6 +7,14 @@
 	"license": "LGPL-2.1",
 	"authors": [
 		{
+			"name": "Charles Waddell",
+			"email": "charles@silverorange.com"
+		},
+		{
+			"name": "Isaac Grant",
+			"email": "isaac@silverorange.com"
+		},
+		{
 			"name": "Michael Gauthier",
 			"email": "mike@silverorange.com"
 		},
@@ -15,20 +23,12 @@
 			"email": "nathan@silverorange.com"
 		},
 		{
-			"name": "Isaac Grant",
-			"email": "isaac@silverorange.com"
-		},
-		{
 			"name": "Nick Burka",
 			"email": "nick@silverorange.com"
 		},
 		{
 			"name": "Steven Garrity",
 			"email": "steven@silverorange.com"
-		},
-		{
-			"name": "Charles Waddell",
-			"email": "charles@silverorange.com"
 		}
 	],
 	"require": {
