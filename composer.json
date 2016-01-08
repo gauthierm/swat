@@ -3,7 +3,7 @@
 	"description": "Web application toolkit.",
 	"type": "library",
 	"keywords": [ "swat", "toolkit", "widget" ],
-	"homepage": "https://code.silverorange.com/Swat",
+	"homepage": "https://code.silverorange.com/swat",
 	"license": "LGPL-2.1",
 	"authors": [
 		{
